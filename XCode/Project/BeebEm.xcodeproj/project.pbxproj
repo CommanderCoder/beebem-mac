@@ -7,10 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		DC907E992BB4DBCD00523116 /* BeebEmApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC907E982BB4DBCD00523116 /* BeebEmApp.swift */; };
-		DC907E9B2BB4DBCD00523116 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC907E9A2BB4DBCD00523116 /* ContentView.swift */; };
 		DC907E9D2BB4DBCE00523116 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DC907E9C2BB4DBCE00523116 /* Assets.xcassets */; };
 		DC907EA02BB4DBCE00523116 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DC907E9F2BB4DBCE00523116 /* Preview Assets.xcassets */; };
+		DC907EAD2BB5B7F300523116 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DC907EAB2BB5B7F300523116 /* Main.storyboard */; };
+		DC907EB02BB5BA4000523116 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC907EAF2BB5BA4000523116 /* AppDelegate.swift */; };
+		DC907EB22BB5BAD300523116 /* BeebEm-Bridging-Code.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC907EB12BB5BAD300523116 /* BeebEm-Bridging-Code.swift */; };
+		DC907EC12BB5C1F100523116 /* BeebApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC907EC02BB5C1F100523116 /* BeebApplication.swift */; };
+		DC907EC32BB5C23C00523116 /* BeebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC907EC22BB5C23C00523116 /* BeebViewController.swift */; };
+		DC907EC62BB6D48600523116 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC907EC52BB6D48600523116 /* Renderer.swift */; };
+		DC907EC82BB6D55100523116 /* Bitmap.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC907EC72BB6D55100523116 /* Bitmap.swift */; };
+		DC907ECA2BB6D76F00523116 /* Colour.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC907EC92BB6D76F00523116 /* Colour.swift */; };
+		DC907ECC2BB70CE000523116 /* NSImage+Bitmap.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC907ECB2BB70CE000523116 /* NSImage+Bitmap.swift */; };
+		DC907ECE2BB70E7B00523116 /* BeebSKView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC907ECD2BB70E7B00523116 /* BeebSKView.swift */; };
+		DC907ED22BB7101900523116 /* BeebEm-Bridging-Temp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC907ED02BB7101900523116 /* BeebEm-Bridging-Temp.cpp */; };
+		DC907ED42BB7191300523116 /* mergenotes.txt in Resources */ = {isa = PBXBuildFile; fileRef = DC907ED32BB7191300523116 /* mergenotes.txt */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,6 +30,25 @@
 		DC907E9C2BB4DBCE00523116 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		DC907E9F2BB4DBCE00523116 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		DC907EA12BB4DBCE00523116 /* BeebEm.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BeebEm.entitlements; sourceTree = "<group>"; };
+		DC907EAC2BB5B7F300523116 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		DC907EAF2BB5BA4000523116 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		DC907EB12BB5BAD300523116 /* BeebEm-Bridging-Code.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "BeebEm-Bridging-Code.swift"; sourceTree = "<group>"; };
+		DC907EB32BB5BB7700523116 /* BeebEm-Bridge-TapeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BeebEm-Bridge-TapeController.swift"; sourceTree = "<group>"; };
+		DC907EB52BB5BB9100523116 /* BeebEm-Bridge-KbdController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BeebEm-Bridge-KbdController.swift"; sourceTree = "<group>"; };
+		DC907EB72BB5BB9A00523116 /* BeebEm-Bridge-RomController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BeebEm-Bridge-RomController.swift"; sourceTree = "<group>"; };
+		DC907EB92BB5BC6200523116 /* BeebEm-Bridge-FilesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BeebEm-Bridge-FilesController.swift"; sourceTree = "<group>"; };
+		DC907EBF2BB5C02D00523116 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		DC907EC02BB5C1F100523116 /* BeebApplication.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BeebApplication.swift; sourceTree = "<group>"; };
+		DC907EC22BB5C23C00523116 /* BeebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BeebViewController.swift; sourceTree = "<group>"; };
+		DC907EC52BB6D48600523116 /* Renderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
+		DC907EC72BB6D55100523116 /* Bitmap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bitmap.swift; sourceTree = "<group>"; };
+		DC907EC92BB6D76F00523116 /* Colour.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Colour.swift; sourceTree = "<group>"; };
+		DC907ECB2BB70CE000523116 /* NSImage+Bitmap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSImage+Bitmap.swift"; sourceTree = "<group>"; };
+		DC907ECD2BB70E7B00523116 /* BeebSKView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BeebSKView.swift; sourceTree = "<group>"; };
+		DC907ECF2BB7101900523116 /* BeebEm-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BeebEm-Bridging-Header.h"; sourceTree = "<group>"; };
+		DC907ED02BB7101900523116 /* BeebEm-Bridging-Temp.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "BeebEm-Bridging-Temp.cpp"; sourceTree = "<group>"; };
+		DC907ED12BB7101900523116 /* BeebEm-Bridging-Temp.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "BeebEm-Bridging-Temp.hpp"; sourceTree = "<group>"; };
+		DC907ED32BB7191300523116 /* mergenotes.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = mergenotes.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -36,6 +65,10 @@
 		DC907E8C2BB4DBCD00523116 = {
 			isa = PBXGroup;
 			children = (
+				DC907ED32BB7191300523116 /* mergenotes.txt */,
+				DC907EBB2BB5BE0B00523116 /* Src */,
+				DC907EAE2BB5BA2500523116 /* Swift */,
+				DC907EA82BB5B5F000523116 /* Scenes */,
 				DC907E972BB4DBCD00523116 /* BeebEm */,
 				DC907E962BB4DBCD00523116 /* Products */,
 			);
@@ -52,6 +85,7 @@
 		DC907E972BB4DBCD00523116 /* BeebEm */ = {
 			isa = PBXGroup;
 			children = (
+				DC907EBF2BB5C02D00523116 /* Info.plist */,
 				DC907E982BB4DBCD00523116 /* BeebEmApp.swift */,
 				DC907E9A2BB4DBCD00523116 /* ContentView.swift */,
 				DC907E9C2BB4DBCE00523116 /* Assets.xcassets */,
@@ -67,6 +101,44 @@
 				DC907E9F2BB4DBCE00523116 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		DC907EA82BB5B5F000523116 /* Scenes */ = {
+			isa = PBXGroup;
+			children = (
+				DC907EAB2BB5B7F300523116 /* Main.storyboard */,
+			);
+			path = Scenes;
+			sourceTree = "<group>";
+		};
+		DC907EAE2BB5BA2500523116 /* Swift */ = {
+			isa = PBXGroup;
+			children = (
+				DC907EAF2BB5BA4000523116 /* AppDelegate.swift */,
+				DC907EC02BB5C1F100523116 /* BeebApplication.swift */,
+				DC907EC22BB5C23C00523116 /* BeebViewController.swift */,
+				DC907EC52BB6D48600523116 /* Renderer.swift */,
+				DC907EC92BB6D76F00523116 /* Colour.swift */,
+				DC907EC72BB6D55100523116 /* Bitmap.swift */,
+				DC907ECB2BB70CE000523116 /* NSImage+Bitmap.swift */,
+				DC907ECD2BB70E7B00523116 /* BeebSKView.swift */,
+				DC907EB12BB5BAD300523116 /* BeebEm-Bridging-Code.swift */,
+				DC907EB32BB5BB7700523116 /* BeebEm-Bridge-TapeController.swift */,
+				DC907EB52BB5BB9100523116 /* BeebEm-Bridge-KbdController.swift */,
+				DC907EB72BB5BB9A00523116 /* BeebEm-Bridge-RomController.swift */,
+				DC907EB92BB5BC6200523116 /* BeebEm-Bridge-FilesController.swift */,
+			);
+			path = Swift;
+			sourceTree = "<group>";
+		};
+		DC907EBB2BB5BE0B00523116 /* Src */ = {
+			isa = PBXGroup;
+			children = (
+				DC907ED02BB7101900523116 /* BeebEm-Bridging-Temp.cpp */,
+				DC907ED12BB7101900523116 /* BeebEm-Bridging-Temp.hpp */,
+				DC907ECF2BB7101900523116 /* BeebEm-Bridging-Header.h */,
+			);
+			path = Src;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -101,6 +173,7 @@
 				TargetAttributes = {
 					DC907E942BB4DBCD00523116 = {
 						CreatedOnToolsVersion = 13.4.1;
+						LastSwiftMigration = 1340;
 					};
 				};
 			};
@@ -128,7 +201,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				DC907EA02BB4DBCE00523116 /* Preview Assets.xcassets in Resources */,
+				DC907ED42BB7191300523116 /* mergenotes.txt in Resources */,
 				DC907E9D2BB4DBCE00523116 /* Assets.xcassets in Resources */,
+				DC907EAD2BB5B7F300523116 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -139,12 +214,31 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DC907E9B2BB4DBCD00523116 /* ContentView.swift in Sources */,
-				DC907E992BB4DBCD00523116 /* BeebEmApp.swift in Sources */,
+				DC907EC32BB5C23C00523116 /* BeebViewController.swift in Sources */,
+				DC907ECA2BB6D76F00523116 /* Colour.swift in Sources */,
+				DC907EC12BB5C1F100523116 /* BeebApplication.swift in Sources */,
+				DC907ED22BB7101900523116 /* BeebEm-Bridging-Temp.cpp in Sources */,
+				DC907ECC2BB70CE000523116 /* NSImage+Bitmap.swift in Sources */,
+				DC907EB02BB5BA4000523116 /* AppDelegate.swift in Sources */,
+				DC907EC62BB6D48600523116 /* Renderer.swift in Sources */,
+				DC907EC82BB6D55100523116 /* Bitmap.swift in Sources */,
+				DC907ECE2BB70E7B00523116 /* BeebSKView.swift in Sources */,
+				DC907EB22BB5BAD300523116 /* BeebEm-Bridging-Code.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		DC907EAB2BB5B7F300523116 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				DC907EAC2BB5B7F300523116 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		DC907EA22BB4DBCE00523116 /* Debug */ = {
@@ -197,6 +291,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				MACOSX_DEPLOYMENT_TARGET = 12.3;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -251,6 +346,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				MACOSX_DEPLOYMENT_TARGET = 12.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -265,6 +361,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = BeebEm/BeebEm.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
@@ -275,15 +372,20 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_FILE = BeebEm/Info.plist;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 1994/1995 David Alan Gilbert. All rights reserved.";
+				INFOPLIST_KEY_NSMainStoryboardFile = Main;
+				INFOPLIST_KEY_NSPrincipalClass = BeebEm.BeebApplication;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = "4.19-mac";
 				PRODUCT_BUNDLE_IDENTIFIER = com.commandercoder.BeebEm;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Src/BeebEm-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -293,6 +395,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = BeebEm/BeebEm.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
@@ -303,15 +406,19 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_FILE = BeebEm/Info.plist;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 1994/1995 David Alan Gilbert. All rights reserved.";
+				INFOPLIST_KEY_NSMainStoryboardFile = Main;
+				INFOPLIST_KEY_NSPrincipalClass = BeebEm.BeebApplication;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = "4.19-mac";
 				PRODUCT_BUNDLE_IDENTIFIER = com.commandercoder.BeebEm;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Src/BeebEm-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;

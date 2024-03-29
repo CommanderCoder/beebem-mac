@@ -1,0 +1,31 @@
+TODO:
+Get rid off all the warnings NOW
+
+
+
+
+Notes:
+=====
+
+Set up a shim for rendering an 'App' using swift
+
+Requires swift files for:
+AppDelegate - all menu handler
+BeebApplication - linked to XCode 'Principle Class', used for Keyboard Shortcuts
+BeebViewController - the main frame renderer and cpu update and LEDs
+BeebEm-Bridging-Code - code that is called by the windows BeebEm C++ to communicate with MacOS
+
+Renderer, Colour, Bitmap, NSImage+Bitmap, BeebSKView - required for rendering the video
+
+
+Requires C++ files for:
+BeebEm-Bridging-Header - This is set in the Xcode Build Settings
+BeebEm-Bridging-Temp - placeholder functions for calls from MacOS to BeebEm C++
+
+
+
+BeebEm-Bridging-[...]Controller
+The bridging code for the following relates to the different Controllers in the Storyboard
+- removed tape, keyboard, rom, files list code into their own files as these access additional view controllers
+
+
