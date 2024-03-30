@@ -8,5 +8,47 @@
 	<true/>
 	<key>NSSupportsSuddenTermination</key>
 	<true/>
+	<key>UTExportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>BeebEm ETI</string>
+			<key>UTTypeIcons</key>
+			<dict>
+				<key>UTTypeIconBadgeName</key>
+				<string>Icon</string>
+			</dict>
+			<key>UTTypeIdentifier</key>
+			<string>com.commandercoder.beebem</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>uef</string>
+					<string>csw</string>
+					<string>ssd</string>
+					<string>dsd</string>
+					<string>wdd</string>
+					<string>adf</string>
+					<string>adl</string>
+					<string>img</string>
+					<string>dos</string>
+					<string>UEF</string>
+					<string>CSW</string>
+					<string>SSD</string>
+					<string>WDD</string>
+					<string>DSD</string>
+					<string>ADF</string>
+					<string>ADL</string>
+					<string>IMG</string>
+					<string>DOS</string>
+				</array>
+			</dict>
+		</dict>
+	</array>
 </dict>
 </plist>

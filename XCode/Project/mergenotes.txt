@@ -29,3 +29,11 @@ The bridging code for the following relates to the different Controllers in the 
 - removed tape, keyboard, rom, files list code into their own files as these access additional view controllers
 
 
+NSSavePanel has changed to use allowedContentTypes and these types are predefined in info.plist
+
+Fixed some layout issues in Main.Storyboard
+AUTOLAYOUT:
+https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/AutolayoutPG/index.html#//apple_ref/doc/uid/TP40010853-CH7-SW1
+
+https://developer.apple.com/macos/planning/
+

@@ -78,6 +78,13 @@ enum CBridge {
     static var machineType: MachineTypeFlags = []
 }
 
+
+
+extension UTType {
+	public static let beebem = UTType(exportedAs: "com.commandercoder.beebem")
+}
+
+
 // allow access to this in C
 @_cdecl("swift_GetFilesWithPreview")
 func swift_GetFilesWithPreview(filepath : UnsafeMutablePointer<CChar>, bytes: Int, directory : UnsafeMutablePointer<CChar>, fileexts : FileFilter, multiFiles : Bool = false) -> Int
@@ -101,17 +108,17 @@ func swift_GetFilesWithPreview(filepath : UnsafeMutablePointer<CChar>, bytes: In
     
     switch fileexts {
     case .DISC:
-        dialog.allowedFileTypes        = ["ssd", "dsd", "wdd", "dos", "adl", "adf", "img"]
+		dialog.allowedContentTypes        = [.beebem] // ["ssd", "dsd", "wdd", "dos", "adl", "adf", "img"]
     case .UEF:
-        dialog.allowedFileTypes        = ["uef", "csw"]
+        dialog.allowedContentTypes        = [.beebem] // ["uef", "csw"]
     case .IFD:
-        dialog.allowedFileTypes        = ["ssd", "dsd", "inf"]
+        dialog.allowedContentTypes        = [.beebem] // ["ssd", "dsd", "inf"]
     case .KEYBOARD:
-        dialog.allowedFileTypes        = ["kmap"]
+        dialog.allowedContentTypes        = [.beebem] // ["kmap"]
     case .DISCFILE:
-        dialog.allowedFileTypes        = nil  // ["inf"]
+        dialog.allowedContentTypes        = [] //nil  // ["inf"]
     case .ROMCFG:
-        dialog.allowedFileTypes        = ["rom"]
+        dialog.allowedContentTypes        = [.beebem] // ["rom"]
     case .PRINTFILE:
         break
     }
@@ -176,6 +183,7 @@ func swift_SelectFolder(filepath : UnsafeMutablePointer<CChar>, bytes: Int) -> I
 }
 
 
+
 @_cdecl("swift_SaveFile")
 func swift_SaveFile(filepath : UnsafeMutablePointer<CChar>, bytes: Int, fileexts: FileFilter) -> Bool
 {
@@ -187,19 +195,19 @@ func swift_SaveFile(filepath : UnsafeMutablePointer<CChar>, bytes: Int, fileexts
     dialog.allowsOtherFileTypes    = true
     switch fileexts {
     case .DISC:
-        dialog.allowedFileTypes        = ["ssd", "dsd", "wdd", "dos", "adl", "adf", "img"]
+        dialog.allowedContentTypes        = [.beebem] // ["ssd", "dsd", "wdd", "dos", "adl", "adf", "img"]
     case .UEF:
-        dialog.allowedFileTypes        = ["uef", "csw"]
+        dialog.allowedContentTypes        = [.beebem] // ["uef", "csw"]
     case .IFD:
-        dialog.allowedFileTypes        = ["ssd", "dsd", "inf"]
+        dialog.allowedContentTypes        = [.beebem] // ["ssd", "dsd", "inf"]
     case .KEYBOARD:
-        dialog.allowedFileTypes        = ["kmap"]
+        dialog.allowedContentTypes        = [.beebem] // ["kmap"]
     case .DISCFILE:
-        dialog.allowedFileTypes        = nil // ["inf"]
+        dialog.allowedContentTypes        = [] //nil // ["inf"]
     case .ROMCFG:
-        dialog.allowedFileTypes        = ["rom"]
+        dialog.allowedContentTypes        = [.beebem] // ["rom"]
     case .PRINTFILE:
-        dialog.allowedFileTypes        = nil  // ["inf"]
+        dialog.allowedContentTypes        = [] //nil  // ["inf"]
     }
 
     if (dialog.runModal() ==  NSApplication.ModalResponse.OK) {
