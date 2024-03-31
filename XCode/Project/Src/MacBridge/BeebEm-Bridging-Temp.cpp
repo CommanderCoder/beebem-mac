@@ -138,3 +138,9 @@ extern "C" long beeb_BBHandleCommand(unsigned int cmdID)
 }
 
 
+#ifdef __APPLE__
+
+#else // assumed windows
+testing
+
+#endif

@@ -30,6 +30,165 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		DC0996DD2BBA0C9B00A109A5 /* UserPortBreakoutBox.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = UserPortBreakoutBox.cpp; path = ../../../Src/UserPortBreakoutBox.cpp; sourceTree = "<group>"; };
+		DC0996DE2BBA0C9B00A109A5 /* UserKeyboardDialog.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = UserKeyboardDialog.cpp; path = ../../../Src/UserKeyboardDialog.cpp; sourceTree = "<group>"; };
+		DC0996DF2BBA0C9B00A109A5 /* Log.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Log.cpp; path = ../../../Src/Log.cpp; sourceTree = "<group>"; };
+		DC0996E02BBA0C9B00A109A5 /* SerialPortDialog.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = SerialPortDialog.cpp; path = ../../../Src/SerialPortDialog.cpp; sourceTree = "<group>"; };
+		DC0996E12BBA0C9B00A109A5 /* UefState.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = UefState.cpp; path = ../../../Src/UefState.cpp; sourceTree = "<group>"; };
+		DC0996E22BBA0C9B00A109A5 /* BeebWin.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = BeebWin.cpp; path = ../../../Src/BeebWin.cpp; sourceTree = "<group>"; };
+		DC0996E32BBA0C9B00A109A5 /* Csw.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Csw.cpp; path = ../../../Src/Csw.cpp; sourceTree = "<group>"; };
+		DC0996E42BBA0C9B00A109A5 /* IC32Latch.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = IC32Latch.cpp; path = ../../../Src/IC32Latch.cpp; sourceTree = "<group>"; };
+		DC0996E52BBA0C9B00A109A5 /* RomConfigDialog.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = RomConfigDialog.cpp; path = ../../../Src/RomConfigDialog.cpp; sourceTree = "<group>"; };
+		DC0996E62BBA0C9B00A109A5 /* FileUtils.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = FileUtils.cpp; path = ../../../Src/FileUtils.cpp; sourceTree = "<group>"; };
+		DC0996E72BBA0C9B00A109A5 /* 6502core.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = 6502core.cpp; path = ../../../Src/6502core.cpp; sourceTree = "<group>"; };
+		DC0996E82BBA0C9B00A109A5 /* Debug.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Debug.cpp; path = ../../../Src/Debug.cpp; sourceTree = "<group>"; };
+		DC0996E92BBA0C9B00A109A5 /* IP232.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = IP232.cpp; path = ../../../Src/IP232.cpp; sourceTree = "<group>"; };
+		DC0996EA2BBA0C9B00A109A5 /* Scsi.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Scsi.cpp; path = ../../../Src/Scsi.cpp; sourceTree = "<group>"; };
+		DC0996EB2BBA0C9B00A109A5 /* Thread.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Thread.cpp; path = ../../../Src/Thread.cpp; sourceTree = "<group>"; };
+		DC0996EC2BBA0C9B00A109A5 /* Sasi.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Sasi.cpp; path = ../../../Src/Sasi.cpp; sourceTree = "<group>"; };
+		DC0996ED2BBA0C9B00A109A5 /* DebugTrace.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DebugTrace.cpp; path = ../../../Src/DebugTrace.cpp; sourceTree = "<group>"; };
+		DC0996EE2BBA0C9B00A109A5 /* UserVia.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = UserVia.cpp; path = ../../../Src/UserVia.cpp; sourceTree = "<group>"; };
+		DC0996EF2BBA0C9B00A109A5 /* Z80Support.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Z80Support.cpp; path = ../../../Src/Z80Support.cpp; sourceTree = "<group>"; };
+		DC0996F02BBA0C9B00A109A5 /* Uef.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Uef.cpp; path = ../../../Src/Uef.cpp; sourceTree = "<group>"; };
+		DC0996F12BBA0C9B00A109A5 /* RingBuffer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = RingBuffer.cpp; path = ../../../Src/RingBuffer.cpp; sourceTree = "<group>"; };
+		DC0996F22BBA0C9C00A109A5 /* BeebWinDx.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = BeebWinDx.cpp; path = ../../../Src/BeebWinDx.cpp; sourceTree = "<group>"; };
+		DC0996F32BBA0C9C00A109A5 /* DiscInfo.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DiscInfo.cpp; path = ../../../Src/DiscInfo.cpp; sourceTree = "<group>"; };
+		DC0996F42BBA0C9C00A109A5 /* BeebWinSpeech.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = BeebWinSpeech.cpp; path = ../../../Src/BeebWinSpeech.cpp; sourceTree = "<group>"; };
+		DC0996F52BBA0C9C00A109A5 /* PALRom.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = PALRom.cpp; path = ../../../Src/PALRom.cpp; sourceTree = "<group>"; };
+		DC0996F62BBA0C9C00A109A5 /* AVIWriter.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = AVIWriter.cpp; path = ../../../Src/AVIWriter.cpp; sourceTree = "<group>"; };
+		DC0996F72BBA0C9C00A109A5 /* Main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Main.cpp; path = ../../../Src/Main.cpp; sourceTree = "<group>"; };
+		DC0996F82BBA0C9C00A109A5 /* Master512CoPro.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Master512CoPro.cpp; path = ../../../Src/Master512CoPro.cpp; sourceTree = "<group>"; };
+		DC0996F92BBA0C9C00A109A5 /* FileDialog.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = FileDialog.cpp; path = ../../../Src/FileDialog.cpp; sourceTree = "<group>"; };
+		DC0996FA2BBA0C9C00A109A5 /* Sound.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Sound.cpp; path = ../../../Src/Sound.cpp; sourceTree = "<group>"; };
+		DC0996FB2BBA0C9C00A109A5 /* Teletext.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Teletext.cpp; path = ../../../Src/Teletext.cpp; sourceTree = "<group>"; };
+		DC0996FC2BBA0C9C00A109A5 /* KeyboardLinksDialog.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = KeyboardLinksDialog.cpp; path = ../../../Src/KeyboardLinksDialog.cpp; sourceTree = "<group>"; };
+		DC0996FD2BBA0C9C00A109A5 /* ArmDisassembler.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ArmDisassembler.cpp; path = ../../../Src/ArmDisassembler.cpp; sourceTree = "<group>"; };
+		DC0996FE2BBA0C9C00A109A5 /* Bcd.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Bcd.cpp; path = ../../../Src/Bcd.cpp; sourceTree = "<group>"; };
+		DC0996FF2BBA0C9C00A109A5 /* TouchScreen.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = TouchScreen.cpp; path = ../../../Src/TouchScreen.cpp; sourceTree = "<group>"; };
+		DC0997002BBA0C9C00A109A5 /* FolderSelectDialog.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = FolderSelectDialog.cpp; path = ../../../Src/FolderSelectDialog.cpp; sourceTree = "<group>"; };
+		DC0997012BBA0C9C00A109A5 /* BeebMem.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = BeebMem.cpp; path = ../../../Src/BeebMem.cpp; sourceTree = "<group>"; };
+		DC0997022BBA0C9C00A109A5 /* AboutDialog.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = AboutDialog.cpp; path = ../../../Src/AboutDialog.cpp; sourceTree = "<group>"; };
+		DC0997032BBA0C9C00A109A5 /* Video.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Video.cpp; path = ../../../Src/Video.cpp; sourceTree = "<group>"; };
+		DC0997042BBA0C9C00A109A5 /* Z80dis.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Z80dis.cpp; path = ../../../Src/Z80dis.cpp; sourceTree = "<group>"; };
+		DC0997052BBA0C9C00A109A5 /* SprowCoPro.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = SprowCoPro.cpp; path = ../../../Src/SprowCoPro.cpp; sourceTree = "<group>"; };
+		DC0997062BBA0C9C00A109A5 /* SysVia.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = SysVia.cpp; path = ../../../Src/SysVia.cpp; sourceTree = "<group>"; };
+		DC0997072BBA0C9C00A109A5 /* ListView.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ListView.cpp; path = ../../../Src/ListView.cpp; sourceTree = "<group>"; };
+		DC0997082BBA0C9C00A109A5 /* Z80.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Z80.cpp; path = ../../../Src/Z80.cpp; sourceTree = "<group>"; };
+		DC0997092BBA0C9C00A109A5 /* RenameFileDialog.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = RenameFileDialog.cpp; path = ../../../Src/RenameFileDialog.cpp; sourceTree = "<group>"; };
+		DC09970A2BBA0C9C00A109A5 /* Disc1770.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Disc1770.cpp; path = ../../../Src/Disc1770.cpp; sourceTree = "<group>"; };
+		DC09970B2BBA0C9C00A109A5 /* BeebWinPrefs.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = BeebWinPrefs.cpp; path = ../../../Src/BeebWinPrefs.cpp; sourceTree = "<group>"; };
+		DC09970C2BBA0C9C00A109A5 /* Ext1770.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Ext1770.cpp; path = ../../../Src/Ext1770.cpp; sourceTree = "<group>"; };
+		DC09970D2BBA0C9C00A109A5 /* Serial.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Serial.cpp; path = ../../../Src/Serial.cpp; sourceTree = "<group>"; };
+		DC09970E2BBA0C9C00A109A5 /* Preferences.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Preferences.cpp; path = ../../../Src/Preferences.cpp; sourceTree = "<group>"; };
+		DC09970F2BBA0C9C00A109A5 /* Disc8271.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Disc8271.cpp; path = ../../../Src/Disc8271.cpp; sourceTree = "<group>"; };
+		DC0997102BBA0C9C00A109A5 /* ExportFileDialog.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ExportFileDialog.cpp; path = ../../../Src/ExportFileDialog.cpp; sourceTree = "<group>"; };
+		DC0997112BBA0C9C00A109A5 /* Ide.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Ide.cpp; path = ../../../Src/Ide.cpp; sourceTree = "<group>"; };
+		DC0997122BBA0C9C00A109A5 /* SoundStreamer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = SoundStreamer.cpp; path = ../../../Src/SoundStreamer.cpp; sourceTree = "<group>"; };
+		DC0997132BBA0C9C00A109A5 /* KeyMap.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = KeyMap.cpp; path = ../../../Src/KeyMap.cpp; sourceTree = "<group>"; };
+		DC0997142BBA0C9C00A109A5 /* DiscEdit.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DiscEdit.cpp; path = ../../../Src/DiscEdit.cpp; sourceTree = "<group>"; };
+		DC0997152BBA0C9C00A109A5 /* Music5000.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Music5000.cpp; path = ../../../Src/Music5000.cpp; sourceTree = "<group>"; };
+		DC0997162BBA0C9C00A109A5 /* DirectSoundStreamer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DirectSoundStreamer.cpp; path = ../../../Src/DirectSoundStreamer.cpp; sourceTree = "<group>"; };
+		DC0997172BBA0C9C00A109A5 /* TapeControlDialog.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = TapeControlDialog.cpp; path = ../../../Src/TapeControlDialog.cpp; sourceTree = "<group>"; };
+		DC0997182BBA0C9C00A109A5 /* TapeMap.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = TapeMap.cpp; path = ../../../Src/TapeMap.cpp; sourceTree = "<group>"; };
+		DC0997192BBA0C9C00A109A5 /* Tube.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Tube.cpp; path = ../../../Src/Tube.cpp; sourceTree = "<group>"; };
+		DC09971A2BBA0C9C00A109A5 /* Via.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Via.cpp; path = ../../../Src/Via.cpp; sourceTree = "<group>"; };
+		DC09971B2BBA0C9C00A109A5 /* Arm.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Arm.cpp; path = ../../../Src/Arm.cpp; sourceTree = "<group>"; };
+		DC09971C2BBA0C9C00A109A5 /* Dialog.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Dialog.cpp; path = ../../../Src/Dialog.cpp; sourceTree = "<group>"; };
+		DC09971D2BBA0C9C00A109A5 /* BeebWinIo.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = BeebWinIo.cpp; path = ../../../Src/BeebWinIo.cpp; sourceTree = "<group>"; };
+		DC09971E2BBA0C9C00A109A5 /* Econet.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Econet.cpp; path = ../../../Src/Econet.cpp; sourceTree = "<group>"; };
+		DC09971F2BBA0C9C00A109A5 /* XAudio2Streamer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = XAudio2Streamer.cpp; path = ../../../Src/XAudio2Streamer.cpp; sourceTree = "<group>"; };
+		DC0997202BBA0C9C00A109A5 /* SelectKeyDialog.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = SelectKeyDialog.cpp; path = ../../../Src/SelectKeyDialog.cpp; sourceTree = "<group>"; };
+		DC0997212BBA0C9C00A109A5 /* AtoDConv.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = AtoDConv.cpp; path = ../../../Src/AtoDConv.cpp; sourceTree = "<group>"; };
+		DC0997222BBA0C9C00A109A5 /* StringUtils.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = StringUtils.cpp; path = ../../../Src/StringUtils.cpp; sourceTree = "<group>"; };
+		DC0997232BBA0C9C00A109A5 /* Speech.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Speech.cpp; path = ../../../Src/Speech.cpp; sourceTree = "<group>"; };
+		DC0997282BBA0CBB00A109A5 /* thumbemu.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = thumbemu.cpp; sourceTree = "<group>"; };
+		DC09972B2BBA0CBB00A109A5 /* armemu.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = armemu.cpp; sourceTree = "<group>"; };
+		DC09972C2BBA0CBB00A109A5 /* armdis.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = armdis.cpp; sourceTree = "<group>"; };
+		DC0997302BBA0CBB00A109A5 /* armsupp.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = armsupp.cpp; sourceTree = "<group>"; };
+		DC0997312BBA0CBB00A109A5 /* arminit.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = arminit.cpp; sourceTree = "<group>"; };
+		DC0997352BBA0CD400A109A5 /* armos.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = armos.h; sourceTree = "<group>"; };
+		DC0997362BBA0CD400A109A5 /* iwmmxt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iwmmxt.h; sourceTree = "<group>"; };
+		DC0997382BBA0CD400A109A5 /* armdis.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = armdis.h; sourceTree = "<group>"; };
+		DC0997392BBA0CD400A109A5 /* ansidecl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ansidecl.h; sourceTree = "<group>"; };
+		DC09973C2BBA0CD400A109A5 /* armopts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = armopts.h; sourceTree = "<group>"; };
+		DC09973D2BBA0CD400A109A5 /* dbg_rdi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dbg_rdi.h; sourceTree = "<group>"; };
+		DC09973E2BBA0CD400A109A5 /* armdefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = armdefs.h; sourceTree = "<group>"; };
+		DC0997412BBA0CD400A109A5 /* armemu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = armemu.h; sourceTree = "<group>"; };
+		DC0997482BBA0E2500A109A5 /* StringUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = StringUtils.h; path = ../../../Src/StringUtils.h; sourceTree = "<group>"; };
+		DC0997492BBA0E2500A109A5 /* DiscInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DiscInfo.h; path = ../../../Src/DiscInfo.h; sourceTree = "<group>"; };
+		DC09974A2BBA0E2500A109A5 /* ML675001.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ML675001.h; path = ../../../Src/ML675001.h; sourceTree = "<group>"; };
+		DC09974B2BBA0E2500A109A5 /* KeyboardLinksDialog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = KeyboardLinksDialog.h; path = ../../../Src/KeyboardLinksDialog.h; sourceTree = "<group>"; };
+		DC09974C2BBA0E2500A109A5 /* TapeMap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TapeMap.h; path = ../../../Src/TapeMap.h; sourceTree = "<group>"; };
+		DC09974D2BBA0E2500A109A5 /* IP232.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = IP232.h; path = ../../../Src/IP232.h; sourceTree = "<group>"; };
+		DC09974E2BBA0E2500A109A5 /* TapeControlDialog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TapeControlDialog.h; path = ../../../Src/TapeControlDialog.h; sourceTree = "<group>"; };
+		DC09974F2BBA0E2500A109A5 /* PALRom.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PALRom.h; path = ../../../Src/PALRom.h; sourceTree = "<group>"; };
+		DC0997502BBA0E2500A109A5 /* TouchScreen.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TouchScreen.h; path = ../../../Src/TouchScreen.h; sourceTree = "<group>"; };
+		DC0997512BBA0E2500A109A5 /* ArmDisassembler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ArmDisassembler.h; path = ../../../Src/ArmDisassembler.h; sourceTree = "<group>"; };
+		DC0997522BBA0E2500A109A5 /* Csw.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Csw.h; path = ../../../Src/Csw.h; sourceTree = "<group>"; };
+		DC0997532BBA0E2500A109A5 /* FileDialog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FileDialog.h; path = ../../../Src/FileDialog.h; sourceTree = "<group>"; };
+		DC0997542BBA0E2500A109A5 /* FileUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FileUtils.h; path = ../../../Src/FileUtils.h; sourceTree = "<group>"; };
+		DC0997552BBA0E2500A109A5 /* BeebMem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = BeebMem.h; path = ../../../Src/BeebMem.h; sourceTree = "<group>"; };
+		DC0997562BBA0E2500A109A5 /* Bcd.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Bcd.h; path = ../../../Src/Bcd.h; sourceTree = "<group>"; };
+		DC0997572BBA0E2500A109A5 /* Sasi.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Sasi.h; path = ../../../Src/Sasi.h; sourceTree = "<group>"; };
+		DC0997582BBA0E2500A109A5 /* 6502core.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = 6502core.h; path = ../../../Src/6502core.h; sourceTree = "<group>"; };
+		DC0997592BBA0E2500A109A5 /* SelectKeyDialog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SelectKeyDialog.h; path = ../../../Src/SelectKeyDialog.h; sourceTree = "<group>"; };
+		DC09975A2BBA0E2500A109A5 /* Video.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Video.h; path = ../../../Src/Video.h; sourceTree = "<group>"; };
+		DC09975B2BBA0E2500A109A5 /* FolderSelectDialog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FolderSelectDialog.h; path = ../../../Src/FolderSelectDialog.h; sourceTree = "<group>"; };
+		DC09975C2BBA0E2500A109A5 /* ARMulator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ARMulator.h; path = ../../../Src/ARMulator.h; sourceTree = "<group>"; };
+		DC09975D2BBA0E2600A109A5 /* AboutDialog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AboutDialog.h; path = ../../../Src/AboutDialog.h; sourceTree = "<group>"; };
+		DC09975E2BBA0E2600A109A5 /* Serial.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Serial.h; path = ../../../Src/Serial.h; sourceTree = "<group>"; };
+		DC09975F2BBA0E2600A109A5 /* Econet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Econet.h; path = ../../../Src/Econet.h; sourceTree = "<group>"; };
+		DC0997602BBA0E2600A109A5 /* Model.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Model.h; path = ../../../Src/Model.h; sourceTree = "<group>"; };
+		DC0997612BBA0E2600A109A5 /* SoundStreamer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SoundStreamer.h; path = ../../../Src/SoundStreamer.h; sourceTree = "<group>"; };
+		DC0997622BBA0E2600A109A5 /* Speech.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Speech.h; path = ../../../Src/Speech.h; sourceTree = "<group>"; };
+		DC0997632BBA0E2600A109A5 /* DirectSoundStreamer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DirectSoundStreamer.h; path = ../../../Src/DirectSoundStreamer.h; sourceTree = "<group>"; };
+		DC0997642BBA0E2600A109A5 /* Via.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Via.h; path = ../../../Src/Via.h; sourceTree = "<group>"; };
+		DC0997652BBA0E2600A109A5 /* Music5000.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Music5000.h; path = ../../../Src/Music5000.h; sourceTree = "<group>"; };
+		DC0997662BBA0E2600A109A5 /* Ide.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Ide.h; path = ../../../Src/Ide.h; sourceTree = "<group>"; };
+		DC0997672BBA0E2600A109A5 /* Master512CoPro.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Master512CoPro.h; path = ../../../Src/Master512CoPro.h; sourceTree = "<group>"; };
+		DC0997682BBA0E2600A109A5 /* SysVia.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SysVia.h; path = ../../../Src/SysVia.h; sourceTree = "<group>"; };
+		DC0997692BBA0E2600A109A5 /* Disc8271.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Disc8271.h; path = ../../../Src/Disc8271.h; sourceTree = "<group>"; };
+		DC09976A2BBA0E2600A109A5 /* Main.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Main.h; path = ../../../Src/Main.h; sourceTree = "<group>"; };
+		DC09976B2BBA0E2600A109A5 /* KeyMap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = KeyMap.h; path = ../../../Src/KeyMap.h; sourceTree = "<group>"; };
+		DC09976C2BBA0E2600A109A5 /* Thread.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Thread.h; path = ../../../Src/Thread.h; sourceTree = "<group>"; };
+		DC09976D2BBA0E2600A109A5 /* AtoDConv.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AtoDConv.h; path = ../../../Src/AtoDConv.h; sourceTree = "<group>"; };
+		DC09976E2BBA0E2600A109A5 /* DebugTrace.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DebugTrace.h; path = ../../../Src/DebugTrace.h; sourceTree = "<group>"; };
+		DC09976F2BBA0E2600A109A5 /* ListView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ListView.h; path = ../../../Src/ListView.h; sourceTree = "<group>"; };
+		DC0997702BBA0E2600A109A5 /* RomConfigDialog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = RomConfigDialog.h; path = ../../../Src/RomConfigDialog.h; sourceTree = "<group>"; };
+		DC0997712BBA0E2600A109A5 /* Tube.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Tube.h; path = ../../../Src/Tube.h; sourceTree = "<group>"; };
+		DC0997722BBA0E2600A109A5 /* BeebWin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = BeebWin.h; path = ../../../Src/BeebWin.h; sourceTree = "<group>"; };
+		DC0997732BBA0E2600A109A5 /* Ext1770.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Ext1770.h; path = ../../../Src/Ext1770.h; sourceTree = "<group>"; };
+		DC0997742BBA0E2600A109A5 /* Port.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Port.h; path = ../../../Src/Port.h; sourceTree = "<group>"; };
+		DC0997752BBA0E2600A109A5 /* ExportFileDialog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ExportFileDialog.h; path = ../../../Src/ExportFileDialog.h; sourceTree = "<group>"; };
+		DC0997762BBA0E2600A109A5 /* AVIWriter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AVIWriter.h; path = ../../../Src/AVIWriter.h; sourceTree = "<group>"; };
+		DC0997772BBA0E2600A109A5 /* DiscEdit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DiscEdit.h; path = ../../../Src/DiscEdit.h; sourceTree = "<group>"; };
+		DC0997782BBA0E2600A109A5 /* Z80mem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Z80mem.h; path = ../../../Src/Z80mem.h; sourceTree = "<group>"; };
+		DC0997792BBA0E2600A109A5 /* SerialPortDialog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SerialPortDialog.h; path = ../../../Src/SerialPortDialog.h; sourceTree = "<group>"; };
+		DC09977A2BBA0E2600A109A5 /* Arm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Arm.h; path = ../../../Src/Arm.h; sourceTree = "<group>"; };
+		DC09977B2BBA0E2600A109A5 /* RenameFileDialog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = RenameFileDialog.h; path = ../../../Src/RenameFileDialog.h; sourceTree = "<group>"; };
+		DC09977C2BBA0E2600A109A5 /* DiscType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DiscType.h; path = ../../../Src/DiscType.h; sourceTree = "<group>"; };
+		DC09977D2BBA0E2600A109A5 /* Scsi.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Scsi.h; path = ../../../Src/Scsi.h; sourceTree = "<group>"; };
+		DC09977E2BBA0E2600A109A5 /* Debug.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Debug.h; path = ../../../Src/Debug.h; sourceTree = "<group>"; };
+		DC09977F2BBA0E2600A109A5 /* Log.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Log.h; path = ../../../Src/Log.h; sourceTree = "<group>"; };
+		DC0997802BBA0E2600A109A5 /* Disc1770.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Disc1770.h; path = ../../../Src/Disc1770.h; sourceTree = "<group>"; };
+		DC0997812BBA0E2600A109A5 /* IC32Latch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = IC32Latch.h; path = ../../../Src/IC32Latch.h; sourceTree = "<group>"; };
+		DC0997822BBA0E2600A109A5 /* Resource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Resource.h; path = ../../../Src/Resource.h; sourceTree = "<group>"; };
+		DC0997832BBA0E2600A109A5 /* Sound.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Sound.h; path = ../../../Src/Sound.h; sourceTree = "<group>"; };
+		DC0997842BBA0E2600A109A5 /* Teletext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Teletext.h; path = ../../../Src/Teletext.h; sourceTree = "<group>"; };
+		DC0997852BBA0E2600A109A5 /* Uef.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Uef.h; path = ../../../Src/Uef.h; sourceTree = "<group>"; };
+		DC0997862BBA0E2600A109A5 /* Preferences.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Preferences.h; path = ../../../Src/Preferences.h; sourceTree = "<group>"; };
+		DC0997872BBA0E2600A109A5 /* UserKeyboardDialog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = UserKeyboardDialog.h; path = ../../../Src/UserKeyboardDialog.h; sourceTree = "<group>"; };
+		DC0997882BBA0E2700A109A5 /* TarmacGlobals.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TarmacGlobals.h; path = ../../../Src/TarmacGlobals.h; sourceTree = "<group>"; };
+		DC0997892BBA0E2700A109A5 /* XAudio2Streamer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = XAudio2Streamer.h; path = ../../../Src/XAudio2Streamer.h; sourceTree = "<group>"; };
+		DC09978A2BBA0E2700A109A5 /* RingBuffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = RingBuffer.h; path = ../../../Src/RingBuffer.h; sourceTree = "<group>"; };
+		DC09978B2BBA0E2700A109A5 /* SprowCoPro.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SprowCoPro.h; path = ../../../Src/SprowCoPro.h; sourceTree = "<group>"; };
+		DC09978C2BBA0E2700A109A5 /* Dialog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Dialog.h; path = ../../../Src/Dialog.h; sourceTree = "<group>"; };
+		DC09978D2BBA0E2700A109A5 /* UefState.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = UefState.h; path = ../../../Src/UefState.h; sourceTree = "<group>"; };
+		DC09978E2BBA0E2700A109A5 /* UserPortBreakoutBox.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = UserPortBreakoutBox.h; path = ../../../Src/UserPortBreakoutBox.h; sourceTree = "<group>"; };
+		DC09978F2BBA0E2700A109A5 /* Messages.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Messages.h; path = ../../../Src/Messages.h; sourceTree = "<group>"; };
+		DC0997902BBA0E2700A109A5 /* UserVia.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = UserVia.h; path = ../../../Src/UserVia.h; sourceTree = "<group>"; };
+		DC0997912BBA0E2700A109A5 /* Version.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Version.h; path = ../../../Src/Version.h; sourceTree = "<group>"; };
+		DC0997922BBA0E2700A109A5 /* Z80.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Z80.h; path = ../../../Src/Z80.h; sourceTree = "<group>"; };
 		DC1DBA132BB8CF0400AAB22F /* KeyboardMappingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyboardMappingViewController.swift; sourceTree = "<group>"; };
 		DC1DBA142BB8CF0500AAB22F /* BreakoutBoxViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BreakoutBoxViewController.swift; sourceTree = "<group>"; };
 		DC1DBA152BB8CF0500AAB22F /* RomConfigViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RomConfigViewController.swift; sourceTree = "<group>"; };
@@ -74,6 +233,197 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		DC0996DB2BBA0C5000A109A5 /* code */ = {
+			isa = PBXGroup;
+			children = (
+				DC0996E72BBA0C9B00A109A5 /* 6502core.cpp */,
+				DC0997022BBA0C9C00A109A5 /* AboutDialog.cpp */,
+				DC09971B2BBA0C9C00A109A5 /* Arm.cpp */,
+				DC0996FD2BBA0C9C00A109A5 /* ArmDisassembler.cpp */,
+				DC0997242BBA0CBB00A109A5 /* ARMulator */,
+				DC0997212BBA0C9C00A109A5 /* AtoDConv.cpp */,
+				DC0996F62BBA0C9C00A109A5 /* AVIWriter.cpp */,
+				DC0996FE2BBA0C9C00A109A5 /* Bcd.cpp */,
+				DC0997012BBA0C9C00A109A5 /* BeebMem.cpp */,
+				DC0996E22BBA0C9B00A109A5 /* BeebWin.cpp */,
+				DC0996F22BBA0C9C00A109A5 /* BeebWinDx.cpp */,
+				DC09971D2BBA0C9C00A109A5 /* BeebWinIo.cpp */,
+				DC09970B2BBA0C9C00A109A5 /* BeebWinPrefs.cpp */,
+				DC0996F42BBA0C9C00A109A5 /* BeebWinSpeech.cpp */,
+				DC0996E32BBA0C9B00A109A5 /* Csw.cpp */,
+				DC0996E82BBA0C9B00A109A5 /* Debug.cpp */,
+				DC0996ED2BBA0C9B00A109A5 /* DebugTrace.cpp */,
+				DC09971C2BBA0C9C00A109A5 /* Dialog.cpp */,
+				DC0997162BBA0C9C00A109A5 /* DirectSoundStreamer.cpp */,
+				DC09970A2BBA0C9C00A109A5 /* Disc1770.cpp */,
+				DC09970F2BBA0C9C00A109A5 /* Disc8271.cpp */,
+				DC0997142BBA0C9C00A109A5 /* DiscEdit.cpp */,
+				DC0996F32BBA0C9C00A109A5 /* DiscInfo.cpp */,
+				DC09971E2BBA0C9C00A109A5 /* Econet.cpp */,
+				DC0997102BBA0C9C00A109A5 /* ExportFileDialog.cpp */,
+				DC09970C2BBA0C9C00A109A5 /* Ext1770.cpp */,
+				DC0996F92BBA0C9C00A109A5 /* FileDialog.cpp */,
+				DC0996E62BBA0C9B00A109A5 /* FileUtils.cpp */,
+				DC0997002BBA0C9C00A109A5 /* FolderSelectDialog.cpp */,
+				DC0996E42BBA0C9B00A109A5 /* IC32Latch.cpp */,
+				DC0997112BBA0C9C00A109A5 /* Ide.cpp */,
+				DC0996FC2BBA0C9C00A109A5 /* KeyboardLinksDialog.cpp */,
+				DC0997132BBA0C9C00A109A5 /* KeyMap.cpp */,
+				DC0996E92BBA0C9B00A109A5 /* IP232.cpp */,
+				DC0997072BBA0C9C00A109A5 /* ListView.cpp */,
+				DC0996DF2BBA0C9B00A109A5 /* Log.cpp */,
+				DC0996F72BBA0C9C00A109A5 /* Main.cpp */,
+				DC0996F82BBA0C9C00A109A5 /* Master512CoPro.cpp */,
+				DC0997152BBA0C9C00A109A5 /* Music5000.cpp */,
+				DC0996F52BBA0C9C00A109A5 /* PALRom.cpp */,
+				DC09970E2BBA0C9C00A109A5 /* Preferences.cpp */,
+				DC0997092BBA0C9C00A109A5 /* RenameFileDialog.cpp */,
+				DC0996F12BBA0C9B00A109A5 /* RingBuffer.cpp */,
+				DC0996E52BBA0C9B00A109A5 /* RomConfigDialog.cpp */,
+				DC0996EC2BBA0C9B00A109A5 /* Sasi.cpp */,
+				DC0996EA2BBA0C9B00A109A5 /* Scsi.cpp */,
+				DC0997202BBA0C9C00A109A5 /* SelectKeyDialog.cpp */,
+				DC09970D2BBA0C9C00A109A5 /* Serial.cpp */,
+				DC0996E02BBA0C9B00A109A5 /* SerialPortDialog.cpp */,
+				DC0996FA2BBA0C9C00A109A5 /* Sound.cpp */,
+				DC0997122BBA0C9C00A109A5 /* SoundStreamer.cpp */,
+				DC0997232BBA0C9C00A109A5 /* Speech.cpp */,
+				DC0997052BBA0C9C00A109A5 /* SprowCoPro.cpp */,
+				DC0997222BBA0C9C00A109A5 /* StringUtils.cpp */,
+				DC0997062BBA0C9C00A109A5 /* SysVia.cpp */,
+				DC0997182BBA0C9C00A109A5 /* TapeMap.cpp */,
+				DC0997172BBA0C9C00A109A5 /* TapeControlDialog.cpp */,
+				DC0996FB2BBA0C9C00A109A5 /* Teletext.cpp */,
+				DC0996EB2BBA0C9B00A109A5 /* Thread.cpp */,
+				DC0996FF2BBA0C9C00A109A5 /* TouchScreen.cpp */,
+				DC0997192BBA0C9C00A109A5 /* Tube.cpp */,
+				DC0996F02BBA0C9B00A109A5 /* Uef.cpp */,
+				DC0996E12BBA0C9B00A109A5 /* UefState.cpp */,
+				DC0996DE2BBA0C9B00A109A5 /* UserKeyboardDialog.cpp */,
+				DC0996DD2BBA0C9B00A109A5 /* UserPortBreakoutBox.cpp */,
+				DC0996EE2BBA0C9B00A109A5 /* UserVia.cpp */,
+				DC09971A2BBA0C9C00A109A5 /* Via.cpp */,
+				DC0997032BBA0C9C00A109A5 /* Video.cpp */,
+				DC09971F2BBA0C9C00A109A5 /* XAudio2Streamer.cpp */,
+				DC0997082BBA0C9C00A109A5 /* Z80.cpp */,
+				DC0997042BBA0C9C00A109A5 /* Z80dis.cpp */,
+				DC0996EF2BBA0C9B00A109A5 /* Z80Support.cpp */,
+			);
+			name = code;
+			sourceTree = "<group>";
+		};
+		DC0996DC2BBA0C6400A109A5 /* headers */ = {
+			isa = PBXGroup;
+			children = (
+				DC0997582BBA0E2500A109A5 /* 6502core.h */,
+				DC09975D2BBA0E2600A109A5 /* AboutDialog.h */,
+				DC09977A2BBA0E2600A109A5 /* Arm.h */,
+				DC0997512BBA0E2500A109A5 /* ArmDisassembler.h */,
+				DC09975C2BBA0E2500A109A5 /* ARMulator.h */,
+				DC0997332BBA0CD400A109A5 /* ARMulator */,
+				DC09976D2BBA0E2600A109A5 /* AtoDConv.h */,
+				DC0997762BBA0E2600A109A5 /* AVIWriter.h */,
+				DC0997562BBA0E2500A109A5 /* Bcd.h */,
+				DC0997552BBA0E2500A109A5 /* BeebMem.h */,
+				DC0997722BBA0E2600A109A5 /* BeebWin.h */,
+				DC0997522BBA0E2500A109A5 /* Csw.h */,
+				DC09977E2BBA0E2600A109A5 /* Debug.h */,
+				DC09976E2BBA0E2600A109A5 /* DebugTrace.h */,
+				DC09978C2BBA0E2700A109A5 /* Dialog.h */,
+				DC0997632BBA0E2600A109A5 /* DirectSoundStreamer.h */,
+				DC0997802BBA0E2600A109A5 /* Disc1770.h */,
+				DC0997692BBA0E2600A109A5 /* Disc8271.h */,
+				DC0997772BBA0E2600A109A5 /* DiscEdit.h */,
+				DC0997492BBA0E2500A109A5 /* DiscInfo.h */,
+				DC09977C2BBA0E2600A109A5 /* DiscType.h */,
+				DC09975F2BBA0E2600A109A5 /* Econet.h */,
+				DC0997752BBA0E2600A109A5 /* ExportFileDialog.h */,
+				DC0997732BBA0E2600A109A5 /* Ext1770.h */,
+				DC0997532BBA0E2500A109A5 /* FileDialog.h */,
+				DC0997542BBA0E2500A109A5 /* FileUtils.h */,
+				DC09975B2BBA0E2500A109A5 /* FolderSelectDialog.h */,
+				DC0997812BBA0E2600A109A5 /* IC32Latch.h */,
+				DC09974B2BBA0E2500A109A5 /* KeyboardLinksDialog.h */,
+				DC09976F2BBA0E2600A109A5 /* ListView.h */,
+				DC0997672BBA0E2600A109A5 /* Master512CoPro.h */,
+				DC0997662BBA0E2600A109A5 /* Ide.h */,
+				DC09974D2BBA0E2500A109A5 /* IP232.h */,
+				DC09976B2BBA0E2600A109A5 /* KeyMap.h */,
+				DC09977F2BBA0E2600A109A5 /* Log.h */,
+				DC09976A2BBA0E2600A109A5 /* Main.h */,
+				DC09978F2BBA0E2700A109A5 /* Messages.h */,
+				DC09974A2BBA0E2500A109A5 /* ML675001.h */,
+				DC0997602BBA0E2600A109A5 /* Model.h */,
+				DC0997652BBA0E2600A109A5 /* Music5000.h */,
+				DC09974F2BBA0E2500A109A5 /* PALRom.h */,
+				DC0997742BBA0E2600A109A5 /* Port.h */,
+				DC0997862BBA0E2600A109A5 /* Preferences.h */,
+				DC09977B2BBA0E2600A109A5 /* RenameFileDialog.h */,
+				DC0997822BBA0E2600A109A5 /* Resource.h */,
+				DC09978A2BBA0E2700A109A5 /* RingBuffer.h */,
+				DC0997702BBA0E2600A109A5 /* RomConfigDialog.h */,
+				DC0997572BBA0E2500A109A5 /* Sasi.h */,
+				DC09977D2BBA0E2600A109A5 /* Scsi.h */,
+				DC0997592BBA0E2500A109A5 /* SelectKeyDialog.h */,
+				DC09975E2BBA0E2600A109A5 /* Serial.h */,
+				DC0997792BBA0E2600A109A5 /* SerialPortDialog.h */,
+				DC0997832BBA0E2600A109A5 /* Sound.h */,
+				DC0997612BBA0E2600A109A5 /* SoundStreamer.h */,
+				DC0997622BBA0E2600A109A5 /* Speech.h */,
+				DC09978B2BBA0E2700A109A5 /* SprowCoPro.h */,
+				DC0997482BBA0E2500A109A5 /* StringUtils.h */,
+				DC0997682BBA0E2600A109A5 /* SysVia.h */,
+				DC09974E2BBA0E2500A109A5 /* TapeControlDialog.h */,
+				DC09974C2BBA0E2500A109A5 /* TapeMap.h */,
+				DC0997882BBA0E2700A109A5 /* TarmacGlobals.h */,
+				DC0997842BBA0E2600A109A5 /* Teletext.h */,
+				DC09976C2BBA0E2600A109A5 /* Thread.h */,
+				DC0997502BBA0E2500A109A5 /* TouchScreen.h */,
+				DC0997712BBA0E2600A109A5 /* Tube.h */,
+				DC0997852BBA0E2600A109A5 /* Uef.h */,
+				DC09978D2BBA0E2700A109A5 /* UefState.h */,
+				DC0997872BBA0E2600A109A5 /* UserKeyboardDialog.h */,
+				DC09978E2BBA0E2700A109A5 /* UserPortBreakoutBox.h */,
+				DC0997902BBA0E2700A109A5 /* UserVia.h */,
+				DC0997912BBA0E2700A109A5 /* Version.h */,
+				DC0997642BBA0E2600A109A5 /* Via.h */,
+				DC09975A2BBA0E2500A109A5 /* Video.h */,
+				DC0997892BBA0E2700A109A5 /* XAudio2Streamer.h */,
+				DC0997922BBA0E2700A109A5 /* Z80.h */,
+				DC0997782BBA0E2600A109A5 /* Z80mem.h */,
+			);
+			name = headers;
+			sourceTree = "<group>";
+		};
+		DC0997242BBA0CBB00A109A5 /* ARMulator */ = {
+			isa = PBXGroup;
+			children = (
+				DC09972C2BBA0CBB00A109A5 /* armdis.cpp */,
+				DC09972B2BBA0CBB00A109A5 /* armemu.cpp */,
+				DC0997312BBA0CBB00A109A5 /* arminit.cpp */,
+				DC0997302BBA0CBB00A109A5 /* armsupp.cpp */,
+				DC0997282BBA0CBB00A109A5 /* thumbemu.cpp */,
+			);
+			name = ARMulator;
+			path = ../../../Src/ARMulator;
+			sourceTree = "<group>";
+		};
+		DC0997332BBA0CD400A109A5 /* ARMulator */ = {
+			isa = PBXGroup;
+			children = (
+				DC0997392BBA0CD400A109A5 /* ansidecl.h */,
+				DC09973E2BBA0CD400A109A5 /* armdefs.h */,
+				DC0997382BBA0CD400A109A5 /* armdis.h */,
+				DC0997412BBA0CD400A109A5 /* armemu.h */,
+				DC09973C2BBA0CD400A109A5 /* armopts.h */,
+				DC0997352BBA0CD400A109A5 /* armos.h */,
+				DC09973D2BBA0CD400A109A5 /* dbg_rdi.h */,
+				DC0997362BBA0CD400A109A5 /* iwmmxt.h */,
+			);
+			name = ARMulator;
+			path = ../../../Src/ARMulator;
+			sourceTree = "<group>";
+		};
 		DC1DBA1E2BB8CF2500AAB22F /* BeebBridge */ = {
 			isa = PBXGroup;
 			children = (
@@ -169,6 +519,8 @@
 		DC907EBB2BB5BE0B00523116 /* Src */ = {
 			isa = PBXGroup;
 			children = (
+				DC0996DC2BBA0C6400A109A5 /* headers */,
+				DC0996DB2BBA0C5000A109A5 /* code */,
 				DC1DBA242BB9A43D00AAB22F /* Resource.h */,
 				DC1DBA1F2BB8CF2B00AAB22F /* MacBridge */,
 			);
