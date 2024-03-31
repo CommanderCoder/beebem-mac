@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DC1DBA202BB8CF8600AAB22F /* BeebEm-Bridge-TapeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC907EB32BB5BB7700523116 /* BeebEm-Bridge-TapeController.swift */; };
+		DC1DBA212BB8CF8B00AAB22F /* TapeControlViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1DBA162BB8CF0500AAB22F /* TapeControlViewController.swift */; };
+		DC1DBA222BB998B000AAB22F /* KeyboardMappingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1DBA132BB8CF0400AAB22F /* KeyboardMappingViewController.swift */; };
+		DC1DBA232BB9A2BB00AAB22F /* RomConfigViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1DBA152BB8CF0500AAB22F /* RomConfigViewController.swift */; };
+		DC1DBA252BB9A4C900AAB22F /* BreakoutBoxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1DBA142BB8CF0500AAB22F /* BreakoutBoxViewController.swift */; };
+		DC1DBA262BB9A6F600AAB22F /* FileListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1DBA172BB8CF0500AAB22F /* FileListViewController.swift */; };
 		DC907E9D2BB4DBCE00523116 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DC907E9C2BB4DBCE00523116 /* Assets.xcassets */; };
 		DC907EA02BB4DBCE00523116 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DC907E9F2BB4DBCE00523116 /* Preview Assets.xcassets */; };
 		DC907EAD2BB5B7F300523116 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DC907EAB2BB5B7F300523116 /* Main.storyboard */; };
@@ -24,6 +30,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		DC1DBA132BB8CF0400AAB22F /* KeyboardMappingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyboardMappingViewController.swift; sourceTree = "<group>"; };
+		DC1DBA142BB8CF0500AAB22F /* BreakoutBoxViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BreakoutBoxViewController.swift; sourceTree = "<group>"; };
+		DC1DBA152BB8CF0500AAB22F /* RomConfigViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RomConfigViewController.swift; sourceTree = "<group>"; };
+		DC1DBA162BB8CF0500AAB22F /* TapeControlViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TapeControlViewController.swift; sourceTree = "<group>"; };
+		DC1DBA172BB8CF0500AAB22F /* FileListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileListViewController.swift; sourceTree = "<group>"; };
+		DC1DBA242BB9A43D00AAB22F /* Resource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Resource.h; path = ../../../Src/Resource.h; sourceTree = "<group>"; };
 		DC907E952BB4DBCD00523116 /* BeebEm.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BeebEm.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC907E982BB4DBCD00523116 /* BeebEmApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeebEmApp.swift; sourceTree = "<group>"; };
 		DC907E9A2BB4DBCD00523116 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -62,6 +74,28 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		DC1DBA1E2BB8CF2500AAB22F /* BeebBridge */ = {
+			isa = PBXGroup;
+			children = (
+				DC907EB12BB5BAD300523116 /* BeebEm-Bridging-Code.swift */,
+				DC907EB32BB5BB7700523116 /* BeebEm-Bridge-TapeController.swift */,
+				DC907EB52BB5BB9100523116 /* BeebEm-Bridge-KbdController.swift */,
+				DC907EB72BB5BB9A00523116 /* BeebEm-Bridge-RomController.swift */,
+				DC907EB92BB5BC6200523116 /* BeebEm-Bridge-FilesController.swift */,
+			);
+			path = BeebBridge;
+			sourceTree = "<group>";
+		};
+		DC1DBA1F2BB8CF2B00AAB22F /* MacBridge */ = {
+			isa = PBXGroup;
+			children = (
+				DC907ED02BB7101900523116 /* BeebEm-Bridging-Temp.cpp */,
+				DC907ED12BB7101900523116 /* BeebEm-Bridging-Temp.hpp */,
+				DC907ECF2BB7101900523116 /* BeebEm-Bridging-Header.h */,
+			);
+			path = MacBridge;
+			sourceTree = "<group>";
+		};
 		DC907E8C2BB4DBCD00523116 = {
 			isa = PBXGroup;
 			children = (
@@ -114,6 +148,12 @@
 		DC907EAE2BB5BA2500523116 /* Swift */ = {
 			isa = PBXGroup;
 			children = (
+				DC1DBA1E2BB8CF2500AAB22F /* BeebBridge */,
+				DC1DBA172BB8CF0500AAB22F /* FileListViewController.swift */,
+				DC1DBA142BB8CF0500AAB22F /* BreakoutBoxViewController.swift */,
+				DC1DBA132BB8CF0400AAB22F /* KeyboardMappingViewController.swift */,
+				DC1DBA152BB8CF0500AAB22F /* RomConfigViewController.swift */,
+				DC1DBA162BB8CF0500AAB22F /* TapeControlViewController.swift */,
 				DC907EAF2BB5BA4000523116 /* AppDelegate.swift */,
 				DC907EC02BB5C1F100523116 /* BeebApplication.swift */,
 				DC907EC22BB5C23C00523116 /* BeebViewController.swift */,
@@ -122,11 +162,6 @@
 				DC907EC72BB6D55100523116 /* Bitmap.swift */,
 				DC907ECB2BB70CE000523116 /* NSImage+Bitmap.swift */,
 				DC907ECD2BB70E7B00523116 /* BeebSKView.swift */,
-				DC907EB12BB5BAD300523116 /* BeebEm-Bridging-Code.swift */,
-				DC907EB32BB5BB7700523116 /* BeebEm-Bridge-TapeController.swift */,
-				DC907EB52BB5BB9100523116 /* BeebEm-Bridge-KbdController.swift */,
-				DC907EB72BB5BB9A00523116 /* BeebEm-Bridge-RomController.swift */,
-				DC907EB92BB5BC6200523116 /* BeebEm-Bridge-FilesController.swift */,
 			);
 			path = Swift;
 			sourceTree = "<group>";
@@ -134,9 +169,8 @@
 		DC907EBB2BB5BE0B00523116 /* Src */ = {
 			isa = PBXGroup;
 			children = (
-				DC907ED02BB7101900523116 /* BeebEm-Bridging-Temp.cpp */,
-				DC907ED12BB7101900523116 /* BeebEm-Bridging-Temp.hpp */,
-				DC907ECF2BB7101900523116 /* BeebEm-Bridging-Header.h */,
+				DC1DBA242BB9A43D00AAB22F /* Resource.h */,
+				DC1DBA1F2BB8CF2B00AAB22F /* MacBridge */,
 			);
 			path = Src;
 			sourceTree = "<group>";
@@ -216,12 +250,18 @@
 			files = (
 				DC907EC32BB5C23C00523116 /* BeebViewController.swift in Sources */,
 				DC907ECA2BB6D76F00523116 /* Colour.swift in Sources */,
+				DC1DBA262BB9A6F600AAB22F /* FileListViewController.swift in Sources */,
 				DC907EC12BB5C1F100523116 /* BeebApplication.swift in Sources */,
 				DC907ED22BB7101900523116 /* BeebEm-Bridging-Temp.cpp in Sources */,
+				DC1DBA212BB8CF8B00AAB22F /* TapeControlViewController.swift in Sources */,
 				DC907ECC2BB70CE000523116 /* NSImage+Bitmap.swift in Sources */,
+				DC1DBA202BB8CF8600AAB22F /* BeebEm-Bridge-TapeController.swift in Sources */,
+				DC1DBA252BB9A4C900AAB22F /* BreakoutBoxViewController.swift in Sources */,
 				DC907EB02BB5BA4000523116 /* AppDelegate.swift in Sources */,
 				DC907EC62BB6D48600523116 /* Renderer.swift in Sources */,
 				DC907EC82BB6D55100523116 /* Bitmap.swift in Sources */,
+				DC1DBA222BB998B000AAB22F /* KeyboardMappingViewController.swift in Sources */,
+				DC1DBA232BB9A2BB00AAB22F /* RomConfigViewController.swift in Sources */,
 				DC907ECE2BB70E7B00523116 /* BeebSKView.swift in Sources */,
 				DC907EB22BB5BAD300523116 /* BeebEm-Bridging-Code.swift in Sources */,
 			);
@@ -384,7 +424,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.commandercoder.BeebEm;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "Src/BeebEm-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Src/MacBridge/BeebEm-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 			};
@@ -418,7 +458,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.commandercoder.BeebEm;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "Src/BeebEm-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Src/MacBridge/BeebEm-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;

@@ -28,6 +28,8 @@ BeebEm-Bridging-[...]Controller
 The bridging code for the following relates to the different Controllers in the Storyboard
 - removed tape, keyboard, rom, files list code into their own files as these access additional view controllers
 
+Renamed hardware update to Leds update
+Move tape_update to the TapeControl file
 
 NSSavePanel has changed to use allowedContentTypes and these types are predefined in info.plist
 

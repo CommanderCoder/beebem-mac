@@ -22,14 +22,48 @@ import SpriteKit
 //
 
 
+weak var beebViewControllerInstance : BeebViewController?
+
+
+
+
 // MODIFIED FOR MacOS FROM
 // https://github.com/nicklockwood/RetroRampage
 // AND
 // https://stackoverflow.com/questions/25981553/cvdisplaylink-with-swift
 
-weak var beebViewControllerInstance : BeebViewController?
 class BeebViewController: NSViewController {
 
+	// beeb
+	var screenFilename : String?
+
+	var BeebReady : Bool = false
+	
+	//    var timer: Timer = Timer()
+
+	
+	// hardware
+
+	@IBOutlet weak var WIPlabel: NSTextField!
+
+
+	@IBOutlet weak var CassMotorLabel: NSTextField!
+	@IBOutlet weak var MasterPowerOnLabel: NSTextField!
+
+	@IBOutlet weak var CassMotorLED: NSImageView!
+	@IBOutlet weak var CapsLED: NSImageView!
+	@IBOutlet weak var ShiftLED: NSImageView!
+
+	@IBOutlet weak var HD0LED: NSImageView!
+	@IBOutlet weak var HD1LED: NSImageView!
+	@IBOutlet weak var HD2LED: NSImageView!
+	@IBOutlet weak var HD3LED: NSImageView!
+	@IBOutlet weak var FD0LED: NSImageView!
+	@IBOutlet weak var FD1LED: NSImageView!
+
+
+	// screen
+	
     @IBOutlet weak var spriteView: SKView!
 	
 	// make a spritenode to render the whole screen into
@@ -37,11 +71,7 @@ class BeebViewController: NSViewController {
     
     var displayLink : CVDisplayLink?
     
-    var screenFilename : String?
-//    var timer: Timer = Timer()
-
-    var BeebReady : Bool = false
-    
+	
     override func viewDidLoad() {
         super.viewDidLoad()
                 
@@ -137,10 +167,10 @@ class BeebViewController: NSViewController {
 		// put the image from the emulator onto the texture of the sprite node (skimage is a sprite node)
 		skimage.texture = SKTexture(image: bmImage)
 
-        // update the tape controller
-// >>        TapeControlViewController.tcViewControllerInstance?.update()
+		// update the tape controller
+		tape_update()
 
-        update_hardware_bridge()
+        LEDs_update()
 
         // update the window label
         NSApplication.shared.mainWindow?.title = CBridge.windowTitle
@@ -178,24 +208,7 @@ class BeebViewController: NSViewController {
 
     private var width : Int = 0
     private var height : Int = 0
-    
-    @IBOutlet weak var WIPlabel: NSTextField!
-
-    
-    @IBOutlet weak var CassMotorLabel: NSTextField!
-    @IBOutlet weak var MasterPowerOnLabel: NSTextField!
-    
-    @IBOutlet weak var CassMotorLED: NSImageView!
-    @IBOutlet weak var CapsLED: NSImageView!
-    @IBOutlet weak var ShiftLED: NSImageView!
-
-    @IBOutlet weak var HD0LED: NSImageView!
-    @IBOutlet weak var HD1LED: NSImageView!
-    @IBOutlet weak var HD2LED: NSImageView!
-    @IBOutlet weak var HD3LED: NSImageView!
-    @IBOutlet weak var FD0LED: NSImageView!
-    @IBOutlet weak var FD1LED: NSImageView!
-
+ 
     
  
     func setupBeeb() -> Bool
@@ -247,30 +260,6 @@ extension BeebViewController{
         }
     }
 
-    func update_hardware_bridge()
-    {
-        WIPlabel?.stringValue = CBridge.windowTitle
-
-        if #available(OSX 10.14, *) {
-            CapsLED?.contentTintColor = CBridge.leds.contains(.CapsLED) ? NSColor.red: NSColor.darkGray
-            ShiftLED?.contentTintColor = CBridge.leds.contains(.ShiftLED) ? NSColor.red: NSColor.darkGray
-            CassMotorLED?.contentTintColor = CBridge.leds.contains(.CassLED) ? NSColor.red: NSColor.darkGray
-
-            HD0LED?.contentTintColor = CBridge.leds.contains(.HD0LED) ? NSColor.yellow: NSColor.darkGray
-            HD1LED?.contentTintColor = CBridge.leds.contains(.HD1LED) ? NSColor.yellow: NSColor.darkGray
-            HD2LED?.contentTintColor = CBridge.leds.contains(.HD2LED) ? NSColor.yellow: NSColor.darkGray
-            HD3LED?.contentTintColor = CBridge.leds.contains(.HD3LED) ? NSColor.yellow: NSColor.darkGray
-            FD0LED?.contentTintColor = CBridge.leds.contains(.FD0LED) ? NSColor.yellow: NSColor.darkGray
-            FD1LED?.contentTintColor = CBridge.leds.contains(.FD1LED) ? NSColor.yellow: NSColor.darkGray
-
-            CassMotorLabel.isHidden = (CBridge.machineType.contains(.Master128)) // BBC Master
-            MasterPowerOnLabel.isHidden = !CassMotorLabel.isHidden // opposite of CassMotorLabel
-            
-        } else {
-            // cannot COLOUR TINT on earlier versions
-            // Fallback on earlier versions
-        }
-    }
     
     func end_cpu()
     {
@@ -278,5 +267,37 @@ extension BeebViewController{
        beeb_end()
     }
  
-    
+}
+
+
+// The LEDs on Hard Drives, Floppy Drives and the Keyboard
+extension BeebViewController
+{
+	
+	
+	func LEDs_update()
+	{
+		WIPlabel.stringValue = CBridge.windowTitle
+
+		if #available(OSX 10.14, *) {
+			CapsLED.contentTintColor = CBridge.leds.contains(.CapsLED) ? NSColor.red: NSColor.darkGray
+			ShiftLED.contentTintColor = CBridge.leds.contains(.ShiftLED) ? NSColor.red: NSColor.darkGray
+			CassMotorLED.contentTintColor = CBridge.leds.contains(.CassLED) ? NSColor.red: NSColor.darkGray
+
+			HD0LED.contentTintColor = CBridge.leds.contains(.HD0LED) ? NSColor.yellow: NSColor.darkGray
+			HD1LED.contentTintColor = CBridge.leds.contains(.HD1LED) ? NSColor.yellow: NSColor.darkGray
+			HD2LED.contentTintColor = CBridge.leds.contains(.HD2LED) ? NSColor.yellow: NSColor.darkGray
+			HD3LED.contentTintColor = CBridge.leds.contains(.HD3LED) ? NSColor.yellow: NSColor.darkGray
+			FD0LED.contentTintColor = CBridge.leds.contains(.FD0LED) ? NSColor.yellow: NSColor.darkGray
+			FD1LED.contentTintColor = CBridge.leds.contains(.FD1LED) ? NSColor.yellow: NSColor.darkGray
+
+			CassMotorLabel.isHidden = (CBridge.machineType.contains(.Master128)) // BBC Master
+			MasterPowerOnLabel.isHidden = !(CassMotorLabel.isHidden) // opposite of CassMotorLabel
+			
+		} else {
+			// cannot COLOUR TINT on earlier versions
+			// Fallback on earlier versions
+		}
+	}
+
 }
