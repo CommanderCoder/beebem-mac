@@ -1,24 +1,3 @@
-/****************************************************************
-BeebEm - BBC Micro and Master 128 Emulator
-Copyright (C) 1994  Nigel Magnay
-Copyright (C) 1997  Mike Wyatt
-
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public
-License along with this program; if not, write to the Free
-Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-Boston, MA  02110-1301, USA.
-****************************************************************/
-
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
 // Used by BeebEm.rc
@@ -98,9 +77,18 @@ Boston, MA  02110-1301, USA.
 #define IDK_UNDERSCORE                  82
 #define IDK_CARET                       83
 #define IDR_MENU                        101
-#define IDI_BEEBEM                      102
+#define IDI_BEEBEM                      101
+#define IDI_SSD                         102
+#define IDI_DSD                         103
 #define IDD_USERKYBRD                   103
+#define IDI_FSD                         104
+#define IDI_UEF                         105
+#define IDI_CSW                         106
 #define IDD_KEYBOARD_LINKS              106
+#define IDI_ADF                         107
+#define IDI_ADS                         108
+#define IDI_ADM                         109
+#define IDI_ADL                         110
 #define IDD_DEBUG                       110
 #define IDD_TAPECONTROL                 112
 #define IDD_BREAKOUT                    113
@@ -108,33 +96,36 @@ Boston, MA  02110-1301, USA.
 #define IDR_ACCELERATORS                115
 #define IDD_ROMCONFIG                   116
 #define IDD_SELECT_KEY                  117
+#define IDD_RENAME_FILE                 118
+#define IDD_SERIAL                      119
+#define IDD_ABOUT                       120
 #define IDC_DEBUGBREAK                  1010
 #define IDC_DEBUGINFO                   1015
 #define IDC_DEBUGCOMMAND                1016
 #define IDC_DEBUGEXECUTE                1017
-#define IDC_DEBUGVIDEO                  1022
-#define IDC_DEBUGVIDEOBRK               1023
-#define IDC_DEBUGSYSVIA                 1024
-#define IDC_DEBUGSYSVIABRK              1025
-#define IDC_DEBUGUSERVIA                1026
-#define IDC_DEBUGUSERVIABRK             1027
+#define IDC_DEBUG_VIDEO                 1022
+#define IDC_DEBUG_VIDEO_BRK             1023
+#define IDC_DEBUG_SYSVIA                1024
+#define IDC_DEBUG_SYSVIA_BRK            1025
+#define IDC_DEBUG_USERVIA               1026
+#define IDC_DEBUG_USERVIA_BRK           1027
 #define IDC_DEBUGBREAKPOINTS            1028
 #define IDC_DEBUGBPS                    1029
 #define IDC_DEBUGOS                     1030
 #define IDC_DEBUGROM                    1031
-#define IDC_TCMAP                       1031
-#define IDC_DEBUGTUBE                   1032
-#define IDC_TCPLAY                      1032
-#define IDC_DEBUGTUBEBRK                1033
-#define IDC_TCSTOP                      1033
+#define IDC_TAPE_CONTROL_MAP            1031
+#define IDC_DEBUG_TUBE                  1032
+#define IDC_TAPE_CONTROL_PLAY           1032
+#define IDC_DEBUG_TUBE_BRK              1033
+#define IDC_TAPE_CONTROL_STOP           1033
 #define IDC_DEBUGHOST                   1034
-#define IDC_TCRECORD                    1034
+#define IDC_TAPE_CONTROL_RECORD         1034
 #define IDC_DEBUGPARASITE               1035
-#define IDC_TCEJECT                     1035
-#define IDC_DEBUGSERIAL                 1036
-#define IDC_DEBUGSERIALBRK              1037
-#define IDC_DEBUGECONET                 1038
-#define IDC_DEBUGECONETBRK              1039
+#define IDC_TAPE_CONTROL_EJECT          1035
+#define IDC_DEBUG_SERIAL                1036
+#define IDC_DEBUG_SERIAL_BRK            1037
+#define IDC_DEBUG_ECONET                1038
+#define IDC_DEBUG_ECONET_BRK            1039
 #define IDC_DEBUGTRCBRK                 1040
 #define IDC_OB7                         1041
 #define IDC_OB6                         1042
@@ -161,8 +152,8 @@ Boston, MA  02110-1301, USA.
 #define IDK_BIT6                        1063
 #define IDK_BIT7                        1064
 #define IDC_EXPORTFILELIST              1065
-#define IDC_DEBUGREMSER                 1066
-#define IDC_DEBUGREMSERBRK              1067
+#define IDC_DEBUG_REMSER                1066
+#define IDC_DEBUG_REMSER_BRK            1067
 #define IDC_DEBUGWATCHES                1068
 #define IDC_DEBUGWATCHLABEL             1069
 #define IDC_BREAKLABEL                  1070
@@ -182,10 +173,41 @@ Boston, MA  02110-1301, USA.
 #define IDC_EMPTY                       1084
 #define IDC_SAVE                        1085
 #define IDC_LOAD                        1086
-#define IDC_DEBUGTELETEXT               1087
+#define IDC_DEBUG_TELETEXT              1087
 #define IDC_SHIFT                       1088
-#define IDC_DEBUGTELETEXTBRK            1089
+#define IDC_DEBUG_CMOS                  1088
+#define IDC_DEBUG_TELETEXT_BRK          1089
 #define IDC_ASSIGNED_KEYS               1090
+#define IDC_DEBUG_CMOS_BRK              1090
+#define IDC_BEEB_FILE_NAME              1091
+#define IDC_HOST_FILE_NAME              1092
+#define IDC_SERIAL_PORT_DESTINATION_SERIAL_PORT 1094
+#define IDC_SERIAL_PORT_DESTINATION_TOUCH_SCREEN 1095
+#define IDC_SERIAL_PORT_DESTINATION_IP  1096
+#define IDC_IP_ADDRESS                  1097
+#define IDC_IP_PORT                     1098
+#define IDC_IP323_RAW_COMMS             1099
+#define IDC_IP232_HANDSHAKE             1100
+#define IDC_SERIAL_PORT                 1101
+#define IDC_CLEAR                       1102
+#define IDC_VERSION                     1102
+#define IDC_COPYRIGHT                   1103
+#define IDC_KEYBOARD_BIT7               1104
+#define IDC_KEYBOARD_BIT6               1105
+#define IDC_KEYBOARD_BIT5               1106
+#define IDC_KEYBOARD_BIT4               1107
+#define IDC_KEYBOARD_BIT3               1108
+#define IDC_KEYBOARD_BIT2               1109
+#define IDC_KEYBOARD_BIT1               1110
+#define IDC_KEYBOARD_BIT0               1111
+#define IDC_TAPE_CONTROL_REWIND         1112
+#define IDC_PLAYING                     1114
+#define IDC_RECORDING                   1115
+#define IDC_STOPPED                     1116
+#define IDC_TAPE_FILENAME               1117
+#define IDC_TAPE_CONTROL_LOAD_TAPE      1118
+#define IDC_UNLOCK                      1119
+#define IDC_TAPE_CONTROL_UNLOCK         1119
 #define IDM_ABOUT                       40001
 #define IDM_DISC                        40002
 #define IDM_LOADDISC0                   40002
@@ -241,8 +263,8 @@ Boston, MA  02110-1301, USA.
 #define IDM_DEFINEKEYMAP                40061
 #define IDM_NEWDISC0                    40062
 #define IDM_NEWDISC1                    40063
-#define IDM_WPDISC0                     40064
-#define IDM_WPDISC1                     40065
+#define IDM_WRITE_PROTECT_DISC0         40064
+#define IDM_WRITE_PROTECT_DISC1         40065
 #define IDM_SAVE_PREFS                  40066
 #define IDM_FULLSCREEN                  40067
 #define IDM_AMXONOFF                    40068
@@ -293,10 +315,6 @@ Boston, MA  02110-1301, USA.
 #define ID_HIDEMENU                     40125
 #define ID_TAPESOUND                    40126
 #define ID_SERIAL                       40127
-#define ID_COM1                         40128
-#define ID_COM2                         40129
-#define ID_COM3                         40130
-#define ID_COM4                         40131
 #define ID_RED_LEDS                     40132
 #define ID_GREEN_LEDS                   40133
 #define ID_SHOW_KBLEDS                  40134
@@ -354,18 +372,17 @@ Boston, MA  02110-1301, USA.
 #define IDM_EJECTDISC0                  40201
 #define IDM_EJECTDISC1                  40202
 #define IDM_EXPVOLUME                   40203
-#define ID_TOUCHSCREEN                  40204
 #define IDM_ANALOGUE_MOUSESTICK         40205
 #define IDM_DIGITAL_MOUSESTICK          40206
 #define ID_BREAKOUT                     40208
-#define IDM_TEXTTOSPEECH                40209
+#define IDM_TEXTTOSPEECH_ENABLE         40209
 #define IDM_TEXTVIEW                    40210
 #define IDM_DISABLEKEYSWINDOWS          40211
 #define IDM_DISABLEKEYSBREAK            40212
 #define IDM_DISABLEKEYSESCAPE           40213
 #define IDM_DISABLEKEYSSHORTCUT         40214
 #define IDM_DISABLEKEYSALL              40215
-#define IDM_WPONLOAD                    40216
+#define IDM_WRITE_PROTECT_ON_LOAD       40216
 #define IDM_DISPGDI                     40217
 #define IDM_DISPDDRAW                   40218
 #define IDM_DISPDX9                     40219
@@ -377,16 +394,12 @@ Boston, MA  02110-1301, USA.
 #define IDM_1280X1024                   40225
 #define IDM_1440X1080                   40226
 #define IDM_1600X1200                   40227
-#define ID_UPRM                         40228
+#define ID_USER_PORT_RTC_MODULE         40228
 #define IDM_LOADKEYMAP                  40230
 #define IDM_SAVEKEYMAP                  40231
 #define IDM_AUTOSAVE_PREFS_CMOS         40232
 #define IDM_AUTOSAVE_PREFS_FOLDERS      40233
 #define IDM_AUTOSAVE_PREFS_ALL          40234
-#define ID_IP232                        40236
-#define ID_IP232LOCALHOST               40238
-#define ID_IP232CUSTOM                  40239
-#define ID_IP232MODE                    40241
 #define IDM_EDIT_COPY                   40242
 #define IDM_EDIT_PASTE                  40243
 #define IDM_PRINTER_CLIPBOARD           40244
@@ -414,7 +427,6 @@ Boston, MA  02110-1301, USA.
 #define IDM_CAPTUREPNG                  40269
 #define IDM_CAPTURESCREEN               40270
 #define ID_FLOPPYDRIVE                  40271
-#define ID_RTCY2KADJUST                 40272
 #define ID_IP232RAW                     40274
 #define IDM_SWRAMBOARD                  40276
 #define IDM_ROMCONFIG                   40277
@@ -435,16 +447,21 @@ Boston, MA  02110-1301, USA.
 #define IDM_EMUPAUSED                   40296
 #define IDM_CAPTUREMOUSE                40318
 #define IDM_SELECT_HARD_DRIVE_FOLDER    40319
-#define IDC_STATIC                      -1
+#define ID_SELECT_SERIAL_DESTINATION    40320
+#define IDM_SET_KEYBOARD_LINKS          40321
+#define IDM_TEXTTOSPEECH_AUTO_SPEAK     40322
+#define IDM_TEXTTOSPEECH_SPEAK_PUNCTUATION 40323
+#define IDM_TEXTTOSPEECH_INCREASE_RATE  40324
+#define IDM_TEXTTOSPEECH_DECREASE_RATE  40325
 
 // Next default values for new objects
 //
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
-#define _APS_NEXT_RESOURCE_VALUE        118
-#define _APS_NEXT_COMMAND_VALUE         40320
-#define _APS_NEXT_CONTROL_VALUE         1090
+#define _APS_NEXT_RESOURCE_VALUE        121
+#define _APS_NEXT_COMMAND_VALUE         40326
+#define _APS_NEXT_CONTROL_VALUE         1120
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
