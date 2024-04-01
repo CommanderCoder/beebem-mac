@@ -9,7 +9,7 @@
 #ifndef beebemrcids_h
 #define beebemrcids_h
 
-#include "beebemrc.h"
+#include "Resource.h"
 #include <map>
 
 #define ID IDM_FULLSCREEN

@@ -54,9 +54,9 @@ std::map<int,int> ID2RC =
 {'monb', ID_MONITOR_BW   },
 {'mona', ID_MONITOR_AMBER},
 {'mong', ID_MONITOR_GREEN},
-{'wrp0', IDM_WPDISC0},
-{'wrp1', IDM_WPDISC1},
-{'wpol', IDM_WPONLOAD},
+{'wrp0', IDM_WRITE_PROTECT_DISC0},
+{'wrp1', IDM_WRITE_PROTECT_DISC1},
+{'wpol', IDM_WRITE_PROTECT_ON_LOAD},
 {'siz1', ID}, //160x128 selected
 {'siz2', ID},
 {'siz3', ID},
@@ -158,7 +158,7 @@ std::map<int,int> ID2RC =
 {'tpco', IDD_TAPECONTROL},
 {'dbgr', IDM_SHOWDEBUGGER},
 {'upbo', ID_BREAKOUT},
-{'uprm', ID_UPRM},
+{'uprm', ID_USER_PORT_RTC_MODULE},
 {'abou', IDM_ABOUT},
 {'kusr', IDM_DEFINEKEYMAP},
 {'lukm', IDM_LOADKEYMAP},
@@ -203,14 +203,14 @@ std::map<int,int> ID2RC =
 {'invb', ID}, // invertbackground
 {'swtd', IDM_CAPTURESCREEN},
 {'txvw', IDM_TEXTVIEW},
-{'ttsp', IDM_TEXTTOSPEECH},
+{'ttsp', IDM_TEXTTOSPEECH_ENABLE},
 {'mus5', IDM_MUSIC5000},
     
 {'mbcn', ID_8271},
 {'mbca', ID_FDC_ACORN}, //Acorn 1770 Controller
 {'mbco', ID_FDC_OPUS}, //OPUS 1770 Controller - on DLL on windows
 {'mbcw', ID_FDC_WATFORD}, //Watford 1770 - on DLL on windows
-    {'mrty', ID_RTCY2KADJUST},
+//    {'mrty', ID_RTCY2KADJUST},
     {'jstk', IDM_JOYSTICK},
     {'hcur', IDM_HIDECURSOR},
     {'kf10', IDM_MAPFUNCS},
@@ -316,10 +316,10 @@ std::map<int,int> ID2RC =
     
     
     
-    {'tppl', IDC_TCPLAY},
-    {'tpst', IDC_TCSTOP},
-    {'tpej', IDC_TCEJECT},
-    {'tprc', IDC_TCRECORD},
+    {'tppl', IDC_TAPE_CONTROL_PLAY},
+    {'tpst', IDC_TAPE_CONTROL_STOP},
+    {'tpej', IDC_TAPE_CONTROL_EJECT},
+    {'tprc', IDC_TAPE_CONTROL_RECORD},
 
 };
 
