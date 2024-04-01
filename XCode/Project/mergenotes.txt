@@ -39,3 +39,32 @@ https://developer.apple.com/library/archive/documentation/UserExperience/Concept
 
 https://developer.apple.com/macos/planning/
 
+
+Changes
+All now '.cpp' files, and all using CamelCase filenames
+ 6502core - needed Sleep
+ ArmDisassembler
+ AtoDConv
+
+Added beebemrcids
+Added a windows_stubs folder to the project which will catch all the <windows.h> .etc. includes
+
+Including the additional beebmain files
+
+Following files from Windows will not be used:
+printing
+avi
+beebwin
+beebwinx
+beebwinio
+beebwinprefs
+beebwinspeech
+DirectSoundStreamer
+XAudio2Streamer
+filedialog
+FolderSelectDialog
+Armulator/armdis
+Armulator/armmem
+
+Drive controllers are not DLLs; they are statically linked into namespaces
+

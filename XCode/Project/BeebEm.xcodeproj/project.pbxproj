@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DC0997AA2BBAA6E300A109A5 /* beebemrcids.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC09979D2BBAA51300A109A5 /* beebemrcids.cpp */; };
 		DC1DBA202BB8CF8600AAB22F /* BeebEm-Bridge-TapeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC907EB32BB5BB7700523116 /* BeebEm-Bridge-TapeController.swift */; };
 		DC1DBA212BB8CF8B00AAB22F /* TapeControlViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1DBA162BB8CF0500AAB22F /* TapeControlViewController.swift */; };
 		DC1DBA222BB998B000AAB22F /* KeyboardMappingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1DBA132BB8CF0400AAB22F /* KeyboardMappingViewController.swift */; };
@@ -189,12 +190,29 @@
 		DC0997902BBA0E2700A109A5 /* UserVia.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = UserVia.h; path = ../../../Src/UserVia.h; sourceTree = "<group>"; };
 		DC0997912BBA0E2700A109A5 /* Version.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Version.h; path = ../../../Src/Version.h; sourceTree = "<group>"; };
 		DC0997922BBA0E2700A109A5 /* Z80.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Z80.h; path = ../../../Src/Z80.h; sourceTree = "<group>"; };
+		DC0997972BBAA51200A109A5 /* beebmainio.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = beebmainio.cpp; sourceTree = "<group>"; };
+		DC0997982BBAA51200A109A5 /* beebmainprefs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = beebmainprefs.cpp; sourceTree = "<group>"; };
+		DC0997992BBAA51200A109A5 /* beebemrcids.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = beebemrcids.h; sourceTree = "<group>"; };
+		DC09979A2BBAA51200A109A5 /* beebmainvid.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = beebmainvid.cpp; sourceTree = "<group>"; };
+		DC09979B2BBAA51200A109A5 /* beebmainspeech.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = beebmainspeech.cpp; sourceTree = "<group>"; };
+		DC09979C2BBAA51300A109A5 /* beebmain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = beebmain.cpp; sourceTree = "<group>"; };
+		DC09979D2BBAA51300A109A5 /* beebemrcids.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = beebemrcids.cpp; sourceTree = "<group>"; };
+		DC0997A52BBAA5D500A109A5 /* windows.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = windows.h; path = Src/windows_stubs/windows.h; sourceTree = SOURCE_ROOT; };
+		DC0997A72BBAA68600A109A5 /* d3dx9.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = d3dx9.h; sourceTree = "<group>"; };
+		DC0997A82BBAA6A300A109A5 /* ddraw.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ddraw.h; sourceTree = "<group>"; };
+		DC0997A92BBAA6C200A109A5 /* sapi.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sapi.h; sourceTree = "<group>"; };
+		DC0997AB2BBAA8D100A109A5 /* armmem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = armmem.c; sourceTree = "<group>"; };
+		DC0997AF2BBAA91E00A109A5 /* Acorn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Acorn.cpp; sourceTree = "<group>"; };
+		DC0997B12BBAA91E00A109A5 /* Acorn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Acorn.h; sourceTree = "<group>"; };
+		DC0997B62BBAA91E00A109A5 /* Watford.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Watford.h; sourceTree = "<group>"; };
+		DC0997B72BBAA91E00A109A5 /* Watford.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Watford.cpp; sourceTree = "<group>"; };
+		DC0997BA2BBAA91E00A109A5 /* opus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opus.h; sourceTree = "<group>"; };
+		DC0997BC2BBAA91E00A109A5 /* opus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = opus.cpp; sourceTree = "<group>"; };
 		DC1DBA132BB8CF0400AAB22F /* KeyboardMappingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyboardMappingViewController.swift; sourceTree = "<group>"; };
 		DC1DBA142BB8CF0500AAB22F /* BreakoutBoxViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BreakoutBoxViewController.swift; sourceTree = "<group>"; };
 		DC1DBA152BB8CF0500AAB22F /* RomConfigViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RomConfigViewController.swift; sourceTree = "<group>"; };
 		DC1DBA162BB8CF0500AAB22F /* TapeControlViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TapeControlViewController.swift; sourceTree = "<group>"; };
 		DC1DBA172BB8CF0500AAB22F /* FileListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileListViewController.swift; sourceTree = "<group>"; };
-		DC1DBA242BB9A43D00AAB22F /* Resource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Resource.h; path = ../../../Src/Resource.h; sourceTree = "<group>"; };
 		DC907E952BB4DBCD00523116 /* BeebEm.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BeebEm.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC907E982BB4DBCD00523116 /* BeebEmApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeebEmApp.swift; sourceTree = "<group>"; };
 		DC907E9A2BB4DBCD00523116 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -233,7 +251,7 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		DC0996DB2BBA0C5000A109A5 /* code */ = {
+		DC0996DB2BBA0C5000A109A5 /* windows_code */ = {
 			isa = PBXGroup;
 			children = (
 				DC0996E72BBA0C9B00A109A5 /* 6502core.cpp */,
@@ -265,6 +283,7 @@
 				DC0996F92BBA0C9C00A109A5 /* FileDialog.cpp */,
 				DC0996E62BBA0C9B00A109A5 /* FileUtils.cpp */,
 				DC0997002BBA0C9C00A109A5 /* FolderSelectDialog.cpp */,
+				DC0997AD2BBAA91E00A109A5 /* Hardware */,
 				DC0996E42BBA0C9B00A109A5 /* IC32Latch.cpp */,
 				DC0997112BBA0C9C00A109A5 /* Ide.cpp */,
 				DC0996FC2BBA0C9C00A109A5 /* KeyboardLinksDialog.cpp */,
@@ -309,10 +328,10 @@
 				DC0997042BBA0C9C00A109A5 /* Z80dis.cpp */,
 				DC0996EF2BBA0C9B00A109A5 /* Z80Support.cpp */,
 			);
-			name = code;
+			name = windows_code;
 			sourceTree = "<group>";
 		};
-		DC0996DC2BBA0C6400A109A5 /* headers */ = {
+		DC0996DC2BBA0C6400A109A5 /* windows_headers */ = {
 			isa = PBXGroup;
 			children = (
 				DC0997582BBA0E2500A109A5 /* 6502core.h */,
@@ -392,13 +411,14 @@
 				DC0997922BBA0E2700A109A5 /* Z80.h */,
 				DC0997782BBA0E2600A109A5 /* Z80mem.h */,
 			);
-			name = headers;
+			name = windows_headers;
 			sourceTree = "<group>";
 		};
 		DC0997242BBA0CBB00A109A5 /* ARMulator */ = {
 			isa = PBXGroup;
 			children = (
 				DC09972C2BBA0CBB00A109A5 /* armdis.cpp */,
+				DC0997AB2BBAA8D100A109A5 /* armmem.c */,
 				DC09972B2BBA0CBB00A109A5 /* armemu.cpp */,
 				DC0997312BBA0CBB00A109A5 /* arminit.cpp */,
 				DC0997302BBA0CBB00A109A5 /* armsupp.cpp */,
@@ -422,6 +442,55 @@
 			);
 			name = ARMulator;
 			path = ../../../Src/ARMulator;
+			sourceTree = "<group>";
+		};
+		DC0997A62BBAA65E00A109A5 /* windows_stubs */ = {
+			isa = PBXGroup;
+			children = (
+				DC0997A52BBAA5D500A109A5 /* windows.h */,
+				DC0997A72BBAA68600A109A5 /* d3dx9.h */,
+				DC0997A82BBAA6A300A109A5 /* ddraw.h */,
+				DC0997A92BBAA6C200A109A5 /* sapi.h */,
+			);
+			path = windows_stubs;
+			sourceTree = "<group>";
+		};
+		DC0997AD2BBAA91E00A109A5 /* Hardware */ = {
+			isa = PBXGroup;
+			children = (
+				DC0997AE2BBAA91E00A109A5 /* Acorn1770 */,
+				DC0997B32BBAA91E00A109A5 /* Watford */,
+				DC0997B82BBAA91E00A109A5 /* OpusDDOS */,
+			);
+			name = Hardware;
+			path = ../../../Src/Hardware;
+			sourceTree = "<group>";
+		};
+		DC0997AE2BBAA91E00A109A5 /* Acorn1770 */ = {
+			isa = PBXGroup;
+			children = (
+				DC0997AF2BBAA91E00A109A5 /* Acorn.cpp */,
+				DC0997B12BBAA91E00A109A5 /* Acorn.h */,
+			);
+			path = Acorn1770;
+			sourceTree = "<group>";
+		};
+		DC0997B32BBAA91E00A109A5 /* Watford */ = {
+			isa = PBXGroup;
+			children = (
+				DC0997B62BBAA91E00A109A5 /* Watford.h */,
+				DC0997B72BBAA91E00A109A5 /* Watford.cpp */,
+			);
+			path = Watford;
+			sourceTree = "<group>";
+		};
+		DC0997B82BBAA91E00A109A5 /* OpusDDOS */ = {
+			isa = PBXGroup;
+			children = (
+				DC0997BA2BBAA91E00A109A5 /* opus.h */,
+				DC0997BC2BBAA91E00A109A5 /* opus.cpp */,
+			);
+			path = OpusDDOS;
 			sourceTree = "<group>";
 		};
 		DC1DBA1E2BB8CF2500AAB22F /* BeebBridge */ = {
@@ -519,9 +588,16 @@
 		DC907EBB2BB5BE0B00523116 /* Src */ = {
 			isa = PBXGroup;
 			children = (
-				DC0996DC2BBA0C6400A109A5 /* headers */,
-				DC0996DB2BBA0C5000A109A5 /* code */,
-				DC1DBA242BB9A43D00AAB22F /* Resource.h */,
+				DC0997A62BBAA65E00A109A5 /* windows_stubs */,
+				DC09979D2BBAA51300A109A5 /* beebemrcids.cpp */,
+				DC0997992BBAA51200A109A5 /* beebemrcids.h */,
+				DC09979C2BBAA51300A109A5 /* beebmain.cpp */,
+				DC0997972BBAA51200A109A5 /* beebmainio.cpp */,
+				DC0997982BBAA51200A109A5 /* beebmainprefs.cpp */,
+				DC09979B2BBAA51200A109A5 /* beebmainspeech.cpp */,
+				DC09979A2BBAA51200A109A5 /* beebmainvid.cpp */,
+				DC0996DC2BBA0C6400A109A5 /* windows_headers */,
+				DC0996DB2BBA0C5000A109A5 /* windows_code */,
 				DC1DBA1F2BB8CF2B00AAB22F /* MacBridge */,
 			);
 			path = Src;
@@ -601,6 +677,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DC907EC32BB5C23C00523116 /* BeebViewController.swift in Sources */,
+				DC0997AA2BBAA6E300A109A5 /* beebemrcids.cpp in Sources */,
 				DC907ECA2BB6D76F00523116 /* Colour.swift in Sources */,
 				DC1DBA262BB9A6F600AAB22F /* FileListViewController.swift in Sources */,
 				DC907EC12BB5C1F100523116 /* BeebApplication.swift in Sources */,
@@ -779,6 +856,7 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "Src/MacBridge/BeebEm-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
+				SYSTEM_HEADER_SEARCH_PATHS = Src/windows_stubs;
 			};
 			name = Debug;
 		};
@@ -812,6 +890,7 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Src/MacBridge/BeebEm-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
+				SYSTEM_HEADER_SEARCH_PATHS = Src/windows_stubs;
 			};
 			name = Release;
 		};
