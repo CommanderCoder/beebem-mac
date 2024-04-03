@@ -106,7 +106,9 @@ struct DebugCmd
 	const char *help;
 };
 
+#ifndef __APPLE__
 extern HWND hwndDebug;
+#endif
 bool DebugDisassembler(int addr,
                        int prevAddr,
                        int Accumulator,
@@ -125,8 +127,10 @@ int DebugDisassembleInstructionWithCPUStatus(int addr,
                                              unsigned char PSR,
                                              char *opstr);
 
+#ifndef __APPLE__
 void DebugOpenDialog(HINSTANCE hinst, HWND hwndMain);
 void DebugCloseDialog(void);
+#endif
 
 void DebugDisplayTrace(DebugType type, bool host, const char *info);
 void DebugDisplayTraceF(DebugType type, bool host, const char *format, ...);
