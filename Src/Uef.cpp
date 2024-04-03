@@ -319,7 +319,8 @@ UEFResult UEFFileReader::LoadData(const char *FileName)
 		return UEFResult::NotUEF;
 	}
 
-	const int ver = gzget16(InputFile);
+	//const int ver =
+		gzget16(InputFile);
 
 	m_Chunks.clear();
 
