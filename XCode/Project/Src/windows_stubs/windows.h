@@ -24,6 +24,13 @@
 // used in BeebMem.h
 extern long GetTickCount();
 
+// general use
+#include "winints.h"
+
+// used for Files
+#include <sys/types.h>
+#include <sys/stat.h>
+#define _stricmp strcmp
 
 #endif
 

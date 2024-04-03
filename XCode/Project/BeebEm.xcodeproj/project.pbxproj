@@ -33,6 +33,8 @@
 		DCDC73072BBE043D00D83402 /* Watford.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0997B72BBAA91E00A109A5 /* Watford.cpp */; };
 		DCDC73092BBE108600D83402 /* Bcd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996FE2BBA0C9C00A109A5 /* Bcd.cpp */; };
 		DCDC730B2BBE118B00D83402 /* Preferences.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC09970E2BBA0C9C00A109A5 /* Preferences.cpp */; };
+		DCDC730E2BBE13BF00D83402 /* DiscInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996F32BBA0C9C00A109A5 /* DiscInfo.cpp */; };
+		DCDC730F2BBE13EE00D83402 /* FileUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996E62BBA0C9B00A109A5 /* FileUtils.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -704,7 +706,9 @@
 				DCDC730B2BBE118B00D83402 /* Preferences.cpp in Sources */,
 				DC1DBA232BB9A2BB00AAB22F /* RomConfigViewController.swift in Sources */,
 				DC907ECE2BB70E7B00523116 /* BeebSKView.swift in Sources */,
+				DCDC730E2BBE13BF00D83402 /* DiscInfo.cpp in Sources */,
 				DC907EB22BB5BAD300523116 /* BeebEm-Bridging-Code.swift in Sources */,
+				DCDC730F2BBE13EE00D83402 /* FileUtils.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
