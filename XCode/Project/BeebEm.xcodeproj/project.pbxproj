@@ -31,6 +31,8 @@
 		DCB3B2592BBB865E00F507F4 /* opus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0997BC2BBAA91E00A109A5 /* opus.cpp */; };
 		DCDC73062BBE043A00D83402 /* Acorn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0997AF2BBAA91E00A109A5 /* Acorn.cpp */; };
 		DCDC73072BBE043D00D83402 /* Watford.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0997B72BBAA91E00A109A5 /* Watford.cpp */; };
+		DCDC73092BBE108600D83402 /* Bcd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996FE2BBA0C9C00A109A5 /* Bcd.cpp */; };
+		DCDC730B2BBE118B00D83402 /* Preferences.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC09970E2BBA0C9C00A109A5 /* Preferences.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -690,6 +692,7 @@
 				DC907EC12BB5C1F100523116 /* BeebApplication.swift in Sources */,
 				DC907ED22BB7101900523116 /* BeebEm-Bridging-Temp.cpp in Sources */,
 				DC1DBA212BB8CF8B00AAB22F /* TapeControlViewController.swift in Sources */,
+				DCDC73092BBE108600D83402 /* Bcd.cpp in Sources */,
 				DC907ECC2BB70CE000523116 /* NSImage+Bitmap.swift in Sources */,
 				DC1DBA202BB8CF8600AAB22F /* BeebEm-Bridge-TapeController.swift in Sources */,
 				DCDC73072BBE043D00D83402 /* Watford.cpp in Sources */,
@@ -698,6 +701,7 @@
 				DC907EC62BB6D48600523116 /* Renderer.swift in Sources */,
 				DC907EC82BB6D55100523116 /* Bitmap.swift in Sources */,
 				DC1DBA222BB998B000AAB22F /* KeyboardMappingViewController.swift in Sources */,
+				DCDC730B2BBE118B00D83402 /* Preferences.cpp in Sources */,
 				DC1DBA232BB9A2BB00AAB22F /* RomConfigViewController.swift in Sources */,
 				DC907ECE2BB70E7B00523116 /* BeebSKView.swift in Sources */,
 				DC907EB22BB5BAD300523116 /* BeebEm-Bridging-Code.swift in Sources */,
