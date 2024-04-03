@@ -23,8 +23,11 @@ Boston, MA  02110-1301, USA.
 
 #include <windows.h>
 #include "Acorn.h"
+#ifdef __APPLE__
+namespace AcornFDC {
+#endif
 
-char *AcornName="Acorn 1770 DFS Extension board for BBC Model B";
+char AcornName[]="Acorn 1770 DFS Extension board for BBC Model B";
 
 // The dll must assume the 1770 system accepts a Master 128 type control reg thus:
 // Bit 0 Drive Select 0
@@ -57,3 +60,7 @@ EXPORT void GetBoardProperties(struct DriveControlBlock *FDBoard) {
 	FDBoard->BoardName=AcornName;
 	FDBoard->TR00_ActiveHigh = false;
 }
+
+#ifdef __APPLE__
+}// AcornFDC
+#endif

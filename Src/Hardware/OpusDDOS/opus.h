@@ -29,6 +29,14 @@ Boston, MA  02110-1301, USA.
 
 #define WIN_LEAN_AND_MEAN
 
+#ifdef __APPLE__
+#undef EXPORT
+#define EXPORT ;
+
+namespace OpusFDC {
+
+#endif
+
 struct DriveControlBlock {
 	int FDCAddress; // 1770 FDC chip address
 	int DCAddress; // Drive Control Register Address
@@ -40,5 +48,14 @@ EXPORT unsigned char SetDriveControl(unsigned char value);
 EXPORT unsigned char GetDriveControl(unsigned char value);
 EXPORT void GetBoardProperties(struct DriveControlBlock *FDBoard);
 
+#ifndef __APPLE__
+
 #define DCB struct DriveControlBlock
       
+#else
+
+#define OPUS_DCB struct DriveControlBlock
+
+}// OpusFDC
+
+#endif

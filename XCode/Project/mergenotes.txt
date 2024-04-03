@@ -70,3 +70,7 @@ Drive controllers are not DLLs; they are statically linked into namespaces
 
 Had a problem because beebemrc.h was the same as Resource.h - coping Resource.h into the folder got the names mixed up.
 Some of the names in the new Resources have changed, so fixed up these. (y2KAdjust removed)
+
+Fixed the string literal to 'char *' and added Opus/Acorn/WatfordFDC
+
+

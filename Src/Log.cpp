@@ -67,10 +67,16 @@ void WriteLog(char *fmt, ...)
 
 		va_end(argptr);
 
+#ifdef __APPLE__
+		std::time_t result = std::time(nullptr);
+		struct tm* tim = std::localtime(&result);
+		fprintf(LogFile, "[%s] ", asctime(tim));
+#else
 		SYSTEMTIME tim;
 		GetLocalTime(&tim);
 		fprintf(LogFile, "[%02d-%3s-%02d %02d:%02d:%02d.%03d] ",
 		        tim.wDay, mon[tim.wMonth - 1], tim.wYear % 100, tim.wHour, tim.wMinute, tim.wSecond, tim.wMilliseconds);
+#endif
 
 		fprintf(LogFile, "%s", buff);
 	}
