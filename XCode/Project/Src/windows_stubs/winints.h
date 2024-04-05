@@ -55,5 +55,12 @@ struct RCItem {
 	std::string name;
 };
 
+#include <sys/syslimits.h>
+#define _MAX_PATH PATH_MAX
+#define MAX_PATH PATH_MAX
+#define _MAX_DRIVE 32
+#define _MAX_DIR 512
+#define _MAX_FNAME 96
+#define _MAX_EXT 32
 
 #endif /* winints_h */

@@ -41,6 +41,17 @@
 		DCDC73152BBE1A9500D83402 /* StringUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0997222BBA0C9C00A109A5 /* StringUtils.cpp */; };
 		DCDC73162BBE1AC600D83402 /* RingBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996F12BBA0C9B00A109A5 /* RingBuffer.cpp */; };
 		DCDC731E2BBE215F00D83402 /* IC32Latch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996E42BBA0C9B00A109A5 /* IC32Latch.cpp */; };
+		DCDC73282BBF574100D83402 /* 6502core.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996E72BBA0C9B00A109A5 /* 6502core.cpp */; };
+		DCDC73292BBF58DC00D83402 /* Arm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC09971B2BBA0C9C00A109A5 /* Arm.cpp */; };
+		DCDC732A2BBF5AF400D83402 /* ArmDisassembler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996FD2BBA0C9C00A109A5 /* ArmDisassembler.cpp */; };
+		DCDC732B2BBF5B7F00D83402 /* armemu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC09972B2BBA0CBB00A109A5 /* armemu.cpp */; };
+		DCDC732C2BBF5E0600D83402 /* armsupp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0997302BBA0CBB00A109A5 /* armsupp.cpp */; };
+		DCDC732D2BBF5E1500D83402 /* thumbemu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0997282BBA0CBB00A109A5 /* thumbemu.cpp */; };
+		DCDC732E2BBF5E1B00D83402 /* arminit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0997312BBA0CBB00A109A5 /* arminit.cpp */; };
+		DCDC732F2BBF5EF600D83402 /* AtoDConv.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0997212BBA0C9C00A109A5 /* AtoDConv.cpp */; };
+		DCDC73302BBF5F2200D83402 /* BeebMem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0997012BBA0C9C00A109A5 /* BeebMem.cpp */; };
+		DCDC73312BBF615E00D83402 /* Csw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996E32BBA0C9B00A109A5 /* Csw.cpp */; };
+		DCDC73322BBF61F700D83402 /* Debug.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996E82BBA0C9B00A109A5 /* Debug.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -704,12 +715,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DCDC73312BBF615E00D83402 /* Csw.cpp in Sources */,
+				DCDC73322BBF61F700D83402 /* Debug.cpp in Sources */,
 				DC907EC32BB5C23C00523116 /* BeebViewController.swift in Sources */,
+				DCDC73282BBF574100D83402 /* 6502core.cpp in Sources */,
+				DCDC732A2BBF5AF400D83402 /* ArmDisassembler.cpp in Sources */,
 				DC0997AA2BBAA6E300A109A5 /* beebemrcids.cpp in Sources */,
 				DCB3B2592BBB865E00F507F4 /* opus.cpp in Sources */,
 				DCDC73062BBE043A00D83402 /* Acorn.cpp in Sources */,
 				DCDC73142BBE198A00D83402 /* TapeMap.cpp in Sources */,
 				DC907ECA2BB6D76F00523116 /* Colour.swift in Sources */,
+				DCDC732F2BBF5EF600D83402 /* AtoDConv.cpp in Sources */,
+				DCDC732E2BBF5E1B00D83402 /* arminit.cpp in Sources */,
+				DCDC732B2BBF5B7F00D83402 /* armemu.cpp in Sources */,
 				DC1DBA262BB9A6F600AAB22F /* FileListViewController.swift in Sources */,
 				DC907EC12BB5C1F100523116 /* BeebApplication.swift in Sources */,
 				DC907ED22BB7101900523116 /* BeebEm-Bridging-Temp.cpp in Sources */,
@@ -718,7 +736,9 @@
 				DC907ECC2BB70CE000523116 /* NSImage+Bitmap.swift in Sources */,
 				DCDC73152BBE1A9500D83402 /* StringUtils.cpp in Sources */,
 				DC1DBA202BB8CF8600AAB22F /* BeebEm-Bridge-TapeController.swift in Sources */,
+				DCDC73302BBF5F2200D83402 /* BeebMem.cpp in Sources */,
 				DCDC73072BBE043D00D83402 /* Watford.cpp in Sources */,
+				DCDC732C2BBF5E0600D83402 /* armsupp.cpp in Sources */,
 				DC1DBA252BB9A4C900AAB22F /* BreakoutBoxViewController.swift in Sources */,
 				DC907EB02BB5BA4000523116 /* AppDelegate.swift in Sources */,
 				DCDC73162BBE1AC600D83402 /* RingBuffer.cpp in Sources */,
@@ -730,8 +750,10 @@
 				DC1DBA232BB9A2BB00AAB22F /* RomConfigViewController.swift in Sources */,
 				DCDC731E2BBE215F00D83402 /* IC32Latch.cpp in Sources */,
 				DC907ECE2BB70E7B00523116 /* BeebSKView.swift in Sources */,
+				DCDC732D2BBF5E1500D83402 /* thumbemu.cpp in Sources */,
 				DCDC730E2BBE13BF00D83402 /* DiscInfo.cpp in Sources */,
 				DC907EB22BB5BAD300523116 /* BeebEm-Bridging-Code.swift in Sources */,
+				DCDC73292BBF58DC00D83402 /* Arm.cpp in Sources */,
 				DCDC730F2BBE13EE00D83402 /* FileUtils.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -793,6 +815,9 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
+					MODET,
+					BEEBEM,
+					MODE32,
 				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
@@ -849,6 +874,11 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					BEEBEM,
+					MODET,
+					MODE32,
+				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;

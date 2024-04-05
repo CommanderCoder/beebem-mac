@@ -195,7 +195,7 @@ extern ARMword isize;
 #define SETABORT(i, m, d)						\
   do									\
     { 									\
-      int SETABORT_mode = (m);						\
+      ARMword SETABORT_mode = (m);						\
 									\
       ARMul_SetSPSR (state, SETABORT_mode, ARMul_GetCPSR (state));	\
       ARMul_SetCPSR (state, ((ARMul_GetCPSR (state) & ~(EMODE | TBIT))	\
@@ -377,7 +377,7 @@ extern ARMword isize;
 #endif
 
 /* Macro to rotate n right by b bits.  */
-#define ROTATER(n, b) (((n) >> (b)) | ((n) << (32 - (b))))
+#define ROTATER(n, b) (ARMword)(((n) >> (b)) | ((n) << (32 - (b))))
 
 /* Macros to store results of instructions.  */
 #define WRITEDEST(d)				\

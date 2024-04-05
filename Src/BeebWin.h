@@ -111,6 +111,7 @@ struct TextToSpeechVoice
 	std::string Description;
 };
 
+#ifndef __APPLE__
 // A structure for our custom vertex type. We added texture coordinates
 struct CUSTOMVERTEX
 {
@@ -121,6 +122,8 @@ struct CUSTOMVERTEX
 
 // Our custom FVF, which describes our custom vertex structure
 #define D3DFVF_CUSTOMVERTEX (D3DFVF_XYZ|D3DFVF_DIFFUSE|D3DFVF_TEX1)
+
+#endif
 
 enum class MessageType {
 	Error,
@@ -156,13 +159,15 @@ public:
 	void ApplyPrefs();
 	void Shutdown();
 
+#ifndef __APPLE__
 	static LRESULT CALLBACK WndProc(HWND hWnd,
 	                                  UINT nMessage,
 	                                  WPARAM wParam,
 	                                  LPARAM lParam);
 
 	LRESULT WndProc(UINT nMessage, WPARAM wParam, LPARAM lParam);
-
+#endif
+	
 	void UpdateModelMenu();
 	void SetSoundMenu(void);
 	void SetImageName(const char *DiscName, int Drive, DiscType Type);
@@ -177,14 +182,22 @@ public:
 	void SetDriveControl(unsigned char value);
 	unsigned char GetDriveControl(void);
 	void doLED(int sx,bool on);
+#ifndef __APPLE__
 	void updateLines(HDC hDC, int starty, int nlines);
 	void updateLines(int starty, int nlines) {
 		updateLines(m_hDC, starty, nlines);
 	}
-
+#else
+	void updateLines(int starty, int nlines);
+	void Blt(RECT destR, RECT srcR);
+	
+	int_fast32_t m_RGB32[256];
+	int_fast16_t m_RGB16[256];
+#endif
+	
 	void doHorizLine(int Colour, int y, int sx, int width) {
 		if (TeletextEnabled) y/=TeletextStyle;
-		int d = (y*800)+sx+ScreenAdjust+(TeletextEnabled?36:0);
+		int d = (y*800)+sx+(int)ScreenAdjust+(TeletextEnabled?36:0);
 		if ((d+width)>(500*800)) return;
 		if (d<0) return;
 		memset(m_screen+d, Colour, width);
@@ -192,7 +205,7 @@ public:
 
 	void doInvHorizLine(int Colour, int y, int sx, int width) {
 		if (TeletextEnabled) y/=TeletextStyle;
-		int d = (y*800)+sx+ScreenAdjust+(TeletextEnabled?36:0);
+		int d = (y*800)+sx+(int)ScreenAdjust+(TeletextEnabled?36:0);
 		char *vaddr;
 		if ((d+width)>(500*800)) return;
 		if (d<0) return;
@@ -207,21 +220,23 @@ public:
 	}
 
 	EightUChars *GetLinePtr(int y) {
-		int d = (y*800)+ScreenAdjust;
+		int d = (y*800)+(int)ScreenAdjust;
 		if (d > (MAX_VIDEO_SCAN_LINES*800))
 			return((EightUChars *)(m_screen+(MAX_VIDEO_SCAN_LINES*800)));
 		return((EightUChars *)(m_screen + d));
 	}
 
 	SixteenUChars *GetLinePtr16(int y) {
-		int d = (y*800)+ScreenAdjust;
+		int d = (y*800)+(int)ScreenAdjust;
 		if (d > (MAX_VIDEO_SCAN_LINES*800))
 			return((SixteenUChars *)(m_screen+(MAX_VIDEO_SCAN_LINES*800)));
 		return((SixteenUChars *)(m_screen + d));
 	}
 
+#ifndef __APPLE__
 	HWND GethWnd() { return m_hWnd; }
-
+#endif
+	
 	void ResetBeebSystem(Model NewModelType, bool LoadRoms);
 	void Break();
 
@@ -237,8 +252,10 @@ public:
 	void DisplayTiming();
 	void UpdateWindowTitle();
 	bool IsWindowMinimized() const;
+#ifndef __APPLE__
 	void DisplayClientAreaText(HDC hdc);
 	void DisplayFDCBoardInfo(HDC hDC, int x, int y);
+#endif
 	void ScaleJoystick(unsigned int x, unsigned int y);
 	void SetMousestickButton(int index, bool button);
 	void ScaleMousestick(unsigned int x, unsigned int y);
@@ -249,7 +266,9 @@ public:
 	void ReleaseMouse();
 	void Activate(bool Active);
 	void Focus(bool Focus);
+#ifndef __APPLE__
 	void WinSizeChange(WPARAM size, int width, int height);
+#endif
 	void WinPosChange(int x, int y);
 	bool IsFrozen();
 	void TogglePause();
@@ -300,7 +319,9 @@ public:
 	bool InitClass();
 	void UpdateOptiMenu();
 	void CreateBeebWindow(void);
+#ifndef __APPLE__
 	void DisableRoundedCorners(HWND hWnd);
+#endif
 	void FlashWindow();
 	void CreateBitmap(void);
 	void InitMenu();
@@ -326,6 +347,7 @@ public:
 	void ExitDX();
 	void UpdateSmoothing();
 
+#ifndef __APPLE__
 	// DirectDraw
 	HRESULT InitDirectDraw();
 	HRESULT InitSurfaces();
@@ -335,7 +357,7 @@ public:
 	HRESULT InitDX9();
 	void ExitDX9();
 	void RenderDX9();
-
+#endif
 	void TranslateWindowSize(void);
 	void TranslateDDSize(void);
 	void CalcAspectRatioAdjustment(int DisplayWidth, int DisplayHeight);
@@ -378,8 +400,11 @@ public:
 	                   int SourceHeight,
 	                   bool Teletext);
 	bool GetImageFile(char *FileName, int Size);
+#ifndef __APPLE__
 	bool GetImageEncoderClsid(const WCHAR *mimeType, CLSID *encoderClsid);
-
+#endif
+	
+#ifndef __APPLE__
 	bool InitTextToSpeech();
 	void TextToSpeechResetState();
 	void CloseTextToSpeech();
@@ -391,7 +416,9 @@ public:
 	void TextToSpeechSetVoice(ISpObjectToken* pToken);
 	void TextToSpeechSelectVoiceMenuItem(int Index);
 	void Speak(const char *text, DWORD flags);
+#endif
 	void SpeakChar(unsigned char c);
+#ifndef __APPLE__
 	void TextToSpeechClearBuffer();
 	void TextToSpeechToggleAutoSpeak();
 	void TextToSpeechToggleSpeakPunctuation();
@@ -405,7 +432,7 @@ public:
 	void TextToSpeechReadSentence();
 	void TextToSpeechReadScreen();
 	void TextToSpeechKey(WPARAM wParam);
-
+#endif
 
 	void InitTextView();
 	void CloseTextView();
@@ -421,24 +448,30 @@ public:
 	MessageResult Report(MessageType type, const char *format, ...);
 	MessageResult ReportV(MessageType type, const char *format, va_list args);
 
+#ifndef __APPLE__
 	bool RegCreateKey(HKEY hKeyRoot, LPCSTR lpSubKey);
 	bool RegGetBinaryValue(HKEY hKeyRoot, LPCSTR lpSubKey, LPCSTR lpValue, void* pData, int* pnSize);
 	bool RegSetBinaryValue(HKEY hKeyRoot, LPCSTR lpSubKey, LPCSTR lpValue, const void* pData, int* pnSize);
 	bool RegGetStringValue(HKEY hKeyRoot, LPCSTR lpSubKey, LPCSTR lpValue, LPSTR pData, DWORD dwSize);
 	bool RegSetStringValue(HKEY hKeyRoot, LPCSTR lpSubKey, LPCSTR lpValue, LPCSTR pData);
-
+#endif
+	
 	// Preferences
 	void LoadPreferences();
 	void SavePreferences(bool saveAll);
 
 	// Main window
+#ifndef __APPLE__
 	HWND m_hWnd;
+#endif
 	char m_szTitle[256];
 	bool m_isFullScreen;
 	bool m_startFullScreen;
 
 	// Menu
+#ifndef __APPLE__
 	HMENU m_hMenu;
+#endif
 	bool m_MenuOn;
 	bool m_HideMenuEnabled;
 	bool m_DisableMenu;
@@ -489,10 +522,12 @@ public:
 	float m_YRatioCrop;
 
 	// Graphics rendering
+#ifndef __APPLE__
 	HDC m_hDC;
 	HGDIOBJ m_hOldObj;
 	HDC m_hDCBitmap;
 	HGDIOBJ m_hBitmap;
+#endif
 	bmiData m_bmi;
 	PaletteType m_PaletteType;
 	char* m_screen;
@@ -506,6 +541,7 @@ public:
 	int m_CurrentDisplayRenderer;
 	int m_DDFullScreenMode;
 
+#ifndef __APPLE__
 	// DirectX stuff
 	bool m_DXInit;
 	bool m_DXResetPending;
@@ -528,21 +564,24 @@ public:
 	LPDIRECT3DVERTEXBUFFER9 m_pVB;
 	LPDIRECT3DTEXTURE9 m_pTexture;
 	D3DXMATRIX m_TextureMatrix;
-
+#endif
+	
 	// Audio
 	UINT m_MenuIDSampleRate;
 	UINT m_MenuIDVolume;
 
+#ifndef __APPLE__
 	// Joystick input
 	bool m_JoystickCaptured;
 	JOYCAPS m_JoystickCaps;
 	UINT m_MenuIDSticks;
-
+	
 	// Mouse capture
 	bool m_HideCursor;
 	bool m_CaptureMouse;
 	bool m_MouseCaptured;
 	POINT m_RelMousePos;
+#endif
 
 	// Keyboard input
 	UINT m_MenuIDKeyMapping;
@@ -619,6 +658,7 @@ public:
 	// ROMs
 	bool RomWritePrefs[16];
 
+#ifndef __APPLE__
 	// Bitmap capture
 	ULONG_PTR m_gdiplusToken;
 	bool m_CaptureBitmapPending;
@@ -638,8 +678,10 @@ public:
 	UINT m_MenuIDAviResolution;
 	UINT m_MenuIDAviSkip;
 
+#endif
 	// Text to speech variables
 	bool m_TextToSpeechEnabled;
+#ifndef __APPLE__
 	std::vector<TextToSpeechVoice> m_TextToSpeechVoices;
 	HMENU m_hVoiceMenu;
 	ISpVoice *m_SpVoice;
@@ -662,6 +704,7 @@ public:
 	WNDPROC m_TextViewPrevWndProc;
 	static const int MAX_TEXTVIEW_SCREEN_LEN = 128 * 32;
 	char m_TextViewScreen[MAX_TEXTVIEW_SCREEN_LEN + 1];
+#endif
 
 	// Debug
 	bool m_WriteInstructionCounts;

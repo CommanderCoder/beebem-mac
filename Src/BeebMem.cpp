@@ -658,6 +658,8 @@ void DebugMemoryState()
 				(ACCCON & 0x02) != 0 ? "on" : "off",
 				(ACCCON & 0x01) != 0 ? "on" : "off");
 			break;
+		default: // display nothing
+			break;
 	}
 }
 
@@ -1293,7 +1295,7 @@ void BeebReadRoms(void) {
 					fread(PALRom[bank].Rom, 1, Size, InFile);
 					fclose(InFile);
 
-					PALRom[bank].Type = GuessRomType(PALRom[bank].Rom, Size);
+					PALRom[bank].Type = GuessRomType(PALRom[bank].Rom, (uint32_t)Size);
 
 					if (PALRom[bank].Type != PALRomType::none)
 					{
@@ -1394,6 +1396,8 @@ void SaveMemUEF(FILE *SUEF)
 		fputc(PagedRomReg | (static_cast<int>(MemSel) << 7), SUEF);
 		fputc((static_cast<int>(Sh_Display) << 7), SUEF);
 		break;
+	default:
+		break;
 	}
 
 	fput16(0x0462,SUEF); // Main Memory
@@ -1434,6 +1438,8 @@ void SaveMemUEF(FILE *SUEF)
 		fput32(8192,SUEF);
 		fwrite(FSRam,1,8192,SUEF);
 		break;
+	default:
+		break;
 	}
 
 	for (int bank = 0; bank < 16; bank++)
@@ -1472,6 +1478,8 @@ void SaveMemUEF(FILE *SUEF)
 			fputc(bank,SUEF);
 			fputc(static_cast<int>(BankType::Empty),SUEF);
 			break;
+		default:// RAM
+			break;
 		}
 	}
 }
@@ -1505,6 +1513,8 @@ void LoadRomRegsUEF(FILE *SUEF) {
 		Sh_CPUE = (ACCCON & 2) != 0;
 		FSRAMSelect = (ACCCON & 8) != 0;
 		break;
+	default:
+		break;
 	}
 }
 
@@ -1525,6 +1535,8 @@ void LoadShadMemUEF(FILE *SUEF) {
 		SAddr=fget16(SUEF);
 		fread(ShadowRAM+SAddr,1,32768,SUEF);
 		break;
+	default:
+		break;
 	}
 }
 
@@ -1538,6 +1550,8 @@ void LoadPrivMemUEF(FILE *SUEF) {
 		break;
 	case Model::Master128:
 		fread(PrivateRAM,1,4096,SUEF);
+		break;
+	default:
 		break;
 	}
 }
@@ -1570,6 +1584,8 @@ void LoadSWRomMemUEF(FILE *SUEF) {
 	case BankType::Empty:
 		memset(Roms[Rom], 0, MAX_ROM_SIZE);
 		break;
+	default: // RAM
+		break;
 	}
 }
 
@@ -1597,6 +1613,8 @@ bool LoadPALRomEUF(FILE *SUEF, unsigned int ChunkLength)
 				memset(PALRom[Bank].Rom, 0, MAX_PALROM_SIZE);
 				PALRom[Bank].Type = PALRomType::none;
 				PALRom[Bank].Bank = 0;
+				break;
+			default:// RAM
 				break;
 		}
 

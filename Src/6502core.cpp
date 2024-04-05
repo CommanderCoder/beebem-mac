@@ -3139,6 +3139,8 @@ void Exec6502Instruction()
 			case Tube::Master512CoPro: // 8MHz
 				master512CoPro.Execute(4 * Cycles);
 				break;
+			default: // None
+				break;
 		}
 	}
 }

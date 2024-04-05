@@ -10,13 +10,6 @@
 
 #ifdef __APPLE__
 
-#include <sys/syslimits.h>
-#define _MAX_PATH PATH_MAX
-#define MAX_PATH PATH_MAX
-#define _MAX_DRIVE 32
-#define _MAX_DIR 512
-#define _MAX_FNAME 96
-#define _MAX_EXT 32
 
 
 
@@ -30,7 +23,21 @@ extern long GetTickCount();
 // used for Files
 #include <sys/types.h>
 #include <sys/stat.h>
-#define _stricmp strcmp
+#define _stricmp strcasecmp
+#define _strnicmp strncasecmp
+#define stricmp strcasecmp
+#define strnicmp strncasecmp
+
+template < typename T, int N >
+int _countof( T ( & arr )[ N ] )
+{
+	return std::extent< T[ N ] >::value;
+}
+
+#define Sleep swift_sleepCPU
+extern "C" void swift_sleepCPU(unsigned long microseconds);
+
+
 
 #endif
 
