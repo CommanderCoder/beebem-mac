@@ -32,7 +32,9 @@ Boston, MA  02110-1301, USA.
 #include "Log.h"
 #include "Main.h"
 #include "Tube.h"
+#ifndef __APPLE__
 #include "UserPortBreakoutBox.h"
+#endif
 #include "Via.h"
 
 /* Real Time Clock */
@@ -117,9 +119,11 @@ void UserVIAWrite(int Address, unsigned char Value)
 				UpdateIFRTopBit();
 			}
 
+#ifndef __APPLE__
 			if (userPortBreakoutDialog != nullptr)
 				userPortBreakoutDialog->ShowOutputs(UserVIAState.orb);
-
+#endif
+			
 			if (RTC_Enabled)
 				RTCWrite(Value, lastValue);
 
@@ -269,9 +273,11 @@ unsigned char UserVIARead(int Address)
 				RTC_data = RTC_data >> 1;
 			}
 
+#ifndef __APPLE__
 			if (userPortBreakoutDialog != nullptr)
 				userPortBreakoutDialog->ShowInputs(tmp);
-
+#endif
+			
 			if (AMXMouseEnabled)
 			{
 				if (AMXLRForMiddle)

@@ -1609,7 +1609,7 @@ bool DebugDisassembler(int addr,
 	// Update memory watches. Prevent emulator slowdown by limiting updates
 	// to every 100ms, or on timer wrap-around.
 	static DWORD LastTickCount = 0;
-	const DWORD TickCount = (DWORD)GetTickCount();
+	const DWORD TickCount = GetTickCount();
 
 	if (TickCount - LastTickCount > 100 || TickCount < LastTickCount)
 	{

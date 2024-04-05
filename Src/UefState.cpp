@@ -23,7 +23,7 @@ Boston, MA  02110-1301, USA.
 
 #include <functional>
 
-#include "UEFState.h"
+#include "UefState.h"
 #include "6502core.h"
 #include "Arm.h"
 #include "AtoDConv.h"
@@ -168,7 +168,7 @@ void SaveState(SaveStateFunctionType SaveStateFunction, int ChunkID, FILE *SUEF)
 	long EndPos = ftell(SUEF);
 	long Length = EndPos - StartPos;
 	fseek(SUEF, StartPos - 4, SEEK_SET);
-	fput32(Length, SUEF); // Size
+	fput32((unsigned int)Length, SUEF); // Size
 	fseek(SUEF, EndPos, SEEK_SET);
 }
 
@@ -215,6 +215,8 @@ UEFStateResult SaveUEFState(const char *FileName)
 
 		switch (TubeType)
 		{
+			case Tube::None:
+				break;
 			case Tube::Acorn65C02:
 				SaveState(Save65C02UEF, 0x0471, UEFState);
 				SaveState(Save65C02MemUEF, 0x0472, UEFState);

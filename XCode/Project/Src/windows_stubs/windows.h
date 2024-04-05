@@ -14,11 +14,12 @@
 
 
 
-// used in BeebMem.h
-extern long GetTickCount();
 
 // general use
 #include "winints.h"
+
+// used in BeebMem.h
+extern DWORD GetTickCount();
 
 // used for Files
 #include <sys/types.h>
@@ -27,6 +28,9 @@ extern long GetTickCount();
 #define _strnicmp strncasecmp
 #define stricmp strcasecmp
 #define strnicmp strncasecmp
+
+#include <stdio.h>
+#define _strerror(X) strerror((long)X)
 
 template < typename T, int N >
 int _countof( T ( & arr )[ N ] )

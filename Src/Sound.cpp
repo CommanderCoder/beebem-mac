@@ -31,11 +31,13 @@ Boston, MA  02110-1301, USA.
 
 #include "Sound.h"
 #include "6502core.h"
-#include "AviWriter.h"
+#ifndef __APPLE__
+#include "AVIWriter.h"
+#endif
 #include "Main.h"
 #include "SoundStreamer.h"
 #include "Speech.h"
-#include "UEFState.h"
+#include "UefState.h"
 
 //  #define DEBUGSOUNDTOFILE
 
@@ -134,6 +136,7 @@ SoundStreamer *pSoundStreamer = nullptr;
 
 static void WriteToSoundBuffer(BYTE *pSoundData)
 {
+#ifndef __APPLE__
 	if (pSoundStreamer != nullptr)
 	{
 		pSoundStreamer->Stream(pSoundData);
@@ -150,6 +153,7 @@ static void WriteToSoundBuffer(BYTE *pSoundData)
 			mainWin->EndVideo();
 		}
 	}
+#endif
 }
 
 /****************************************************************************/
@@ -433,6 +437,7 @@ static double CyclesToSamples(int BeebCycles) {
 
 static void InitAudioDev()
 {
+#ifndef __APPLE__
 	if (pSoundStreamer != nullptr)
 	{
 		delete pSoundStreamer;
@@ -441,6 +446,7 @@ static void InitAudioDev()
 	pSoundStreamer = CreateSoundStreamer(SoundSampleRate, 8, 1);
 
 	SoundEnabled = pSoundStreamer != nullptr;
+#endif
 }
 
 void LoadSoundSamples()
@@ -456,7 +462,7 @@ void LoadSoundSamples()
 			FILE *fd = fopen(FileName, "rb");
 			if (fd != NULL) {
 				fseek(fd, 0, SEEK_END);
-				SoundSamples[i].len = ftell(fd);
+				SoundSamples[i].len = (int)ftell(fd);
 				SoundSamples[i].pBuf = (unsigned char *)malloc(SoundSamples[i].len);
 				fseek(fd, 0, SEEK_SET);
 				fread(SoundSamples[i].pBuf, 1, SoundSamples[i].len, fd);
@@ -551,7 +557,7 @@ void SoundInit() {
   if (SoundSampleRate == 44100) SoundAutoTriggerTime = 5000;
   if (SoundSampleRate == 22050) SoundAutoTriggerTime = 10000;
   if (SoundSampleRate == 11025) SoundAutoTriggerTime = 20000;
-  SoundBufferSize = pSoundStreamer ? pSoundStreamer->BufferSize() : SoundSampleRate / 50;
+  SoundBufferSize = pSoundStreamer ? (unsigned int) pSoundStreamer->BufferSize() : SoundSampleRate / 50;
   LoadSoundSamples();
   SoundTrigger = TotalCycles + SoundAutoTriggerTime;
 }

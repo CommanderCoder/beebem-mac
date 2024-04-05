@@ -52,12 +52,17 @@ Control latch:
 #include <stdio.h>
 #include <stdlib.h>
 
+#ifdef __APPLE__
+#include <unistd.h>
+#endif
+
 #include "Teletext.h"
 #include "6502core.h"
 #include "BeebMem.h"
 #include "Debug.h"
 #include "Log.h"
 #include "Main.h"
+
 
 #define ENABLE_LOG 0
 
@@ -82,7 +87,9 @@ static unsigned char TeletextStatus = 0x0f;
 static bool TeletextInts = false;
 static bool TeletextEnable = false;
 static int TeletextChannel = 0;
+#ifndef __APPLE__
 static int rowPtrOffset = 0x00;
+#endif
 static int rowPtr = 0x00;
 static int colPtr = 0x00;
 
@@ -118,7 +125,7 @@ static int TeletextConnect(int ch)
         DebugDisplayTraceF(DebugType::Teletext, true,
                            "Teletext: socket %d created, connecting to server", ch);
     }
-
+#ifndef __APPLE__
     u_long iMode = 1;
     ioctlsocket(TeletextSocket[ch], FIONBIO, &iMode); // non blocking
 
@@ -143,7 +150,8 @@ static int TeletextConnect(int ch)
             return 1;
         }
     }
-
+#endif
+	
     TeletextSocketConnected[ch] = true;
     return 0;
 }
@@ -198,7 +206,7 @@ void TeletextInit()
             if (TeletextFile[i] != nullptr)
             {
                 fseek(TeletextFile[i], 0L, SEEK_END);
-                TeletextFrameCount[i] = ftell(TeletextFile[i]) / TELETEXT_FRAME_SIZE;
+                TeletextFrameCount[i] = (int) ftell(TeletextFile[i]) / TELETEXT_FRAME_SIZE;
                 fseek(TeletextFile[i], 0L, SEEK_SET);
             }
         }
@@ -356,13 +364,19 @@ void TeletextAdapterUpdate()
                 {
                     if (TeletextSocket[i] != INVALID_SOCKET)
                     {
-                        int result = recv(TeletextSocket[i], socketBuff[i], 672, 0);
+                        int result = (int) recv(TeletextSocket[i], socketBuff[i], 672, 0);
 
                         if (result == SOCKET_ERROR)
                         {
-                            int err = WSAGetLastError();
-                            if (err == WSAEWOULDBLOCK)
-                                break; // not fatal, ignore
+                            int err = (int) WSAGetLastError();
+							
+#ifndef __APPLE__
+							if (err == WSAEWOULDBLOCK)
+								break; // not fatal, ignore
+#else
+							if (err == EWOULDBLOCK)
+								break; // not fatal, ignore
+#endif
 
                             if (DebugEnabled)
                             {

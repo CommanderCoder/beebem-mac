@@ -31,7 +31,7 @@ Boston, MA  02110-1301, USA.
 #include "BeebMem.h"
 #include "Log.h"
 #include "Tube.h"
-#include "UEFState.h"
+#include "UefState.h"
 
 #include "ARMulator.h"
 
@@ -427,7 +427,7 @@ unsigned
 ARMul_MemoryInit (ARMul_State * state, unsigned long initmemsize)
 {
     if (initmemsize)
-        state->MemSize = initmemsize;
+        state->MemSize = (ARMword)initmemsize;
 
     unsigned char *memory = (unsigned char *)malloc(initmemsize);
 
@@ -682,7 +682,7 @@ ARMul_StoreHalfWord (ARMul_State * state, ARMword address, ARMword data)
     temp = ARMul_ReadWord (state, address);
     ARMword offset = (((ARMword) state->bigendSig * 2) ^ (address & 2)) << 3;	/* bit offset into the word */
     PutWord (state, address,
-        (temp & ~(0xffffL << offset)) | ((data & 0xffffL) << offset),
+			 (ARMword)((temp & ~(0xffffL << offset)) | ((data & 0xffffL) << offset)),
         TRUE);
     //temp = ARMul_ReadWord (state, address);
     //temp = temp & 0xFFFF0000;
@@ -716,7 +716,7 @@ ARMul_WriteByte (ARMul_State * state, ARMword address, ARMword data)
     ARMword offset = (((ARMword) state->bigendSig * 3) ^ (address & 3)) << 3;	/* bit offset into the word */
 
     PutWord (state, address,
-        (temp & ~(0xffL << offset)) | ((data & 0xffL) << offset),
+			 (ARMword)((temp & ~(0xffL << offset)) | ((data & 0xffL) << offset)),
         TRUE);
     //temp = temp & 0xFFFFFF00;
     //temp = temp | (data & 0xFF);
@@ -816,7 +816,7 @@ ARMul_SafeWriteByte (ARMul_State * state, ARMword address, ARMword data)
     ARMword offset = (((ARMword) state->bigendSig * 3) ^ (address & 3)) << 3;
 
     PutWord (state, address,
-        (temp & ~(0xffL << offset)) | ((data & 0xffL) << offset),
+			 (ARMword)((temp & ~(0xffL << offset)) | ((data & 0xffL) << offset)),
         FALSE);
 }
 
@@ -861,19 +861,19 @@ void CSprowCoPro::SaveState(FILE* SUEF)
 	fput32(m_State->temp, SUEF);
 	fput32(m_State->loaded, SUEF);
 	fput32(m_State->decoded, SUEF);
-	fput32(m_State->NumScycles, SUEF);
-	fput32(m_State->NumNcycles, SUEF);
-	fput32(m_State->NumIcycles, SUEF);
-	fput32(m_State->NumCcycles, SUEF);
-	fput32(m_State->NumFcycles, SUEF);
+	fput32((unsigned int)m_State->NumScycles, SUEF);
+	fput32((unsigned int)m_State->NumNcycles, SUEF);
+	fput32((unsigned int)m_State->NumIcycles, SUEF);
+	fput32((unsigned int)m_State->NumCcycles, SUEF);
+	fput32((unsigned int)m_State->NumFcycles, SUEF);
 	fput32(m_State->NextInstr, SUEF);
 
 	fwrite(m_State->MemDataPtr, 1, 0x4000000, SUEF);
 	fput32(m_State->remapControlRegister, SUEF);
 	fput32(m_State->romSelectRegister, SUEF);
-	fput32(m_State->LastTime, SUEF);
+	fput32((unsigned int)m_State->LastTime, SUEF);
 	fput32(m_State->CP14R0_CCD, SUEF);
-	fput32(m_State->Now, SUEF);
+	fput32((unsigned int)m_State->Now, SUEF);
 	fputc(m_State->Exception, SUEF);
 	fputc(m_State->NresetSig, SUEF);
 	fputc(m_State->NfiqSig, SUEF);

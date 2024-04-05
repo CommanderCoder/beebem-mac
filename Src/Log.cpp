@@ -30,10 +30,12 @@ Boston, MA  02110-1301, USA.
 
 static FILE *LogFile = nullptr;
 
+#ifndef __APPLE__
 static const char* const mon[] = {
 	"Jan", "Feb", "Mar", "Apr", "May", "Jun",
 	"Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
 };
+#endif
 
 void OpenLog()
 {

@@ -44,25 +44,31 @@ Boston, MA  02110-1301, USA.
 
 // 8271 Status register
 const unsigned char STATUS_REG_COMMAND_BUSY       = 0x80;
+#ifndef __APPLE__
 const unsigned char STATUS_REG_COMMAND_FULL       = 0x40;
 const unsigned char STATUS_REG_PARAMETER_FULL     = 0x20;
+#endif
 const unsigned char STATUS_REG_RESULT_FULL        = 0x10;
 const unsigned char STATUS_REG_INTERRUPT_REQUEST  = 0x08;
 const unsigned char STATUS_REG_NON_DMA_MODE       = 0x04;
 
 // 8271 Result register
 const unsigned char RESULT_REG_SUCCESS                = 0x00;
+#ifndef __APPLE__
 const unsigned char RESULT_REG_SCAN_NOT_MET           = 0x00;
 const unsigned char RESULT_REG_SCAN_MET_EQUAL         = 0x02;
 const unsigned char RESULT_REG_SCAN_MET_NOT_EQUAL     = 0x04;
 const unsigned char RESULT_REG_CLOCK_ERROR            = 0x08;
 const unsigned char RESULT_REG_LATE_DMA               = 0x0A;
 const unsigned char RESULT_REG_ID_CRC_ERRORV          = 0x0C;
+#endif
 const unsigned char RESULT_REG_DATA_CRC_ERROR         = 0x0E;
 const unsigned char RESULT_REG_DRIVE_NOT_READY        = 0x10;
 const unsigned char RESULT_REG_WRITE_PROTECT          = 0x12;
+#ifndef __APPLE__
 const unsigned char RESULT_REG_TRACK_0_NOT_FOUND      = 0x14;
 const unsigned char RESULT_REG_WRITE_FAULT            = 0x16;
+#endif
 const unsigned char RESULT_REG_SECTOR_NOT_FOUND       = 0x18;
 const unsigned char RESULT_REG_DRIVE_NOT_PRESENT      = 0x1E; // Undocumented, see http://beebwiki.mdfs.net/OSWORD_%267F
 const unsigned char RESULT_REG_DELETED_DATA_FOUND     = 0x20;
@@ -418,7 +424,7 @@ static SectorType *GetSectorPtr(TrackType *Track, unsigned char LogicalSectorID,
 	}
 
 	// As above, but from sector 0 to the current position
-	if (FDCState.PositionInTrack > 0)
+	if (FDCState.PositionInTrack[Drive] > 0)
 	{
 		for (unsigned char CurrentSector = 0; CurrentSector < FDCState.PositionInTrack[Drive]; CurrentSector++)
 		{
@@ -2511,13 +2517,15 @@ Disc8271Result LoadFSDDiscImage(const char *FileName, int DriveNum)
 		unsigned char Info[5];
 		Input.read((char *)Info, sizeof(Info));
 
+#ifndef __APPLE__
 		const int Day = Info[0] >> 3;
 		const int Month = Info[2] & 0x0F;
 		const int Year = ((Info[0] & 0x07) << 8) | Info[1];
 
 		const int CreatorID = Info[2] >> 4;
 		const int Release = ((Info[4] >> 6) << 8) | Info[3];
-
+#endif
+		
 		std::string DiscTitle;
 		char TitleChar = 1;
 
@@ -2537,7 +2545,7 @@ Disc8271Result LoadFSDDiscImage(const char *FileName, int DriveNum)
 
 		for (int Track = 0; Track < DiscStatus[DriveNum].TotalTracks; Track++)
 		{
-			/* unsigned char TrackNumber = */(unsigned char)Input.get(); // Read current track details
+			/* unsigned char TrackNumber = (unsigned char)*/Input.get(); // Read current track details
 			unsigned char SectorsPerTrack = (unsigned char)Input.get(); // Read number of sectors on track
 			DiscStatus[DriveNum].Tracks[Head][Track].LogicalSectors = SectorsPerTrack;
 

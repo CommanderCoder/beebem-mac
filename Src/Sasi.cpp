@@ -300,15 +300,19 @@ static void SASIWriteData(unsigned char data)
 			}
 			return;
 
+		case execute:
+			break;
+		case read:
+			break;
 		case write:
 			sasi.buffer[sasi.offset] = data;
 			sasi.offset++;
 			sasi.length--;
 			sasi.req = false;
-
+			
 			if (sasi.length > 0)
 				return;
-
+			
 			switch (sasi.cmd[0]) {
 				case 0x0a:
 				case 0x0c:
@@ -317,7 +321,7 @@ static void SASIWriteData(unsigned char data)
 					SASIStatus();
 					return;
 			}
-
+			
 			switch (sasi.cmd[0]) {
 				case 0x0a:
 					if (!SASIWriteSector(sasi.buffer, sasi.next - 1)) {
@@ -336,9 +340,9 @@ static void SASIWriteData(unsigned char data)
 					}
 					break;
 			}
-
+			
 			sasi.blocks--;
-
+			
 			if (sasi.blocks == 0) {
 				SASIStatus();
 				return;
@@ -347,6 +351,10 @@ static void SASIWriteData(unsigned char data)
 			sasi.next++;
 			sasi.offset = 0;
 			return;
+		case status:
+			break;
+		case message:
+			break;
 	}
 
 	SASIBusFree();
