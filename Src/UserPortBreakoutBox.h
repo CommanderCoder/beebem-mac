@@ -25,6 +25,7 @@ Boston, MA  02110-1301, USA.
 
 #ifndef USER_PORT_BREAKOUT_BOX_HEADER
 #define USER_PORT_BREAKOUT_BOX_HEADER
+#ifndef __APPLE__
 
 #include <windows.h>
 
@@ -79,5 +80,5 @@ class UserPortBreakoutDialog
 extern int BitKeys[8];
 
 extern UserPortBreakoutDialog* userPortBreakoutDialog;
-
+#endif
 #endif

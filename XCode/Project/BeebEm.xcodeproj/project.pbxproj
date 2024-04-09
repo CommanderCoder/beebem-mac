@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		DC0997AA2BBAA6E300A109A5 /* beebemrcids.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC09979D2BBAA51300A109A5 /* beebemrcids.cpp */; };
+		DC0D30E32BC12C8E00AFEF01 /* Main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996F72BBA0C9C00A109A5 /* Main.cpp */; };
 		DC1DBA202BB8CF8600AAB22F /* BeebEm-Bridge-TapeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC907EB32BB5BB7700523116 /* BeebEm-Bridge-TapeController.swift */; };
 		DC1DBA212BB8CF8B00AAB22F /* TapeControlViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1DBA162BB8CF0500AAB22F /* TapeControlViewController.swift */; };
 		DC1DBA222BB998B000AAB22F /* KeyboardMappingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1DBA132BB8CF0400AAB22F /* KeyboardMappingViewController.swift */; };
@@ -28,6 +29,18 @@
 		DC907ECE2BB70E7B00523116 /* BeebSKView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC907ECD2BB70E7B00523116 /* BeebSKView.swift */; };
 		DC907ED22BB7101900523116 /* BeebEm-Bridging-Temp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC907ED02BB7101900523116 /* BeebEm-Bridging-Temp.cpp */; };
 		DC907ED42BB7191300523116 /* mergenotes.txt in Resources */ = {isa = PBXBuildFile; fileRef = DC907ED32BB7191300523116 /* mergenotes.txt */; };
+		DC9B41302BC20C0500C3D9D8 /* IP232.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996E92BBA0C9B00A109A5 /* IP232.cpp */; };
+		DC9B41312BC2108600C3D9D8 /* Serial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC09970D2BBA0C9C00A109A5 /* Serial.cpp */; };
+		DC9B41322BC2145D00C3D9D8 /* Thread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996EB2BBA0C9B00A109A5 /* Thread.cpp */; };
+		DC9B41332BC2151900C3D9D8 /* Video.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0997032BBA0C9C00A109A5 /* Video.cpp */; };
+		DC9B41342BC215BD00C3D9D8 /* Econet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC09971E2BBA0C9C00A109A5 /* Econet.cpp */; };
+		DC9B41352BC2190500C3D9D8 /* BeebWin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996E22BBA0C9B00A109A5 /* BeebWin.cpp */; };
+		DC9B41362BC2255900C3D9D8 /* TapeControlDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0997172BBA0C9C00A109A5 /* TapeControlDialog.cpp */; };
+		DC9B41372BC22AE700C3D9D8 /* BeebWinIo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC09971D2BBA0C9C00A109A5 /* BeebWinIo.cpp */; };
+		DC9B41382BC22DB300C3D9D8 /* BeebWinDx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996F22BBA0C9C00A109A5 /* BeebWinDx.cpp */; };
+		DC9B41392BC22E9800C3D9D8 /* BeebWinSpeech.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996F42BBA0C9C00A109A5 /* BeebWinSpeech.cpp */; };
+		DC9B413A2BC22FE200C3D9D8 /* BeebWinPrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC09970B2BBA0C9C00A109A5 /* BeebWinPrefs.cpp */; };
+		DCACDAC12BC5DD2E00CEF154 /* winints.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCACDAC02BC5DD2E00CEF154 /* winints.cpp */; };
 		DCB3B2592BBB865E00F507F4 /* opus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0997BC2BBAA91E00A109A5 /* opus.cpp */; };
 		DCDC73062BBE043A00D83402 /* Acorn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0997AF2BBAA91E00A109A5 /* Acorn.cpp */; };
 		DCDC73072BBE043D00D83402 /* Watford.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0997B72BBAA91E00A109A5 /* Watford.cpp */; };
@@ -287,6 +300,7 @@
 		DC907ED02BB7101900523116 /* BeebEm-Bridging-Temp.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "BeebEm-Bridging-Temp.cpp"; sourceTree = "<group>"; };
 		DC907ED12BB7101900523116 /* BeebEm-Bridging-Temp.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "BeebEm-Bridging-Temp.hpp"; sourceTree = "<group>"; };
 		DC907ED32BB7191300523116 /* mergenotes.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = mergenotes.txt; sourceTree = "<group>"; };
+		DCACDAC02BC5DD2E00CEF154 /* winints.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = winints.cpp; sourceTree = "<group>"; };
 		DCB3B2512BBAB97A00F507F4 /* winints.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = winints.h; sourceTree = "<group>"; };
 		DCDC73122BBE192200D83402 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		DCDC73182BBE1B9F00D83402 /* commctrl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = commctrl.h; sourceTree = "<group>"; };
@@ -506,6 +520,7 @@
 				DC0997A92BBAA6C200A109A5 /* sapi.h */,
 				DCB3B2512BBAB97A00F507F4 /* winints.h */,
 				DCDC73182BBE1B9F00D83402 /* commctrl.h */,
+				DCACDAC02BC5DD2E00CEF154 /* winints.cpp */,
 			);
 			path = windows_stubs;
 			sourceTree = "<group>";
@@ -745,7 +760,9 @@
 				DC907EC32BB5C23C00523116 /* BeebViewController.swift in Sources */,
 				DCDC73282BBF574100D83402 /* 6502core.cpp in Sources */,
 				DCDC732A2BBF5AF400D83402 /* ArmDisassembler.cpp in Sources */,
+				DC9B41362BC2255900C3D9D8 /* TapeControlDialog.cpp in Sources */,
 				DC0997AA2BBAA6E300A109A5 /* beebemrcids.cpp in Sources */,
+				DC0D30E32BC12C8E00AFEF01 /* Main.cpp in Sources */,
 				DCDC73392BC0AB8200D83402 /* KeyMap.cpp in Sources */,
 				DCB3B2592BBB865E00F507F4 /* opus.cpp in Sources */,
 				DCDC733E2BC0AED800D83402 /* Music5000.cpp in Sources */,
@@ -764,18 +781,23 @@
 				DCDC73452BC0B4A700D83402 /* SprowCoPro.cpp in Sources */,
 				DC1DBA262BB9A6F600AAB22F /* FileListViewController.swift in Sources */,
 				DC907EC12BB5C1F100523116 /* BeebApplication.swift in Sources */,
+				DCACDAC12BC5DD2E00CEF154 /* winints.cpp in Sources */,
 				DCDC73472BC0B5C200D83402 /* Teletext.cpp in Sources */,
 				DCDC733C2BC0ACE200D83402 /* Log.cpp in Sources */,
 				DCDC734B2BC0B78E00D83402 /* UefState.cpp in Sources */,
 				DC907ED22BB7101900523116 /* BeebEm-Bridging-Temp.cpp in Sources */,
 				DCDC73462BC0B5B500D83402 /* SysVia.cpp in Sources */,
 				DCDC73342BBFE87C00D83402 /* Disc8271.cpp in Sources */,
+				DC9B41342BC215BD00C3D9D8 /* Econet.cpp in Sources */,
 				DCDC734D2BC0B80C00D83402 /* UserVia.cpp in Sources */,
+				DC9B41322BC2145D00C3D9D8 /* Thread.cpp in Sources */,
+				DC9B41332BC2151900C3D9D8 /* Video.cpp in Sources */,
 				DC1DBA212BB8CF8B00AAB22F /* TapeControlViewController.swift in Sources */,
 				DCDC734E2BC0B85F00D83402 /* Via.cpp in Sources */,
 				DCDC73092BBE108600D83402 /* Bcd.cpp in Sources */,
 				DCDC73442BC0B43400D83402 /* SoundStreamer.cpp in Sources */,
 				DC907ECC2BB70CE000523116 /* NSImage+Bitmap.swift in Sources */,
+				DC9B41352BC2190500C3D9D8 /* BeebWin.cpp in Sources */,
 				DCDC73152BBE1A9500D83402 /* StringUtils.cpp in Sources */,
 				DCDC733D2BC0AD1600D83402 /* Master512CoPro.cpp in Sources */,
 				DCDC73482BC0B6CC00D83402 /* TouchScreen.cpp in Sources */,
@@ -786,25 +808,31 @@
 				DCDC732C2BBF5E0600D83402 /* armsupp.cpp in Sources */,
 				DC1DBA252BB9A4C900AAB22F /* BreakoutBoxViewController.swift in Sources */,
 				DC907EB02BB5BA4000523116 /* AppDelegate.swift in Sources */,
+				DC9B41302BC20C0500C3D9D8 /* IP232.cpp in Sources */,
 				DCDC73162BBE1AC600D83402 /* RingBuffer.cpp in Sources */,
 				DC907EC62BB6D48600523116 /* Renderer.swift in Sources */,
 				DCDC73102BBE188400D83402 /* Uef.cpp in Sources */,
 				DC907EC82BB6D55100523116 /* Bitmap.swift in Sources */,
+				DC9B413A2BC22FE200C3D9D8 /* BeebWinPrefs.cpp in Sources */,
 				DC1DBA222BB998B000AAB22F /* KeyboardMappingViewController.swift in Sources */,
 				DCDC730B2BBE118B00D83402 /* Preferences.cpp in Sources */,
 				DC1DBA232BB9A2BB00AAB22F /* RomConfigViewController.swift in Sources */,
 				DCDC731E2BBE215F00D83402 /* IC32Latch.cpp in Sources */,
 				DCDC734F2BC0B8C500D83402 /* Z80.cpp in Sources */,
+				DC9B41392BC22E9800C3D9D8 /* BeebWinSpeech.cpp in Sources */,
 				DCDC734A2BC0B75800D83402 /* Tube.cpp in Sources */,
 				DC907ECE2BB70E7B00523116 /* BeebSKView.swift in Sources */,
 				DCDC732D2BBF5E1500D83402 /* thumbemu.cpp in Sources */,
 				DCDC73512BC0B99700D83402 /* Z80Support.cpp in Sources */,
 				DCDC73332BBFE79800D83402 /* Disc1770.cpp in Sources */,
+				DC9B41382BC22DB300C3D9D8 /* BeebWinDx.cpp in Sources */,
 				DCDC730E2BBE13BF00D83402 /* DiscInfo.cpp in Sources */,
+				DC9B41372BC22AE700C3D9D8 /* BeebWinIo.cpp in Sources */,
 				DC907EB22BB5BAD300523116 /* BeebEm-Bridging-Code.swift in Sources */,
 				DCDC73502BC0B8D400D83402 /* Z80dis.cpp in Sources */,
 				DCDC73292BBF58DC00D83402 /* Arm.cpp in Sources */,
 				DCDC730F2BBE13EE00D83402 /* FileUtils.cpp in Sources */,
+				DC9B41312BC2108600C3D9D8 /* Serial.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -868,6 +896,7 @@
 					MODET,
 					BEEBEM,
 					MODE32,
+					NDEBUG,
 				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
@@ -928,6 +957,7 @@
 					BEEBEM,
 					MODET,
 					MODE32,
+					NDEBUG,
 				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;

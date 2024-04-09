@@ -37,7 +37,7 @@ Boston, MA  02110-1301, USA.
 #include "Main.h"
 #include "Sound.h"
 #include "SysVia.h"
-#include "UEFState.h"
+#include "UefState.h"
 
 #ifdef BEEB_DOTIME
 #include <sys/times.h>
@@ -1121,7 +1121,7 @@ void VideoDoScanLine(void) {
     /* Clear the next 20 scan lines */
     if (!FrameNum) {
       if (VScreenAdjust>0 && VideoState.PixmapLine==0)
-        for (l=-VScreenAdjust; l<0; ++l)
+        for (l=(int)-VScreenAdjust; l<0; ++l)
           mainWin->doHorizLine(0, l, -36, 800);
       for (l=0; l<20 && VideoState.PixmapLine+l<512; ++l)
         mainWin->doHorizLine(0, VideoState.PixmapLine+l, -36, 800);
@@ -1627,7 +1627,7 @@ void SaveVideoUEF(FILE *SUEF)
 		fputc(VideoULA_Palette[col] ^ 7,SUEF); // Use real ULA values
 	}
 	fput16(ActualScreenWidth, SUEF);
-	fput32(ScreenAdjust, SUEF);
+	fput32((unsigned int)ScreenAdjust, SUEF);
 	fputc(CRTCControlReg, SUEF);
 	fputc(TeletextStyle, SUEF);
 

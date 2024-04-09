@@ -78,10 +78,12 @@ static const char *CFG_TUBE_TYPE = "TubeType";
 #define LED_SHOW_KB (LEDByte&1)
 #define LED_SHOW_DISC (LEDByte&2)>>1
 
+#ifndef __APPLE__
 static int Clamp(int Value, int MinValue, int MaxValue)
 {
 	return std::min(std::max(Value, MinValue), MaxValue);
 }
+#endif
 
 void BeebWin::LoadPreferences()
 {
@@ -138,12 +140,14 @@ void BeebWin::LoadPreferences()
 	else
 		m_DisplayRenderer = IDM_DISPDX9;
 
+#ifndef __APPLE__
 	if (!m_Preferences.GetBoolValue("DXSmoothing", m_DXSmoothing))
 		m_DXSmoothing = true;
 
 	if (!m_Preferences.GetBoolValue("DXSmoothMode7Only", m_DXSmoothMode7Only))
 		m_DXSmoothMode7Only = false;
-
+#endif
+	
 	if (m_Preferences.GetDWORDValue("DDFullScreenMode", dword))
 		m_DDFullScreenMode = dword;
 	else
@@ -221,9 +225,11 @@ void BeebWin::LoadPreferences()
 		m_BlurIntensities[7]=12;
 	}
 
+#ifndef __APPLE__
 	if (!m_Preferences.GetBoolValue("TextViewEnabled", m_TextViewEnabled))
 		m_TextViewEnabled = false;
-
+#endif
+	
 	if (m_Preferences.GetDWORDValue(CFG_SPEED_TIMING, dword))
 		m_MenuIDTiming = dword;
 	else
@@ -266,6 +272,7 @@ void BeebWin::LoadPreferences()
 		m_TextToSpeechEnabled = false;
 	if (!m_Preferences.GetBoolValue("TextToSpeechAutoSpeak", m_SpeechWriteChar))
 		m_SpeechWriteChar = true;
+#ifndef __APPLE__
 	if (!m_Preferences.GetBoolValue("TextToSpeechSpeakPunctuation", m_SpeechSpeakPunctuation))
 		m_SpeechSpeakPunctuation = false;
 
@@ -278,7 +285,7 @@ void BeebWin::LoadPreferences()
 	{
 		m_SpeechRate = 0;
 	}
-
+#endif
 	if (!m_Preferences.GetBoolValue("Music5000Enabled", Music5000Enabled))
 		Music5000Enabled = false;
 
@@ -287,6 +294,7 @@ void BeebWin::LoadPreferences()
 	else
 		m_MenuIDSticks = 0;
 
+	
 	if (!m_Preferences.GetBoolValue(CFG_OPTIONS_FREEZEINACTIVE, m_FreezeWhenInactive))
 		m_FreezeWhenInactive = true;
 
@@ -343,12 +351,14 @@ void BeebWin::LoadPreferences()
 	if (!m_Preferences.GetBoolValue("AutoSavePrefsAll", m_AutoSavePrefsAll))
 		m_AutoSavePrefsAll = false;
 
+#ifndef __APPLE__
 	if (m_Preferences.GetBinaryValue("BitKeys", keyData, 8))
 	{
 		for (int key=0; key<8; ++key)
 			BitKeys[key] = keyData[key];
 	}
-
+#endif
+	
 	if (!m_Preferences.GetBoolValue(CFG_AMX_ENABLED, AMXMouseEnabled))
 		AMXMouseEnabled = false;
 
@@ -577,6 +587,7 @@ void BeebWin::LoadPreferences()
 	if (!m_Preferences.GetBoolValue("RTCEnabled", RTC_Enabled))
 		RTC_Enabled = false;
 
+#ifndef __APPLE__
 	if (m_Preferences.GetDWORDValue("CaptureResolution", dword))
 		m_MenuIDAviResolution = dword;
 	else
@@ -596,13 +607,14 @@ void BeebWin::LoadPreferences()
 		m_MenuIDCaptureFormat = dword;
 	else
 		m_MenuIDCaptureFormat = IDM_CAPTUREBMP;
-
+#endif
 	RECT rect;
 	if (m_Preferences.GetBinaryValue("WindowPos", &rect, sizeof(rect)))
 	{
 		m_XWinPos = rect.left;
 		m_YWinPos = rect.top;
 
+#ifndef __APPLE__
 		// Pos can get corrupted if two BeebEm's exited at same time
 		RECT scrrect;
 		SystemParametersInfo(SPI_GETWORKAREA, 0, (PVOID)&scrrect, 0);
@@ -614,6 +626,8 @@ void BeebWin::LoadPreferences()
 			m_YWinPos = 0;
 		if (m_YWinPos > scrrect.bottom - 80)
 			m_YWinPos = 0;
+#endif
+		
 	}
 	else
 	{
@@ -674,6 +688,7 @@ void BeebWin::LoadPreferences()
 	// Update prefs version
 	m_Preferences.SetStringValue("PrefsVersion", "2.1");
 
+#ifndef __APPLE__
 	// Windows key enable/disable still comes from registry
 	int binsize = 24;
 	if (RegGetBinaryValue(HKEY_LOCAL_MACHINE,CFG_KEYBOARD_LAYOUT,
@@ -681,7 +696,8 @@ void BeebWin::LoadPreferences()
 		m_DisableKeysWindows = true;
 	else
 		m_DisableKeysWindows = false;
-
+#endif
+	
 	if (!m_Preferences.GetBoolValue("WriteInstructionCounts", m_WriteInstructionCounts))
 		m_WriteInstructionCounts = false;
 }
@@ -698,8 +714,10 @@ void BeebWin::SavePreferences(bool saveAll)
 		m_Preferences.SetBinaryValue(CFG_MACHINE_TYPE, &MachineType, 1);
 		m_Preferences.SetBoolValue("WriteProtectOnLoad", m_WriteProtectOnLoad);
 		m_Preferences.SetDWORDValue("DisplayRenderer", m_DisplayRenderer);
+#ifndef __APPLE__
 		m_Preferences.SetBoolValue("DXSmoothing", m_DXSmoothing);
 		m_Preferences.SetBoolValue("DXSmoothMode7Only", m_DXSmoothMode7Only);
+#endif
 		m_Preferences.SetDWORDValue("DDFullScreenMode", m_DDFullScreenMode);
 		m_Preferences.SetDWORDValue(CFG_VIEW_WIN_SIZE, m_MenuIDWinSize);
 		m_Preferences.SetDWORDValue("WinSizeX", m_XLastWinSize);
@@ -717,8 +735,10 @@ void BeebWin::SavePreferences(bool saveAll)
 		m_Preferences.SetBinaryValue("LED Information", &LEDByte, 1);
 		m_Preferences.SetDWORDValue("MotionBlur", m_MenuIDMotionBlur);
 		m_Preferences.SetBinaryValue("MotionBlurIntensities", m_BlurIntensities, 8);
+#ifndef __APPLE__
 		m_Preferences.SetBoolValue("TextViewEnabled", m_TextViewEnabled);
-
+#endif
+		
 		m_Preferences.SetDWORDValue(CFG_SPEED_TIMING, m_MenuIDTiming);
 
 		m_Preferences.SetDWORDValue("SoundConfig::Selection", SoundConfig::Selection);
@@ -732,12 +752,16 @@ void BeebWin::SavePreferences(bool saveAll)
 		m_Preferences.SetBoolValue("Part Samples", PartSamples);
 		m_Preferences.SetBoolValue("ExponentialVolume", SoundExponentialVolume);
 		m_Preferences.SetBoolValue("TextToSpeechEnabled", m_TextToSpeechEnabled);
+#ifndef __APPLE__
 		m_Preferences.SetDWORDValue("TextToSpeechRate", m_SpeechRate);
 		m_Preferences.SetBoolValue("TextToSpeechAutoSpeak", m_SpeechWriteChar);
 		m_Preferences.SetBoolValue("TextToSpeechSpeakPunctuation", m_SpeechSpeakPunctuation);
+#endif
 		m_Preferences.SetBoolValue("Music5000Enabled", Music5000Enabled);
 
+#ifndef __APPLE__
 		m_Preferences.SetDWORDValue(CFG_OPTIONS_STICKS, m_MenuIDSticks);
+#endif
 		m_Preferences.SetBoolValue(CFG_OPTIONS_FREEZEINACTIVE, m_FreezeWhenInactive);
 		m_Preferences.SetBoolValue(CFG_OPTIONS_HIDE_CURSOR, m_HideCursor);
 		m_Preferences.SetBoolValue(CFG_OPTIONS_CAPTURE_MOUSE, m_CaptureMouse);
@@ -750,11 +774,13 @@ void BeebWin::SavePreferences(bool saveAll)
 		m_Preferences.SetBoolValue("DisableKeysEscape", m_DisableKeysEscape);
 		m_Preferences.SetBoolValue("DisableKeysShortcut", m_DisableKeysShortcut);
 
+#ifndef __APPLE__
 		for (int key = 0; key < 8; ++key)
 		{
 			keyData[key] = static_cast<char>(BitKeys[key]);
 		}
-
+#endif
+		
 		m_Preferences.SetBinaryValue("BitKeys", keyData, 8);
 
 		m_Preferences.SetStringValue(CFG_OPTIONS_USER_KEY_MAP_FILE, m_UserKeyMapPath);
@@ -818,6 +844,7 @@ void BeebWin::SavePreferences(bool saveAll)
 		m_Preferences.SetBoolValue("IDEDriveEnabled", IDEDriveEnabled);
 		m_Preferences.SetBoolValue("RTCEnabled", RTC_Enabled);
 
+#ifndef __APPLE__
 		m_Preferences.SetDWORDValue("CaptureResolution", m_MenuIDAviResolution);
 		m_Preferences.SetDWORDValue("FrameSkip", m_MenuIDAviSkip);
 
@@ -827,6 +854,8 @@ void BeebWin::SavePreferences(bool saveAll)
 		RECT rect;
 		GetWindowRect(m_hWnd,&rect);
 		m_Preferences.SetBinaryValue("WindowPos", &rect, sizeof(rect));
+#endif
+		
 	}
 
 	// CMOS RAM now in prefs file

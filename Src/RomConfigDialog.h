@@ -21,6 +21,7 @@ Boston, MA  02110-1301, USA.
 
 #ifndef ROM_CONFIG_DIALOG_HEADER
 #define ROM_CONFIG_DIALOG_HEADER
+#ifndef __APPLE__
 
 #include "BeebMem.h"
 #include "Dialog.h"
@@ -57,5 +58,5 @@ class RomConfigDialog : public Dialog
 		ROMConfigFile m_RomConfig;
 		Model m_Model;
 };
-
+#endif
 #endif

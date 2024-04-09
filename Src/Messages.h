@@ -20,6 +20,7 @@ Boston, MA  02110-1301, USA.
 
 #ifndef MESSAGES_HEADER
 #define MESSAGES_HEADER
+#ifndef __APPLE__
 
 #include <windows.h>
 
@@ -31,5 +32,5 @@ constexpr UINT WM_USER_PORT_BREAKOUT_DIALOG_CLOSED = WM_APP + 4;
 
 // Menu item IDs
 constexpr UINT ID_TEXT_TO_SPEECH_VOICE_BASE = 50000;
-
+#endif
 #endif

@@ -34,6 +34,7 @@ struct FileExportEntry
 	std::string HostFileName;
 };
 
+#ifndef __APPLE__
 class ExportFileDialog : public Dialog
 {
 	public:
@@ -71,5 +72,6 @@ class ExportFileDialog : public Dialog
 		int m_FilesSelected[DFS_MAX_CAT_SIZE];
 		int m_NumSelected;
 };
+#endif
 
 #endif

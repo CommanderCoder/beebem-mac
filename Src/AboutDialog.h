@@ -20,6 +20,7 @@ Boston, MA  02110-1301, USA.
 
 #ifndef ABOUTDIALOG_HEADER
 #define ABOUTDIALOG_HEADER
+#ifndef __APPLE__
 
 #include "Dialog.h"
 
@@ -38,5 +39,5 @@ class AboutDialog : public Dialog
 			LPARAM lParam
 		);
 };
-
+#endif
 #endif

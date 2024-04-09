@@ -22,8 +22,10 @@ Boston, MA  02110-1301, USA.
 
 #include <windows.h>
 
+#ifndef __APPLE__
 #define STRSAFE_NO_DEPRECATE
 #include <sphelper.h>
+#endif
 
 #include <assert.h>
 #include <stdio.h>
@@ -34,6 +36,8 @@ Boston, MA  02110-1301, USA.
 #include "Messages.h"
 #include "Resource.h"
 #include "StringUtils.h"
+
+#ifndef __APPLE__
 
 /****************************************************************************/
 bool BeebWin::InitTextToSpeech()
@@ -326,12 +330,16 @@ void BeebWin::TextToSpeechSelectVoiceMenuItem(int Index)
 	                   MF_BYCOMMAND);
 }
 
+#endif
 void BeebWin::Speak(const char *text, DWORD flags)
 {
+#ifndef __APPLE__
 	if (m_SpVoice != nullptr)
 	{
 		m_SpVoice->Speak(Str2WStr(text).c_str(), SPF_ASYNC | SPF_IS_NOT_XML | flags, nullptr);
 	}
+#endif
+	
 }
 
 static constexpr bool IsEndSentence(char c)
@@ -360,6 +368,7 @@ void BeebWin::SpeakChar(unsigned char c)
 	}
 }
 
+#ifndef __APPLE__
 void BeebWin::TextToSpeechClearBuffer()
 {
 	if (m_SpVoice != nullptr)
@@ -905,10 +914,12 @@ LRESULT TextViewWndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 	return Result;
 }
+#endif
 
 void BeebWin::InitTextView()
 {
 	CloseTextView();
+#ifndef __APPLE__
 
 	m_TextViewScreen[0] = '\0';
 
@@ -942,20 +953,26 @@ void BeebWin::InitTextView()
 	}
 
 	CheckMenuItem(IDM_TEXTVIEW, m_TextViewEnabled);
+#endif
+	
 }
 
 void BeebWin::CloseTextView()
 {
+#ifndef __APPLE__
 	if (m_hTextView != nullptr)
 	{
 		DestroyWindow(m_hTextView);
 		m_hTextView = nullptr;
 		m_TextViewPrevWndProc = nullptr;
 	}
+#endif
+	
 }
 
 void BeebWin::TextView()
 {
+#ifndef __APPLE__
 	char text[MAX_SPEECH_LINE_LEN+1];
 	char screen[MAX_TEXTVIEW_SCREEN_LEN+1];
 	char *s = screen;
@@ -984,7 +1001,10 @@ void BeebWin::TextView()
 		SendMessage(m_hTextView, EM_SETSEL, selpos, selpos);
 		TextViewSpeechSync();
 	}
+#endif
 }
+
+#ifndef __APPLE__
 
 void BeebWin::TextViewSpeechSync()
 {
@@ -1011,3 +1031,4 @@ void BeebWin::TextViewSyncWithBeebCursor()
 	if (m_TextViewEnabled)
 		TextViewSetCursorPos(m_SpeechLine, m_SpeechCol);
 }
+#endif

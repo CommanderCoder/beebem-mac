@@ -138,9 +138,9 @@ extern "C" long beeb_BBHandleCommand(unsigned int cmdID)
 }
 
 
-#ifdef __APPLE__
+//main.cpp
+extern "C" int mainInit();
+extern "C" int mainStep();
+extern "C" int mainEnd();
 
-#else // assumed windows
-testing
 
-#endif

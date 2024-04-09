@@ -24,6 +24,7 @@ typedef int16_t INT16;   // INT16 = signed 16 bit value
 
 #define u_short uint16_t
 
+#define CHAR char
 
 typedef struct tagBITMAPINFOHEADER {
   DWORD biSize;

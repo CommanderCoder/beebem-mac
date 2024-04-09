@@ -179,7 +179,7 @@ static const char* GetVirtualKeyCode(int Key)
 
 		return Name;
 	}
-#ifndef __APPLE__
+
 	switch (Key)
 	{
 		CASE(VK_LBUTTON);
@@ -321,7 +321,7 @@ static const char* GetVirtualKeyCode(int Key)
 		CASE(VK_PA1);
 		CASE(VK_OEM_CLEAR);
 	}
-#endif
+
 	return nullptr;
 }
 

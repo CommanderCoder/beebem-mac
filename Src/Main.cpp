@@ -33,11 +33,14 @@ Boston, MA  02110-1301, USA.
 #include "6502core.h"
 #include "BeebWin.h"
 #include "Log.h"
+#ifndef __APPLE__
 #include "SelectKeyDialog.h"
+#endif
 #include "Serial.h"
 
 Model MachineType;
 BeebWin *mainWin = nullptr;
+#ifndef __APPLE__
 HINSTANCE hInst;
 HWND hCurrentDialog = nullptr;
 HACCEL hCurrentAccelTable = nullptr;
@@ -119,3 +122,75 @@ int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE /* hPrevInstance */,
 
 	return 0;
 }
+#else
+
+int _vscprintf (const char * format, va_list pargs) {
+	int retval;
+	va_list argcopy;
+	va_copy(argcopy, pargs);
+	retval = vsnprintf(NULL, 0, format, argcopy);
+	va_end(argcopy);
+	return retval;
+ }
+
+
+int mainInit()
+{
+	OpenLog();
+
+	mainWin = new(std::nothrow) BeebWin();
+
+	if (mainWin == nullptr)
+	{
+		return 1;
+	}
+
+	if (!mainWin->Initialise())
+	{
+		delete mainWin;
+		mainWin=0;
+		return 1;
+	}
+
+	// Create serial threads
+	SerialInit();
+	
+	return 0;
+}
+
+int mainStep()
+//    for (;;)
+{
+	
+	// Windows MAIN
+	// keep processing instructions until WM_QUIT
+	// When there is a mesage or beeb is frozen, process Messages
+	// either to TranslateAccelerator
+	// Translates virtual key codes,Dispatches message to window
+	// to CurrentDialogue
+	
+	bool done = false;
+	if (done)
+		return 1;
+
+	if (!mainWin->IsFrozen() && !mainWin->IsPaused()) {
+		Exec6502Instruction();
+	}
+	
+	return 0;
+}
+
+int mainEnd()
+{
+	mainWin->KillDLLs();
+
+	CloseLog();
+
+	SerialClose();
+
+	delete mainWin;
+
+	return 0;
+}
+
+#endif

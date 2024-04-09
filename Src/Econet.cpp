@@ -79,22 +79,29 @@ struct MC6854 {
 const unsigned char CONTROL_REG1_ADDRESS_CONTROL               = 0x01;
 const unsigned char CONTROL_REG1_RX_INT_ENABLE                 = 0x02;
 const unsigned char CONTROL_REG1_TX_INT_ENABLE                 = 0x04;
+#ifndef __APPLE__
 const unsigned char CONTROL_REG1_RDSR_MODE                     = 0x08;
 const unsigned char CONTROL_REG1_TDSR_MODE                     = 0x10;
+#endif
 const unsigned char CONTROL_REG1_RX_FRAME_DISCONTINUE          = 0x20;
 const unsigned char CONTROL_REG1_RX_RESET                      = 0x40;
 const unsigned char CONTROL_REG1_TX_RESET                      = 0x80;
 
 const unsigned char CONTROL_REG2_PRIORITIZED_STATUS_ENABLE     = 0x01;
 const unsigned char CONTROL_REG2_2_BYTE_TRANSFER               = 0x02;
+#ifndef __APPLE__
 const unsigned char CONTROL_REG2_FLAG_MARK_IDLE                = 0x04;
+#endif
 const unsigned char CONTROL_REG2_TDRA_SELECT                   = 0x08;
+#ifndef __APPLE__
 const unsigned char CONTROL_REG2_FRAME_COMPLETE                = 0x08;
+#endif
 const unsigned char CONTROL_REG2_TX_LAST_DATA                  = 0x10;
 const unsigned char CONTROL_REG2_CLEAR_RX_STATUS               = 0x20;
 const unsigned char CONTROL_REG2_CLEAR_TX_STATUS               = 0x40;
 const unsigned char CONTROL_REG2_RTS_CONTROL                   = 0x80;
 
+#ifndef __APPLE__
 const unsigned char CONTROL_REG3_LOGICAL_CONTROL_FIELD_SELECT  = 0x01;
 const unsigned char CONTROL_REG3_EXTENDED_CONTROL_FIELD_SELECT = 0x02;
 const unsigned char CONTROL_REG3_AUTO_ADDRESS_EXTENSION_MODE   = 0x04;
@@ -109,18 +116,25 @@ const unsigned char CONTROL_REG3_LOOP_DTR                      = 0x80;
 const unsigned char CONTROL_REG4_DOUBLE_FLAG                   = 0x01;
 const unsigned char CONTROL_REG4_TX_WORD_LENGTH                = 0x06;
 const unsigned char CONTROL_REG4_RX_WORD_LENGTH                = 0x18;
+#endif
 const unsigned char CONTROL_REG4_TX_ABORT                      = 0x20;
+#ifndef __APPLE__
 const unsigned char CONTROL_REG4_ABORT_EXTEND                  = 0x40;
 const unsigned char CONTROL_REG4_NRZI                          = 0x80;
+#endif
 
 const unsigned char STATUS_REG1_RX_DATA_AVAILABLE              = 0x01;
 const unsigned char STATUS_REG1_STATUS2_READ_REQUEST           = 0x02;
+#ifndef __APPLE__
 const unsigned char STATUS_REG1_LOOP                           = 0x04;
+#endif
 const unsigned char STATUS_REG1_FLAG_DETECTED                  = 0x08;
 const unsigned char STATUS_REG1_CTS                            = 0x10;
 const unsigned char STATUS_REG1_TX_UNDERRUN                    = 0x20;
 const unsigned char STATUS_REG1_TDRA                           = 0x40;
+#ifndef __APPLE__
 const unsigned char STATUS_REG1_FRAME_COMPLETE                 = 0x40;
+#endif
 const unsigned char STATUS_REG1_IRQ                            = 0x80;
 
 const unsigned char STATUS_REG2_ADDRESS_PRESENT                = 0x01;
@@ -383,6 +397,7 @@ static ECOLAN* FindNetworkConfig(unsigned char Station)
 	return nullptr;
 }
 
+#ifndef __APPLE__
 static ECOLAN* FindHost(sockaddr_in* pAddress)
 {
 	for (int i = 0; i < networkp; i++)
@@ -396,8 +411,10 @@ static ECOLAN* FindHost(sockaddr_in* pAddress)
 
 	return nullptr;
 }
+#endif
 
 //---------------------------------------------------------------------------
+#ifndef __APPLE__
 
 static ECOLAN* AddHost(sockaddr_in* pAddress)
 {
@@ -425,6 +442,7 @@ static ECOLAN* AddHost(sockaddr_in* pAddress)
 
 	return nullptr;
 }
+#endif
 
 //---------------------------------------------------------------------------
 
@@ -482,10 +500,15 @@ void EconetReset()
 	{
 		if (!SingleSocket)
 		{
+#ifndef __APPLE__
 			closesocket(SendSocket);
+#endif
+			
 		}
 
+#ifndef __APPLE__
 		closesocket(ListenSocket);
+#endif
 		ReceiverSocketsOpen = false;
 	}
 
@@ -529,6 +552,7 @@ void EconetReset()
 			return;
 		}
 
+#ifndef __APPLE__
 		service.sin_port = htons(EconetListenPort);
 		service.sin_addr.s_addr = EconetListenIP;
 
@@ -539,9 +563,11 @@ void EconetReset()
 			ListenSocket = INVALID_SOCKET;
 			return;
 		}
+#endif
 	}
 	else
 	{
+#ifndef __APPLE__
 		// Station number not specified, find first one not already in use.
 		char localhost[256];
 		hostent *host;
@@ -590,7 +616,7 @@ void EconetReset()
 						{
 							struct in_addr localaddr;
 							memcpy(&localaddr, host->h_addr_list[a], sizeof(struct in_addr));
-						
+
 							if (aunnet[j].inet_addr == (localaddr.S_un.S_addr & 0x00FFFFFF))
 							{
 								service.sin_port = htons(DEFAULT_AUN_PORT);
@@ -618,6 +644,7 @@ void EconetReset()
 			}
 		}
 		else
+#endif
 		{
 			EconetError("Econet: Failed to resolve local IP address");
 			return;
@@ -647,7 +674,9 @@ void EconetReset()
 
 		if (SendSocket == INVALID_SOCKET) {
 			EconetError("Econet: Failed to open sending socket (error %ld)", WSAGetLastError());
+#ifndef __APPLE__
 			closesocket(ListenSocket);
+#endif
 			ListenSocket = INVALID_SOCKET;
 			return;
 		}
@@ -659,7 +688,9 @@ void EconetReset()
 	if (setsockopt(SendSocket, SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof(broadcast)) == -1)
 	{
 		EconetError("Econet: Failed to set cosket for broadcasts (error %ld)", WSAGetLastError());
+#ifndef __APPLE__
 		closesocket(ListenSocket);
+#endif
 		ListenSocket = INVALID_SOCKET;
 		return;
 	}
@@ -759,14 +790,15 @@ static void ReadEconetConfigFile()
 					network[networkp].inet_addr = inet_addr(Tokens[2].c_str());
 					network[networkp].port      = (u_short)std::stoi(Tokens[3]);
 
+#ifndef __APPLE__
 					in_addr in;
 					in.S_un.S_addr = network[networkp].inet_addr;
 					char* ip = inet_ntoa(in);
-
 					DebugDisplayTraceF(DebugType::Econet, true,
 					                   "Econet: ConfigFile Net %i Stn %i IP %s Port %i",
 					                   network[networkp].network, network[networkp].station,
 					                   ip, network[networkp].port);
+#endif
 
 					networkp++;
 				}
@@ -1318,7 +1350,7 @@ bool EconetPoll_real() // return NMI status
 
 					sockaddr_in RecvAddr;
 					bool SendMe = false;
-					int SendLen;
+					int SendLen = 0;
 					int i = 0;
 
 					if (AUNMode && (BeebTx.eh.deststn == 255 || BeebTx.eh.deststn ==  0)) // broadcast!
@@ -1390,7 +1422,7 @@ bool EconetPoll_real() // return NMI status
 
 						RecvAddr.sin_family = AF_INET;
 						RecvAddr.sin_port = htons(network[i].port);
-						RecvAddr.sin_addr.s_addr = network[i].inet_addr;
+						RecvAddr.sin_addr.s_addr = (unsigned int)network[i].inet_addr;
 					}
 
 					if (DebugEnabled) {
@@ -1457,7 +1489,7 @@ bool EconetPoll_real() // return NMI status
 							EconetTx.ah.cb = (unsigned int)(BeebTx.eh.cb) & 127; // | 128;
 							EconetTx.ah.port = (unsigned int)BeebTx.eh.port;
 							EconetTx.ah.pad = 0;
-							EconetTx.ah.handle = (ec_sequence+=4);
+							EconetTx.ah.handle = (unsigned int)(ec_sequence+=4);
 
 							EconetTx.destnet = BeebTx.eh.destnet | outmask; //30JUN
 							EconetTx.deststn = BeebTx.eh.deststn;
@@ -1641,6 +1673,7 @@ bool EconetPoll_real() // return NMI status
 						FD_ZERO(&ReadFds);
 						FD_SET(ListenSocket, &ReadFds);
 
+#ifndef __APPLE__
 						static const timeval TimeOut = {0, 0};
 
 						int RetVal = select((int)ListenSocket + 1, &ReadFds, NULL, NULL, &TimeOut);
@@ -1660,7 +1693,7 @@ bool EconetPoll_real() // return NMI status
 							{
 								RetVal = recvfrom(ListenSocket, (char *)BeebRx.buff, sizeof(BeebRx.buff), 0, (SOCKADDR *)&RecvAddr, &sizRcvAdr);
 							}
-
+							
 							if (RetVal > 0)
 							{
 								if (DebugEnabled)
@@ -1670,7 +1703,6 @@ bool EconetPoll_real() // return NMI status
 									                   (int)RetVal,
 									                   RecvAddr.sin_addr.s_addr,
 									                   htons(RecvAddr.sin_port));
-
 									char info[200];
 									char *s = info;
 									s += sprintf(s, "EconetPoll: Packet data:");
@@ -1854,6 +1886,8 @@ bool EconetPoll_real() // return NMI status
 							}
 						}
 						else if (RetVal == SOCKET_ERROR)
+#endif
+
 						{
 							EconetError("Econet: Failed to check for new packet");
 						}
@@ -1864,37 +1898,53 @@ bool EconetPoll_real() // return NMI status
 					if (AUNMode && EconetSCACKtrigger > TotalCycles)
 					{
 						switch (fourwaystage) {
-						case FourWayStage::ScoutSent:
-							// just got a scout from the beeb, fake an acknowledgement.
-							BeebRx.eh.deststn = EconetStationID;
-							BeebRx.eh.destnet = 0;
-							BeebRx.eh.srcstn = (unsigned char)EconetTx.deststn; // use scout's dest as source of ack.
-							BeebRx.eh.srcnet = (unsigned char)EconetTx.destnet; // & inmask; //30jun
-
-							BeebRx.BytesInBuffer = 4;
-							BeebRx.Pointer = 0;
-							fourwaystage = FourWayStage::ScoutAckReceived;
-							if (DebugEnabled) DebugDisplayTrace(DebugType::Econet, true, "Econet: Set FWS_SCACKRCVD");
-							break;
-
-						case FourWayStage::ScoutAckSent:
-							// beeb acked the scout we gave it, so give it the data AUN sent us earlier.
-							BeebRx.eh.deststn = EconetStationID; // as it is data it must be for us
-							BeebRx.eh.destnet = 0;
-							// BeebRx.eh.deststn = EconetRx.eh.deststn ; // 30jun
-							// BeebRx.eh.destnet = EconetRx.eh.destnet & inmask ; // 30jun was 0
-
-							BeebRx.eh.srcstn = (unsigned char)EconetTx.deststn;  //30jun dont think this is right..
-							BeebRx.eh.srcnet = (unsigned char)(EconetTx.destnet & inmask);
-							j = 4;
-							for (unsigned int i = 0; i < EconetRx.BytesInBuffer - sizeof(EconetRx.ah); i++, j++) {
-								BeebRx.buff[j] = EconetRx.buff[i];
-							}
-							BeebRx.BytesInBuffer = j;
-							BeebRx.Pointer =0;
-							fourwaystage = FourWayStage::DataReceived;
-							if (DebugEnabled) DebugDisplayTrace(DebugType::Econet, true, "Econet: Set FWS_DATARCVD");
-							break;
+							case FourWayStage::Idle:
+								break;
+							case FourWayStage::ScoutSent:
+								// just got a scout from the beeb, fake an acknowledgement.
+								BeebRx.eh.deststn = EconetStationID;
+								BeebRx.eh.destnet = 0;
+								BeebRx.eh.srcstn = (unsigned char)EconetTx.deststn; // use scout's dest as source of ack.
+								BeebRx.eh.srcnet = (unsigned char)EconetTx.destnet; // & inmask; //30jun
+								
+								BeebRx.BytesInBuffer = 4;
+								BeebRx.Pointer = 0;
+								fourwaystage = FourWayStage::ScoutAckReceived;
+								if (DebugEnabled) DebugDisplayTrace(DebugType::Econet, true, "Econet: Set FWS_SCACKRCVD");
+								break;
+								
+							case FourWayStage::ScoutAckReceived:
+								break;
+							case FourWayStage::DataSent:
+								break;
+							case FourWayStage::WaitForIdle:
+								break;
+							case FourWayStage::ScoutReceived:
+								break;
+							case FourWayStage::ScoutAckSent:
+								// beeb acked the scout we gave it, so give it the data AUN sent us earlier.
+								BeebRx.eh.deststn = EconetStationID; // as it is data it must be for us
+								BeebRx.eh.destnet = 0;
+								// BeebRx.eh.deststn = EconetRx.eh.deststn ; // 30jun
+								// BeebRx.eh.destnet = EconetRx.eh.destnet & inmask ; // 30jun was 0
+								
+								BeebRx.eh.srcstn = (unsigned char)EconetTx.deststn;  //30jun dont think this is right..
+								BeebRx.eh.srcnet = (unsigned char)(EconetTx.destnet & inmask);
+								j = 4;
+								for (unsigned int i = 0; i < EconetRx.BytesInBuffer - sizeof(EconetRx.ah); i++, j++) {
+									BeebRx.buff[j] = EconetRx.buff[i];
+								}
+								BeebRx.BytesInBuffer = j;
+								BeebRx.Pointer =0;
+								fourwaystage = FourWayStage::DataReceived;
+								if (DebugEnabled) DebugDisplayTrace(DebugType::Econet, true, "Econet: Set FWS_DATARCVD");
+								break;
+							case FourWayStage::DataReceived:
+								break;
+							case FourWayStage::ImmediateSent:
+								break;
+							case FourWayStage::ImmediateReceived:
+								break;
 						}
 					}
 				}
@@ -2017,12 +2067,13 @@ bool EconetPoll_real() // return NMI status
 
 	// and then set the status bit if the line is high! (status bit stays
 	// up until cpu tries to clear it) (& still stays up if cts line still high)
-
+#ifndef __APPLE__
 	if (!(ADLC.control1 && CONTROL_REG1_TX_RESET) && ADLC.cts) // TODO: is && right here?
 	{
 		ADLC.status1 |= STATUS_REG1_CTS; // set CTS now
 	}
-
+#endif
+	
 	// SR1b5 - TXU - Tx Underrun.
 	if (ADLC.txfptr > 4) // probably not needed
 	{

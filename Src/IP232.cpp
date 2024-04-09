@@ -40,10 +40,13 @@ Boston, MA  02110-1301, USA.
 #include "Main.h"
 #include "RingBuffer.h"
 #include "Serial.h"
+#ifndef __APPLE__
 #include "Thread.h"
+#endif
 
 constexpr int IP232_CONNECTION_DELAY = 8192; // Cycles to wait after connection
 
+#ifndef __APPLE__
 class EthernetPortReadThread : public Thread
 {
 	public:
@@ -55,12 +58,15 @@ class EthernetPortStatusThread : public Thread
 	public:
 		virtual unsigned int ThreadFunc();
 };
+#endif
 
 // IP232
 static SOCKET EthernetSocket = INVALID_SOCKET; // Listen socket
 
+#ifndef __APPLE__
 static EthernetPortReadThread EthernetReadThread;
 static EthernetPortStatusThread EthernetStatusThread;
+#endif
 
 // This bit is the Serial Port stuff
 bool IP232Mode;
@@ -68,8 +74,10 @@ bool IP232Raw;
 char IP232Address[256];
 int IP232Port;
 
+#ifndef __APPLE__
 static bool ip232_flag_received = false;
 // static bool mStartAgain = false;
+#endif
 
 // IP232 routines use InputBuffer as data coming in from the modem,
 // and OutputBuffer for data to be sent out to the modem.
@@ -78,9 +86,11 @@ static RingBuffer OutputBuffer;
 
 CycleCountT IP232RxTrigger=CycleCountTMax;
 
+#ifndef __APPLE__
 static void EthernetReceivedData(unsigned char* pData, int Length);
 static void EthernetPortStore(unsigned char data);
 static void DebugReceivedData(unsigned char* pData, int Length);
+#endif
 
 bool IP232Open()
 {
@@ -140,12 +150,14 @@ bool IP232Open()
 	if (DebugEnabled)
 		DebugDisplayTrace(DebugType::RemoteServer, true, "IP232: Init, CTS low");
 
+#ifndef __APPLE__
 	if (!EthernetReadThread.IsStarted())
 	{
 		EthernetReadThread.Start();
 		EthernetStatusThread.Start();
 	}
-
+#endif
+	
 	return true;
 }
 
@@ -189,7 +201,9 @@ void IP232Close()
 		if (DebugEnabled)
 			DebugDisplayTrace(DebugType::RemoteServer, true, "IP232: Closing Sockets");
 
+#ifndef __APPLE__
 		closesocket(EthernetSocket);
+#endif
 		EthernetSocket = INVALID_SOCKET;
 	}
 
@@ -247,6 +261,7 @@ unsigned char IP232Read()
 	return data;
 }
 
+#ifndef __APPLE__
 unsigned int EthernetPortReadThread::ThreadFunc()
 {
 	// Much taken from Mac version by Jon Welch
@@ -531,3 +546,4 @@ static void DebugReceivedData(unsigned char* pData, int Length)
 
 	DebugDisplayTrace(DebugType::RemoteServer, true, info);
 }
+#endif

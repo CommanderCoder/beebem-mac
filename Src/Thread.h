@@ -38,11 +38,13 @@ class Thread
 		virtual unsigned int ThreadFunc() = 0;
 
 	private:
+#ifndef __APPLE__
 		static unsigned int __stdcall s_ThreadFunc(void *parameter);
 
 	private:
 		HANDLE m_hThread;
 		HANDLE m_hStartEvent;
+#endif
 };
 
 #endif

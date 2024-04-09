@@ -1088,10 +1088,13 @@ void DebugCloseDialog()
 	DebugParasite = false;
 	DebugInfoWidth = 0;
 }
+#endif
 
 //*******************************************************************
 void DebugDisplayInfoF(const char *format, ...)
 {
+#ifndef __APPLE__
+
 	va_list args;
 	va_start(args, format);
 
@@ -1107,10 +1110,13 @@ void DebugDisplayInfoF(const char *format, ...)
 		DebugDisplayInfo(buffer);
 		free(buffer);
 	}
+#endif
 }
 
 void DebugDisplayInfo(const char *info)
 {
+#ifndef __APPLE__
+
 	HDC pDC = GetDC(hwndInfo);
 	SIZE size;
 	HGDIOBJ oldFont = SelectObject(pDC, (HFONT)SendMessage(hwndInfo, WM_GETFONT, 0, 0));
@@ -1134,7 +1140,10 @@ void DebugDisplayInfo(const char *info)
 	}
 	if (LinesDisplayed > LINES_IN_INFO)
 		SendMessage(hwndInfo, LB_SETTOPINDEX, LinesDisplayed - LINES_IN_INFO, 0);
+#endif
 }
+
+#ifndef __APPLE__
 
 INT_PTR CALLBACK DebugDlgProc(HWND hwndDlg, UINT message, WPARAM wParam, LPARAM /* lParam */)
 {

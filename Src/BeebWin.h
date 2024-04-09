@@ -123,6 +123,10 @@ struct CUSTOMVERTEX
 // Our custom FVF, which describes our custom vertex structure
 #define D3DFVF_CUSTOMVERTEX (D3DFVF_XYZ|D3DFVF_DIFFUSE|D3DFVF_TEX1)
 
+#else
+
+int BeebMainKeyUpDown(UINT, long,long);
+
 #endif
 
 enum class MessageType {
@@ -340,6 +344,7 @@ public:
 	void CheckMenuItem(UINT id, bool checked);
 	void EnableMenuItem(UINT id, bool enabled);
 
+#ifndef __APPLE__
 	// DirectX - calls DDraw or DX9 fn
 	void InitDX();
 	void ResetDX();
@@ -347,7 +352,6 @@ public:
 	void ExitDX();
 	void UpdateSmoothing();
 
-#ifndef __APPLE__
 	// DirectDraw
 	HRESULT InitDirectDraw();
 	HRESULT InitSurfaces();
@@ -415,8 +419,8 @@ public:
 	void TextToSpeechSetVoice(int Index);
 	void TextToSpeechSetVoice(ISpObjectToken* pToken);
 	void TextToSpeechSelectVoiceMenuItem(int Index);
-	void Speak(const char *text, DWORD flags);
 #endif
+	void Speak(const char *text, DWORD flags);
 	void SpeakChar(unsigned char c);
 #ifndef __APPLE__
 	void TextToSpeechClearBuffer();
@@ -570,16 +574,19 @@ public:
 	UINT m_MenuIDSampleRate;
 	UINT m_MenuIDVolume;
 
-#ifndef __APPLE__
 	// Joystick input
 	bool m_JoystickCaptured;
+#ifndef __APPLE__
 	JOYCAPS m_JoystickCaps;
+#endif
 	UINT m_MenuIDSticks;
 	
+
 	// Mouse capture
 	bool m_HideCursor;
 	bool m_CaptureMouse;
 	bool m_MouseCaptured;
+#ifndef __APPLE__
 	POINT m_RelMousePos;
 #endif
 
@@ -692,11 +699,13 @@ public:
 	static const int MAX_SPEECH_SCREEN_LEN = 128 * 32;
 	char m_SpeechText[MAX_SPEECH_LINE_LEN + 1];
 	bool m_SpeechSpeakPunctuation;
+#endif
 	bool m_SpeechWriteChar;
 	static const int MAX_SPEECH_BUF_LEN = 160;
 	char m_SpeechBuf[MAX_SPEECH_BUF_LEN + 1];
 	int m_SpeechBufPos;
 	int m_SpeechRate;
+#ifndef __APPLE__
 
 	// Text view variables
 	HWND m_hTextView;
