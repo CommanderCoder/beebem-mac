@@ -193,10 +193,8 @@ public:
 	}
 #else
 	void updateLines(int starty, int nlines);
-	void Blt(RECT destR, RECT srcR);
 	
-	int_fast32_t m_RGB32[256];
-	int_fast16_t m_RGB16[256];
+	void MacVideo(int top, int left, int bottom, int right);
 #endif
 	
 	void doHorizLine(int Colour, int y, int sx, int width) {
@@ -709,7 +707,9 @@ public:
 
 	// Text view variables
 	HWND m_hTextView;
+#endif
 	bool m_TextViewEnabled;
+#ifndef __APPLE__
 	WNDPROC m_TextViewPrevWndProc;
 	static const int MAX_TEXTVIEW_SCREEN_LEN = 128 * 32;
 	char m_TextViewScreen[MAX_TEXTVIEW_SCREEN_LEN + 1];

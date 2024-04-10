@@ -1214,9 +1214,7 @@ void BeebWin::InitMenu(void)
 	UpdateMonitorMenu();
 	CheckMenuItem(ID_HIDEMENU, m_HideMenuEnabled);
 	UpdateLEDMenu();
-#ifndef __APPLE__
 	CheckMenuItem(IDM_TEXTVIEW, m_TextViewEnabled);
-#endif
 	
 	// View -> Win size
 	CheckMenuItem(IDM_320X256, false);

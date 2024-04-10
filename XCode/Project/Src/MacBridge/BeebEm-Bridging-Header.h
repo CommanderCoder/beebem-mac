@@ -4,7 +4,7 @@
 
 // Including from Windows Src folder
 #include "Resource.h"
-
+#include "BeebEm-Bridging-Video.hpp"
 
 // Exposed to AppDelegate
 void beeb_HandleCommand(unsigned int cmdID);
@@ -15,15 +15,6 @@ int beeb_main(long argc, char *argv[]);
 void beeb_MainCpuLoop();
 int beeb_end();
 
-// Exposed to Renderer
-struct CColour{
-	unsigned char r;
-	unsigned char g;
-	unsigned char b;
-	unsigned char a;
-};
-
-void beeb_video(long height, long width, struct CColour buffer[]);
 
 // Exposed to BeebSKView
 void beeb_handlekeys(long eventkind, unsigned long keycode, char charCode);

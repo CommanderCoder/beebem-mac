@@ -41,6 +41,8 @@
 		DC9B41392BC22E9800C3D9D8 /* BeebWinSpeech.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996F42BBA0C9C00A109A5 /* BeebWinSpeech.cpp */; };
 		DC9B413A2BC22FE200C3D9D8 /* BeebWinPrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC09970B2BBA0C9C00A109A5 /* BeebWinPrefs.cpp */; };
 		DCACDAC12BC5DD2E00CEF154 /* winints.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCACDAC02BC5DD2E00CEF154 /* winints.cpp */; };
+		DCACDAC42BC669B600CEF154 /* BeebMacVideo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCACDAC22BC669B600CEF154 /* BeebMacVideo.cpp */; };
+		DCACDAC72BC66F5600CEF154 /* BeebEm-Bridging-Video.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCACDAC52BC66F5600CEF154 /* BeebEm-Bridging-Video.cpp */; };
 		DCB3B2592BBB865E00F507F4 /* opus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0997BC2BBAA91E00A109A5 /* opus.cpp */; };
 		DCDC73062BBE043A00D83402 /* Acorn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0997AF2BBAA91E00A109A5 /* Acorn.cpp */; };
 		DCDC73072BBE043D00D83402 /* Watford.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0997B72BBAA91E00A109A5 /* Watford.cpp */; };
@@ -256,7 +258,6 @@
 		DC0997982BBAA51200A109A5 /* beebmainprefs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = beebmainprefs.cpp; sourceTree = "<group>"; };
 		DC0997992BBAA51200A109A5 /* beebemrcids.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = beebemrcids.h; sourceTree = "<group>"; };
 		DC09979A2BBAA51200A109A5 /* beebmainvid.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = beebmainvid.cpp; sourceTree = "<group>"; };
-		DC09979B2BBAA51200A109A5 /* beebmainspeech.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = beebmainspeech.cpp; sourceTree = "<group>"; };
 		DC09979C2BBAA51300A109A5 /* beebmain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = beebmain.cpp; sourceTree = "<group>"; };
 		DC09979D2BBAA51300A109A5 /* beebemrcids.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = beebemrcids.cpp; sourceTree = "<group>"; };
 		DC0997A52BBAA5D500A109A5 /* windows.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = windows.h; path = Src/windows_stubs/windows.h; sourceTree = SOURCE_ROOT; };
@@ -301,6 +302,9 @@
 		DC907ED12BB7101900523116 /* BeebEm-Bridging-Temp.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "BeebEm-Bridging-Temp.hpp"; sourceTree = "<group>"; };
 		DC907ED32BB7191300523116 /* mergenotes.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = mergenotes.txt; sourceTree = "<group>"; };
 		DCACDAC02BC5DD2E00CEF154 /* winints.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = winints.cpp; sourceTree = "<group>"; };
+		DCACDAC22BC669B600CEF154 /* BeebMacVideo.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = BeebMacVideo.cpp; sourceTree = "<group>"; };
+		DCACDAC52BC66F5600CEF154 /* BeebEm-Bridging-Video.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "BeebEm-Bridging-Video.cpp"; sourceTree = "<group>"; };
+		DCACDAC62BC66F5600CEF154 /* BeebEm-Bridging-Video.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "BeebEm-Bridging-Video.hpp"; sourceTree = "<group>"; };
 		DCB3B2512BBAB97A00F507F4 /* winints.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = winints.h; sourceTree = "<group>"; };
 		DCDC73122BBE192200D83402 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		DCDC73182BBE1B9F00D83402 /* commctrl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = commctrl.h; sourceTree = "<group>"; };
@@ -581,6 +585,8 @@
 				DC907ED02BB7101900523116 /* BeebEm-Bridging-Temp.cpp */,
 				DC907ED12BB7101900523116 /* BeebEm-Bridging-Temp.hpp */,
 				DC907ECF2BB7101900523116 /* BeebEm-Bridging-Header.h */,
+				DCACDAC52BC66F5600CEF154 /* BeebEm-Bridging-Video.cpp */,
+				DCACDAC62BC66F5600CEF154 /* BeebEm-Bridging-Video.hpp */,
 			);
 			path = MacBridge;
 			sourceTree = "<group>";
@@ -665,11 +671,11 @@
 				DC09979C2BBAA51300A109A5 /* beebmain.cpp */,
 				DC0997972BBAA51200A109A5 /* beebmainio.cpp */,
 				DC0997982BBAA51200A109A5 /* beebmainprefs.cpp */,
-				DC09979B2BBAA51200A109A5 /* beebmainspeech.cpp */,
 				DC09979A2BBAA51200A109A5 /* beebmainvid.cpp */,
 				DC0996DC2BBA0C6400A109A5 /* windows_headers */,
 				DC0996DB2BBA0C5000A109A5 /* windows_code */,
 				DC1DBA1F2BB8CF2B00AAB22F /* MacBridge */,
+				DCACDAC22BC669B600CEF154 /* BeebMacVideo.cpp */,
 			);
 			path = Src;
 			sourceTree = "<group>";
@@ -788,6 +794,7 @@
 				DC907ED22BB7101900523116 /* BeebEm-Bridging-Temp.cpp in Sources */,
 				DCDC73462BC0B5B500D83402 /* SysVia.cpp in Sources */,
 				DCDC73342BBFE87C00D83402 /* Disc8271.cpp in Sources */,
+				DCACDAC72BC66F5600CEF154 /* BeebEm-Bridging-Video.cpp in Sources */,
 				DC9B41342BC215BD00C3D9D8 /* Econet.cpp in Sources */,
 				DCDC734D2BC0B80C00D83402 /* UserVia.cpp in Sources */,
 				DC9B41322BC2145D00C3D9D8 /* Thread.cpp in Sources */,
@@ -801,6 +808,7 @@
 				DCDC73152BBE1A9500D83402 /* StringUtils.cpp in Sources */,
 				DCDC733D2BC0AD1600D83402 /* Master512CoPro.cpp in Sources */,
 				DCDC73482BC0B6CC00D83402 /* TouchScreen.cpp in Sources */,
+				DCACDAC42BC669B600CEF154 /* BeebMacVideo.cpp in Sources */,
 				DC1DBA202BB8CF8600AAB22F /* BeebEm-Bridge-TapeController.swift in Sources */,
 				DCDC73402BC0AFF100D83402 /* Sasi.cpp in Sources */,
 				DCDC73302BBF5F2200D83402 /* BeebMem.cpp in Sources */,

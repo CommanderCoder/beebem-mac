@@ -6,7 +6,6 @@
 //
 
 #include "BeebEm-Bridging-Temp.hpp"
-#include <Carbon/Carbon.h>
 #include <string>
 
 // Dummy functions for building the BeebEm shim
@@ -34,9 +33,7 @@ extern "C" void beeb_HandleCommand(unsigned int cmdID)
 {
 }
 
-extern "C" void beeb_video(int height, int width, struct CColour buffer[])
-{
-}
+
 
 //tape
 extern "C" void beeb_TapeControlOpenDialog()
@@ -73,7 +70,7 @@ extern "C" long beeb_getTableRowsCount(const char* tablename)
 
 // cannot return value contained in a local variable - so this is global
 static std::string  temp;
-extern "C" const char* beeb_getTableCellData(UInt32 property, long itemID)
+extern "C" const char* beeb_getTableCellData(unsigned int property, long itemID)
 {
 	temp="";
 	return temp.c_str();

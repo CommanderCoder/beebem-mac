@@ -74,3 +74,7 @@ Some of the names in the new Resources have changed, so fixed up these. (y2KAdju
 Fixed the string literal to 'char *' and added Opus/Acorn/WatfordFDC
 
 
+Ran through and added __APPLE__ to every error in Windows version.
+
+Merged video. Removed <Carbon> as it was only used for Ptr which is char*, and UInt32, and it caused a conflict with KeyMap
+
