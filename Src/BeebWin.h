@@ -194,6 +194,7 @@ public:
 #else
 	void updateLines(int starty, int nlines);
 	
+	void CreateColours(bmiData bmi, int ledcolbase);
 	void MacVideo(int top, int left, int bottom, int right);
 #endif
 	

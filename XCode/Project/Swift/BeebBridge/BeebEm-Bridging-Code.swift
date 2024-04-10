@@ -326,6 +326,19 @@ func menuItemByIdentifier(id: String) -> NSMenuItem? {
 @_cdecl("swift_SetMenuCheck")
 public func swift_SetMenuCheck(_ cmd: UInt32, _ check: Bool)
 {
+	
+	//
+	//	auto cmdID = RC2ID.find(id);
+	//	if (cmdID != RC2ID.end())
+	//	{
+	//		swift_SetMenuCheck(cmdID->second, checked);
+	//	}
+	//	else
+	//	{
+	//		Report(MessageType::Error, "cannot find menu item %d\n", id);
+	//	}
+
+	
     let cmdSTR =  conv(cmd)
 
     if let n = menuItemByIdentifier(id:cmdSTR)
@@ -363,6 +376,18 @@ public func swift_ModifyMenu(_ cmd: UInt32, _ newitem: UInt32,  _ itemtext: Unsa
 @_cdecl("swift_SetMenuEnable")
 public func swift_SetMenuEnable(_ cmd: UInt32, _ enable: Bool)
 {
+//	
+//	auto cmdID = RC2ID.find(id);
+//	if (cmdID != RC2ID.end())
+//	{
+//		swift_SetMenuEnable(cmdID->second, enabled);
+//	}
+//	else
+//	{
+//		Report(MessageType::Error, "cannot find menu item %d\n", id);
+//	}
+//	
+//	
     // There is a checkbox in the Menu's Inspector called "Auto Enables Items" that was overriding my code.
     let cmdSTR =  conv(cmd)
     if let n = menuItemByIdentifier(id:cmdSTR)

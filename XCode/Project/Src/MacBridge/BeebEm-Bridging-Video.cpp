@@ -7,6 +7,12 @@
 
 #include "BeebEm-Bridging-Video.hpp"
 
+struct CColour{
+	unsigned char r;
+	unsigned char g;
+	unsigned char b;
+	unsigned char a;
+};
 
 int y = 0;
 const int width = 640;

@@ -14,20 +14,6 @@ extern "C" void beeb_handlekeys(long eventkind, unsigned int keycode, char charC
 {
 }
 
-extern "C" int beeb_main(long argc, char* argv[])
-{
-	return 1;
-}
-
-
-extern "C" void beeb_MainCpuLoop()
-{
-}
-
-extern "C" int beeb_end()
-{
-	return 0;
-}
 
 extern "C" void beeb_HandleCommand(unsigned int cmdID)
 {
@@ -134,10 +120,5 @@ extern "C" long beeb_BBHandleCommand(unsigned int cmdID)
 	return 0;
 }
 
-
-//main.cpp
-extern "C" int mainInit();
-extern "C" int mainStep();
-extern "C" int mainEnd();
 
 

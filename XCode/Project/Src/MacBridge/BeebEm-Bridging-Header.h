@@ -4,16 +4,10 @@
 
 // Including from Windows Src folder
 #include "Resource.h"
-#include "BeebEm-Bridging-Video.hpp"
 
 // Exposed to AppDelegate
 void beeb_HandleCommand(unsigned int cmdID);
 long beeb_ExportDiscFiles( unsigned int driveID);
-
-// Exposed to BeebViewController
-int beeb_main(long argc, char *argv[]);
-void beeb_MainCpuLoop();
-int beeb_end();
 
 
 // Exposed to BeebSKView
@@ -32,7 +26,10 @@ void beeb_ExportDiscFilesToFolder( );
 long beeb_getTableRowsCount(const char* tablename);
 const char* beeb_getTableCellData(unsigned int property, long itemID);
 
-
+// Exposed to BeebViewController
+int beeb_main(long argc, char *argv[]);
+void beeb_MainCpuLoop();
+int beeb_end();
 
 // Exposed to KeyboardMappingViewController [User Keyboard]
 void beeb_UserKeyboardOpen();
@@ -57,3 +54,16 @@ long beeb_BBHandleCommand(unsigned int cmdID);
 long beeb_ExportDiscFiles( unsigned int drive);
 void beeb_ExportDiscFilesToFolder();
 
+
+
+// make it bridge between C++ and Swift code
+
+// Exposed to Renderer
+struct CColour {
+	unsigned char r;
+	unsigned char g;
+	unsigned char b;
+	unsigned char a;
+};
+
+void beeb_video(long height, long width, struct CColour buffer[]);

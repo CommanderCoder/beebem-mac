@@ -256,6 +256,12 @@ BeebWin::BeebWin()
 			strcat(m_UserDataPath, "\\BeebEm\\");
 		}
 	}
+#else
+	
+	
+	// get the bundle directory
+
+	
 #endif
 	m_CustomData = false;
 
@@ -928,10 +934,16 @@ void BeebWin::CreateBitmap()
 	m_bmi.bmiColors[LED_COL_BASE+2].rgbBlue=0;		m_bmi.bmiColors[LED_COL_BASE+3].rgbBlue=0;
 	m_bmi.bmiColors[LED_COL_BASE+2].rgbReserved=0;	m_bmi.bmiColors[LED_COL_BASE+3].rgbReserved=0;
 #ifndef __APPLE__
-
 	m_hBitmap = CreateDIBSection(m_hDCBitmap, (BITMAPINFO *)&m_bmi, DIB_RGB_COLORS,
 	                             (void**)&m_screen, NULL,0);
+#else
+	m_screen = (char *) malloc(800 * 512);
+
+	fprintf(stderr, "Base Address = %08lx\n", (unsigned long) m_screen);
+
+	CreateColours(m_bmi, LED_COL_BASE);
 #endif
+	
 #endif
 
 	m_screen_blur = (char *)calloc(m_bmi.bmiHeader.biSizeImage,1);
@@ -971,7 +983,7 @@ bool BeebWin::InitClass()
 	// Register the window class and return success/failure code.
 	return RegisterClass(&wc) != 0;
 #else
-	return false;
+	return true;
 #endif
 }
 
@@ -1118,6 +1130,8 @@ void BeebWin::CheckMenuItem(UINT id, bool checked)
 {
 #ifndef __APPLE__
 	::CheckMenuItem(m_hMenu, id, checked ? MF_CHECKED : MF_UNCHECKED);
+#else
+//	swift_SetMenuCheck(id, checked);
 #endif
 }
 
@@ -1125,6 +1139,8 @@ void BeebWin::EnableMenuItem(UINT id, bool enabled)
 {
 #ifndef __APPLE__
 	::EnableMenuItem(m_hMenu, id, enabled ? MF_ENABLED : MF_GRAYED);
+#else
+//	swift_SetMenuEnable(id, enabled);
 #endif
 }
 
@@ -1500,6 +1516,10 @@ void BeebWin::SetRomMenu()
 		           MF_BYCOMMAND,
 		           IDM_ALLOWWRITES_ROM0 + i, // menu item identifier or pop-up menu handle
 		           Title);                   // menu item content
+#else
+//		beebwin_ModifyMenu(IDM_ALLOWWRITES_ROM0 + i,
+//						   IDM_ALLOWWRITES_ROM0 + i,
+//						   Title);
 #endif
 		// Disable ROM and uncheck the ROM/RAM which are NOT writable
 		EnableMenuItem(IDM_ALLOWWRITES_ROM0 + i, RomBankType[i] == BankType::Ram);
@@ -3112,6 +3132,8 @@ void BeebWin::HandleCommand(UINT MenuID)
 			ModifyMenu(m_hMenu, IDM_PRINTER_FILE,
 				MF_BYCOMMAND, IDM_PRINTER_FILE,
 				menu_string);
+#else
+//			beebwin_ModifyMenu(IDM_PRINTER_FILE, IDM_PRINTER_FILE, menu_string);
 #endif
 			if (MenuID != m_MenuIDPrinterPort)
 			{

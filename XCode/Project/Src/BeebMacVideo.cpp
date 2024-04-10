@@ -19,6 +19,21 @@ void Blt(char* screenbuffer, RECT destR, RECT srcR);
 int_fast32_t m_RGB32[256];
 int_fast16_t m_RGB16[256];
 
+void BeebWin::CreateColours(bmiData bmi, int ledcolbase)
+{
+	for (int i = 0; i < ledcolbase + 4; ++i)
+	{
+	  m_RGB32[i] = ((( ((bmi.bmiColors[i].rgbRed) << 8)  + (bmi.bmiColors[i].rgbGreen )) << 8) + (bmi.bmiColors[i].rgbBlue));
+	  m_RGB32[i] |= 0xff000000;
+
+	  m_RGB16[i] = ((( ((bmi.bmiColors[i].rgbRed >> 3) << 5)  + (bmi.bmiColors[i].rgbGreen >> 3)) << 5) + (bmi.bmiColors[i].rgbBlue >> 3));
+
+	//      printf("RGB32[%d] = %08x, RGB16[%d] = %04x\n", i, m_RGB32[i], i, m_RGB16[i]);
+
+	}
+}
+
+
 //only one renderer on MACOS
 // - not GDI and not DX9
 // - blit to secondary buffer
