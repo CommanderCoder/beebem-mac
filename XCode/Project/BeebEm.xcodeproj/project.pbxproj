@@ -17,6 +17,20 @@
 		DC1DBA262BB9A6F600AAB22F /* FileListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1DBA172BB8CF0500AAB22F /* FileListViewController.swift */; };
 		DC527AD12BC71C21000D7CCF /* BeebEm-Bridging-Video.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCACDAC52BC66F5600CEF154 /* BeebEm-Bridging-Video.cpp */; };
 		DC527AD22BC71CBC000D7CCF /* BeebEm-Bridging-Main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCACDAC82BC67D2500CEF154 /* BeebEm-Bridging-Main.cpp */; };
+		DC527BC82BC75107000D7CCF /* Teletext.fnt in Resources */ = {isa = PBXBuildFile; fileRef = DC527BC42BC75107000D7CCF /* Teletext.fnt */; };
+		DC527BC92BC75107000D7CCF /* RelayOn.snd in Resources */ = {isa = PBXBuildFile; fileRef = DC527BC52BC75107000D7CCF /* RelayOn.snd */; };
+		DC527BCA2BC75107000D7CCF /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = DC527BC62BC75107000D7CCF /* README.md */; };
+		DC527BCB2BC75107000D7CCF /* RelayOff.snd in Resources */ = {isa = PBXBuildFile; fileRef = DC527BC72BC75107000D7CCF /* RelayOff.snd */; };
+		DC527BD12BC75114000D7CCF /* DriveMotor.snd in Resources */ = {isa = PBXBuildFile; fileRef = DC527BCC2BC75114000D7CCF /* DriveMotor.snd */; };
+		DC527BD22BC75114000D7CCF /* HeadStep.snd in Resources */ = {isa = PBXBuildFile; fileRef = DC527BCD2BC75114000D7CCF /* HeadStep.snd */; };
+		DC527BD32BC75114000D7CCF /* HeadSeek.snd in Resources */ = {isa = PBXBuildFile; fileRef = DC527BCE2BC75114000D7CCF /* HeadSeek.snd */; };
+		DC527BD42BC75114000D7CCF /* HeadUnload.snd in Resources */ = {isa = PBXBuildFile; fileRef = DC527BCF2BC75114000D7CCF /* HeadUnload.snd */; };
+		DC527BD52BC75114000D7CCF /* HeadLoad.snd in Resources */ = {isa = PBXBuildFile; fileRef = DC527BD02BC75114000D7CCF /* HeadLoad.snd */; };
+		DC527BD72BC75122000D7CCF /* COPYRIGHT.txt in Resources */ = {isa = PBXBuildFile; fileRef = DC527BD62BC75122000D7CCF /* COPYRIGHT.txt */; };
+		DC527C1E2BC75165000D7CCF /* CHANGES.md in Resources */ = {isa = PBXBuildFile; fileRef = DC527C1D2BC75165000D7CCF /* CHANGES.md */; };
+		DC527C202BC75175000D7CCF /* README-SPROW.txt in Resources */ = {isa = PBXBuildFile; fileRef = DC527C1F2BC75175000D7CCF /* README-SPROW.txt */; };
+		DC527D122BC75316000D7CCF /* UserData in Resources */ = {isa = PBXBuildFile; fileRef = DC527D112BC75316000D7CCF /* UserData */; };
+		DC527D142BC7532E000D7CCF /* Help in Resources */ = {isa = PBXBuildFile; fileRef = DC527D132BC7532E000D7CCF /* Help */; };
 		DC907E9D2BB4DBCE00523116 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DC907E9C2BB4DBCE00523116 /* Assets.xcassets */; };
 		DC907EA02BB4DBCE00523116 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DC907E9F2BB4DBCE00523116 /* Preview Assets.xcassets */; };
 		DC907EAD2BB5B7F300523116 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DC907EAB2BB5B7F300523116 /* Main.storyboard */; };
@@ -30,7 +44,6 @@
 		DC907ECC2BB70CE000523116 /* NSImage+Bitmap.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC907ECB2BB70CE000523116 /* NSImage+Bitmap.swift */; };
 		DC907ECE2BB70E7B00523116 /* BeebSKView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC907ECD2BB70E7B00523116 /* BeebSKView.swift */; };
 		DC907ED22BB7101900523116 /* BeebEm-Bridging-Temp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC907ED02BB7101900523116 /* BeebEm-Bridging-Temp.cpp */; };
-		DC907ED42BB7191300523116 /* mergenotes.txt in Resources */ = {isa = PBXBuildFile; fileRef = DC907ED32BB7191300523116 /* mergenotes.txt */; };
 		DC9B41302BC20C0500C3D9D8 /* IP232.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996E92BBA0C9B00A109A5 /* IP232.cpp */; };
 		DC9B41312BC2108600C3D9D8 /* Serial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC09970D2BBA0C9C00A109A5 /* Serial.cpp */; };
 		DC9B41322BC2145D00C3D9D8 /* Thread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996EB2BBA0C9B00A109A5 /* Thread.cpp */; };
@@ -277,6 +290,20 @@
 		DC1DBA152BB8CF0500AAB22F /* RomConfigViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RomConfigViewController.swift; sourceTree = "<group>"; };
 		DC1DBA162BB8CF0500AAB22F /* TapeControlViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TapeControlViewController.swift; sourceTree = "<group>"; };
 		DC1DBA172BB8CF0500AAB22F /* FileListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileListViewController.swift; sourceTree = "<group>"; };
+		DC527BC42BC75107000D7CCF /* Teletext.fnt */ = {isa = PBXFileReference; lastKnownFileType = file; name = Teletext.fnt; path = ../../Teletext.fnt; sourceTree = "<group>"; };
+		DC527BC52BC75107000D7CCF /* RelayOn.snd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = RelayOn.snd; path = ../../RelayOn.snd; sourceTree = "<group>"; };
+		DC527BC62BC75107000D7CCF /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../../README.md; sourceTree = "<group>"; };
+		DC527BC72BC75107000D7CCF /* RelayOff.snd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = RelayOff.snd; path = ../../RelayOff.snd; sourceTree = "<group>"; };
+		DC527BCC2BC75114000D7CCF /* DriveMotor.snd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = DriveMotor.snd; path = ../../DriveMotor.snd; sourceTree = "<group>"; };
+		DC527BCD2BC75114000D7CCF /* HeadStep.snd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = HeadStep.snd; path = ../../HeadStep.snd; sourceTree = "<group>"; };
+		DC527BCE2BC75114000D7CCF /* HeadSeek.snd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = HeadSeek.snd; path = ../../HeadSeek.snd; sourceTree = "<group>"; };
+		DC527BCF2BC75114000D7CCF /* HeadUnload.snd */ = {isa = PBXFileReference; lastKnownFileType = file; name = HeadUnload.snd; path = ../../HeadUnload.snd; sourceTree = "<group>"; };
+		DC527BD02BC75114000D7CCF /* HeadLoad.snd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = HeadLoad.snd; path = ../../HeadLoad.snd; sourceTree = "<group>"; };
+		DC527BD62BC75122000D7CCF /* COPYRIGHT.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = COPYRIGHT.txt; path = ../../COPYRIGHT.txt; sourceTree = "<group>"; };
+		DC527C1D2BC75165000D7CCF /* CHANGES.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = CHANGES.md; path = ../../CHANGES.md; sourceTree = "<group>"; };
+		DC527C1F2BC75175000D7CCF /* README-SPROW.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "README-SPROW.txt"; path = "../../README-SPROW.txt"; sourceTree = "<group>"; };
+		DC527D112BC75316000D7CCF /* UserData */ = {isa = PBXFileReference; lastKnownFileType = folder; name = UserData; path = ../../UserData; sourceTree = "<group>"; };
+		DC527D132BC7532E000D7CCF /* Help */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Help; path = ../../Help; sourceTree = "<group>"; };
 		DC907E952BB4DBCD00523116 /* BeebEm.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BeebEm.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC907E982BB4DBCD00523116 /* BeebEmApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeebEmApp.swift; sourceTree = "<group>"; };
 		DC907E9A2BB4DBCD00523116 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -596,6 +623,27 @@
 			path = MacBridge;
 			sourceTree = "<group>";
 		};
+		DC527AD32BC7505C000D7CCF /* Bundle */ = {
+			isa = PBXGroup;
+			children = (
+				DC527D132BC7532E000D7CCF /* Help */,
+				DC527D112BC75316000D7CCF /* UserData */,
+				DC527C1D2BC75165000D7CCF /* CHANGES.md */,
+				DC527BD62BC75122000D7CCF /* COPYRIGHT.txt */,
+				DC527BCC2BC75114000D7CCF /* DriveMotor.snd */,
+				DC527BD02BC75114000D7CCF /* HeadLoad.snd */,
+				DC527BCE2BC75114000D7CCF /* HeadSeek.snd */,
+				DC527BCD2BC75114000D7CCF /* HeadStep.snd */,
+				DC527BCF2BC75114000D7CCF /* HeadUnload.snd */,
+				DC527C1F2BC75175000D7CCF /* README-SPROW.txt */,
+				DC527BC62BC75107000D7CCF /* README.md */,
+				DC527BC72BC75107000D7CCF /* RelayOff.snd */,
+				DC527BC52BC75107000D7CCF /* RelayOn.snd */,
+				DC527BC42BC75107000D7CCF /* Teletext.fnt */,
+			);
+			name = Bundle;
+			sourceTree = "<group>";
+		};
 		DC907E8C2BB4DBCD00523116 = {
 			isa = PBXGroup;
 			children = (
@@ -605,6 +653,7 @@
 				DC907EA82BB5B5F000523116 /* Scenes */,
 				DC907E972BB4DBCD00523116 /* BeebEm */,
 				DC907E962BB4DBCD00523116 /* Products */,
+				DC527AD32BC7505C000D7CCF /* Bundle */,
 				DCDC73112BBE192200D83402 /* Frameworks */,
 			);
 			sourceTree = "<group>";
@@ -752,10 +801,23 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DC527D142BC7532E000D7CCF /* Help in Resources */,
+				DC527BD72BC75122000D7CCF /* COPYRIGHT.txt in Resources */,
+				DC527D122BC75316000D7CCF /* UserData in Resources */,
+				DC527BD32BC75114000D7CCF /* HeadSeek.snd in Resources */,
+				DC527BCB2BC75107000D7CCF /* RelayOff.snd in Resources */,
+				DC527C1E2BC75165000D7CCF /* CHANGES.md in Resources */,
 				DC907EA02BB4DBCE00523116 /* Preview Assets.xcassets in Resources */,
-				DC907ED42BB7191300523116 /* mergenotes.txt in Resources */,
+				DC527BD22BC75114000D7CCF /* HeadStep.snd in Resources */,
+				DC527BD42BC75114000D7CCF /* HeadUnload.snd in Resources */,
+				DC527BC82BC75107000D7CCF /* Teletext.fnt in Resources */,
+				DC527BD12BC75114000D7CCF /* DriveMotor.snd in Resources */,
+				DC527BC92BC75107000D7CCF /* RelayOn.snd in Resources */,
 				DC907E9D2BB4DBCE00523116 /* Assets.xcassets in Resources */,
+				DC527C202BC75175000D7CCF /* README-SPROW.txt in Resources */,
+				DC527BD52BC75114000D7CCF /* HeadLoad.snd in Resources */,
 				DC907EAD2BB5B7F300523116 /* Main.storyboard in Resources */,
+				DC527BCA2BC75107000D7CCF /* README.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

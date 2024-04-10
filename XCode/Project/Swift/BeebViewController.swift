@@ -139,7 +139,10 @@ class BeebViewController: NSViewController {
 
         // run the CPU update as fast as possible
         // it will be put to sleep internally.
-        update_cpu()
+		if (BeebReady)
+		{
+			update_cpu()
+		}
     }
 
     
@@ -194,6 +197,11 @@ class BeebViewController: NSViewController {
 
 
     deinit {
+		if (!BeebReady)
+		{
+			return
+		}
+		
         //  Stop the display link.  A better place to stop the link is in
         //  the viewController or windowController within functions such as
         //  windowWillClose(_:)

@@ -78,3 +78,7 @@ Ran through and added __APPLE__ to every error in Windows version.
 
 Merged video. Removed <Carbon> as it was only used for Ptr which is char*, and UInt32, and it caused a conflict with KeyMap
 
+Merge main.  Should have a log window pop up to show errors on boot up and allow for BeebEm to Wait and then quit
+
+Getting Resource files loaded, which needs them copying to the Bundle for execution (as a Build Phase).  The added folders are resource references and not groups.
+

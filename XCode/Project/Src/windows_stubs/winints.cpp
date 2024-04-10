@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <windows.h>
 #include "beebemrcids.h"
+#include "FileUtils.h"
 
 int __argc;
 char** __argv;
@@ -19,24 +20,6 @@ DWORD GetTickCount() // milliseconds
 	auto millis = milli.count();
 	return (DWORD) millis;
 }
-
-
-
-extern "C" void swift_GetBundleDirectory(const char* bundlePath, int length);
-extern "C" void swift_GetApplicationSupportDirectory(const char* appPath, int length);
-extern "C" void swift_GetResourcePath(const char* resourcePath, int length, const char* filename);
-extern "C" bool swift_CopyDirectoryRecursively(const char* sourcePath, const char* targetPath);
-extern "C" void swift_saveScreen(const char * filename);
-
-
-extern "C" void swift_SetMenuCheck(unsigned int cmd, char check);
-extern "C" void swift_SetMenuEnable(unsigned int cmd, char enable);
-extern "C" int swift_SetMenuItemTextWithCString(unsigned int cmd, const char* text);
-extern "C" int swift_ModifyMenu(unsigned int cmd, unsigned int newitem, const char* itemtext);
-
-// delay the next update of the cpu (i.e. Exec6502Instruction) by this accumulation of
-// this time
-extern "C" void swift_sleepCPU(unsigned long microseconds);
 
 
 void beebwin_ModifyMenu(
@@ -62,3 +45,48 @@ int _vscprintf (const char * format, va_list pargs) {
 	va_end(argcopy);
 	return retval;
  }
+
+
+void _splitpath(const char *path,
+				char *drive,
+				char *dir,
+				char *fname,
+				char *ext)
+{
+	char d[300];
+	char n[300];
+	char e[300];
+	sscanf(path, "%s/%s.%s", d,n,e);
+	if (dir)
+		strcpy(dir, d);
+	if (fname)
+		strcpy(fname, n);
+	if (ext)
+		strcpy(ext, e);
+}
+
+void _makepath(char *path,
+			   const char *drive,
+	  const char *dir,
+	  const char *fname,
+	  const char *ext)
+{
+	if (fname && ext)
+		sprintf(path, "%s/%s.%s", dir,fname,ext);
+	else
+		sprintf(path, "%s/", dir);
+}
+
+bool SHGetFolderPath(const char* path)
+{
+	// look for path
+	bool folderFound = FolderExists(path);
+	
+	if (!folderFound)
+	{
+		// replace the path with the path to the users DOCUMENTS
+		// folder and return 'true'
+	}
+
+	return false;
+}

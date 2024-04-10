@@ -245,7 +245,18 @@ BeebWin::BeebWin()
 	GetModuleFileName(NULL, app_path, _MAX_PATH);
 	_splitpath(app_path, app_drive, app_dir, NULL, NULL);
 	_makepath(m_AppPath, app_drive, app_dir, NULL, NULL);
+#else
+	// Resources for the APP are in the bundle directory
+	swift_GetBundleDirectory(m_AppPath, _MAX_PATH);
 
+	// fix up the userdatapath
+	char userDataPath[PATH_MAX];
+	swift_GetApplicationSupportDirectory(userDataPath, _MAX_PATH);
+	strcat(userDataPath, "UserData/");
+	strcpy(m_UserDataPath, userDataPath);
+#endif
+
+#ifndef __APPLE__
 	// Read user data path from registry
 	if (!RegGetStringValue(HKEY_CURRENT_USER, CFG_REG_KEY, "UserDataFolder",
 	                       m_UserDataPath, _MAX_PATH))
@@ -257,14 +268,22 @@ BeebWin::BeebWin()
 		}
 	}
 #else
-	
-	
-	// get the bundle directory
-
-	
+	{
+		// Default user data path to a sub-directory in My Docs
+		if (SHGetFolderPath(m_UserDataPath))
+		{
+			strcat(m_UserDataPath, "\\BeebEm\\");
+		}
+	}
 #endif
+
 	m_CustomData = false;
 
+#ifdef __APPLE__
+//    swift_GetApplicationSupportDirectory(m_PrefsFile, _MAX_PATH);
+//    swift_GetResourcePath(m_PrefsFile, _MAX_PATH, "UserData/Preferences.cfg");
+//    swift_GetResourcePath(RomFile, _MAX_PATH, "UserData/Roms.cfg");
+#endif
 	// Set default files, may be overridden by command line parameters.
 	strcpy(m_PrefsFile, "Preferences.cfg");
 	strcpy(RomFile, "Roms.cfg");
@@ -4627,7 +4646,6 @@ void BeebWin::UserKeyboardDialogClosed()
 
 void BeebWin::ParseCommandLine()
 {
-#ifndef __APPLE__
 	bool invalid;
 
 	m_CommandLineFileName1[0] = '\0';
@@ -4772,7 +4790,6 @@ void BeebWin::ParseCommandLine()
 
 		++i;
 	}
-#endif
 }
 
 /*****************************************************************************/
@@ -4782,7 +4799,6 @@ void BeebWin::CheckForLocalPrefs(const char *path, bool bLoadPrefs)
 	if (path[0] == '\0')
 		return;
 
-#ifndef __APPLE__
 
 	char file[_MAX_PATH];
 	char drive[_MAX_DRIVE];
@@ -4802,12 +4818,16 @@ void BeebWin::CheckForLocalPrefs(const char *path, bool bLoadPrefs)
 		{
 			LoadPreferences();
 
+#ifndef __APPLE__
 			// Reinit with new prefs
 			SetWindowPos(m_hWnd, HWND_TOP, m_XWinPos, m_YWinPos,
 			             0, 0, SWP_NOSIZE);
+#endif
 			HandleCommand(m_DisplayRenderer);
 			InitMenu();
+#ifndef __APPLE__
 			SetWindowText(m_hWnd, WindowTitle);
+#endif
 			if (m_MenuIDSticks == IDM_JOYSTICK)
 				InitJoystick();
 		}
@@ -4815,7 +4835,7 @@ void BeebWin::CheckForLocalPrefs(const char *path, bool bLoadPrefs)
 
 	// Look for ROMs file
 	_makepath(file, drive, dir, "Roms", "cfg");
-
+	
 	if (FileExists(file))
 	{
 		// File exists, use it
@@ -4827,7 +4847,6 @@ void BeebWin::CheckForLocalPrefs(const char *path, bool bLoadPrefs)
 			BeebReadRoms();
 		}
 	}
-#endif
 }
 
 enum FileType {
@@ -5251,14 +5270,17 @@ bool BeebWin::CheckUserDataPath(bool Persist)
 	bool store_user_data_path = false;
 	char path[_MAX_PATH];
 
+#ifndef __APPLE__
 	// Change all '/' to '\'
 	for (size_t i = 0; i < strlen(m_UserDataPath); ++i)
 		if (m_UserDataPath[i] == '/')
 			m_UserDataPath[i] = '\\';
-
+#endif
+	
 	// Check that the folder exists
 	if (!FolderExists(m_UserDataPath))
 	{
+#ifndef __APPLE__
 		if (Report(MessageType::Question,
 		           "BeebEm data folder does not exist:\n  %s\n\nCreate the folder?",
 		           m_UserDataPath) != MessageResult::Yes)
@@ -5271,7 +5293,6 @@ bool BeebWin::CheckUserDataPath(bool Persist)
 		}
 		else
 		{
-#ifndef __APPLE__
 			// Create the folder
 			int result = SHCreateDirectoryEx(nullptr, m_UserDataPath, nullptr);
 
@@ -5285,8 +5306,15 @@ bool BeebWin::CheckUserDataPath(bool Persist)
 				       m_UserDataPath);
 				success = false;
 			}
-#endif
 		}
+#else
+		// checked if Application Support/BeebEm/UserData exists
+		// it doesn't so create it and copy the files
+		mode_t mode = 0755;
+		mkdir(m_UserDataPath, mode);
+		copy_user_files=true;
+
+#endif
 	}
 	else
 	{
@@ -5341,6 +5369,7 @@ bool BeebWin::CheckUserDataPath(bool Persist)
 
 		if (copy_user_files)
 		{
+#ifndef __APPLE__
 			if (Report(MessageType::Question,
 			           "Essential or new files missing from BeebEm data folder:\n  %s"
 			           "\n\nCopy essential or new files into folder?",
@@ -5348,6 +5377,7 @@ bool BeebWin::CheckUserDataPath(bool Persist)
 			{
 				success = false;
 			}
+#endif
 		}
 	}
 
@@ -5390,19 +5420,31 @@ bool BeebWin::CheckUserDataPath(bool Persist)
 			// Wait for copy dialogs to disappear
 			Sleep(2000);
 		}
+#else
+		swift_GetResourcePath(path, _MAX_PATH, "UserData");
+		
+		// using SWIFT Foundation to copy all the files in UserData/*.*
+		// if this copy fails: success = false
+		success = swift_CopyDirectoryRecursively(path, m_UserDataPath);
+		if (!success)
+		{
+			Report(MessageType::Error, "Copy failed.  Manually copy files from:\n  %s"
+									   "\n\nTo BeebEm data folder:\n  %s",
+				   path, m_UserDataPath);
+		}
 #endif
 	}
 
 	if (success)
 	{
-#ifndef __APPLE__
 		// Check that roms file exists and create its full path
+#ifndef __APPLE__
 		if (PathIsRelative(RomFile))
+#endif
 		{
 			sprintf(path, "%s%s", m_UserDataPath, RomFile);
 			strcpy(RomFile, path);
 		}
-#endif
 		
 		if (!FileExists(RomFile))
 		{
@@ -5413,14 +5455,14 @@ bool BeebWin::CheckUserDataPath(bool Persist)
 
 	if (success)
 	{
-#ifndef __APPLE__
 		// Fill out full path of prefs file
+#ifndef __APPLE__
 		if (PathIsRelative(m_PrefsFile))
+#endif
 		{
 			sprintf(path, "%s%s", m_UserDataPath, m_PrefsFile);
 			strcpy(m_PrefsFile, path);
 		}
-#endif
 		
 	}
 

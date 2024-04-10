@@ -16,9 +16,8 @@ int mainEnd();
 #include <stdio.h>
 #include <sys/syslimits.h>
 #include <unistd.h>
-
-extern int __argc;
-extern char** __argv;
+#include <windows.h>
+#include "Main.h"
 
 extern "C"
 int beeb_main(long argc, char* argv[])
@@ -29,6 +28,10 @@ int beeb_main(long argc, char* argv[])
 	__argc = (int)argc;
 	__argv = argv;
 
+	// report the args
+	int i;
+	for (i = 0; i < __argc; ++i)
+		fprintf(stderr, "Arg %d = %s\n", i, __argv[i]);
 
 // show the path
 	char cwd[PATH_MAX];
@@ -38,7 +41,7 @@ int beeb_main(long argc, char* argv[])
 		perror("getcwd() error");
 	}
 
-	return (  mainInit() );
+	return ( mainInit() );
 }
 
 

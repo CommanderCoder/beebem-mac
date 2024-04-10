@@ -45,6 +45,21 @@ extern "C" void swift_sleepCPU(unsigned long microseconds);
 #define ODDPARITY 0
 #define NOPARITY 2
 
+extern int __argc;
+extern char** __argv;
 
+extern void _splitpath(const char *path,
+				char *drive,
+				char *dir,
+				char *fname,
+				char *ext);
+extern void _makepath(char *path,
+					  const char *drive,
+	   const char *dir,
+	   const char *fname,
+	   const char *ext);
+
+
+bool SHGetFolderPath(const char* path);
 
 #endif /* windows_h */

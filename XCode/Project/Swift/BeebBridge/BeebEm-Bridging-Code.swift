@@ -618,7 +618,7 @@ public func swift_GetApplicationSupportDirectory( _ resourcePath: UnsafeMutableP
         let fileManager = FileManager.default
         let appSupportURL = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
         //  Create subdirectory
-        let directoryURL = appSupportURL.appendingPathComponent("BeebEm5")
+        let directoryURL = appSupportURL.appendingPathComponent("BeebEm-mac")
         try fileManager.createDirectory (at: directoryURL, withIntermediateDirectories: true, attributes: nil)
         
         let dpath = directoryURL.path+"/"
