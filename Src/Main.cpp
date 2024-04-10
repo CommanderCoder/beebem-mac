@@ -49,7 +49,21 @@ int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE /* hPrevInstance */,
                      LPSTR /* lpszCmdLine */, int /* nCmdShow */)
 {
 	hInst = hInstance;
-
+#else
+	
+	// Windows MAIN
+	// keep processing instructions until WM_QUIT
+	// When there is a mesage or beeb is frozen, process Messages
+	// either to TranslateAccelerator
+	// Translates virtual key codes,Dispatches message to window
+	// to CurrentDialogue
+	
+	// MacOS Main
+	// three functions - mainInit -> mainStep -> mainEnd
+int mainInit()
+{
+#endif
+	
 	mainWin = new(std::nothrow) BeebWin();
 
 	if (mainWin == nullptr)
@@ -67,6 +81,11 @@ int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE /* hPrevInstance */,
 
 	// Create serial threads
 	SerialInit();
+
+#ifdef __APPLE__
+	return 0;
+}
+#else
 
 	for (;;)
 	{
@@ -106,82 +125,31 @@ int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE /* hPrevInstance */,
 				}
 			}
 		}
+#endif
+		
+#ifdef __APPLE__
+int mainStep()
+{
+	 bool done = false;
+	 if (done)
+		 return 1;
 
+#endif
 		if (!mainWin->IsFrozen() && !mainWin->IsPaused()) {
 			Exec6502Instruction();
 		}
-	}
-
-	mainWin->KillDLLs();
-
-	CloseLog();
-
-	SerialClose();
-
-	delete mainWin;
-
+	
+#ifdef __APPLE__
 	return 0;
 }
 #else
+	 }
+#endif
 
-int _vscprintf (const char * format, va_list pargs) {
-	int retval;
-	va_list argcopy;
-	va_copy(argcopy, pargs);
-	retval = vsnprintf(NULL, 0, format, argcopy);
-	va_end(argcopy);
-	return retval;
- }
-
-
-int mainInit()
-{
-	OpenLog();
-
-	mainWin = new(std::nothrow) BeebWin();
-
-	if (mainWin == nullptr)
-	{
-		return 1;
-	}
-
-	if (!mainWin->Initialise())
-	{
-		delete mainWin;
-		mainWin=0;
-		return 1;
-	}
-
-	// Create serial threads
-	SerialInit();
-	
-	return 0;
-}
-
-int mainStep()
-//    for (;;)
-{
-	
-	// Windows MAIN
-	// keep processing instructions until WM_QUIT
-	// When there is a mesage or beeb is frozen, process Messages
-	// either to TranslateAccelerator
-	// Translates virtual key codes,Dispatches message to window
-	// to CurrentDialogue
-	
-	bool done = false;
-	if (done)
-		return 1;
-
-	if (!mainWin->IsFrozen() && !mainWin->IsPaused()) {
-		Exec6502Instruction();
-	}
-	
-	return 0;
-}
-
+#ifdef __APPLE__
 int mainEnd()
 {
+#endif
 	mainWin->KillDLLs();
 
 	CloseLog();
@@ -192,5 +160,3 @@ int mainEnd()
 
 	return 0;
 }
-
-#endif
