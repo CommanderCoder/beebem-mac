@@ -675,6 +675,8 @@ static void VideoStartOfFrame(void) {
     VideoState.IsNewTVFrame = false;
 #ifdef WIN32
     FrameNum = mainWin->StartOfFrame();
+#elif defined(__APPLE__)
+	FrameNum = mainWin->StartOfFrame();
 #else
     /* If FrameNum hits 0 we actually refresh */
     if (FrameNum--==0) {

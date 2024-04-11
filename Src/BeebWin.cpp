@@ -4126,6 +4126,15 @@ void BeebWin::HandleCommand(UINT MenuID)
 		{
 			CaptureBitmapPending(false);
 		}
+#else
+			m_CaptureFileName[0] = 0;
+			// prompt for filename
+			strcpy(m_CaptureFileName, "BeebEm.png");
+			if (strlen(m_CaptureFileName)>0)
+			{
+				// save to PICTURES folder
+				swift_saveScreen("BeebEm.png");
+			}
 #endif
 		break;
 
@@ -4413,8 +4422,15 @@ void BeebWin::HandleCommand(UINT MenuID)
 		break;
 
 	case IDM_DISABLEKEYSALL:
+#ifndef __APPLE__
 		if (m_DisableKeysWindows && m_DisableKeysBreak &&
 			m_DisableKeysEscape && m_DisableKeysShortcut)
+#else
+		// only consider break and escape on MACOS for now
+		if (m_DisableKeysBreak &&
+			m_DisableKeysEscape)
+#endif
+			
 		{
 			if (m_DisableKeysWindows)
 				HandleCommand(IDM_DISABLEKEYSWINDOWS);
@@ -5691,10 +5707,10 @@ MessageResult BeebWin::ReportV(MessageType type, const char *format, va_list arg
 	if (buffer != nullptr)
 	{
 		vsprintf(buffer, format, args);
-#ifndef __APPLE__
 
 		UINT Type = 0;
 
+#ifndef __APPLE__
 		switch (type)
 		{
 			case MessageType::Error:
@@ -5741,6 +5757,17 @@ MessageResult BeebWin::ReportV(MessageType type, const char *format, va_list arg
 					Result = MessageResult::Cancel;
 					break;
 			}
+		}
+#else
+		if (type == MessageType::Error ||
+			type == MessageType::Warning ||
+			type == MessageType::Info ||
+			type == MessageType::Question ||
+			type == MessageType::Confirm )
+		{
+			Type = (int)type;
+			const char* msgtitle[5] {"Error:","Warning:","Info:","Question:","Confirm:"};
+			fprintf(stderr,"%s: %s",msgtitle[Type],buffer);
 		}
 #endif
 		free(buffer);

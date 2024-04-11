@@ -663,12 +663,14 @@ public:
 #ifndef __APPLE__
 	// Bitmap capture
 	ULONG_PTR m_gdiplusToken;
+#endif
 	bool m_CaptureBitmapPending;
 	bool m_CaptureBitmapAutoFilename;
 	char m_CaptureFileName[MAX_PATH];
 	UINT m_MenuIDCaptureResolution;
 	UINT m_MenuIDCaptureFormat;
 
+#ifndef __APPLE__
 	// AVI vars
 	bmiData m_Avibmi;
 	HBITMAP m_AviDIB;
@@ -679,8 +681,8 @@ public:
 	int m_AviFrameCount;
 	UINT m_MenuIDAviResolution;
 	UINT m_MenuIDAviSkip;
-
 #endif
+
 	// Text to speech variables
 	bool m_TextToSpeechEnabled;
 #ifndef __APPLE__

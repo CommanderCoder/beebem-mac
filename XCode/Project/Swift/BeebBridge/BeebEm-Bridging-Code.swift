@@ -527,16 +527,12 @@ public func swift_SetMachineType(_ type: MachineModel)
     CBridge.machineType = mtf
 }
 
-/*
- put this into BeebViewController and
- make it more localised to that
 @_cdecl("swift_saveScreen")
 public func swift_saveScreen(_ text: UnsafePointer<CChar>)
 {
     print("\(#function) \(text)")
     beebViewControllerInstance?.screenFilename = String(cString: text);
 }
-*/
 
 // allow access to this in C
 @_cdecl("swift_GetResourcePath")
