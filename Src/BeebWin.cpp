@@ -120,6 +120,11 @@ static const char *CFG_REG_KEY = "Software\\BeebEm";
 static const unsigned char CFG_DISABLE_WINDOWS_KEYS[24] = {
 	00,00,00,00,00,00,00,00,03,00,00,00,00,00,0x5B,0xE0,00,00,0x5C,0xE0,00,00,00,00
 };
+
+#else
+
+#include "beebemrcids.h"
+
 #endif
 
 CArm *arm = nullptr;
@@ -474,9 +479,8 @@ void BeebWin::ApplyPrefs()
 	{
 		m_TextToSpeechEnabled = InitTextToSpeech();
 	}
-#endif
-
 	InitTextView();
+#endif
 
 	/* Initialise printer */
 	if (PrinterEnabled)
@@ -568,8 +572,8 @@ void BeebWin::Shutdown()
 
 #ifndef __APPLE__
 	CloseTextToSpeech();
-#endif
 	CloseTextView();
+#endif
 
 	IP232Close();
 
@@ -876,9 +880,12 @@ void BeebWin::CreateBitmap()
 		DeleteObject(m_hBitmap);
 	if (m_hDCBitmap != NULL)
 		DeleteDC(m_hDCBitmap);
+#endif
 	if (m_screen_blur != NULL)
 		free(m_screen_blur);
+#ifndef __APPLE__
 	m_hDCBitmap = CreateCompatibleDC(NULL);
+#endif
 
 	m_bmi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
 	m_bmi.bmiHeader.biWidth = 800;
@@ -887,11 +894,12 @@ void BeebWin::CreateBitmap()
 	m_bmi.bmiHeader.biBitCount = 8;
 	m_bmi.bmiHeader.biXPelsPerMeter = 0;
 	m_bmi.bmiHeader.biYPelsPerMeter = 0;
+#ifndef __APPLE__
 	m_bmi.bmiHeader.biCompression = BI_RGB;
+#endif
 	m_bmi.bmiHeader.biSizeImage = 800*512;
 	m_bmi.bmiHeader.biClrUsed = 68;
 	m_bmi.bmiHeader.biClrImportant = 68;
-#endif
 
 #ifdef USE_PALETTE
 	__int16 *pInts = (__int16 *)&m_bmi.bmiColors[0];
@@ -956,7 +964,7 @@ void BeebWin::CreateBitmap()
 	m_hBitmap = CreateDIBSection(m_hDCBitmap, (BITMAPINFO *)&m_bmi, DIB_RGB_COLORS,
 	                             (void**)&m_screen, NULL,0);
 #else
-	m_screen = (char *) malloc(800 * 512);
+	m_screen = (char *)calloc(m_bmi.bmiHeader.biSizeImage,1);
 
 	fprintf(stderr, "Base Address = %08lx\n", (unsigned long) m_screen);
 
@@ -1150,7 +1158,7 @@ void BeebWin::CheckMenuItem(UINT id, bool checked)
 #ifndef __APPLE__
 	::CheckMenuItem(m_hMenu, id, checked ? MF_CHECKED : MF_UNCHECKED);
 #else
-//	swift_SetMenuCheck(id, checked);
+	swift_SetMenuCheck(id, checked);
 #endif
 }
 
@@ -1159,7 +1167,15 @@ void BeebWin::EnableMenuItem(UINT id, bool enabled)
 #ifndef __APPLE__
 	::EnableMenuItem(m_hMenu, id, enabled ? MF_ENABLED : MF_GRAYED);
 #else
-//	swift_SetMenuEnable(id, enabled);
+	
+	if (id == ID_FDC_DLL)
+	{
+		swift_SetMenuEnable(ID_FDC_ACORN, enabled);
+		swift_SetMenuEnable(ID_FDC_OPUS, enabled);
+		swift_SetMenuEnable(ID_FDC_WATFORD, enabled);
+	}
+
+	swift_SetMenuEnable(id, enabled);
 #endif
 }
 
@@ -1437,9 +1453,9 @@ void BeebWin::UpdateModelMenu()
 		{ Model::Master128, ID_MASTER128 },
 	};
 
-#ifndef __APPLE__
 	UINT SelectedMenuItem = ModelMenuItems.find(MachineType)->second;
 
+#ifndef __APPLE__
 	CheckMenuRadioItem(
 		m_hMenu,
 		ID_MODELB,
@@ -1447,6 +1463,13 @@ void BeebWin::UpdateModelMenu()
 		SelectedMenuItem,
 		MF_BYCOMMAND
 	);
+#else
+	// switch between the items - assumes first and last are consecutive and
+	// that 'SelectedMenuItem' is within that range
+	beebwin_CheckMenuRadioItem(
+		  ID_MODELB,
+		  ID_MASTER128,
+		  SelectedMenuItem);
 #endif
 	
 	if (MachineType == Model::Master128) {
@@ -1483,9 +1506,9 @@ void BeebWin::UpdateTubeMenu()
 		{ Tube::SprowArm,       IDM_TUBE_SPROWARM }
 	};
 
-#ifndef __APPLE__
 	UINT SelectedMenuItem = TubeMenuItems.find(TubeType)->second;
-
+	
+#ifndef __APPLE__
 	CheckMenuRadioItem(
 		m_hMenu,
 		IDM_TUBE_NONE,
@@ -1493,6 +1516,11 @@ void BeebWin::UpdateTubeMenu()
 		SelectedMenuItem,
 		MF_BYCOMMAND
 	);
+#else
+	beebwin_CheckMenuRadioItem(
+		   IDM_TUBE_NONE,
+		   IDM_TUBE_SPROWARM,
+		  SelectedMenuItem);
 #endif
 	
 }
@@ -1536,9 +1564,9 @@ void BeebWin::SetRomMenu()
 		           IDM_ALLOWWRITES_ROM0 + i, // menu item identifier or pop-up menu handle
 		           Title);                   // menu item content
 #else
-//		beebwin_ModifyMenu(IDM_ALLOWWRITES_ROM0 + i,
-//						   IDM_ALLOWWRITES_ROM0 + i,
-//						   Title);
+		beebwin_ModifyMenu(IDM_ALLOWWRITES_ROM0 + i,
+						   IDM_ALLOWWRITES_ROM0 + i,
+						   Title);
 #endif
 		// Disable ROM and uncheck the ROM/RAM which are NOT writable
 		EnableMenuItem(IDM_ALLOWWRITES_ROM0 + i, RomBankType[i] == BankType::Ram);
@@ -1605,20 +1633,16 @@ void BeebWin::ResetJoystick(void)
 /****************************************************************************/
 void BeebWin::SetMousestickButton(int index, bool button)
 {
-#ifndef __APPLE__
 	if (m_MenuIDSticks == IDM_ANALOGUE_MOUSESTICK ||
 	    m_MenuIDSticks == IDM_DIGITAL_MOUSESTICK)
 	{
 		JoystickButton[index] = button;
 	}
-#endif
-	
 }
 
 /****************************************************************************/
 void BeebWin::ScaleMousestick(unsigned int x, unsigned int y)
 {
-#ifndef __APPLE__
 	static int lastx = 32768;
 	static int lasty = 32768;
 
@@ -1641,7 +1665,6 @@ void BeebWin::ScaleMousestick(unsigned int x, unsigned int y)
 		lastx = x;
 		lasty = y;
 	}
-#endif
 }
 
 /****************************************************************************/
@@ -3152,7 +3175,7 @@ void BeebWin::HandleCommand(UINT MenuID)
 				MF_BYCOMMAND, IDM_PRINTER_FILE,
 				menu_string);
 #else
-//			beebwin_ModifyMenu(IDM_PRINTER_FILE, IDM_PRINTER_FILE, menu_string);
+			beebwin_ModifyMenu(IDM_PRINTER_FILE, IDM_PRINTER_FILE, menu_string);
 #endif
 			if (MenuID != m_MenuIDPrinterPort)
 			{

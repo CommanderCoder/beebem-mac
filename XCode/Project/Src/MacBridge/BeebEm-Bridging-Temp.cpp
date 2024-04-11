@@ -10,11 +10,6 @@
 
 // Dummy functions for building the BeebEm shim
 
-extern "C" void beeb_handlekeys(long eventkind, unsigned int keycode, char charCode)
-{
-}
-
-
 extern "C" void beeb_HandleCommand(unsigned int cmdID)
 {
 }

@@ -109,6 +109,13 @@ extern "C" int swift_ModifyMenu(unsigned int cmd, unsigned int newitem, const ch
 // this time
 extern "C" void swift_sleepCPU(unsigned long microseconds);
 
+void beebwin_ModifyMenu(
+						UINT position,
+						UINT newitem,
+						CHAR* newtext);
+void beebwin_SetMenuCheck(UINT cmd, bool check);
+void beebwin_CheckMenuRadioItem(UINT first, UINT last, UINT cmd);
 
+int beebwin_KeyUpDown(long, long,long);
 
 #endif /* winints_h */

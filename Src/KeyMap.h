@@ -33,12 +33,12 @@ struct KeyMapping {
 
 constexpr int KEYMAP_SIZE = 256;
 
-typedef KeyMapping KeyMap[KEYMAP_SIZE][2]; // Indices are: [Virt key][shift state]
+typedef KeyMapping beebEmKeyMap[KEYMAP_SIZE][2]; // Indices are: [Virt key][shift state]
 
 void InitKeyMap();
 
-bool ReadKeyMap(const char *filename, KeyMap *keymap);
-bool WriteKeyMap(const char *filename, KeyMap *keymap);
+bool ReadKeyMap(const char *filename, beebEmKeyMap *keymap);
+bool WriteKeyMap(const char *filename, beebEmKeyMap *keymap);
 
 const char* GetPCKeyName(int PCKey);
 
@@ -46,11 +46,11 @@ void SetUserKeyMapping(int Row, int Column, bool BBCShift, int PCKey, bool PCShi
 void ClearUserKeyMapping(int Row, int Column, bool Shift);
 std::string GetKeysUsed(int Row, int Column, bool Shift);
 
-extern KeyMap DefaultKeyMap;
-extern KeyMap LogicalKeyMap;
-extern KeyMap UserKeyMap;
+extern beebEmKeyMap DefaultKeyMap;
+extern beebEmKeyMap LogicalKeyMap;
+extern beebEmKeyMap UserKeyMap;
 
-extern const KeyMap *transTable;
+extern const beebEmKeyMap *transTable;
 
 
 #ifdef __APPLE__

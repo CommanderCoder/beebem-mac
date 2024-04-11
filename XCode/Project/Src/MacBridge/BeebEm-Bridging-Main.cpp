@@ -59,3 +59,12 @@ extern "C" int beeb_end()
 	
 	return(0);
 } /* main */
+
+
+
+extern "C" void beeb_handlekeys(long eventkind, unsigned int keycode, char charCode)
+{
+	beebwin_KeyUpDown(eventkind, keycode, charCode);
+}
+
+

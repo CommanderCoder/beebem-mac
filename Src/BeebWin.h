@@ -123,10 +123,6 @@ struct CUSTOMVERTEX
 // Our custom FVF, which describes our custom vertex structure
 #define D3DFVF_CUSTOMVERTEX (D3DFVF_XYZ|D3DFVF_DIFFUSE|D3DFVF_TEX1)
 
-#else
-
-int BeebMainKeyUpDown(UINT, long,long);
-
 #endif
 
 enum class MessageType {

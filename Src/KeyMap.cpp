@@ -24,12 +24,12 @@ Boston, MA  02110-1301, USA.
 #include "Main.h"
 
 // Keyboard mappings
-KeyMap UserKeyMap;
-KeyMap DefaultKeyMap;
-KeyMap LogicalKeyMap;
+beebEmKeyMap UserKeyMap;
+beebEmKeyMap DefaultKeyMap;
+beebEmKeyMap LogicalKeyMap;
 
 // Currently selected translation table
-const KeyMap *transTable = &DefaultKeyMap;
+const beebEmKeyMap *transTable = &DefaultKeyMap;
 
 // Token written to start of map file
 #define KEYMAP_TOKEN "*** BeebEm Keymap ***"
@@ -38,7 +38,7 @@ static const char* GetVirtualKeyCode(int Key);
 
 /*--------------------------------------------------------------------------*/
 
-static void ResetKeyMap(KeyMap* keymap)
+static void ResetKeyMap(beebEmKeyMap* keymap)
 {
 	for (int PCKey = 0; PCKey < KEYMAP_SIZE; PCKey++)
 	{
@@ -62,7 +62,7 @@ void InitKeyMap()
 
 /*--------------------------------------------------------------------------*/
 
-bool ReadKeyMap(const char *filename, KeyMap *keymap)
+bool ReadKeyMap(const char *filename, beebEmKeyMap *keymap)
 {
 	bool success = true;
 	char buf[256];
@@ -124,7 +124,7 @@ bool ReadKeyMap(const char *filename, KeyMap *keymap)
 
 /*--------------------------------------------------------------------------*/
 
-bool WriteKeyMap(const char *filename, KeyMap *keymap)
+bool WriteKeyMap(const char *filename, beebEmKeyMap *keymap)
 {
 	FILE *outfile = fopen(filename, "w");
 
