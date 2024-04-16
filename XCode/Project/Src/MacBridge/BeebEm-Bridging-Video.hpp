@@ -8,6 +8,6 @@
 #ifndef BeebEm_Bridging_Video_hpp
 #define BeebEm_Bridging_Video_hpp
 
-
+#include <stdio.h>
 
 #endif /* BeebEm_Bridging_Video_hpp */

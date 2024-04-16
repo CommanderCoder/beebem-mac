@@ -259,6 +259,12 @@ BeebWin::BeebWin()
 	swift_GetApplicationSupportDirectory(userDataPath, _MAX_PATH);
 	strcat(userDataPath, "UserData/");
 	strcpy(m_UserDataPath, userDataPath);
+#ifdef DEBUG
+	// during debugging need to always copy the userdata from the Bundle
+	fprintf(stdout,"*** REMOVING %s SO IT WILL GET A CLEAN COPY ***", m_UserDataPath);
+	int ret = swift_Remove(m_UserDataPath);
+	fprintf(stdout,"*** %d ***", ret);
+#endif
 #endif
 
 #ifndef __APPLE__
@@ -456,11 +462,19 @@ void BeebWin::ApplyPrefs()
 
 	// Load key maps
 	char KeyMapPath[_MAX_PATH];
+#ifndef __APPLE__
 	strcpy(KeyMapPath, "Logical.kmap");
+#else
+	strcpy(KeyMapPath, "Logical-mac.kmap");
+#endif
 	GetDataPath(m_UserDataPath, KeyMapPath);
 	ReadKeyMap(KeyMapPath, &LogicalKeyMap);
 
+#ifndef __APPLE__
 	strcpy(KeyMapPath, "Default.kmap");
+#else
+	strcpy(KeyMapPath, "Default-mac.kmap");
+#endif
 	GetDataPath(m_UserDataPath, KeyMapPath);
 	ReadKeyMap(KeyMapPath, &DefaultKeyMap);
 
@@ -577,8 +591,10 @@ void BeebWin::Shutdown()
 
 	IP232Close();
 
+#ifndef __APPLE__
 	WSACleanup();
-
+#endif
+	
 	if (m_WriteInstructionCounts) {
 		char FileName[_MAX_PATH];
 		strcpy(FileName, m_UserDataPath);

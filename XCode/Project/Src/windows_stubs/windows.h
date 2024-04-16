@@ -8,58 +8,7 @@
 #ifndef windows_h
 #define windows_h
 
-
-
-
-
-// general use
-#include "winints.h"
-
-// used in BeebMem.h
-extern DWORD GetTickCount();
-
-// used for Files
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <stdio.h>
-#define _stricmp strcasecmp
-#define _strnicmp strncasecmp
-#define stricmp strcasecmp
-#define strnicmp strncasecmp
-#define _strerror(x) strerror(errno)
-
-
-template < typename T, int N >
-int _countof( T ( & arr )[ N ] )
-{
-	return std::extent< T[ N ] >::value;
-}
-
-extern int _vscprintf (const char * format, va_list pargs);
-
-#define Sleep swift_sleepCPU
-extern "C" void swift_sleepCPU(unsigned long microseconds);
-
-// Serial
-#define EVENPARITY 1
-#define ODDPARITY 0
-#define NOPARITY 2
-
-extern int __argc;
-extern char** __argv;
-
-extern void _splitpath(const char *path,
-				char *drive,
-				char *dir,
-				char *fname,
-				char *ext);
-extern void _makepath(char *path,
-					  const char *drive,
-	   const char *dir,
-	   const char *fname,
-	   const char *ext);
-
-
-bool SHGetFolderPath(const char* path);
+// anywhere we need windows, actually we need apples
+#include "apples.h"
 
 #endif /* windows_h */

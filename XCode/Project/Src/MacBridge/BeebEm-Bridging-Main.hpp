@@ -9,4 +9,6 @@
 #ifndef BeebEm_Bridging_Main_hpp
 #define BeebEm_Bridging_Main_hpp
 
+#include <stdio.h>
+
 #endif /* BeebEm_Bridging_Main_hpp */

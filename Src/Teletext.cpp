@@ -53,7 +53,11 @@ Control latch:
 #include <stdlib.h>
 
 #ifdef __APPLE__
+// required for 'close' but
+// includes a redefinition of read and write
+// so cannot be included generally
 #include <unistd.h>
+
 #endif
 
 #include "Teletext.h"

@@ -31,6 +31,7 @@
 		DC527C202BC75175000D7CCF /* README-SPROW.txt in Resources */ = {isa = PBXBuildFile; fileRef = DC527C1F2BC75175000D7CCF /* README-SPROW.txt */; };
 		DC527D122BC75316000D7CCF /* UserData in Resources */ = {isa = PBXBuildFile; fileRef = DC527D112BC75316000D7CCF /* UserData */; };
 		DC527D142BC7532E000D7CCF /* Help in Resources */ = {isa = PBXBuildFile; fileRef = DC527D132BC7532E000D7CCF /* Help */; };
+		DC527D172BC9110E000D7CCF /* BeebEm-Bridging-Keyboard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC527D152BC9110E000D7CCF /* BeebEm-Bridging-Keyboard.cpp */; };
 		DC907E9D2BB4DBCE00523116 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DC907E9C2BB4DBCE00523116 /* Assets.xcassets */; };
 		DC907EA02BB4DBCE00523116 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DC907E9F2BB4DBCE00523116 /* Preview Assets.xcassets */; };
 		DC907EAD2BB5B7F300523116 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DC907EAB2BB5B7F300523116 /* Main.storyboard */; };
@@ -55,7 +56,7 @@
 		DC9B41382BC22DB300C3D9D8 /* BeebWinDx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996F22BBA0C9C00A109A5 /* BeebWinDx.cpp */; };
 		DC9B41392BC22E9800C3D9D8 /* BeebWinSpeech.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996F42BBA0C9C00A109A5 /* BeebWinSpeech.cpp */; };
 		DC9B413A2BC22FE200C3D9D8 /* BeebWinPrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC09970B2BBA0C9C00A109A5 /* BeebWinPrefs.cpp */; };
-		DCACDAC12BC5DD2E00CEF154 /* winints.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCACDAC02BC5DD2E00CEF154 /* winints.cpp */; };
+		DCACDAC12BC5DD2E00CEF154 /* apples.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCACDAC02BC5DD2E00CEF154 /* apples.cpp */; };
 		DCACDAC42BC669B600CEF154 /* BeebMacVideo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCACDAC22BC669B600CEF154 /* BeebMacVideo.cpp */; };
 		DCB3B2592BBB865E00F507F4 /* opus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0997BC2BBAA91E00A109A5 /* opus.cpp */; };
 		DCDC73062BBE043A00D83402 /* Acorn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0997AF2BBAA91E00A109A5 /* Acorn.cpp */; };
@@ -304,6 +305,8 @@
 		DC527C1F2BC75175000D7CCF /* README-SPROW.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "README-SPROW.txt"; path = "../../README-SPROW.txt"; sourceTree = "<group>"; };
 		DC527D112BC75316000D7CCF /* UserData */ = {isa = PBXFileReference; lastKnownFileType = folder; name = UserData; path = ../../UserData; sourceTree = "<group>"; };
 		DC527D132BC7532E000D7CCF /* Help */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Help; path = ../../Help; sourceTree = "<group>"; };
+		DC527D152BC9110E000D7CCF /* BeebEm-Bridging-Keyboard.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "BeebEm-Bridging-Keyboard.cpp"; sourceTree = "<group>"; };
+		DC527D162BC9110E000D7CCF /* BeebEm-Bridging-Keyboard.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "BeebEm-Bridging-Keyboard.hpp"; sourceTree = "<group>"; };
 		DC907E952BB4DBCD00523116 /* BeebEm.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BeebEm.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC907E982BB4DBCD00523116 /* BeebEmApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeebEmApp.swift; sourceTree = "<group>"; };
 		DC907E9A2BB4DBCD00523116 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -329,13 +332,13 @@
 		DC907ED02BB7101900523116 /* BeebEm-Bridging-Temp.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "BeebEm-Bridging-Temp.cpp"; sourceTree = "<group>"; };
 		DC907ED12BB7101900523116 /* BeebEm-Bridging-Temp.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "BeebEm-Bridging-Temp.hpp"; sourceTree = "<group>"; };
 		DC907ED32BB7191300523116 /* mergenotes.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = mergenotes.txt; sourceTree = "<group>"; };
-		DCACDAC02BC5DD2E00CEF154 /* winints.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = winints.cpp; sourceTree = "<group>"; };
+		DCACDAC02BC5DD2E00CEF154 /* apples.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = apples.cpp; sourceTree = "<group>"; };
 		DCACDAC22BC669B600CEF154 /* BeebMacVideo.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = BeebMacVideo.cpp; sourceTree = "<group>"; };
 		DCACDAC52BC66F5600CEF154 /* BeebEm-Bridging-Video.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "BeebEm-Bridging-Video.cpp"; sourceTree = "<group>"; };
 		DCACDAC62BC66F5600CEF154 /* BeebEm-Bridging-Video.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "BeebEm-Bridging-Video.hpp"; sourceTree = "<group>"; };
 		DCACDAC82BC67D2500CEF154 /* BeebEm-Bridging-Main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "BeebEm-Bridging-Main.cpp"; sourceTree = "<group>"; };
 		DCACDAC92BC67D2500CEF154 /* BeebEm-Bridging-Main.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "BeebEm-Bridging-Main.hpp"; sourceTree = "<group>"; };
-		DCB3B2512BBAB97A00F507F4 /* winints.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = winints.h; sourceTree = "<group>"; };
+		DCB3B2512BBAB97A00F507F4 /* apples.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = apples.h; sourceTree = "<group>"; };
 		DCDC73122BBE192200D83402 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		DCDC73182BBE1B9F00D83402 /* commctrl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = commctrl.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -552,9 +555,9 @@
 				DC0997A72BBAA68600A109A5 /* d3dx9.h */,
 				DC0997A82BBAA6A300A109A5 /* ddraw.h */,
 				DC0997A92BBAA6C200A109A5 /* sapi.h */,
-				DCB3B2512BBAB97A00F507F4 /* winints.h */,
+				DCB3B2512BBAB97A00F507F4 /* apples.h */,
 				DCDC73182BBE1B9F00D83402 /* commctrl.h */,
-				DCACDAC02BC5DD2E00CEF154 /* winints.cpp */,
+				DCACDAC02BC5DD2E00CEF154 /* apples.cpp */,
 			);
 			path = windows_stubs;
 			sourceTree = "<group>";
@@ -619,6 +622,8 @@
 				DCACDAC62BC66F5600CEF154 /* BeebEm-Bridging-Video.hpp */,
 				DCACDAC82BC67D2500CEF154 /* BeebEm-Bridging-Main.cpp */,
 				DCACDAC92BC67D2500CEF154 /* BeebEm-Bridging-Main.hpp */,
+				DC527D152BC9110E000D7CCF /* BeebEm-Bridging-Keyboard.cpp */,
+				DC527D162BC9110E000D7CCF /* BeebEm-Bridging-Keyboard.hpp */,
 			);
 			path = MacBridge;
 			sourceTree = "<group>";
@@ -854,7 +859,7 @@
 				DCDC73452BC0B4A700D83402 /* SprowCoPro.cpp in Sources */,
 				DC1DBA262BB9A6F600AAB22F /* FileListViewController.swift in Sources */,
 				DC907EC12BB5C1F100523116 /* BeebApplication.swift in Sources */,
-				DCACDAC12BC5DD2E00CEF154 /* winints.cpp in Sources */,
+				DCACDAC12BC5DD2E00CEF154 /* apples.cpp in Sources */,
 				DCDC73472BC0B5C200D83402 /* Teletext.cpp in Sources */,
 				DCDC733C2BC0ACE200D83402 /* Log.cpp in Sources */,
 				DCDC734B2BC0B78E00D83402 /* UefState.cpp in Sources */,
@@ -904,6 +909,7 @@
 				DC9B41382BC22DB300C3D9D8 /* BeebWinDx.cpp in Sources */,
 				DCDC730E2BBE13BF00D83402 /* DiscInfo.cpp in Sources */,
 				DC9B41372BC22AE700C3D9D8 /* BeebWinIo.cpp in Sources */,
+				DC527D172BC9110E000D7CCF /* BeebEm-Bridging-Keyboard.cpp in Sources */,
 				DC907EB22BB5BAD300523116 /* BeebEm-Bridging-Code.swift in Sources */,
 				DCDC73502BC0B8D400D83402 /* Z80dis.cpp in Sources */,
 				DCDC73292BBF58DC00D83402 /* Arm.cpp in Sources */,

@@ -629,6 +629,22 @@ public func swift_GetApplicationSupportDirectory( _ resourcePath: UnsafeMutableP
     }
 }
 
+@_cdecl("swift_Remove")
+public func swift_Remove( _ path: UnsafePointer<CChar>) -> Int
+{
+	let pathStr = String(cString: path)
+	do
+	{
+		let folderURL = NSURL.fileURL(withPath: pathStr, isDirectory: true)
+		try FileManager.default.removeItem(at: folderURL)
+	}
+	catch  {
+		print("Unexpected error: \(error).")
+		return -1
+	}
+	return 0
+}
+
 
 // allow access to this in C
 @_cdecl("swift_CopyDirectoryRecursively")
