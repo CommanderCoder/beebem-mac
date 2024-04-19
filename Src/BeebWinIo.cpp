@@ -140,7 +140,6 @@ void BeebWin::EjectDiscImage(int Drive)
 
 bool BeebWin::ReadDisc(int Drive, bool bCheckForPrefs)
 {
-#ifndef __APPLE__
 	char DefaultPath[_MAX_PATH];
 	char FileName[_MAX_PATH];
 	FileName[0] = '\0';
@@ -170,7 +169,11 @@ bool BeebWin::ReadDisc(int Drive, bool bCheckForPrefs)
 
 		if (m_AutoSavePrefsFolders)
 		{
+#ifndef __APPLE__
 			unsigned int PathLength = (unsigned int)(strrchr(FileName, '\\') - FileName);
+#else
+			unsigned int PathLength = (unsigned int)(strrchr(FileName, '/') - FileName);
+#endif
 			strncpy(DefaultPath, FileName, PathLength);
 			DefaultPath[PathLength] = 0;
 			m_Preferences.SetStringValue("DiscsPath", DefaultPath);
@@ -301,9 +304,6 @@ bool BeebWin::ReadDisc(int Drive, bool bCheckForPrefs)
 		}
 	}
 	return(gotName);
-#else
-	return "";
-#endif
 }
 
 /****************************************************************************/
@@ -386,7 +386,6 @@ bool BeebWin::Load8271DiscImage(const char *FileName, int Drive, int Tracks, Dis
 
 void BeebWin::LoadTape(void)
 {
-#ifndef __APPLE__
 	char DefaultPath[_MAX_PATH];
 	char FileName[_MAX_PATH];
 	FileName[0] = '\0';
@@ -412,7 +411,6 @@ void BeebWin::LoadTape(void)
 
 		LoadTape(FileName);
 	}
-#endif
 }
 
 /****************************************************************************/
@@ -446,7 +444,6 @@ bool BeebWin::LoadTape(const char *FileName)
 
 bool BeebWin::NewTapeImage(char *FileName, int Size)
 {
-#ifndef __APPLE__
 	char DefaultPath[_MAX_PATH];
 	const char* filter = "UEF Tape File (*.uef)\0*.uef\0";
 
@@ -471,9 +468,6 @@ bool BeebWin::NewTapeImage(char *FileName, int Size)
 	}
 
 	return Result;
-#else
-	return false;
-#endif
 }
 
 /*******************************************************************/
@@ -511,7 +505,6 @@ void BeebWin::SelectFDC()
 /****************************************************************************/
 void BeebWin::NewDiscImage(int Drive)
 {
-#ifndef __APPLE__
 	char DefaultPath[_MAX_PATH];
 	char FileName[_MAX_PATH];
 	FileName[0] = '\0';
@@ -581,7 +574,6 @@ void BeebWin::NewDiscImage(int Drive)
 		DiscInfo[Drive].Loaded = true;
 		strcpy(DiscInfo[Drive].FileName, FileName);
 	}
-#endif
 }
 
 /****************************************************************************/
@@ -644,7 +636,6 @@ void BeebWin::CreateDFSDiscImage(const char *FileName, int Drive,
 /****************************************************************************/
 void BeebWin::SaveState()
 {
-#ifndef __APPLE__
 	char DefaultPath[_MAX_PATH];
 	char FileName[_MAX_PATH];
 	FileName[0] = '\0';
@@ -673,13 +664,11 @@ void BeebWin::SaveState()
 
 		SaveUEFState(FileName);
 	}
-#endif
 }
 
 /****************************************************************************/
 void BeebWin::RestoreState()
 {
-#ifndef __APPLE__
 	char DefaultPath[_MAX_PATH];
 	char FileName[_MAX_PATH];
 	FileName[0] = '\0';
@@ -705,7 +694,6 @@ void BeebWin::RestoreState()
 
 		LoadUEFState(FileName);
 	}
-#endif
 }
 
 /****************************************************************************/
@@ -751,7 +739,6 @@ void BeebWin::SetDiscWriteProtects()
 /****************************************************************************/
 bool BeebWin::PrinterFile()
 {
-#ifndef __APPLE__
 	char StartPath[_MAX_PATH];
 	char FileName[_MAX_PATH];
 	FileName[0] = '\0';
@@ -785,9 +772,6 @@ bool BeebWin::PrinterFile()
 	}
 
 	return changed;
-#else
-	return false;
-#endif
 }
 
 /****************************************************************************/
@@ -1006,7 +990,15 @@ void BeebWin::QuickLoad()
 {
 	char FileName[_MAX_PATH];
 	strcpy(FileName, m_UserDataPath);
+#ifndef __APPLE__
 	strcat(FileName, "BeebState\\quicksave.uefstate");
+#else
+	char DirName[_MAX_PATH];
+	strcpy(DirName, m_UserDataPath);
+	strcat(DirName, "BeebState");
+
+	_makepath(FileName, NULL,DirName,"quicksave","uefstate");
+#endif
 
 	if (FileExists(FileName))
 	{
@@ -1016,7 +1008,11 @@ void BeebWin::QuickLoad()
 	{
 		// For backwards compatiblity with existing quicksave files:
 		strcpy(FileName, m_UserDataPath);
+#ifndef __APPLE__
 		strcat(FileName, "BeebState\\quicksave.uef");
+#else
+		_makepath(FileName, NULL,FileName,"quicksave","uef");
+#endif
 		LoadUEFState(FileName);
 	}
 }
@@ -1025,10 +1021,16 @@ void BeebWin::QuickSave()
 {
 	char FileName1[_MAX_PATH];
 	char FileName2[_MAX_PATH];
-
+#ifdef __APPLE__
+	char DirName[_MAX_PATH];
+	strcpy(DirName, m_UserDataPath);
+	strcat(DirName, "BeebState");
+#endif
+	
 	// Bump old quicksave files down
 	for (int i = 1; i <= 9; ++i)
 	{
+#ifndef __APPLE__
 		sprintf(FileName1, "%sBeebState\\quicksave%d.uefstate", m_UserDataPath, i);
 
 		if (i == 9)
@@ -1039,11 +1041,22 @@ void BeebWin::QuickSave()
 		{
 			sprintf(FileName2, "%sBeebState\\quicksave%d.uefstate", m_UserDataPath, i + 1);
 		}
+#else
+		sprintf(FileName1, "quicksave%d", i);
+		_makepath(FileName1, NULL,DirName,FileName1,"uefstate");
 
-#ifndef __APPLE__
-		MoveFileEx(FileName2, FileName1, MOVEFILE_REPLACE_EXISTING);
+		if (i == 9)
+		{
+			_makepath(FileName2, NULL,DirName,"quicksave","uefstate");
+		}
+		else
+		{
+			sprintf(FileName2, "quicksave%d", i + 1);
+			_makepath(FileName2, NULL,DirName,FileName2,"uefstate");
+		}
 #endif
 		
+		MoveFileEx(FileName2, FileName1, MOVEFILE_REPLACE_EXISTING);		
 	}
 
 	SaveUEFState(FileName2);
@@ -1357,7 +1370,6 @@ void BeebWin::GetDataPath(const char *folder, char *path)
 /****************************************************************************/
 void BeebWin::LoadUserKeyMap()
 {
-#ifndef __APPLE__
 	char FileName[_MAX_PATH];
 	FileName[0] = '\0';
 
@@ -1369,14 +1381,12 @@ void BeebWin::LoadUserKeyMap()
 		if (ReadKeyMap(FileName, &UserKeyMap))
 			strcpy(m_UserKeyMapPath, FileName);
 	}
-#endif
 	
 }
 
 /****************************************************************************/
 void BeebWin::SaveUserKeyMap()
 {
-#ifndef __APPLE__
 	char FileName[_MAX_PATH];
 	FileName[0] = '\0';
 
@@ -1396,7 +1406,6 @@ void BeebWin::SaveUserKeyMap()
 			strcpy(m_UserKeyMapPath, FileName);
 		}
 	}
-#endif
 }
 
 /****************************************************************************/
@@ -1450,6 +1459,13 @@ void BeebWin::doPaste()
 		}
 	}
 	CloseClipboard();
+#else
+	if (swift_getPasteboard(m_ClipboardBuffer,ClipboardBufferSize))
+	{
+		m_ClipboardIndex = 0;
+		m_ClipboardLength = (int)strlen(m_ClipboardBuffer);
+	}
+
 #endif
 }
 
@@ -1489,6 +1505,8 @@ void BeebWin::CopyKey(unsigned char Value)
 	SetClipboardData(CF_TEXT, hglbCopy);
 
 	CloseClipboard();
+#else
+	swift_setPasteboard(m_printerbuffer,m_printerbufferlen);
 #endif
 }
 
@@ -1547,9 +1565,12 @@ void BeebWin::ExportDiscFiles(int menuId)
 	m_Preferences.GetStringValue("ExportPath", szExportPath);
 	GetDataPath(m_UserDataPath, szExportPath);
 
-#ifndef __APPLE__
 	// Show export dialog
+#ifndef __APPLE__
 	ExportFileDialog Dialog(hInst, m_hWnd, DiscInfo[Drive].FileName, Heads, Side, &dfsCat, szExportPath);
+#else
+	ExportFileDialog Dialog(DiscInfo[Drive].FileName, Heads, Side, &dfsCat, szExportPath);
+#endif
 
 	if (!Dialog.DoModal())
 	{
@@ -1562,7 +1583,7 @@ void BeebWin::ExportDiscFiles(int menuId)
 	{
 		m_Preferences.SetStringValue("ExportPath", ExportPath.c_str());
 	}
-#endif
+	
 }
 
 // File import
@@ -1622,10 +1643,10 @@ void BeebWin::ImportDiscFiles(int menuId)
 	m_Preferences.GetStringValue("ExportPath", szExportPath);
 	GetDataPath(m_UserDataPath, szExportPath);
 
-#ifndef __APPLE__
 	const char* filter = "INF files (*.inf)\0*.inf\0" "All files (*.*)\0*.*\0";
 
 	FileDialog fileDialog(m_hWnd, fileSelection, sizeof(fileSelection), szExportPath, filter);
+	
 	fileDialog.AllowMultiSelect();
 	fileDialog.SetTitle("Select files to import");
 
@@ -1639,7 +1660,12 @@ void BeebWin::ImportDiscFiles(int menuId)
 	if (fileName[0] == 0)
 	{
 		// Only one file selected
+#ifndef __APPLE__
 		fileName = strrchr(fileSelection, '\\');
+#else
+		fileName = strrchr(fileSelection, '/');
+#endif
+
 		if (fileName != NULL)
 			*fileName = 0;
 		fileName++;
@@ -1727,13 +1753,10 @@ void BeebWin::ImportDiscFiles(int menuId)
 
 		Load1770DiscImage(szFileName, Drive, DiscInfo[Drive].Type);
 	}
-#endif
 }
 
 void BeebWin::SelectHardDriveFolder()
 {
-#ifndef __APPLE__
-
 	char DefaultPath[_MAX_PATH];
 	char FileName[_MAX_PATH];
 	FileName[0] = '\0';
@@ -1746,10 +1769,14 @@ void BeebWin::SelectHardDriveFolder()
 	GetDataPath(m_UserDataPath, DefaultPath);
 
 	FileDialog fileDialog(m_hWnd, FileName, sizeof(FileName), DefaultPath, filter);
-
+	
 	if (fileDialog.Open())
 	{
+#ifndef __APPLE__
 		unsigned int PathLength = (unsigned int)(strrchr(FileName, '\\') - FileName);
+#else
+		unsigned int PathLength = (unsigned int)(strrchr(FileName, '/') - FileName);
+#endif
 		strncpy(DefaultPath, FileName, PathLength);
 		DefaultPath[PathLength] = 0;
 
@@ -1764,10 +1791,8 @@ void BeebWin::SelectHardDriveFolder()
 			ResetBeebSystem(MachineType, false);
 		}
 	}
-#endif
 }
 
-#ifndef __APPLE__
 /****************************************************************************/
 /* Bitmap capture support */
 void BeebWin::CaptureBitmapPending(bool autoFilename)
@@ -1776,6 +1801,7 @@ void BeebWin::CaptureBitmapPending(bool autoFilename)
 	m_CaptureBitmapAutoFilename = autoFilename;
 }
 
+#ifndef __APPLE__
 bool BeebWin::GetImageEncoderClsid(const WCHAR *mimeType, CLSID *encoderClsid)
 {
 	bool Success = false;
@@ -1826,7 +1852,8 @@ Exit:
 
 	return Success;
 }
-
+#endif
+	
 static const char* GetCaptureFormatFileExt(UINT MenuID)
 {
 	switch (MenuID)
@@ -1846,6 +1873,7 @@ static const char* GetCaptureFormatFileExt(UINT MenuID)
 	}
 }
 
+#ifndef __APPLE__
 static const WCHAR* GetCaptureFormatMimeType(UINT MenuID)
 {
 	switch (MenuID)
@@ -1864,7 +1892,8 @@ static const WCHAR* GetCaptureFormatMimeType(UINT MenuID)
 			return L"image/png";
 	}
 }
-
+#endif
+	
 bool BeebWin::GetImageFile(char *FileName, int Size)
 {
 	bool success = false;
@@ -1911,6 +1940,8 @@ void BeebWin::CaptureBitmap(int SourceX,
                             int SourceHeight,
                             bool Teletext)
 {
+#ifndef __APPLE__
+
 	const WCHAR *mimeType = GetCaptureFormatMimeType(m_MenuIDCaptureFormat);
 	const char *fileExt = GetCaptureFormatFileExt(m_MenuIDCaptureFormat);
 
@@ -2070,6 +2101,6 @@ void BeebWin::CaptureBitmap(int SourceX,
 	{
 		DeleteDC(CaptureDC);
 	}
+#endif
 }
 
-#endif

@@ -21,6 +21,10 @@ Boston, MA  02110-1301, USA.
 // Watford DDFS Board Drive Controller Chip DLL
 // (C) September 2001 - Richard Gellman
 
+#ifdef __APPLE__
+#undef EXPORT
+#endif
+
 #ifdef __cplusplus
 #define EXPORT extern "C" __declspec (dllexport)
 #else

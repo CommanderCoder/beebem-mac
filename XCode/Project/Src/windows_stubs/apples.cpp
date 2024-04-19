@@ -20,21 +20,23 @@ DWORD GetTickCount() // milliseconds
 	return (DWORD) millis;
 }
 
-
+int beebwin_RC2ID(int rc)
+{
+	auto cmdID = RC2ID.find(rc);
+	if (cmdID != RC2ID.end())
+		return cmdID->second;
+	return -1;
+}
 
 void beebwin_ModifyMenu(
 						UINT position,
 						UINT newitem,
 						CHAR* newtext)
 {
-	auto cmdID = RC2ID.find(position);
-	auto newID = RC2ID.find(newitem);
-	if (cmdID != RC2ID.end())
-	{
+	auto id = beebwin_RC2ID(position);
+	if (id>0)
 		// check the selected item
-		swift_ModifyMenu(cmdID->second, newID->second, newtext);
-	}
-
+		swift_ModifyMenu(id, beebwin_RC2ID(newitem), newtext);
 }
 
 
@@ -42,11 +44,11 @@ void beebwin_ModifyMenu(
 // set the tick on the menu with a 4 character identifier
 void beebwin_SetMenuCheck(UINT cmd, bool check)
 {
-	auto cmdID = RC2ID.find(cmd);
-	if (cmdID != RC2ID.end())
+	auto id = beebwin_RC2ID(cmd);
+	if (id>0)
 	{
 		// check the selected item
-		swift_SetMenuCheck(cmdID->second, check);
+		swift_SetMenuCheck(id, check);
 	}
 	
 }
@@ -100,8 +102,10 @@ void _makepath(char *path,
 	  const char *fname,
 	  const char *ext)
 {
+	char fpath[_MAX_PATH];
+	strcpy(fpath, fname);
 	if (fname && ext)
-		sprintf(path, "%s/%s.%s", dir,fname,ext);
+		sprintf(path, "%s/%s.%s", dir,fpath,ext);
 	else
 		sprintf(path, "%s/", dir);
 }

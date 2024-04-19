@@ -66,6 +66,9 @@ class Dialog
 		int m_DialogID;
 		HWND m_hwnd;
 };
-#endif
+
+#else
+
+#endif //__APPLE__
 
 #endif

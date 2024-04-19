@@ -460,9 +460,7 @@ public:
 	void SavePreferences(bool saveAll);
 
 	// Main window
-#ifndef __APPLE__
 	HWND m_hWnd;
-#endif
 	char m_szTitle[256];
 	bool m_isFullScreen;
 	bool m_startFullScreen;

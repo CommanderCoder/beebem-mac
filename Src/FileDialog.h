@@ -74,6 +74,8 @@ private:
 
 	bool ShowDialog(bool open);
 };
+#else
+#include "FileDialog-mac.hpp"
 #endif //__APPLE__
 
 #endif

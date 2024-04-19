@@ -30,6 +30,8 @@ typedef uint8_t UINT8;   // UINT8 = unsigned 8 bit value
 typedef int32_t INT;     // INT = signed 32 bit value
 typedef int16_t INT16;   // INT16 = signed 16 bit value
 
+typedef uint32_t* HWND; // 
+
 typedef struct tagBITMAPINFOHEADER {
   DWORD biSize;
   LONG  biWidth;
@@ -133,6 +135,9 @@ extern void _makepath(char *path,
 	   const char *fname,
 	   const char *ext);
 
+#define MOVEFILE_REPLACE_EXISTING 0
+extern void MoveFileEx(const char* dest, const char* orig, DWORD flags);
+
 
 bool SHGetFolderPath(const char* path);
 
@@ -165,6 +170,7 @@ extern "C" int swift_Remove(const char* path);
 // this time
 extern "C" void swift_sleepCPU(unsigned long microseconds);
 
+int beebwin_RC2ID(int rc);
 void beebwin_ModifyMenu(
 						UINT position,
 						UINT newitem,
@@ -181,6 +187,29 @@ int beebwin_KeyUpDown(long, long,long);
 
 extern "C" void swift_sleepCPU(unsigned long microseconds);
 #define Sleep swift_sleepCPU
+
+
+// also modify swift Enum
+extern "C" enum FileFilter { DISC, UEFFILE, IFD, KEYBOARD, DISCFILE, HARDDRIVE, PRINTFILE, ROMCFG };
+
+extern "C" int swift_GetFilesWithPreview (const char *path, int bytes, const char* directory, FileFilter exts, bool multiFiles);
+extern "C" int swift_SaveFile (const char *path, int bytes, FileFilter exts);
+extern "C" int swift_MoveFile (const char *src, const char *dest );
+
+extern "C" int swift_SelectFolder (const char *path, int bytes);
+
+
+extern "C" int swift_setPasteboard ( const char* clipboard, int length);
+extern "C" int swift_getPasteboard ( char* clipboard, int length);
+
+extern "C" void swift_SelectFiles (char* dfsNames[], int max);
+extern "C" int swift_SelectedFiles ( int fileSelected[], int max);
+
+extern void beebwin_ModifyMenu(
+						UINT position,
+						UINT newitem,
+						CHAR* newtext);
+
 
 
 

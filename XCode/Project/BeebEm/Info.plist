@@ -16,36 +16,133 @@
 				<string>public.data</string>
 			</array>
 			<key>UTTypeDescription</key>
-			<string>BeebEm ETI</string>
+			<string>BeebEm Keymap</string>
+			<key>UTTypeIcons</key>
+			<dict>
+				<key>UTTypeIconText</key>
+				<string>BeebEm Keymap</string>
+			</dict>
+			<key>UTTypeIdentifier</key>
+			<string>com.commandercoder.BeebEm.kmap</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>kmap</string>
+				</array>
+			</dict>
+		</dict>
+	</array>
+	<key>UTImportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>BBC Micro HD</string>
 			<key>UTTypeIcons</key>
 			<dict>
 				<key>UTTypeIconBadgeName</key>
-				<string>Icon</string>
+				<string>DiskIcon</string>
+				<key>UTTypeIconText</key>
+				<string>HardDisk</string>
 			</dict>
 			<key>UTTypeIdentifier</key>
-			<string>com.commandercoder.beebem</string>
+			<string>com.commandercoder.BeebEm.dat</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>dat</string>
+					<string>DAT</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>BeebEm Roms</string>
+			<key>UTTypeIcons</key>
+			<dict>
+				<key>UTTypeIconText</key>
+				<string>BeebEm ROM</string>
+			</dict>
+			<key>UTTypeIdentifier</key>
+			<string>com.commandercoder.BeebEm.rom</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>rom</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>BBC Micro Floppy</string>
+			<key>UTTypeIcons</key>
+			<dict>
+				<key>UTTypeIconBadgeName</key>
+				<string></string>
+				<key>UTTypeIconText</key>
+				<string></string>
+			</dict>
+			<key>UTTypeIdentifier</key>
+			<string>com.commandercoder.BeebEm.ssd</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>ssd</string>
+					<string>dsd</string>
+					<string>adf</string>
+					<string>adl</string>
+					<string>SSD</string>
+					<string>DSD</string>
+					<string>ADF</string>
+					<string>ADL</string>
+					<string>wdd</string>
+					<string>WDD</string>
+					<string>img</string>
+					<string>dos</string>
+					<string>IMG</string>
+					<string>DOS</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>BBC Micro Tape</string>
+			<key>UTTypeIcons</key>
+			<dict>
+				<key>UTTypeIconBadgeName</key>
+				<string></string>
+				<key>UTTypeIconText</key>
+				<string></string>
+			</dict>
+			<key>UTTypeIdentifier</key>
+			<string>com.commandercoder.BeebEm.uef</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
 				<array>
 					<string>uef</string>
 					<string>csw</string>
-					<string>ssd</string>
-					<string>dsd</string>
-					<string>wdd</string>
-					<string>adf</string>
-					<string>adl</string>
-					<string>img</string>
-					<string>dos</string>
 					<string>UEF</string>
 					<string>CSW</string>
-					<string>SSD</string>
-					<string>WDD</string>
-					<string>DSD</string>
-					<string>ADF</string>
-					<string>ADL</string>
-					<string>IMG</string>
-					<string>DOS</string>
 				</array>
 			</dict>
 		</dict>

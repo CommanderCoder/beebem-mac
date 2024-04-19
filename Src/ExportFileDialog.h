@@ -72,6 +72,9 @@ class ExportFileDialog : public Dialog
 		int m_FilesSelected[DFS_MAX_CAT_SIZE];
 		int m_NumSelected;
 };
-#endif
+
+#else
+#import "ExportFileDialog-mac.hpp"
+#endif //__APPLE__
 
 #endif

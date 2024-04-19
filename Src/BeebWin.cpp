@@ -139,8 +139,8 @@ const char *WindowTitle = "BeebEm - BBC Model B / Master 128 Emulator";
 /****************************************************************************/
 BeebWin::BeebWin()
 {
-#ifndef __APPLE__
 	m_hWnd = nullptr;
+#ifndef __APPLE__
 	m_DXInit = false;
 #endif
 	m_LastStartY = 0;
@@ -1174,7 +1174,14 @@ void BeebWin::CheckMenuItem(UINT id, bool checked)
 #ifndef __APPLE__
 	::CheckMenuItem(m_hMenu, id, checked ? MF_CHECKED : MF_UNCHECKED);
 #else
-	swift_SetMenuCheck(id, checked);
+	if (id == ID_FDC_DLL)
+	{
+		swift_SetMenuCheck(beebwin_RC2ID(ID_FDC_ACORN), checked);
+		swift_SetMenuCheck(beebwin_RC2ID(ID_FDC_OPUS), checked);
+		swift_SetMenuCheck(beebwin_RC2ID(ID_FDC_WATFORD), checked);
+	}
+
+	swift_SetMenuCheck(beebwin_RC2ID(id), checked);
 #endif
 }
 
@@ -1186,12 +1193,12 @@ void BeebWin::EnableMenuItem(UINT id, bool enabled)
 	
 	if (id == ID_FDC_DLL)
 	{
-		swift_SetMenuEnable(ID_FDC_ACORN, enabled);
-		swift_SetMenuEnable(ID_FDC_OPUS, enabled);
-		swift_SetMenuEnable(ID_FDC_WATFORD, enabled);
+		swift_SetMenuEnable(beebwin_RC2ID(ID_FDC_ACORN), enabled);
+		swift_SetMenuEnable(beebwin_RC2ID(ID_FDC_OPUS), enabled);
+		swift_SetMenuEnable(beebwin_RC2ID(ID_FDC_WATFORD), enabled);
 	}
 
-	swift_SetMenuEnable(id, enabled);
+	swift_SetMenuEnable(beebwin_RC2ID(id), enabled);
 #endif
 }
 
@@ -1258,6 +1265,8 @@ void BeebWin::InitMenu(void)
 	strcat(menu_string, m_PrinterFileName);
 #ifndef __APPLE__
 	ModifyMenu(m_hMenu, IDM_PRINTER_FILE, MF_BYCOMMAND, IDM_PRINTER_FILE, menu_string);
+#else
+	beebwin_ModifyMenu(IDM_PRINTER_FILE, IDM_PRINTER_FILE, menu_string);
 #endif
 	
 	// Comms -> RS423

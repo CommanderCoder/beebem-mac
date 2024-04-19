@@ -21,6 +21,8 @@ Boston, MA  02110-1301, USA.
 #ifndef LIST_VIEW_HEADER
 #define LIST_VIEW_HEADER
 
+#ifndef __APPLE__
+
 #include <string>
 
 int LVInsertColumn(HWND hWnd, UINT uCol, const char* pszText, int iAlignment, UINT uWidth);
@@ -32,5 +34,6 @@ LPARAM LVGetItemData(HWND hWnd, UINT uRow);
 void LVSetItemText(HWND hWnd, UINT uRow, UINT uCol, const LPTSTR pszText);
 
 void LVSetFocus(HWND hWnd);
+#endif
 
 #endif

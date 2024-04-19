@@ -12,10 +12,11 @@ import AVFoundation
 
 @objc enum FileFilter :Int {
     case DISC
-    case UEF
+    case UEFFILE
     case IFD
     case KEYBOARD
     case DISCFILE
+	case HARDDRIVE
     case PRINTFILE
     case ROMCFG
 }
@@ -79,9 +80,15 @@ enum CBridge {
 }
 
 
-
+//https://developer.apple.com/documentation/uniformtypeidentifiers/uttype
+//https://useyourloaf.com/blog/swiftui-importing-and-exporting-files/
 extension UTType {
-	public static let beebem = UTType(exportedAs: "com.commandercoder.beebem")
+	public static let ssd = UTType(importedAs: "com.commandercoder.BeebEm.ssd")
+	public static let hdd = UTType(importedAs: "com.commandercoder.BeebEm.dat")
+	public static let tape = UTType(importedAs: "com.commandercoder.BeebEm.uef")
+	public static let rom = UTType(importedAs: "com.commandercoder.BeebEm.rom")
+
+	public static let keymap = UTType(exportedAs: "com.commandercoder.BeebEm.kmap")
 }
 
 
@@ -108,17 +115,26 @@ func swift_GetFilesWithPreview(filepath : UnsafeMutablePointer<CChar>, bytes: In
     
     switch fileexts {
     case .DISC:
-		dialog.allowedContentTypes        = [.beebem] // ["ssd", "dsd", "wdd", "dos", "adl", "adf", "img"]
-    case .UEF:
-        dialog.allowedContentTypes        = [.beebem] // ["uef", "csw"]
+		dialog.allowedContentTypes        = [.ssd] // ["ssd", "dsd", "wdd", "dos", "adl", "adf", "img"]
+		break
+	case .UEFFILE:
+        dialog.allowedContentTypes        = [.tape] // ["uef", "csw"]
+		break
     case .IFD:
-        dialog.allowedContentTypes        = [.beebem] // ["ssd", "dsd", "inf"]
+        dialog.allowedContentTypes        = [] // ["ssd", "dsd", "inf"]
+		break
     case .KEYBOARD:
-        dialog.allowedContentTypes        = [.beebem] // ["kmap"]
+        dialog.allowedContentTypes        = [.keymap] // ["kmap"]
+		break
+	case .HARDDRIVE:
+		dialog.allowedContentTypes        = [.hdd] //nil  // ["inf"]
+		break
     case .DISCFILE:
-        dialog.allowedContentTypes        = [] //nil  // ["inf"]
+		dialog.allowedContentTypes        = [.data] //nil  // ["inf"]
+		break
     case .ROMCFG:
-        dialog.allowedContentTypes        = [.beebem] // ["rom"]
+        dialog.allowedContentTypes        = [.rom] // ["rom"]
+		break
     case .PRINTFILE:
         break
     }
@@ -131,7 +147,7 @@ func swift_GetFilesWithPreview(filepath : UnsafeMutablePointer<CChar>, bytes: In
             var path: String = (dialog.directoryURL?.path ?? "") + "\0"
             if result.count == 1
             {
-                path = dialog.url?.path ?? ""
+                path = (dialog.url?.path ?? "") + "\0"
             }
             else
             {
@@ -187,27 +203,40 @@ func swift_SelectFolder(filepath : UnsafeMutablePointer<CChar>, bytes: Int) -> I
 @_cdecl("swift_SaveFile")
 func swift_SaveFile(filepath : UnsafeMutablePointer<CChar>, bytes: Int, fileexts: FileFilter) -> Bool
 {
-    let dialog = NSSavePanel()
+	// test that PRINTDIALOG with no filename works
+	let dialog = NSSavePanel()
     
     dialog.title                   = "Choose a file | BeebEm5"
     dialog.showsResizeIndicator    = true
     dialog.showsHiddenFiles        = false
     dialog.allowsOtherFileTypes    = true
+	dialog.isExtensionHidden	= false
+	
     switch fileexts {
     case .DISC:
-        dialog.allowedContentTypes        = [.beebem] // ["ssd", "dsd", "wdd", "dos", "adl", "adf", "img"]
-    case .UEF:
-        dialog.allowedContentTypes        = [.beebem] // ["uef", "csw"]
+        dialog.allowedContentTypes        = [.ssd] // ["ssd", "dsd", "wdd", "dos", "adl", "adf", "img"]
+		break
+    case .UEFFILE:
+        dialog.allowedContentTypes        = [.tape] // ["uef", "csw"]
+		break
     case .IFD:
-        dialog.allowedContentTypes        = [.beebem] // ["ssd", "dsd", "inf"]
+        dialog.allowedContentTypes        = [] // ["ssd", "dsd", "inf"]
+		break
     case .KEYBOARD:
-        dialog.allowedContentTypes        = [.beebem] // ["kmap"]
+        dialog.allowedContentTypes        = [.keymap] // ["kmap"]
+		break
+	case .HARDDRIVE:
+		dialog.allowedContentTypes        = [.data] //nil  // ["inf"]
+		break
     case .DISCFILE:
-        dialog.allowedContentTypes        = [] //nil // ["inf"]
+		dialog.allowedContentTypes        = [.data] //nil // ["inf"]
+		break
     case .ROMCFG:
-        dialog.allowedContentTypes        = [.beebem] // ["rom"]
+        dialog.allowedContentTypes        = [.rom] // ["rom"]
+		break
     case .PRINTFILE:
-        dialog.allowedContentTypes        = [] //nil  // ["inf"]
+		dialog.allowedContentTypes        = [.plainText] //nil  // ["inf"]
+		break
     }
 
     if (dialog.runModal() ==  NSApplication.ModalResponse.OK) {
@@ -326,19 +355,6 @@ func menuItemByIdentifier(id: String) -> NSMenuItem? {
 @_cdecl("swift_SetMenuCheck")
 public func swift_SetMenuCheck(_ cmd: UInt32, _ check: Bool)
 {
-	
-	//
-	//	auto cmdID = RC2ID.find(id);
-	//	if (cmdID != RC2ID.end())
-	//	{
-	//		swift_SetMenuCheck(cmdID->second, checked);
-	//	}
-	//	else
-	//	{
-	//		Report(MessageType::Error, "cannot find menu item %d\n", id);
-	//	}
-
-	
     let cmdSTR =  conv(cmd)
 
     if let n = menuItemByIdentifier(id:cmdSTR)
@@ -348,7 +364,7 @@ public func swift_SetMenuCheck(_ cmd: UInt32, _ check: Bool)
     }
     else
     {
-//        print("\(#function) not found: ",cmdSTR)
+        print("\(#function) not found: ",cmdSTR)
     }
 }
 
@@ -376,18 +392,6 @@ public func swift_ModifyMenu(_ cmd: UInt32, _ newitem: UInt32,  _ itemtext: Unsa
 @_cdecl("swift_SetMenuEnable")
 public func swift_SetMenuEnable(_ cmd: UInt32, _ enable: Bool)
 {
-//	
-//	auto cmdID = RC2ID.find(id);
-//	if (cmdID != RC2ID.end())
-//	{
-//		swift_SetMenuEnable(cmdID->second, enabled);
-//	}
-//	else
-//	{
-//		Report(MessageType::Error, "cannot find menu item %d\n", id);
-//	}
-//	
-//	
     // There is a checkbox in the Menu's Inspector called "Auto Enables Items" that was overriding my code.
     let cmdSTR =  conv(cmd)
     if let n = menuItemByIdentifier(id:cmdSTR)

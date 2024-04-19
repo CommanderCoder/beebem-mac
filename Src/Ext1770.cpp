@@ -23,6 +23,13 @@ Boston, MA  02110-1301, USA.
 #include "Ext1770.h"
 #include "BeebMem.h"
 #include "Disc1770.h"
+#ifdef __APPLE__
+
+#include "Acorn.h"
+#include "Opus.h"
+#include "Watford.h"
+
+#endif
 
 /*--------------------------------------------------------------------------*/
 
@@ -82,6 +89,25 @@ Ext1770Result Ext1770Init(const char *FileName)
 	PGetBoardProperties = (GetBoardPropertiesFunc)GetProcAddress(hFDCBoard, "GetBoardProperties");
 	PSetDriveControl = (SetDriveControlFunc)GetProcAddress(hFDCBoard, "SetDriveControl");
 	PGetDriveControl = (GetDriveControlFunc)GetProcAddress(hFDCBoard, "GetDriveControl");
+#else
+	if (strstr(FileName,"Acorn") == 0)
+	{
+		PGetBoardProperties=(GetBoardPropertiesFunc) AcornFDC::GetBoardProperties;
+		PSetDriveControl=(SetDriveControlFunc) AcornFDC::SetDriveControl;
+		PGetDriveControl=(GetDriveControlFunc) AcornFDC::GetDriveControl;
+	}
+	else if (strstr(FileName,"Opus") == 0)
+	{
+		PGetBoardProperties=(GetBoardPropertiesFunc) OpusFDC::GetBoardProperties;
+		PSetDriveControl=(SetDriveControlFunc) OpusFDC::SetDriveControl;
+		PGetDriveControl=(GetDriveControlFunc) OpusFDC::GetDriveControl;
+	}
+	else if (strstr(FileName,"Watford") == 0)
+	{
+		PGetBoardProperties=(GetBoardPropertiesFunc) WatfordFDC::GetBoardProperties;
+		PSetDriveControl=(SetDriveControlFunc) WatfordFDC::SetDriveControl;
+		PGetDriveControl=(GetDriveControlFunc) WatfordFDC::GetDriveControl;
+	}
 #endif
 
 	if (PGetBoardProperties == nullptr ||
