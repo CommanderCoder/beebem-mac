@@ -124,7 +124,11 @@ void SCSIReset()
 
 	for (int i = 0; i < 4; ++i)
 	{
+#ifndef __APPLE__
 		sprintf(buff, "%s\\scsi%d.dat", HardDrivePath, i);
+#else
+		sprintf(buff, "%s/scsi%d.dat", HardDrivePath, i);
+#endif
 
 		SCSIDisc[i] = fopen(buff, "rb+");
 

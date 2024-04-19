@@ -76,6 +76,17 @@ int _vscprintf (const char * format, va_list pargs) {
 	return retval;
  }
 
+char* _strerror(const char *strErrMsg)
+{
+	static char errorstring[256];
+	if (strErrMsg != NULL)
+		sprintf(errorstring, "%s : %s", strErrMsg, strerror(errno));
+	else
+		sprintf(errorstring, "%s\n", strerror(errno));
+	return errorstring;
+}
+
+
 #include "FileUtils.h"
 
 void _splitpath(const char *path,

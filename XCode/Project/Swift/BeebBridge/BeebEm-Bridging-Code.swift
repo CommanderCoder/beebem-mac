@@ -364,7 +364,7 @@ public func swift_SetMenuCheck(_ cmd: UInt32, _ check: Bool)
     }
     else
     {
-        print("\(#function) not found: ",cmdSTR)
+		print("\(#function): \(cmd) not found: \(cmdSTR)")
     }
 }
 

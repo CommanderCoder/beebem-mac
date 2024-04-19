@@ -106,7 +106,7 @@ long WSAGetLastError();
 #define _strnicmp strncasecmp
 #define stricmp strcasecmp
 #define strnicmp strncasecmp
-#define _strerror(x) strerror(errno)
+char* _strerror(const char *strErrMsg);
 
 
 // Serial

@@ -403,7 +403,11 @@ void BeebWin::LoadTape(void)
 	{
 		if (m_AutoSavePrefsFolders)
 		{
+#ifndef __APPLE__
 			unsigned int PathLength = (unsigned int)(strrchr(FileName, '\\') - FileName);
+#else
+			unsigned int PathLength = (unsigned int)(strrchr(FileName, '/') - FileName);
+#endif
 			strncpy(DefaultPath, FileName, PathLength);
 			DefaultPath[PathLength] = 0;
 			m_Preferences.SetStringValue("TapesPath", DefaultPath);

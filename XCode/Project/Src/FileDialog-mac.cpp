@@ -42,7 +42,11 @@ FileDialog::FileDialog(HWND hwndOwner, LPTSTR result, DWORD resultLength,
 	{
 		fileFilter = KEYBOARD;
 	}
-	else if (strstr(filter,"inf")!=0)
+	else if (strstr(filter,"Hard Drive")!=0)
+	{
+		fileFilter = HARDDRIVE;
+	}
+	else if (strstr(filter,"INF files")!=0)
 	{
 		fileFilter = DISCFILE;
 	}

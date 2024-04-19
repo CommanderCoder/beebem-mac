@@ -79,7 +79,11 @@ void IDEReset()
 	for (int i = 0; i < IDEDriveMax; ++i)
 	{
 		char buff[256];
+#ifndef __APPLE__
 		sprintf(buff, "%s\\ide%d.dat", HardDrivePath, i);
+#else
+		sprintf(buff, "%s/ide%d.dat", HardDrivePath, i);
+#endif
 		IDEDisc[i] = fopen(buff, "rb+");
 
 		if (IDEDisc[i] == nullptr)
