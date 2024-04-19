@@ -149,6 +149,8 @@ int _countof( T ( & arr )[ N ] )
 }
 
 
+extern "C" void swift_SoundStream(BYTE* buffer, int outputType);// outputtype 1 = 8 bit, 1 channel, 2 = 16 bit, 2 channel
+extern "C" void swift_SoundInit();
 
 
 

@@ -153,6 +153,8 @@ static void WriteToSoundBuffer(BYTE *pSoundData)
 			mainWin->EndVideo();
 		}
 	}
+#else
+	swift_SoundStream(pSoundData, 1); // outputtype 1 = 8 bit, 1 pSoundData
 #endif
 }
 
@@ -446,6 +448,8 @@ static void InitAudioDev()
 	pSoundStreamer = CreateSoundStreamer(SoundSampleRate, 8, 1);
 
 	SoundEnabled = pSoundStreamer != nullptr;
+#else
+	swift_SoundInit();
 #endif
 }
 

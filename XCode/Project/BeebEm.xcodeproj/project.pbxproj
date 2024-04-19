@@ -278,11 +278,7 @@
 		DC0997902BBA0E2700A109A5 /* UserVia.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = UserVia.h; path = ../../../Src/UserVia.h; sourceTree = "<group>"; };
 		DC0997912BBA0E2700A109A5 /* Version.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Version.h; path = ../../../Src/Version.h; sourceTree = "<group>"; };
 		DC0997922BBA0E2700A109A5 /* Z80.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Z80.h; path = ../../../Src/Z80.h; sourceTree = "<group>"; };
-		DC0997972BBAA51200A109A5 /* beebmainio.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = beebmainio.cpp; sourceTree = "<group>"; };
-		DC0997982BBAA51200A109A5 /* beebmainprefs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = beebmainprefs.cpp; sourceTree = "<group>"; };
 		DC0997992BBAA51200A109A5 /* beebemrcids.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = beebemrcids.h; sourceTree = "<group>"; };
-		DC09979A2BBAA51200A109A5 /* beebmainvid.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = beebmainvid.cpp; sourceTree = "<group>"; };
-		DC09979C2BBAA51300A109A5 /* beebmain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = beebmain.cpp; sourceTree = "<group>"; };
 		DC09979D2BBAA51300A109A5 /* beebemrcids.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = beebemrcids.cpp; sourceTree = "<group>"; };
 		DC0997A52BBAA5D500A109A5 /* windows.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = windows.h; path = Src/windows_stubs/windows.h; sourceTree = SOURCE_ROOT; };
 		DC0997A72BBAA68600A109A5 /* d3dx9.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = d3dx9.h; sourceTree = "<group>"; };
@@ -754,10 +750,6 @@
 				DC0997A62BBAA65E00A109A5 /* windows_stubs */,
 				DC09979D2BBAA51300A109A5 /* beebemrcids.cpp */,
 				DC0997992BBAA51200A109A5 /* beebemrcids.h */,
-				DC09979C2BBAA51300A109A5 /* beebmain.cpp */,
-				DC0997972BBAA51200A109A5 /* beebmainio.cpp */,
-				DC0997982BBAA51200A109A5 /* beebmainprefs.cpp */,
-				DC09979A2BBAA51200A109A5 /* beebmainvid.cpp */,
 				DC0996DC2BBA0C6400A109A5 /* windows_headers */,
 				DC0996DB2BBA0C5000A109A5 /* windows_code */,
 				DC1DBA1F2BB8CF2B00AAB22F /* MacBridge */,

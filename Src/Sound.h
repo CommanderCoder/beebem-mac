@@ -29,6 +29,8 @@ Boston, MA  02110-1301, USA.
 #ifdef WIN32
 /* Always compile sound code - it is switched on and off using SoundEnabled */
 #include <windows.h>
+#else
+#include "apples.h"
 #endif
 
 #include <stdio.h>
