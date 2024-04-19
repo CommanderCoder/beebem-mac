@@ -50,7 +50,7 @@ void beeb_BreakoutBoxCloseDialog();
 long beeb_BBHandleCommand(unsigned int cmdID);
 
 
-// Exposed to BeebListViewController
+// Exposed to ExportDiscViewController
 long beeb_ExportDiscFiles( unsigned int drive);
 void beeb_ExportDiscFilesToFolder();
 

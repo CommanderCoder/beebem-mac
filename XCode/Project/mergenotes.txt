@@ -95,4 +95,5 @@ Dialog (not used), FileDialog and ExportFileDialog (not using Dialog)
 
 Changed the Export Type Identifier into Import & Export Type Identifers
 
+Renamed Beeb-Bridge-... to match the view controllers, and moved the Bridging-Code into its own files.  Changed BeebListView to ExportDiscView
 

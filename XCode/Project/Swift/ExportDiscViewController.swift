@@ -11,7 +11,7 @@ import AppKit
 
 //https://www.appcoda.com/macos-programming-tableview/
 
-class FileListData {
+class BeebListData {
     
     var selectedFiles : [Int32] = []
     
@@ -28,11 +28,11 @@ class FileListData {
     }
 }
 
-class FileListViewController: NSViewController {
+class ExportDiscViewController: NSViewController {
 
-    static var beeblistdata = FileListData()
+    static var beeblistdata = BeebListData()
 
-    static var beeblist : FileListViewController?
+    static var beeblist : ExportDiscViewController?
     
     var driveNumber : String?
     
@@ -43,7 +43,7 @@ class FileListViewController: NSViewController {
         
         super.viewDidLoad()
         
-		FileListViewController.beeblist = self
+        ExportDiscViewController.beeblist = self
         tableView.allowsMultipleSelection = true
 
         tableView.delegate = self
@@ -68,10 +68,10 @@ class FileListViewController: NSViewController {
     @IBAction func exportSelected(_ sender : NSButton) {
         print("Exported \(sender)")
         
-		FileListViewController.beeblistdata.selectedFiles.removeAll()
+        ExportDiscViewController.beeblistdata.selectedFiles.removeAll()
         for r in tableView.selectedRowIndexes
         {
-			FileListViewController.beeblistdata.selectedFiles.append(Int32(r))
+            ExportDiscViewController.beeblistdata.selectedFiles.append(Int32(r))
             print(">> \(r)")
         }
         
@@ -80,13 +80,13 @@ class FileListViewController: NSViewController {
     }
 }
 
-extension FileListViewController: NSTableViewDataSource {
+extension ExportDiscViewController: NSTableViewDataSource {
     func numberOfRows(in tableView: NSTableView) -> Int {
-        return FileListViewController.beeblistdata.rows.count
+        return ExportDiscViewController.beeblistdata.rows.count
     }
 }
 
-extension FileListViewController: NSTableViewDelegate {
+extension ExportDiscViewController: NSTableViewDelegate {
     
     
     fileprivate enum CellIdentifiers {
@@ -94,15 +94,15 @@ extension FileListViewController: NSTableViewDelegate {
     }
 
     func tableView(_ tableView: NSTableView, rowViewForRow row: Int) -> NSTableRowView? {
-        print("\(#function) \(row) \(FileListViewController.beeblistdata.rows[row])")
+        print("\(#function) \(row) \(ExportDiscViewController.beeblistdata.rows[row])")
         return nil
     }
     
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
-        print("\(#function) \(tableColumn!.identifier) \(row) \(FileListViewController.beeblistdata.rows[row])")
+        print("\(#function) \(tableColumn!.identifier) \(row) \(ExportDiscViewController.beeblistdata.rows[row])")
 
         if let cell = tableView.makeView(withIdentifier: tableColumn!.identifier, owner: nil) as? NSTableCellView {
-            cell.textField?.stringValue = FileListViewController.beeblistdata.rows[row]
+            cell.textField?.stringValue = ExportDiscViewController.beeblistdata.rows[row]
             return cell
         }
         return nil

@@ -12,7 +12,7 @@ import Foundation
 @_cdecl("swift_SelectedFiles")
 public func swift_SelectedFiles ( selectedFiles : UnsafeMutablePointer<Int32> , length : Int)  -> Int
 {
-	let beeblist = BeebListViewController.beeblistdata
+	let beeblist = ExportDiscViewController.beeblistdata
 	let numSelected = beeblist.selectedFiles.count
 
 	selectedFiles.assign(repeating: 0, count: length)
@@ -28,7 +28,7 @@ public func swift_SelectFiles(dfsNames : UnsafePointer<UnsafePointer<CChar>>, fi
 	let dn = UnsafeBufferPointer(start: dfsNames, count:Int(files))
 	
 	// fill up the beeblistdata within the view controller
-	let beeblist = BeebListViewController.beeblistdata
+	let beeblist = ExportDiscViewController.beeblistdata
 	
 	beeblist.clear();
 	for i in dn.enumerated()
