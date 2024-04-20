@@ -139,3 +139,34 @@ long WSAGetLastError()
 {
 	return errno;
 }
+
+
+int MessageBox(HWND m_hWnd, const char* buffer, const char* WindowTitle, int Type) {
+
+	int type = Type &0xf;
+	int button = (Type & 0xf00)>>16;
+	int res = 0;
+
+	if (Type == MB_ICONERROR ||
+		Type == MB_ICONWARNING ||
+		Type == MB_ICONINFORMATION ||
+		Type == MB_ICONQUESTION )
+	{
+		Type = (int)type;
+		const char* msgtitle[5] {"Error:","Warning:","Info:","Question:"};
+		const char* buttontitles[3] {"","YesNo:","OKCancel:"};
+		fprintf(stderr,"%s: %s (%s)",msgtitle[Type],buffer,buttontitles[button]);
+		
+		int ret = swift_Report(buffer,msgtitle[Type],button);
+		if (button == MB_YESNO)
+		{
+			res = ret==1?IDYES:IDNO;
+		}
+		else if (button == MB_OKCANCEL)
+		{
+			res = ret==1?IDOK:IDCANCEL;
+		}
+	}
+
+	return res;
+}

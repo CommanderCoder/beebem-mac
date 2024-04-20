@@ -254,3 +254,32 @@ public func swift_setPasteboard(_ text: UnsafePointer<CChar>, _ length: UInt)
 }
 
 
+
+@_cdecl("swift_Report")
+public func swift_Report(_ text: UnsafePointer<CChar>, _ title: UnsafePointer<CChar>,_ buttonType:Int) -> Int
+{
+	
+	let a = NSAlert()
+	a.messageText = String(cString: text)
+   a.window.title = String(cString: title)
+	
+	if buttonType == 1 //yesno
+	{
+		a.addButton(withTitle: "Yes")
+		a.addButton(withTitle: "No")
+	}
+	else 	if buttonType == 2 //okcancel
+	{
+		a.addButton(withTitle: "OK")
+		a.addButton(withTitle: "Cancel")
+
+	}
+	
+	a.alertStyle = .warning
+	let res = a.runModal()
+	let val = res == .alertFirstButtonReturn ? 1:2
+//	let val2 = res == .alertSecondButtonReturn ? 1:2
+	print(String(cString:text)+" "+String(cString:title)+" "+String(buttonType))
+	return val
+}
+

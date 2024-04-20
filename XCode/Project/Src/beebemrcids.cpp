@@ -57,18 +57,18 @@ std::map<int,int> ID2RC =
 {'wrp0', IDM_WRITE_PROTECT_DISC0},
 {'wrp1', IDM_WRITE_PROTECT_DISC1},
 {'wpol', IDM_WRITE_PROTECT_ON_LOAD},
-{'siz1', ID}, //160x128 selected
-{'siz2', ID},
-{'siz3', ID},
-{'siz4', ID},
-{'siz5', ID},
-{'siz6', ID},
-{'siz7', ID},
-{'siz8', ID},
-{'siz9', ID},
-{'siza', ID},
+{'siz1', ID_}, //160x128 selected
+{'siz2', ID_},
+{'siz3', ID_},
+{'siz4', ID_},
+{'siz5', ID_},
+{'siz6', ID_},
+{'siz7', ID_},
+{'siz8', ID_},
+{'siz9', ID_},
+{'siza', ID_},
 {'sizb', ID_VIEW_DD_1600X1200},//1600x1200 selected
-{'vfsc', ID},//View full screen selected
+{'vfsc', ID_},//View full screen selected
 {'vmar', IDM_MAINTAINASPECTRATIO},//Maintain Aspect Ratio selected
 {'volh', IDM_HIGHVOLUME  },
 {'volm', IDM_MEDIUMVOLUME},
@@ -78,11 +78,11 @@ std::map<int,int> ID2RC =
 {'sond', IDM_SOUNDONOFF},
 {'sped', IDM_SPEECH}, //--gone
 {'enet', ID_ECONET},
-{'igil', ID},//Ignore Illegal Instructions - see OPCODES
+{'igil', ID_},//Ignore Illegal Instructions - see OPCODES
 {'hard', ID_BASIC_HARDWARE_ONLY},//Basic Hardware
-{'docu', ID},//Documented Only
-{'extr', ID},//Common Extras
-{'full', ID},//Full Set
+{'docu', ID_},//Documented Only
+{'extr', ID_},//Common Extras
+{'full', ID_},//Full Set
 {'ifd0', IDM_DISC_IMPORT_0},
 {'ifd1', IDM_DISC_IMPORT_1},
 {'ifd2', IDM_DISC_IMPORT_2},
@@ -130,7 +130,7 @@ std::map<int,int> ID2RC =
 {'kmas', IDM_MAPAS},
 {'copy', IDM_EDIT_COPY},
 {'past', IDM_EDIT_PASTE},
-{'trac', ID}, // trace186
+{'trac', ID_}, // trace186
 {'amxo', IDM_AMXONOFF       },
 {'amx3', IDM_AMX_320X256    },
 {'amx6', IDM_AMX_640X256    },
@@ -177,14 +177,14 @@ std::map<int,int> ID2RC =
 {'rec1', IDM_VIDEORES1},
 {'rec2', IDM_VIDEORES2},
 {'rec3', IDM_VIDEORES3},
-{'rec4', ID}, //--unused
+{'rec4', ID_}, //--unused
 {'mbof', IDM_BLUR_OFF},
 {'mb2f', IDM_BLUR_2},
 {'mb4f', IDM_BLUR_4},
 {'mb8f', IDM_BLUR_8},
 {'ejd0', IDM_EJECTDISC0},
 {'ejd1', IDM_EJECTDISC1},
-{'snev', ID},
+{'snev', ID_},
 {'txte', ID_TELETEXT},
 {'txtd', ID_TELETEXTFILES},
 {'txts', ID_TELETEXTLOCALHOST},
@@ -193,14 +193,14 @@ std::map<int,int> ID2RC =
 {'hdsc', ID_HARDDRIVE},
 {'hdde', ID_IDEDRIVE},
 {'hdre', IDM_SELECT_HARD_DRIVE_FOLDER},
-{'rs42', ID},
-{'sdts', ID},
-{'sdep', ID},
-{'sdsp', ID},
-{'page', ID}, // page setup
-{'prns', ID}, // print window
-{'cpyc', ID}, // copy window to clipboard
-{'invb', ID}, // invertbackground
+{'rs42', ID_},
+{'sdts', ID_},
+{'sdep', ID_},
+{'sdsp', ID_},
+{'page', ID_}, // page setup
+{'prns', ID_}, // print window
+{'cpyc', ID_}, // copy window to clipboard
+{'invb', ID_}, // invertbackground
 {'swtd', IDM_CAPTURESCREEN},
 {'txvw', IDM_TEXTVIEW},
 {'ttsp', IDM_TEXTTOSPEECH_ENABLE},

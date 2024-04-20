@@ -207,12 +207,29 @@ extern "C" int swift_getPasteboard ( char* clipboard, int length);
 extern "C" void swift_SelectFiles (char* dfsNames[], int max);
 extern "C" int swift_SelectedFiles ( int fileSelected[], int max);
 
+extern "C" int swift_Report ( const char* message, const char* title, int buttonType);
+
 extern void beebwin_ModifyMenu(
 						UINT position,
 						UINT newitem,
 						CHAR* newtext);
 
 
+
+
+#define MB_ICONERROR 0
+#define MB_ICONWARNING 1
+#define MB_ICONINFORMATION 2
+#define MB_ICONQUESTION 3
+#define MB_NONE 0x000 //none
+#define MB_YESNO 0x100
+#define MB_OKCANCEL 0x200
+
+#define IDYES 0x10
+#define IDNO 0x20
+#define IDOK 0x30
+#define IDCANCEL 0x40
+int MessageBox(HWND m_hWnd, const char* buffer, const char* WindowTitle, int Type);
 
 
 

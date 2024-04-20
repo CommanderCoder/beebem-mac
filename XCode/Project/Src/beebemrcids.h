@@ -12,7 +12,7 @@
 #include "Resource.h"
 #include <map>
 
-#define ID IDM_FULLSCREEN
+#define ID_ IDM_FULLSCREEN
 
 #define ID_FDC_ACORN                      39901
 #define ID_FDC_OPUS                       39902

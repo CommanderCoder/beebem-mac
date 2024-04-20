@@ -5735,7 +5735,6 @@ MessageResult BeebWin::ReportV(MessageType type, const char *format, va_list arg
 
 		UINT Type = 0;
 
-#ifndef __APPLE__
 		switch (type)
 		{
 			case MessageType::Error:
@@ -5783,18 +5782,6 @@ MessageResult BeebWin::ReportV(MessageType type, const char *format, va_list arg
 					break;
 			}
 		}
-#else
-		if (type == MessageType::Error ||
-			type == MessageType::Warning ||
-			type == MessageType::Info ||
-			type == MessageType::Question ||
-			type == MessageType::Confirm )
-		{
-			Type = (int)type;
-			const char* msgtitle[5] {"Error:","Warning:","Info:","Question:","Confirm:"};
-			fprintf(stderr,"%s: %s",msgtitle[Type],buffer);
-		}
-#endif
 		free(buffer);
 	}
 
