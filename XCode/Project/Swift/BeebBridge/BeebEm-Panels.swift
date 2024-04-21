@@ -78,19 +78,23 @@ func swift_GetFilesWithPreview(filepath : UnsafeMutablePointer<CChar>, bytes: In
 
         if (result.count != 0) {
             
-            var path: String = (dialog.directoryURL?.path ?? "") + "\0"
-            if result.count == 1
-            {
-                path = (dialog.url?.path ?? "") + "\0"
-            }
-            else
-            {
-                for f in result
-                {
-                    path = path + f.lastPathComponent + "\0"
-                }
-            }
-            
+			var path: String = ""
+
+			if (result.count == 1)
+			{
+				path = result[0].path + "\0"
+			}
+			else
+			{
+			for f in result
+			{
+				if path.isEmpty {
+					// need base path
+					path = f.deletingLastPathComponent().path + "\0"
+				}
+				path = path + f.lastPathComponent + "\0"
+			}
+			}
             // path contains the file path e.g
             // /Users/ourcodeworld/Desktop/file.txt
             
@@ -263,12 +267,12 @@ public func swift_Report(_ text: UnsafePointer<CChar>, _ title: UnsafePointer<CC
 	a.messageText = String(cString: text)
    a.window.title = String(cString: title)
 	
-	if buttonType == 1 //yesno
+	if buttonType == 0x100 //yesno
 	{
 		a.addButton(withTitle: "Yes")
 		a.addButton(withTitle: "No")
 	}
-	else 	if buttonType == 2 //okcancel
+	else 	if buttonType == 0x200 //okcancel
 	{
 		a.addButton(withTitle: "OK")
 		a.addButton(withTitle: "Cancel")
@@ -279,7 +283,8 @@ public func swift_Report(_ text: UnsafePointer<CChar>, _ title: UnsafePointer<CC
 	let res = a.runModal()
 	let val = res == .alertFirstButtonReturn ? 1:2
 //	let val2 = res == .alertSecondButtonReturn ? 1:2
-	print(String(cString:text)+" "+String(cString:title)+" "+String(buttonType))
+//	print(String(cString:text)+" "+String(cString:title)+" "+String(buttonType))
+		print("result "+String(val))
 	return val
 }
 

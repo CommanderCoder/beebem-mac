@@ -144,13 +144,13 @@ long WSAGetLastError()
 int MessageBox(HWND m_hWnd, const char* buffer, const char* WindowTitle, int Type) {
 
 	int type = Type &0xf;
-	int button = (Type & 0xf00)>>16;
+	int button = (Type & 0xf00);
 	int res = 0;
 
-	if (Type == MB_ICONERROR ||
-		Type == MB_ICONWARNING ||
-		Type == MB_ICONINFORMATION ||
-		Type == MB_ICONQUESTION )
+	if (type == MB_ICONERROR ||
+		type == MB_ICONWARNING ||
+		type == MB_ICONINFORMATION ||
+		type == MB_ICONQUESTION )
 	{
 		Type = (int)type;
 		const char* msgtitle[5] {"Error:","Warning:","Info:","Question:"};

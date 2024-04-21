@@ -87,7 +87,7 @@ public:
 //		}
 //		else
 		{
-			bool err = swift_GetFilesWithPreview(m_ofn.lpstrFile, sizeof(m_ofn.lpstrFile), m_ofn.lpstrInitialDir, fileFilter, multiSelect);
+			bool err = swift_GetFilesWithPreview(m_ofn.lpstrFile, m_ofn.nMaxFile, m_ofn.lpstrInitialDir, fileFilter, multiSelect);
 			return !err;
 		}
 	}
