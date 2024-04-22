@@ -20,6 +20,8 @@ class ExportFileDialog
 {
 	public:
 		ExportFileDialog(
+			 HINSTANCE _hinstIgnore,
+			 HWND _hwndIgnore,
 			const char* szDiscFile,
 			int NumSides,
 			int Side,

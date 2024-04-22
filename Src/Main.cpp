@@ -40,8 +40,8 @@ Boston, MA  02110-1301, USA.
 
 Model MachineType;
 BeebWin *mainWin = nullptr;
-#ifndef __APPLE__
 HINSTANCE hInst;
+#ifndef __APPLE__
 HWND hCurrentDialog = nullptr;
 HACCEL hCurrentAccelTable = nullptr;
 

@@ -20,8 +20,7 @@ void beeb_handlekeys(long eventkind, unsigned long keycode, char charCode);
 void beeb_TapeControlOpenDialog();
 void beeb_TapeControlCloseDialog();
 long beeb_TCHandleCommand(unsigned int cmdID);
-long beeb_ExportDiscFiles( unsigned int driveID);
-void beeb_ExportDiscFilesToFolder( );
+
 
 long beeb_getTableRowsCount(const char* tablename);
 const char* beeb_getTableCellData(unsigned int property, long itemID);

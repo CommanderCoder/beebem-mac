@@ -28,7 +28,9 @@
 
 /****************************************************************************/
 
-ExportFileDialog::ExportFileDialog(const char* szDiscFile,
+ExportFileDialog::ExportFileDialog(HINSTANCE _hinstIgnore,
+								   HWND _hwndIgnore,
+								   const char* szDiscFile,
 								   int NumSides,
 								   int Side,
 								   DFS_DISC_CATALOGUE* dfsCat,

@@ -1570,11 +1570,7 @@ void BeebWin::ExportDiscFiles(int menuId)
 	GetDataPath(m_UserDataPath, szExportPath);
 
 	// Show export dialog
-#ifndef __APPLE__
 	ExportFileDialog Dialog(hInst, m_hWnd, DiscInfo[Drive].FileName, Heads, Side, &dfsCat, szExportPath);
-#else
-	ExportFileDialog Dialog(DiscInfo[Drive].FileName, Heads, Side, &dfsCat, szExportPath);
-#endif
 
 	if (!Dialog.DoModal())
 	{

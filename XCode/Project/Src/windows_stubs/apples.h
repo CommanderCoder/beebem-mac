@@ -31,6 +31,7 @@ typedef int32_t INT;     // INT = signed 32 bit value
 typedef int16_t INT16;   // INT16 = signed 16 bit value
 
 typedef uint32_t* HWND; // 
+typedef uint32_t* HINSTANCE; //
 
 typedef struct tagBITMAPINFOHEADER {
   DWORD biSize;

@@ -48,7 +48,6 @@
 		DC907ECA2BB6D76F00523116 /* Colour.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC907EC92BB6D76F00523116 /* Colour.swift */; };
 		DC907ECC2BB70CE000523116 /* NSImage+Bitmap.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC907ECB2BB70CE000523116 /* NSImage+Bitmap.swift */; };
 		DC907ECE2BB70E7B00523116 /* BeebSKView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC907ECD2BB70E7B00523116 /* BeebSKView.swift */; };
-		DC907ED22BB7101900523116 /* BeebEm-Bridging-Temp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC907ED02BB7101900523116 /* BeebEm-Bridging-Temp.cpp */; };
 		DC9B41302BC20C0500C3D9D8 /* IP232.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996E92BBA0C9B00A109A5 /* IP232.cpp */; };
 		DC9B41312BC2108600C3D9D8 /* Serial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC09970D2BBA0C9C00A109A5 /* Serial.cpp */; };
 		DC9B41322BC2145D00C3D9D8 /* Thread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996EB2BBA0C9B00A109A5 /* Thread.cpp */; };
@@ -63,6 +62,11 @@
 		DCACDAC12BC5DD2E00CEF154 /* apples.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCACDAC02BC5DD2E00CEF154 /* apples.cpp */; };
 		DCACDAC42BC669B600CEF154 /* BeebMacVideo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCACDAC22BC669B600CEF154 /* BeebMacVideo.cpp */; };
 		DCB3B2592BBB865E00F507F4 /* opus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0997BC2BBAA91E00A109A5 /* opus.cpp */; };
+		DCB4EBC72BD5BCD7002AEA8A /* BeebEm-Bridging-Roms.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCB4EBC52BD5BCD7002AEA8A /* BeebEm-Bridging-Roms.cpp */; };
+		DCB4EBCA2BD5BD02002AEA8A /* BeebEm-Bridging-BreakoutBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCB4EBC82BD5BD02002AEA8A /* BeebEm-Bridging-BreakoutBox.cpp */; };
+		DCB4EBCD2BD5BD22002AEA8A /* BeebEm-Bridging-UserKeyboard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCB4EBCB2BD5BD22002AEA8A /* BeebEm-Bridging-UserKeyboard.cpp */; };
+		DCB4EBD02BD5BD4E002AEA8A /* BeebEm-Bridging-TapeControl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCB4EBCE2BD5BD4E002AEA8A /* BeebEm-Bridging-TapeControl.cpp */; };
+		DCB4EBD32BD5BDC4002AEA8A /* BeebEm-Bridging-ExportFIles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCB4EBD12BD5BDC4002AEA8A /* BeebEm-Bridging-ExportFIles.cpp */; };
 		DCDC73062BBE043A00D83402 /* Acorn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0997AF2BBAA91E00A109A5 /* Acorn.cpp */; };
 		DCDC73072BBE043D00D83402 /* Watford.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0997B72BBAA91E00A109A5 /* Watford.cpp */; };
 		DCDC73092BBE108600D83402 /* Bcd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996FE2BBA0C9C00A109A5 /* Bcd.cpp */; };
@@ -340,8 +344,6 @@
 		DC907ECB2BB70CE000523116 /* NSImage+Bitmap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSImage+Bitmap.swift"; sourceTree = "<group>"; };
 		DC907ECD2BB70E7B00523116 /* BeebSKView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BeebSKView.swift; sourceTree = "<group>"; };
 		DC907ECF2BB7101900523116 /* BeebEm-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BeebEm-Bridging-Header.h"; sourceTree = "<group>"; };
-		DC907ED02BB7101900523116 /* BeebEm-Bridging-Temp.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "BeebEm-Bridging-Temp.cpp"; sourceTree = "<group>"; };
-		DC907ED12BB7101900523116 /* BeebEm-Bridging-Temp.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "BeebEm-Bridging-Temp.hpp"; sourceTree = "<group>"; };
 		DC907ED32BB7191300523116 /* mergenotes.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = mergenotes.txt; sourceTree = "<group>"; };
 		DCACDAC02BC5DD2E00CEF154 /* apples.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = apples.cpp; sourceTree = "<group>"; };
 		DCACDAC22BC669B600CEF154 /* BeebMacVideo.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = BeebMacVideo.cpp; sourceTree = "<group>"; };
@@ -350,6 +352,16 @@
 		DCACDAC82BC67D2500CEF154 /* BeebEm-Bridging-Main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "BeebEm-Bridging-Main.cpp"; sourceTree = "<group>"; };
 		DCACDAC92BC67D2500CEF154 /* BeebEm-Bridging-Main.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "BeebEm-Bridging-Main.hpp"; sourceTree = "<group>"; };
 		DCB3B2512BBAB97A00F507F4 /* apples.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = apples.h; sourceTree = "<group>"; };
+		DCB4EBC52BD5BCD7002AEA8A /* BeebEm-Bridging-Roms.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "BeebEm-Bridging-Roms.cpp"; sourceTree = "<group>"; };
+		DCB4EBC62BD5BCD7002AEA8A /* BeebEm-Bridging-Roms.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "BeebEm-Bridging-Roms.hpp"; sourceTree = "<group>"; };
+		DCB4EBC82BD5BD02002AEA8A /* BeebEm-Bridging-BreakoutBox.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "BeebEm-Bridging-BreakoutBox.cpp"; sourceTree = "<group>"; };
+		DCB4EBC92BD5BD02002AEA8A /* BeebEm-Bridging-BreakoutBox.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "BeebEm-Bridging-BreakoutBox.hpp"; sourceTree = "<group>"; };
+		DCB4EBCB2BD5BD22002AEA8A /* BeebEm-Bridging-UserKeyboard.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "BeebEm-Bridging-UserKeyboard.cpp"; sourceTree = "<group>"; };
+		DCB4EBCC2BD5BD22002AEA8A /* BeebEm-Bridging-UserKeyboard.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "BeebEm-Bridging-UserKeyboard.hpp"; sourceTree = "<group>"; };
+		DCB4EBCE2BD5BD4E002AEA8A /* BeebEm-Bridging-TapeControl.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "BeebEm-Bridging-TapeControl.cpp"; sourceTree = "<group>"; };
+		DCB4EBCF2BD5BD4E002AEA8A /* BeebEm-Bridging-TapeControl.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "BeebEm-Bridging-TapeControl.hpp"; sourceTree = "<group>"; };
+		DCB4EBD12BD5BDC4002AEA8A /* BeebEm-Bridging-ExportFIles.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "BeebEm-Bridging-ExportFIles.cpp"; sourceTree = "<group>"; };
+		DCB4EBD22BD5BDC4002AEA8A /* BeebEm-Bridging-ExportFIles.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "BeebEm-Bridging-ExportFIles.hpp"; sourceTree = "<group>"; };
 		DCDC73122BBE192200D83402 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		DCDC73182BBE1B9F00D83402 /* commctrl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = commctrl.h; sourceTree = "<group>"; };
 		DCE94C142BD3109500A5C12A /* BeebEm-Menu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BeebEm-Menu.swift"; sourceTree = "<group>"; };
@@ -567,9 +579,9 @@
 		DC0997A62BBAA65E00A109A5 /* windows_stubs */ = {
 			isa = PBXGroup;
 			children = (
-				DC0997A52BBAA5D500A109A5 /* windows.h */,
 				DC0997A72BBAA68600A109A5 /* d3dx9.h */,
 				DC0997A82BBAA6A300A109A5 /* ddraw.h */,
+				DC0997A52BBAA5D500A109A5 /* windows.h */,
 				DC0997A92BBAA6C200A109A5 /* sapi.h */,
 				DCB3B2512BBAB97A00F507F4 /* apples.h */,
 				DCDC73182BBE1B9F00D83402 /* commctrl.h */,
@@ -636,8 +648,6 @@
 		DC1DBA1F2BB8CF2B00AAB22F /* MacBridge */ = {
 			isa = PBXGroup;
 			children = (
-				DC907ED02BB7101900523116 /* BeebEm-Bridging-Temp.cpp */,
-				DC907ED12BB7101900523116 /* BeebEm-Bridging-Temp.hpp */,
 				DC907ECF2BB7101900523116 /* BeebEm-Bridging-Header.h */,
 				DCACDAC52BC66F5600CEF154 /* BeebEm-Bridging-Video.cpp */,
 				DCACDAC62BC66F5600CEF154 /* BeebEm-Bridging-Video.hpp */,
@@ -647,6 +657,16 @@
 				DC527D162BC9110E000D7CCF /* BeebEm-Bridging-Keyboard.hpp */,
 				DC7E1E602BCE53E000494CBE /* BeebEm-Bridging-IO.cpp */,
 				DC7E1E612BCE53E000494CBE /* BeebEm-Bridging-IO.hpp */,
+				DCB4EBC52BD5BCD7002AEA8A /* BeebEm-Bridging-Roms.cpp */,
+				DCB4EBC62BD5BCD7002AEA8A /* BeebEm-Bridging-Roms.hpp */,
+				DCB4EBC82BD5BD02002AEA8A /* BeebEm-Bridging-BreakoutBox.cpp */,
+				DCB4EBC92BD5BD02002AEA8A /* BeebEm-Bridging-BreakoutBox.hpp */,
+				DCB4EBCB2BD5BD22002AEA8A /* BeebEm-Bridging-UserKeyboard.cpp */,
+				DCB4EBCC2BD5BD22002AEA8A /* BeebEm-Bridging-UserKeyboard.hpp */,
+				DCB4EBCE2BD5BD4E002AEA8A /* BeebEm-Bridging-TapeControl.cpp */,
+				DCB4EBCF2BD5BD4E002AEA8A /* BeebEm-Bridging-TapeControl.hpp */,
+				DCB4EBD12BD5BDC4002AEA8A /* BeebEm-Bridging-ExportFIles.cpp */,
+				DCB4EBD22BD5BDC4002AEA8A /* BeebEm-Bridging-ExportFIles.hpp */,
 			);
 			path = MacBridge;
 			sourceTree = "<group>";
@@ -861,6 +881,7 @@
 				DC907EC32BB5C23C00523116 /* BeebViewController.swift in Sources */,
 				DCDC73282BBF574100D83402 /* 6502core.cpp in Sources */,
 				DCDC732A2BBF5AF400D83402 /* ArmDisassembler.cpp in Sources */,
+				DCB4EBD32BD5BDC4002AEA8A /* BeebEm-Bridging-ExportFIles.cpp in Sources */,
 				DC7E1E652BCE58D400494CBE /* FileDialog-mac.cpp in Sources */,
 				DCE94C152BD3109500A5C12A /* BeebEm-Menu.swift in Sources */,
 				DC9B41362BC2255900C3D9D8 /* TapeControlDialog.cpp in Sources */,
@@ -887,10 +908,11 @@
 				DC907EC12BB5C1F100523116 /* BeebApplication.swift in Sources */,
 				DCACDAC12BC5DD2E00CEF154 /* apples.cpp in Sources */,
 				DCDC73472BC0B5C200D83402 /* Teletext.cpp in Sources */,
+				DCB4EBCA2BD5BD02002AEA8A /* BeebEm-Bridging-BreakoutBox.cpp in Sources */,
 				DCDC733C2BC0ACE200D83402 /* Log.cpp in Sources */,
 				DCDC734B2BC0B78E00D83402 /* UefState.cpp in Sources */,
-				DC907ED22BB7101900523116 /* BeebEm-Bridging-Temp.cpp in Sources */,
 				DCDC73462BC0B5B500D83402 /* SysVia.cpp in Sources */,
+				DCB4EBCD2BD5BD22002AEA8A /* BeebEm-Bridging-UserKeyboard.cpp in Sources */,
 				DCDC73342BBFE87C00D83402 /* Disc8271.cpp in Sources */,
 				DC527AD12BC71C21000D7CCF /* BeebEm-Bridging-Video.cpp in Sources */,
 				DC9B41342BC215BD00C3D9D8 /* Econet.cpp in Sources */,
@@ -902,6 +924,7 @@
 				DCDC73092BBE108600D83402 /* Bcd.cpp in Sources */,
 				DCDC73442BC0B43400D83402 /* SoundStreamer.cpp in Sources */,
 				DC907ECC2BB70CE000523116 /* NSImage+Bitmap.swift in Sources */,
+				DCB4EBC72BD5BCD7002AEA8A /* BeebEm-Bridging-Roms.cpp in Sources */,
 				DC9B41352BC2190500C3D9D8 /* BeebWin.cpp in Sources */,
 				DCDC73152BBE1A9500D83402 /* StringUtils.cpp in Sources */,
 				DC904DA22BCF3CD60069DCDF /* ExportDiscViewController.swift in Sources */,
@@ -925,6 +948,7 @@
 				DCE94C192BD3117200A5C12A /* BeebEm-Files.swift in Sources */,
 				DC907EC82BB6D55100523116 /* Bitmap.swift in Sources */,
 				DC9B413A2BC22FE200C3D9D8 /* BeebWinPrefs.cpp in Sources */,
+				DCB4EBD02BD5BD4E002AEA8A /* BeebEm-Bridging-TapeControl.cpp in Sources */,
 				DC1DBA222BB998B000AAB22F /* KeyboardMappingViewController.swift in Sources */,
 				DC527AD22BC71CBC000D7CCF /* BeebEm-Bridging-Main.cpp in Sources */,
 				DCDC730B2BBE118B00D83402 /* Preferences.cpp in Sources */,

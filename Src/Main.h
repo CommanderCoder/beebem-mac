@@ -31,8 +31,8 @@ Boston, MA  02110-1301, USA.
 
 extern Model MachineType;
 extern BeebWin *mainWin;
-#ifndef __APPLE__
 extern HINSTANCE hInst;
+#ifndef __APPLE__
 extern HWND hCurrentDialog;
 extern HACCEL hCurrentAccelTable;
 #endif
