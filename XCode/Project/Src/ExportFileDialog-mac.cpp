@@ -25,8 +25,43 @@
 #include "ExportFileDialog-mac.hpp"
 
 
+#define LVIS_SELECTED 0
+
+// NOTE: ExportFileDialog::m_FileSelected is not used even though it exists in the windows version
+// values are grabbed directly from the ListView ItemData
+static int filesSelected[DFS_MAX_CAT_SIZE];
+
+// populate the menu with disc files
+char szDiscFile[MAX_PATH];
+int heads;
+int side;
+
+
+void LVInsertItem(HWND a, int row, int col, const LPTSTR text, const FileExportEntry* data)
+{
+
+}
+
+void LVSetItemText(HWND a, int row, int col, const LPTSTR text)
+{
+
+}
+
+FileExportEntry* LVGetItemData(HWND a, UINT b)
+{
+	return NULL;
+//	return &(m_ExportFiles[filesSelected[b]]);
+}
+
+//FileExportEntry LVSetItemText(HWND a, )
+//{
+//	return nullptr;
+//}
+
+
 
 /****************************************************************************/
+
 
 ExportFileDialog::ExportFileDialog(HINSTANCE _hinstIgnore,
 								   HWND _hwndIgnore,
@@ -50,8 +85,6 @@ ExportFileDialog::ExportFileDialog(HINSTANCE _hinstIgnore,
 
 		m_ExportFiles.push_back(Entry);
 	}
-	
-
 }
 
 /****************************************************************************/
@@ -66,35 +99,11 @@ ExportFileDialog::ExportFileDialog(HINSTANCE _hinstIgnore,
 
 
 
-bool ExportFileDialog::DoModal()
-{
-	
-	// Need to set up a SAVE dialog with the list of files.
-	// see DiscExportDlgProc
-	
-	
-	char* dfsNames[DFS_MAX_CAT_SIZE];
-	int numFiles = 0;
-	for (const FileExportEntry& Entry : m_ExportFiles)
-	{
-		dfsNames[numFiles] = (char*)malloc(100);
-		sprintf(dfsNames[numFiles], "%c.%-7s %06X %06X %06X",
-				Entry.DfsAttrs.directory,
-				Entry.DfsAttrs.filename,
-				Entry.DfsAttrs.loadAddr & 0xffffff,
-				Entry.DfsAttrs.execAddr & 0xffffff,
-				Entry.DfsAttrs.length);
-		numFiles++;
-	}
 
-	//1. select files to be saved - prepare the dialogue
-	swift_SelectFiles(dfsNames, numFiles);
-	
-	return true;
-}
+// from ExportFileDialog.cpp
 
-/*
- INT_PTR ExportFileDialog::DlgProc(UINT   nMessage,
+#ifndef __APPLE__
+INT_PTR ExportFileDialog::DlgProc(UINT   nMessage,
 								  WPARAM wParam,
 								  LPARAM lParam)
 {
@@ -110,8 +119,12 @@ bool ExportFileDialog::DoModal()
 			LVInsertColumn(m_hwndListView, i, Columns[i], LVCFMT_LEFT, 50);
 		}
 
+		// Make a list view that is row select with grid lines and make left formatted columns
+		// 'Columns' count ; filename, load addr, ..etc
+		
 		int Row = 0;
 
+		// add each of m_ExportFiles as rows
 		for (const FileExportEntry& Entry : m_ExportFiles)
 		{
 			// List is sorted so store catalogue index in list's item data
@@ -136,6 +149,7 @@ bool ExportFileDialog::DoModal()
 			Row++;
 		}
 
+		// autosize column widths
 		for (int i = 0; i < _countof(Columns); ++i)
 		{
 			ListView_SetColumnWidth(m_hwndListView, i, LVSCW_AUTOSIZE_USEHEADER);
@@ -143,7 +157,33 @@ bool ExportFileDialog::DoModal()
 
 		return TRUE;
 	}
+#else
 
+void ExportFileDialog::WM_INITDIALOG()
+   {
+			char* dfsNames[DFS_MAX_CAT_SIZE];
+			int numFiles = 0;
+			for (const FileExportEntry& Entry : m_ExportFiles)
+			{
+				dfsNames[numFiles] = (char*)malloc(100);
+				sprintf(dfsNames[numFiles], "%c.%-7s %06X %06X %06X",
+						Entry.DfsAttrs.directory,
+						Entry.DfsAttrs.filename,
+						Entry.DfsAttrs.loadAddr & 0xffffff,
+						Entry.DfsAttrs.execAddr & 0xffffff,
+						Entry.DfsAttrs.length);
+				numFiles++;
+				
+			}
+	   
+	   // this sets the rows in the ExportDiscViewController.beeblistdata
+	   // to be displayed in the list
+	   swift_SelectFiles(dfsNames, numFiles);
+
+   }
+#endif
+
+#ifndef __APPLE__
 	case WM_NOTIFY: {
 		LPNMHDR nmhdr = (LPNMHDR)lParam;
 
@@ -176,6 +216,14 @@ bool ExportFileDialog::DoModal()
 		}
 		break;
 	}
+#else
+void ExportFileDialog::WM_NOTIFY()
+{
+	// double click a filename will allow it to be changed before exporting
+}
+#endif
+			
+#ifndef __APPLE__
 
 	case WM_COMMAND:
 		switch (LOWORD(wParam))
@@ -192,7 +240,51 @@ bool ExportFileDialog::DoModal()
 
 	return FALSE;
 }
-*/
+#else
+bool ExportFileDialog::WM_COMMAND(int param)
+{
+	switch (param)
+	{
+	case IDOK:
+		ExportSelectedFiles();
+		return true;
+
+	case IDCANCEL:
+		swift_EndDialog();
+		return true;
+	}
+	return false;
+}
+#endif
+
+
+
+
+
+
+
+
+
+
+
+
+
+bool ExportFileDialog::DoModal()
+{
+// Three parts to DoModal -
+	// 1.WM_INITDIALOG ; done here
+	// 2.WM_NOTIFY ; done in swift
+	// 3.WM_COMMAND ; done here
+	
+	// Need to set up a SAVE dialog with the list of files.
+	// see DiscExportDlgProc
+	WM_INITDIALOG();
+	
+	swift_DoModal(this);
+
+	return true;
+}
+
 
 /****************************************************************************/
 
@@ -203,7 +295,38 @@ std::string ExportFileDialog::GetPath() const
 
 /****************************************************************************/
 
-/*
+
+
+
+int ListView_GetSelectedCount(HWND a)
+{
+	return swift_SelectedFiles(filesSelected, sizeof(filesSelected));
+}
+
+int itemIndex = 0;
+int ListView_GetNextItem(HWND a, int b, int c)
+{
+	itemIndex++;
+	if (b<0)
+	{
+		itemIndex = 0;
+	}
+
+	return itemIndex;
+}
+
+int ListView_GetItemCount(HWND a)
+{
+return 0;
+}
+
+void ListView_SetItemState(HWND a, int c, int x, int y)
+{
+	
+	
+}
+
+
 void ExportFileDialog::ExportSelectedFiles()
 {
 	m_NumSelected = ListView_GetSelectedCount(m_hwndListView);
@@ -220,6 +343,16 @@ void ExportFileDialog::ExportSelectedFiles()
 		m_NumSelected = Count;
 	}
 
+	char exportPath[MAX_PATH];
+	bool error = swift_SelectFolder(exportPath, MAX_PATH);
+	
+	if (error)
+	{
+		return;
+	}
+	m_ExportPath = std::string(exportPath);
+	
+#ifdef FUTUREWORK
 	// Get folder to export to
 	FolderSelectDialog Dialog(m_hwnd,
 							  "Select folder for exported files:",
@@ -244,7 +377,12 @@ void ExportFileDialog::ExportSelectedFiles()
 
 	int Item = ListView_GetNextItem(m_hwndListView, -1, LVNI_SELECTED);
 
+#endif
+	
 	int Count = 0;
+	
+	
+#ifdef FUTUREWORK
 
 	while (Item != -1)
 	{
@@ -281,10 +419,43 @@ void ExportFileDialog::ExportSelectedFiles()
 
 		Item = ListView_GetNextItem(m_hwndListView, Item, LVNI_SELECTED);
 	}
+#else
+	 // Export the files
 
+	 for (int i = 0; i < m_NumSelected; ++i)
+	 {
+		 FileExportEntry* Entry =
+					 &(m_ExportFiles[filesSelected[i]]);
+		 std::string LocalFileName = AppendPath(m_ExportPath, Entry->HostFileName);
+
+		 if (FileExists(LocalFileName.c_str()))
+		 {
+			 char FileName[_MAX_PATH];
+//			 const char* Filter = "All Files (*.*)\0*.*\0";
+
+			 strcpy(FileName, Entry->HostFileName.c_str());
+			// ask for overwrite
+			 if (false)
+			 {
+				 if (ExportFile(&Entry->DfsAttrs, FileName))
+				 {
+					 Count++;
+				 }
+			 }
+		 }
+		 else
+		 {
+			 if (ExportFile(&Entry->DfsAttrs, LocalFileName.c_str()))
+			 {
+				 Count++;
+			 }
+		 }
+	 }
+#endif
 	mainWin->Report(MessageType::Info, "Files successfully exported: %d", Count);
+	
 }
-*/
+
 /****************************************************************************/
 
 bool ExportFileDialog::ExportFile(DFS_FILE_ATTR* DfsAttrs, const char* LocalFileName)

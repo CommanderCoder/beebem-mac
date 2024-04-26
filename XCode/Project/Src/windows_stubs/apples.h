@@ -169,6 +169,11 @@ extern "C" int swift_ModifyMenu(unsigned int cmd, unsigned int newitem, const ch
 
 extern "C" int swift_Remove(const char* path);
 
+
+#include "ExportFileDialog-mac.hpp"
+extern "C" int swift_DoModal(ExportFileDialog* dialog);
+extern "C" int swift_EndDialog();
+
 // delay the next update of the cpu (i.e. Exec6502Instruction) by this accumulation of
 // this time
 extern "C" void swift_sleepCPU(unsigned long microseconds);

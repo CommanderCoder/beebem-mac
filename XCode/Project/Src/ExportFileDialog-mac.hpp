@@ -10,8 +10,8 @@
 
 #include <stdio.h>
 
-#include <string>
-#include <vector>
+//#include <string>
+//#include <vector>
 
 #include "DiscEdit.h"
 #include "ExportFileDialog.h"
@@ -34,9 +34,13 @@ class ExportFileDialog
 	
 		bool DoModal();
 
+		bool WM_COMMAND(int param);
 	private:
 		void ExportSelectedFiles();
 		bool ExportFile(DFS_FILE_ATTR* DfsAttrs, const char* LocalFileName);
+	
+		void WM_INITDIALOG();
+		void WM_NOTIFY();
 
 	private:
 		const char* m_DiscFile;
@@ -44,8 +48,10 @@ class ExportFileDialog
 		int m_Side;
 		std::vector<FileExportEntry> m_ExportFiles;
 		std::string m_ExportPath;
-		int m_FilesSelected[DFS_MAX_CAT_SIZE];
+		HWND m_hwndListView;
+		int m_FilesSelected[DFS_MAX_CAT_SIZE];  //unused on windows
 		int m_NumSelected;
 };
+
 
 #endif /* ExportFileDialog_mac_hpp */

@@ -108,3 +108,9 @@ SerialPortDialog
 UserKeyboardDialog
 UserPortBreakoutBox
 
+https://developer.apple.com/documentation/xcode/customizing-the-build-schemes-for-a-project
+Removed 'Document Versions' debugging from the scheme
+
+Fixed up the Export File option.
+
+Next to add the table columns

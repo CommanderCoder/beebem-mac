@@ -61,7 +61,12 @@ std::string AppendPath(const std::string& BasePath, const std::string& Path)
 
 		if (LastChar != '\\' && LastChar != '/')
 		{
+#ifndef __APPLE__
 			PathName.append(1, '\\');
+#else
+			PathName.append(1, '/');
+#endif
+			
 		}
 	}
 

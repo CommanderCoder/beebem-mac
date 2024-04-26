@@ -36,23 +36,5 @@ class AppDelegate: NSObject, NSApplicationDelegate
     
     @IBOutlet weak var tapeControlMenuItem: NSMenuItem!
 
-    var exportFilesWindow: NSWindowController?
-
-    
-    @IBAction func SetDriveNumber(_ sender: NSMenuItem) {
-        
-        let sb = NSStoryboard(name: "Main", bundle: nil)
-        // need to have given the controller an identified (StoryboardID)
-        exportFilesWindow = sb.instantiateController(
-            withIdentifier: "ExportFilesSB") as? NSWindowController
-        
-        let cmd: String = sender.identifier?.rawValue ?? "none"
-        if (0 != beeb_ExportDiscFiles(conv(cmd)))
-        {
-            exportFilesWindow?.showWindow(self)
-        }
-
-    }
-
     
 }

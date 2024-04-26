@@ -65,8 +65,14 @@ class ExportDiscViewController: NSViewController {
         tableView.reloadData()
     }
     
+	// this is the ExportFileDialogue
+	static var caller : UnsafeMutableRawPointer?
+	
     @IBAction func exportSelected(_ sender : NSButton) {
-        print("Exported \(sender)")
+        
+		print("Exported \(sender)")
+		
+		NSApp.stopModal(withCode: NSApplication.ModalResponse.OK)
         
         ExportDiscViewController.beeblistdata.selectedFiles.removeAll()
         for r in tableView.selectedRowIndexes
@@ -75,8 +81,6 @@ class ExportDiscViewController: NSViewController {
             print(">> \(r)")
         }
         
-        
-        beeb_ExportDiscFilesToFolder();
     }
 }
 

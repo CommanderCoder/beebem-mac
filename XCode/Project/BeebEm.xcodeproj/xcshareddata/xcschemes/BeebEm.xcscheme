@@ -38,7 +38,7 @@
       useCustomWorkingDirectory = "YES"
       customWorkingDirectory = "/Users/coder/Desktop/Emulator Projects/BBC/beebemtemp"
       ignoresPersistentStateOnLaunch = "NO"
-      debugDocumentVersioning = "YES"
+      debugDocumentVersioning = "NO"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
       <BuildableProductRunnable

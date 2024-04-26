@@ -9,23 +9,14 @@
 #include "beebemrcids.h"
 #include "Main.h"
 
+#include "ExportFileDialog-mac.hpp"
+
 // Dummy functions for building the BeebEm shim
-
-
-
-extern "C" long beeb_ExportDiscFiles( unsigned int driveID)
-{
-	auto driveRC = ID2RC.find(driveID);
-	if (driveRC != ID2RC.end())
-	{
-		mainWin->ExportDiscFiles(driveRC->second);
-		return 1;
-	}
-   
-	return 0;
-}
 	
-extern "C" void beeb_ExportDiscFilesToFolder( )
+extern "C" void beeb_exportSelected(ExportFileDialog* d)
 {
-//	mainWin->ExportDiscFilesToFolder();
+	if (d!=NULL)
+	{
+		d->WM_COMMAND(IDOK);
+	}
 }

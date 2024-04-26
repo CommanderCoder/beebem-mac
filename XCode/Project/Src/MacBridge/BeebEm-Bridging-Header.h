@@ -7,7 +7,6 @@
 
 // Exposed to AppDelegate
 void beeb_HandleCommand(unsigned int cmdID);
-long beeb_ExportDiscFiles( unsigned int driveID);
 
 
 // Exposed to BeebSKView
@@ -50,10 +49,7 @@ long beeb_BBHandleCommand(unsigned int cmdID);
 
 
 // Exposed to ExportDiscViewController
-long beeb_ExportDiscFiles( unsigned int drive);
-void beeb_ExportDiscFilesToFolder();
-
-
+void beeb_exportSelected(void* d);  //ExportFileDialog*
 
 // make it bridge between C++ and Swift code
 
@@ -66,3 +62,4 @@ struct CColour {
 };
 
 void beeb_video(long height, long width, struct CColour buffer[]);
+
