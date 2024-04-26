@@ -2781,17 +2781,18 @@ DQ
         <scene sceneID="Oe5-0h-WZu">
             <objects>
                 <viewController id="CrT-m1-2Aj" customClass="ExportDiscViewController" customModule="BeebEm" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" misplaced="YES" id="K2i-Gk-phg">
+                    <view key="view" id="K2i-Gk-phg">
                         <rect key="frame" x="0.0" y="0.0" width="480" height="323"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <scrollView misplaced="YES" autohidesScrollers="YES" horizontalLineScroll="24" horizontalPageScroll="10" verticalLineScroll="24" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eZ5-L8-f9b">
+                            <scrollView fixedFrame="YES" autohidesScrollers="YES" horizontalLineScroll="24" horizontalPageScroll="10" verticalLineScroll="24" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eZ5-L8-f9b">
                                 <rect key="frame" x="20" y="112" width="440" height="191"/>
-                                <clipView key="contentView" id="Q4f-He-6X7">
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <clipView key="contentView" ambiguous="YES" id="Q4f-He-6X7">
                                     <rect key="frame" x="1" y="1" width="438" height="189"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" autosaveColumns="NO" rowHeight="24" rowSizeStyle="automatic" headerView="n6l-LA-DAT" viewBased="YES" id="bmW-l1-l4L">
+                                        <tableView verticalHuggingPriority="750" ambiguous="YES" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" autosaveColumns="NO" rowHeight="24" rowSizeStyle="automatic" headerView="n6l-LA-DAT" viewBased="YES" id="bmW-l1-l4L">
                                             <rect key="frame" x="0.0" y="0.0" width="438" height="161"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <size key="intercellSpacing" width="17" height="0.0"/>
@@ -2839,7 +2840,7 @@ DQ
                                     </subviews>
                                 </clipView>
                                 <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="gIk-eH-jCr">
-                                    <rect key="frame" x="1" y="87" width="438" height="16"/>
+                                    <rect key="frame" x="1" y="174" width="438" height="16"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                                 <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="NqK-IE-Asl">
@@ -2851,8 +2852,9 @@ DQ
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableHeaderView>
                             </scrollView>
-                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Bo3-pV-C7y">
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Bo3-pV-C7y">
                                 <rect key="frame" x="336" y="13" width="131" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="push" title="Export Selected" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="smv-Wo-wLF">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -2862,14 +2864,6 @@ DQ
                                 </connections>
                             </button>
                         </subviews>
-                        <constraints>
-                            <constraint firstAttribute="bottom" secondItem="Bo3-pV-C7y" secondAttribute="bottom" constant="20" symbolic="YES" id="6bT-6W-Ag3"/>
-                            <constraint firstItem="eZ5-L8-f9b" firstAttribute="top" secondItem="K2i-Gk-phg" secondAttribute="top" constant="20" symbolic="YES" id="9jx-8S-5zL"/>
-                            <constraint firstAttribute="trailing" secondItem="Bo3-pV-C7y" secondAttribute="trailing" constant="20" symbolic="YES" id="OnB-7o-Mri"/>
-                            <constraint firstItem="eZ5-L8-f9b" firstAttribute="leading" secondItem="K2i-Gk-phg" secondAttribute="leading" id="WVT-54-yXh"/>
-                            <constraint firstItem="Bo3-pV-C7y" firstAttribute="top" secondItem="eZ5-L8-f9b" secondAttribute="bottom" constant="9" id="Wlq-LW-v4O"/>
-                            <constraint firstItem="Bo3-pV-C7y" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="K2i-Gk-phg" secondAttribute="leading" constant="20" symbolic="YES" id="qSj-xW-c0J"/>
-                        </constraints>
                     </view>
                     <connections>
                         <outlet property="tableView" destination="bmW-l1-l4L" id="6xj-4N-Zbj"/>

@@ -60,6 +60,16 @@ class ExportDiscViewController: NSViewController {
         
         tableView.reloadData()
     }
+	
+	override func viewDidDisappear() {
+		super.viewDidDisappear()
+		if (NSApp.isActive)
+		{
+			NSApp.stopModal()
+		}
+		
+	}
+	
     
 	// this is the ExportFileDialogue
 	static var caller : UnsafeMutableRawPointer?

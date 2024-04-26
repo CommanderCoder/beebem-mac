@@ -321,15 +321,22 @@ std::string ExportFileDialog::GetPath() const
 
 
 
+int itemCount = 0;
 int ListView_GetSelectedCount(HWND a)
 {
-	return swift_SelectedFiles(filesSelected, sizeof(filesSelected));
+	itemCount = swift_SelectedFiles(filesSelected, sizeof(filesSelected));
+	return itemCount;
 }
 
 int itemIndex = 0;
 int ListView_GetNextItem(HWND a, int b, int c)
 {
 	itemIndex++;
+	if (itemIndex>=itemCount)
+	{
+		return -1;
+	}
+	
 	if (b<0)
 	{
 		itemIndex = 0;
@@ -366,15 +373,6 @@ void ExportFileDialog::ExportSelectedFiles()
 		m_NumSelected = Count;
 	}
 
-	char exportPath[MAX_PATH];
-	bool error = swift_SelectFolder(exportPath, MAX_PATH);
-	
-	if (error)
-	{
-		return;
-	}
-	m_ExportPath = std::string(exportPath);
-	
 	// Get folder to export to
 	FolderSelectDialog Dialog(m_hwnd,
 							  "Select folder for exported files:",
