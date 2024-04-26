@@ -69,6 +69,8 @@ class Dialog
 
 #else
 
+#include "Dialog-mac.hpp"
+
 #endif //__APPLE__
 
 #endif

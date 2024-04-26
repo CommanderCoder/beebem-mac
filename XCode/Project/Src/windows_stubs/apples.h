@@ -210,7 +210,7 @@ extern "C" int swift_SelectFolder (const char *path, int bytes);
 extern "C" int swift_setPasteboard ( const char* clipboard, int length);
 extern "C" int swift_getPasteboard ( char* clipboard, int length);
 
-extern "C" void swift_SelectFiles (char* dfsNames[], int max);
+extern "C" void swift_InitDialog (char* dfsNames[], int max);
 extern "C" int swift_SelectedFiles ( int fileSelected[], int max);
 
 extern "C" int swift_Report ( const char* message, const char* title, int buttonType);

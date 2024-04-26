@@ -10,23 +10,31 @@
 
 #include <stdio.h>
 
-//#include <string>
-//#include <vector>
+#include <string>
+#include <vector>
 
+#include "Dialog.h"
 #include "DiscEdit.h"
-#include "ExportFileDialog.h"
 
-class ExportFileDialog
+
+struct FileExportEntry
+{
+	DFS_FILE_ATTR DfsAttrs;
+	std::string BeebFileName;
+	std::string HostFileName;
+};
+
+class ExportFileDialog : public Dialog
 {
 	public:
 		ExportFileDialog(
-			 HINSTANCE _hinstIgnore,
-			 HWND _hwndIgnore,
-			const char* szDiscFile,
-			int NumSides,
-			int Side,
-			DFS_DISC_CATALOGUE* dfsCat,
-			const char* ExportPath
+			 HINSTANCE hInstance,
+			 HWND hwndParent,
+			 const char* szDiscFile,
+			 int NumSides,
+			 int Side,
+			 DFS_DISC_CATALOGUE* dfsCat,
+			 const char* ExportPath
 		);
 
 	public:

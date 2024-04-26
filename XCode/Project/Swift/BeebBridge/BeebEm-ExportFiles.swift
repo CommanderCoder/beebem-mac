@@ -9,11 +9,20 @@ import Foundation
 import Cocoa
 
 
+// construct the list view
+
+// need to have given the controller an identified (StoryboardID)
+let exportFilesWindow: NSWindowController =  NSStoryboard(name: "Main", bundle: nil)
+	.instantiateController(
+		withIdentifier: "ExportFilesSB") as! NSWindowController
+let exportFilesView: ExportDiscViewController = exportFilesWindow.contentViewController as! ExportDiscViewController
+
+
 
 @_cdecl("swift_SelectedFiles")
 public func swift_SelectedFiles ( selectedFiles : UnsafeMutablePointer<Int32> , length : Int)  -> Int
 {
-	let beeblist = ExportDiscViewController.beeblistdata
+	let beeblist = exportFilesView.beeblistdata
 	let numSelected = beeblist.selectedFiles.count
 
 	selectedFiles.assign(repeating: 0, count: length)
@@ -21,15 +30,14 @@ public func swift_SelectedFiles ( selectedFiles : UnsafeMutablePointer<Int32> , 
 	return numSelected
 }
 
-
 // allow access to this in C
-@_cdecl("swift_SelectFiles")
-public func swift_SelectFiles(dfsNames : UnsafePointer<UnsafePointer<CChar>>, files : UInt)
+@_cdecl("swift_InitDialog")
+public func swift_InitDialog(dfsNames : UnsafePointer<UnsafePointer<CChar>>, files : UInt)
 {
 	let dn = UnsafeBufferPointer(start: dfsNames, count:Int(files))
 	
 	// fill up the beeblistdata within the view controller
-	let beeblist = ExportDiscViewController.beeblistdata
+	let beeblist = exportFilesView.beeblistdata
 	
 	beeblist.clear();
 	for i in dn.enumerated()
@@ -37,7 +45,7 @@ public func swift_SelectFiles(dfsNames : UnsafePointer<UnsafePointer<CChar>>, fi
 		let s = String(cString: i.element)
 		beeblist.setrow(s)
 	}
-	
+
 }
 
 
@@ -46,14 +54,7 @@ public func swift_SelectFiles(dfsNames : UnsafePointer<UnsafePointer<CChar>>, fi
 public func swift_DoModal(d : UnsafeMutableRawPointer)
 {
 	ExportDiscViewController.caller = d
-	
-	// bring up the list view
-	let sb = NSStoryboard(name: "Main", bundle: nil)
-	// need to have given the controller an identified (StoryboardID)
-	let exportFilesWindow: NSWindowController = sb.instantiateController(
-		withIdentifier: "ExportFilesSB") as! NSWindowController
-	
-	var _: ExportDiscViewController = exportFilesWindow.contentViewController as! ExportDiscViewController
+
 
 	// run the modal until it is closed or the Export Selected (::exportSelected) button
 	// is pressed

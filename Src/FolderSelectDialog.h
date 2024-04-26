@@ -58,5 +58,9 @@ class FolderSelectDialog
 		std::string m_InitialFolder;
 		std::string m_Title;
 };
-#endif
+
+#else
+#import "FolderSelectDialog-mac.hpp"
+#endif //__APPLE__
+
 #endif

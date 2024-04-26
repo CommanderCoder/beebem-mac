@@ -30,20 +30,16 @@ class BeebListData {
 
 class ExportDiscViewController: NSViewController {
 
-    static var beeblistdata = BeebListData()
+	var beeblistdata = BeebListData()
 
-    static var beeblist : ExportDiscViewController?
-    
     var driveNumber : String?
     
     @IBOutlet weak var tableView: NSTableView!
  
-    
     override func viewDidLoad() {
         
         super.viewDidLoad()
         
-        ExportDiscViewController.beeblist = self
         tableView.allowsMultipleSelection = true
 
         tableView.delegate = self
@@ -74,10 +70,10 @@ class ExportDiscViewController: NSViewController {
 		
 		NSApp.stopModal(withCode: NSApplication.ModalResponse.OK)
         
-        ExportDiscViewController.beeblistdata.selectedFiles.removeAll()
+        beeblistdata.selectedFiles.removeAll()
         for r in tableView.selectedRowIndexes
         {
-            ExportDiscViewController.beeblistdata.selectedFiles.append(Int32(r))
+            beeblistdata.selectedFiles.append(Int32(r))
             print(">> \(r)")
         }
         
@@ -86,7 +82,7 @@ class ExportDiscViewController: NSViewController {
 
 extension ExportDiscViewController: NSTableViewDataSource {
     func numberOfRows(in tableView: NSTableView) -> Int {
-        return ExportDiscViewController.beeblistdata.rows.count
+        return beeblistdata.rows.count
     }
 }
 
@@ -98,15 +94,15 @@ extension ExportDiscViewController: NSTableViewDelegate {
     }
 
     func tableView(_ tableView: NSTableView, rowViewForRow row: Int) -> NSTableRowView? {
-        print("\(#function) \(row) \(ExportDiscViewController.beeblistdata.rows[row])")
+        print("\(#function) \(row) \(beeblistdata.rows[row])")
         return nil
     }
     
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
-        print("\(#function) \(tableColumn!.identifier) \(row) \(ExportDiscViewController.beeblistdata.rows[row])")
+        print("\(#function) \(tableColumn!.identifier) \(row) \(beeblistdata.rows[row])")
 
         if let cell = tableView.makeView(withIdentifier: tableColumn!.identifier, owner: nil) as? NSTableCellView {
-            cell.textField?.stringValue = ExportDiscViewController.beeblistdata.rows[row]
+            cell.textField?.stringValue = beeblistdata.rows[row]
             return cell
         }
         return nil

@@ -27,6 +27,8 @@ Boston, MA  02110-1301, USA.
 #include "Dialog.h"
 #include "DiscEdit.h"
 
+#ifndef __APPLE__
+
 struct FileExportEntry
 {
 	DFS_FILE_ATTR DfsAttrs;
@@ -34,7 +36,6 @@ struct FileExportEntry
 	std::string HostFileName;
 };
 
-#ifndef __APPLE__
 class ExportFileDialog : public Dialog
 {
 	public:

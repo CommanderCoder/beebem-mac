@@ -10,22 +10,22 @@
 
 #include <string>
 
+#include "ExportFileDialog.h"
 #include "DebugTrace.h"
 #include "DiscEdit.h"
-#include "FileDialog-mac.hpp"
+#include "FileDialog.h"
 #include "FileUtils.h"
-//#include "FolderSelectDialog.h"
+#include "FolderSelectDialog.h"
 #include "ListView.h"
 #include "Main.h"
-//#include "RenameFileDialog.h"
+#include "RenameFileDialog.h"
 #include "Resource.h"
 #include "StringUtils.h"
 
 
-#include "ExportFileDialog-mac.hpp"
-
 
 #define LVIS_SELECTED 0
+#define LVNI_SELECTED 1
 
 // NOTE: ExportFileDialog::m_FileSelected is not used even though it exists in the windows version
 // values are grabbed directly from the ListView ItemData
@@ -63,13 +63,14 @@ FileExportEntry* LVGetItemData(HWND a, UINT b)
 /****************************************************************************/
 
 
-ExportFileDialog::ExportFileDialog(HINSTANCE _hinstIgnore,
-								   HWND _hwndIgnore,
+ExportFileDialog::ExportFileDialog(HINSTANCE hInstance,
+								   HWND hwndParent,
 								   const char* szDiscFile,
 								   int NumSides,
 								   int Side,
 								   DFS_DISC_CATALOGUE* dfsCat,
 								   const char* ExportPath) :
+	Dialog(hInstance, hwndParent, IDD_DISCEXPORT),
 	m_DiscFile(szDiscFile),
 	m_NumSides(NumSides),
 	m_Side(Side),
@@ -178,7 +179,7 @@ void ExportFileDialog::WM_INITDIALOG()
 	   
 	   // this sets the rows in the ExportDiscViewController.beeblistdata
 	   // to be displayed in the list
-	   swift_SelectFiles(dfsNames, numFiles);
+	   swift_InitDialog(dfsNames, numFiles);
 
    }
 #endif
@@ -220,6 +221,28 @@ void ExportFileDialog::WM_INITDIALOG()
 void ExportFileDialog::WM_NOTIFY()
 {
 	// double click a filename will allow it to be changed before exporting
+	int hitItem = 0; //HitTestInfo.iItem
+	
+	// if Notified of DOUBLECLICK on a valid SELECTED ITEM
+	FileExportEntry* Entry = reinterpret_cast<FileExportEntry*>(
+		LVGetItemData(m_hwndListView, hitItem)
+	);
+
+	if (Entry)
+	{
+		RenameFileDialog Dialog(hInst,
+								m_hwnd,
+								Entry->BeebFileName.c_str(),
+								Entry->HostFileName.c_str());
+
+		// DoModal
+		{
+			Entry->HostFileName = Dialog.GetHostFileName();
+
+			LVSetItemText(m_hwndListView, hitItem, 4, const_cast<LPTSTR>(Entry->HostFileName.c_str()));
+		}
+	}
+	
 }
 #endif
 			
@@ -310,20 +333,20 @@ int ListView_GetNextItem(HWND a, int b, int c)
 	if (b<0)
 	{
 		itemIndex = 0;
+		return filesSelected[itemIndex];
 	}
 
-	return itemIndex;
+	return filesSelected[itemIndex];
 }
 
 int ListView_GetItemCount(HWND a)
 {
-return 0;
+	return 0; // number of items in the listview
 }
 
 void ListView_SetItemState(HWND a, int c, int x, int y)
 {
-	
-	
+	// set state of item in the listview
 }
 
 
@@ -352,7 +375,6 @@ void ExportFileDialog::ExportSelectedFiles()
 	}
 	m_ExportPath = std::string(exportPath);
 	
-#ifdef FUTUREWORK
 	// Get folder to export to
 	FolderSelectDialog Dialog(m_hwnd,
 							  "Select folder for exported files:",
@@ -376,16 +398,12 @@ void ExportFileDialog::ExportSelectedFiles()
 	}
 
 	int Item = ListView_GetNextItem(m_hwndListView, -1, LVNI_SELECTED);
-
-#endif
 	
 	int Count = 0;
-	
-	
-#ifdef FUTUREWORK
 
 	while (Item != -1)
 	{
+#ifdef FUTUREWORK
 		FileExportEntry* Entry = reinterpret_cast<FileExportEntry*>(
 			LVGetItemData(m_hwndListView, Item)
 		);
@@ -417,9 +435,9 @@ void ExportFileDialog::ExportSelectedFiles()
 			}
 		}
 
+#else
 		Item = ListView_GetNextItem(m_hwndListView, Item, LVNI_SELECTED);
 	}
-#else
 	 // Export the files
 
 	 for (int i = 0; i < m_NumSelected; ++i)
@@ -431,11 +449,13 @@ void ExportFileDialog::ExportSelectedFiles()
 		 if (FileExists(LocalFileName.c_str()))
 		 {
 			 char FileName[_MAX_PATH];
-//			 const char* Filter = "All Files (*.*)\0*.*\0";
+			 const char* Filter = "All Files (*.*)\0*.*\0";
 
 			 strcpy(FileName, Entry->HostFileName.c_str());
-			// ask for overwrite
-			 if (false)
+
+			 FileDialog fileDialog(m_hwnd, FileName, sizeof(FileName), m_ExportPath.c_str(), Filter);
+
+			 if (fileDialog.Save())
 			 {
 				 if (ExportFile(&Entry->DfsAttrs, FileName))
 				 {
