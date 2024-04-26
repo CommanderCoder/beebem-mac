@@ -16,6 +16,7 @@ import Foundation
 	case HARDDRIVE
 	case PRINTFILE
 	case ROMCFG
+	case ANYFILE
 }
 
 // allow access to this in C

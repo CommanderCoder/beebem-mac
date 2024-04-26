@@ -50,6 +50,10 @@ FileDialog::FileDialog(HWND hwndOwner, LPTSTR result, DWORD resultLength,
 	{
 		fileFilter = DISCFILE;
 	}
+	else if (strstr(filter,"All Files")!=0)
+	{
+		fileFilter = ANYFILE;
+	}
 	else
 	{
 		// not recognised

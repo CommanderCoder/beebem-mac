@@ -71,7 +71,10 @@ func swift_GetFilesWithPreview(filepath : UnsafeMutablePointer<CChar>, bytes: In
 		break
     case .PRINTFILE:
         break
-    }
+	case .ANYFILE:
+		dialog.allowedContentTypes        = []
+		break
+	}
     
     if (dialog.runModal() ==  NSApplication.ModalResponse.OK) {
         let result = dialog.urls // Pathnames of the files
@@ -156,6 +159,9 @@ func swift_SaveFile(filepath : UnsafeMutablePointer<CChar>, bytes: Int, fileexts
 		break
     case .UEFFILE:
         dialog.allowedContentTypes        = [.tape] // ["uef", "csw"]
+		break
+	case .ANYFILE:
+		dialog.allowedContentTypes        = []
 		break
     case .IFD:
         dialog.allowedContentTypes        = [] // ["ssd", "dsd", "inf"]

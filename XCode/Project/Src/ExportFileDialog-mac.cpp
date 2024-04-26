@@ -401,10 +401,12 @@ void ExportFileDialog::ExportSelectedFiles()
 
 	while (Item != -1)
 	{
-#ifdef FUTUREWORK
-		FileExportEntry* Entry = reinterpret_cast<FileExportEntry*>(
-			LVGetItemData(m_hwndListView, Item)
-		);
+//		FileExportEntry* Entry = reinterpret_cast<FileExportEntry*>(
+//			LVGetItemData(m_hwndListView, Item)
+//		);
+		FileExportEntry* Entry =
+					&(m_ExportFiles[Item]);
+
 
 		std::string LocalFileName = AppendPath(m_ExportPath, Entry->HostFileName);
 
@@ -433,43 +435,10 @@ void ExportFileDialog::ExportSelectedFiles()
 			}
 		}
 
-#else
 		Item = ListView_GetNextItem(m_hwndListView, Item, LVNI_SELECTED);
 	}
-	 // Export the files
 
-	 for (int i = 0; i < m_NumSelected; ++i)
-	 {
-		 FileExportEntry* Entry =
-					 &(m_ExportFiles[filesSelected[i]]);
-		 std::string LocalFileName = AppendPath(m_ExportPath, Entry->HostFileName);
-
-		 if (FileExists(LocalFileName.c_str()))
-		 {
-			 char FileName[_MAX_PATH];
-			 const char* Filter = "All Files (*.*)\0*.*\0";
-
-			 strcpy(FileName, Entry->HostFileName.c_str());
-
-			 FileDialog fileDialog(m_hwnd, FileName, sizeof(FileName), m_ExportPath.c_str(), Filter);
-
-			 if (fileDialog.Save())
-			 {
-				 if (ExportFile(&Entry->DfsAttrs, FileName))
-				 {
-					 Count++;
-				 }
-			 }
-		 }
-		 else
-		 {
-			 if (ExportFile(&Entry->DfsAttrs, LocalFileName.c_str()))
-			 {
-				 Count++;
-			 }
-		 }
-	 }
-#endif
+	
 	mainWin->Report(MessageType::Info, "Files successfully exported: %d", Count);
 	
 }
