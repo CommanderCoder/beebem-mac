@@ -34,6 +34,8 @@ Boston, MA  02110-1301, USA.
 #include "Messages.h"
 #include "Resource.h"
 
+//make a new version of this file and only keep the bits that are required.
+//revert this to the normal version - like the Dialogs
 
 #ifdef __APPLE__
 extern "C" void swift_SetWindowTitleWithCString(const char* title);
