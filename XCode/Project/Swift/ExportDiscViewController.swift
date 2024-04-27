@@ -61,16 +61,17 @@ class ExportDiscViewController: NSViewController {
         tableView.reloadData()
     }
 	
+	// Shouldn't do this - should check for X pressed in controller
+	// maybe link to 'dismissController::' action from the window controller
 	override func viewDidDisappear() {
 		super.viewDidDisappear()
-		if (NSApp.isActive)
+		if ((NSApp.modalWindow?.isVisible) != nil)
 		{
 			NSApp.stopModal()
 		}
-		
+
 	}
-	
-    
+ 
 	// this is the ExportFileDialogue
 	static var caller : UnsafeMutableRawPointer?
 	
@@ -118,4 +119,13 @@ extension ExportDiscViewController: NSTableViewDelegate {
         return nil
     }
     
+}
+
+
+
+extension ExportDiscViewController: NSWindowDelegate {
+	func windowShouldClose(_ sender: NSWindow) -> Bool {
+		print("not closing the window!")
+		return false
+	}
 }
