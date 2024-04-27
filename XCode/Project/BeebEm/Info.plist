@@ -32,6 +32,28 @@
 				</array>
 			</dict>
 		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>BeebEm SaveState</string>
+			<key>UTTypeIcons</key>
+			<dict>
+				<key>UTTypeIconText</key>
+				<string>BeebEm SaveState</string>
+			</dict>
+			<key>UTTypeIdentifier</key>
+			<string>com.commandercoder.BeebEm.uefstate</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>uefstate</string>
+				</array>
+			</dict>
+		</dict>
 	</array>
 	<key>UTImportedTypeDeclarations</key>
 	<array>

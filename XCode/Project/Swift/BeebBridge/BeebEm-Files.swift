@@ -10,6 +10,7 @@ import Foundation
 @objc enum FileFilter :Int {
 	case DISC
 	case UEFFILE
+	case UEFSTATEFILE
 	case IFD
 	case KEYBOARD
 	case DISCFILE

@@ -23,6 +23,7 @@ extension UTType {
 	public static let rom = UTType(importedAs: "com.commandercoder.BeebEm.rom")
 
 	public static let keymap = UTType(exportedAs: "com.commandercoder.BeebEm.kmap")
+	public static let state = UTType(exportedAs: "com.commandercoder.BeebEm.uefstate")
 }
 
 
@@ -50,6 +51,9 @@ func swift_GetFilesWithPreview(filepath : UnsafeMutablePointer<CChar>, bytes: In
     switch fileexts {
     case .DISC:
 		dialog.allowedContentTypes        = [.ssd] // ["ssd", "dsd", "wdd", "dos", "adl", "adf", "img"]
+		break
+	case .UEFSTATEFILE:
+		dialog.allowedContentTypes        = [.state]
 		break
 	case .UEFFILE:
         dialog.allowedContentTypes        = [.tape] // ["uef", "csw"]
@@ -156,6 +160,9 @@ func swift_SaveFile(filepath : UnsafeMutablePointer<CChar>, bytes: Int, fileexts
     switch fileexts {
     case .DISC:
         dialog.allowedContentTypes        = [.ssd] // ["ssd", "dsd", "wdd", "dos", "adl", "adf", "img"]
+		break
+	case .UEFSTATEFILE:
+		dialog.allowedContentTypes        = [.state]
 		break
     case .UEFFILE:
         dialog.allowedContentTypes        = [.tape] // ["uef", "csw"]

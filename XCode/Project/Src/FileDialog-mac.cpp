@@ -30,7 +30,11 @@ FileDialog::FileDialog(HWND hwndOwner, LPTSTR result, DWORD resultLength,
 	{
 		fileFilter = DISC;
 	}
-	else if (strstr(filter,"uef")!=0) // and  uefstate
+	else if (strstr(filter,"UEF State")!=0) //  uefstate
+	{
+		fileFilter = UEFSTATEFILE;
+	}
+	else if (strstr(filter,"uef")!=0)
 	{
 		fileFilter = UEFFILE;
 	}
