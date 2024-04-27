@@ -2760,8 +2760,8 @@ DQ
         <scene sceneID="vot-pf-thT">
             <objects>
                 <windowController storyboardIdentifier="ExportFilesSB" id="GmO-1T-VWK" userLabel="Export Files Window Controller" sceneMemberID="viewController">
-                    <window key="window" title="Export Files" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" tabbingMode="disallowed" id="4Ol-dh-cWa">
-                        <windowStyleMask key="styleMask" titled="YES" closable="YES"/>
+                    <window key="window" title="Export Files" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" tabbingMode="disallowed" id="4Ol-dh-cWa">
+                        <windowStyleMask key="styleMask" titled="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
                         <rect key="contentRect" x="196" y="239" width="480" height="270"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1440" height="875"/>
@@ -2782,18 +2782,18 @@ DQ
             <objects>
                 <viewController id="CrT-m1-2Aj" customClass="ExportDiscViewController" customModule="BeebEm" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="K2i-Gk-phg">
-                        <rect key="frame" x="0.0" y="0.0" width="480" height="323"/>
+                        <rect key="frame" x="0.0" y="0.0" width="480" height="194"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <scrollView fixedFrame="YES" autohidesScrollers="YES" horizontalLineScroll="24" horizontalPageScroll="10" verticalLineScroll="24" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eZ5-L8-f9b">
-                                <rect key="frame" x="20" y="112" width="440" height="191"/>
+                                <rect key="frame" x="20" y="49" width="440" height="125"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <clipView key="contentView" ambiguous="YES" id="Q4f-He-6X7">
-                                    <rect key="frame" x="1" y="1" width="438" height="189"/>
+                                    <rect key="frame" x="1" y="1" width="438" height="123"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <tableView verticalHuggingPriority="750" ambiguous="YES" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" autosaveColumns="NO" rowHeight="24" rowSizeStyle="automatic" headerView="n6l-LA-DAT" viewBased="YES" id="bmW-l1-l4L">
-                                            <rect key="frame" x="0.0" y="0.0" width="438" height="161"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="438" height="95"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <size key="intercellSpacing" width="17" height="0.0"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -2863,6 +2863,20 @@ DQ
                                     <action selector="exportSelected:" target="CrT-m1-2Aj" id="u2i-Im-Pg2"/>
                                 </connections>
                             </button>
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="m0z-vf-Tqd">
+                                <rect key="frame" x="262" y="13" width="76" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="m2E-E4-1Sc">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                    <string key="keyEquivalent" base64-UTF8="YES">
+Gw
+</string>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="exportClose:" target="Eed-uL-0d0" id="jor-YA-Mkp"/>
+                                </connections>
+                            </button>
                         </subviews>
                     </view>
                     <connections>
@@ -2871,7 +2885,7 @@ DQ
                 </viewController>
                 <customObject id="Eed-uL-0d0" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="954" y="1735.5"/>
+            <point key="canvasLocation" x="954" y="1671"/>
         </scene>
         <!--ROM Config Window Controller-->
         <scene sceneID="L1R-Vb-fon">

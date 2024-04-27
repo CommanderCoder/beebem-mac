@@ -60,21 +60,15 @@ public func swift_DoModal(d : UnsafeMutableRawPointer)
 	// is pressed
 	let modalresp = NSApp.runModal(for: exportFilesWindow.window!)
 	
-	// how can the 'X' close be detected for an NSApp modal? - currently just checking if
-	// the window disappears
-	// Maybe 'dismissController::' in window or the view
-	
-	print (modalresp) //ModalResponse
 	//now export the files
 	exportFilesWindow.close()
-	
+	NSApp.stopModal()
+
 	if (modalresp == NSApplication.ModalResponse.OK)
 	{
 	// this should call the method within ExportFileDialog
 		beeb_exportSelected(ExportDiscViewController.caller);
 	}
-
-	
 	
 }
 
