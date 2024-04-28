@@ -6,39 +6,144 @@
 //
 
 #include <windows.h>
+#include <ddraw.h>
+
+#include <stdio.h>
 
 #include "BeebWin.h"
+#include "6502core.h"
+#include "AVIWriter.h"
+#include "DebugTrace.h"
+#include "Ext1770.h"
+#include "Main.h"
+#include "Messages.h"
+#include "Resource.h"
+
+
+
 
 extern char bridgingVideobuffer[];
 
-
-void Blt(char* screenbuffer, RECT destR, RECT srcR);
 
 // colour information in 32 and 16 bit RGB
 // to get from BBC RGB to MacOS RGB
 int_fast32_t m_RGB32[256];
 int_fast16_t m_RGB16[256];
 
-void BeebWin::CreateColours(bmiData bmi, int ledcolbase)
+HGDIOBJ SelectObject(HDC hdc, HGDIOBJ ppvBits)
 {
-	for (int i = 0; i < ledcolbase + 4; ++i)
+	return (HGDIOBJ)1;
+}
+
+HGDIOBJ CreateDIBSection(HDC hdc, const BITMAPINFO *pbmi,
+							   UINT usage, void **ppvBits,
+							   int hSection, DWORD offset)
+{
+
+	*ppvBits = (char *)calloc(pbmi->bmiHeader.biSizeImage,1);
+
+	fprintf(stderr, "Base Address = %08lx\n", (unsigned long) ppvBits);
+	
+	// just in case usage ever changes
+	int COLS = 64;
+	if (usage==DIB_RGB_COLORS)
+		COLS = 64;
+	
+	for (int i = 0; i < COLS + 4; ++i)
 	{
-	  m_RGB32[i] = ((( ((bmi.bmiColors[i].rgbRed) << 8)  + (bmi.bmiColors[i].rgbGreen )) << 8) + (bmi.bmiColors[i].rgbBlue));
+	  m_RGB32[i] = ((( ((pbmi->bmiColors[i].rgbRed) << 8)  + (pbmi->bmiColors[i].rgbGreen )) << 8) + (pbmi->bmiColors[i].rgbBlue));
 	  m_RGB32[i] |= 0xff000000;
 
-	  m_RGB16[i] = ((( ((bmi.bmiColors[i].rgbRed >> 3) << 5)  + (bmi.bmiColors[i].rgbGreen >> 3)) << 5) + (bmi.bmiColors[i].rgbBlue >> 3));
+	  m_RGB16[i] = ((( ((pbmi->bmiColors[i].rgbRed >> 3) << 5)  + (pbmi->bmiColors[i].rgbGreen >> 3)) << 5) + (pbmi->bmiColors[i].rgbBlue >> 3));
 
 	//      printf("RGB32[%d] = %08x, RGB16[%d] = %04x\n", i, m_RGB32[i], i, m_RGB16[i]);
 
 	}
+	
+	return (HGDIOBJ)1;
 }
 
 
-//only one renderer on MACOS
-// - not GDI and not DX9
-// - blit to secondary buffer
-void BeebWin::MacVideo(int top, int left, int bottom, int right)
+
+/****************************************************************************/
+void BeebWin::updateLines(HDC hDC, int starty, int nlines)
 {
+	static bool LastTeletextEnabled = false;
+	static bool First = true;
+	
+//	HRESULT ddrval;
+//	HDC hdc;
+	int TeletextLines = 0;
+//	int TextStart=240;
+	int i,j;
+
+	// Not initialised yet?
+	if (m_screen == NULL)
+		return;
+
+	// Check for text view
+	if (m_TextViewEnabled)
+	{
+		TextView();
+		return;
+	}
+
+	// Changed to/from teletext mode?
+	if (LastTeletextEnabled != TeletextEnabled || First)
+	{
+		if (m_DisplayRenderer != IDM_DISPGDI && m_DXSmoothing && m_DXSmoothMode7Only)
+		{
+			UpdateSmoothing();
+		}
+
+		LastTeletextEnabled = TeletextEnabled;
+		First = false;
+	}
+
+	// Use last stored params?
+	if (starty == 0 && nlines == 0)
+	{
+		starty = m_LastStartY;
+		nlines = m_LastNLines;
+	}
+	else
+	{
+		m_LastStartY = starty;
+		m_LastNLines = nlines;
+	}
+
+	++m_ScreenRefreshCount;
+	TeletextLines = 500 / TeletextStyle;
+
+	// Do motion blur
+	if (m_MenuIDMotionBlur != IDM_BLUR_OFF)
+	{
+		if (m_MenuIDMotionBlur == IDM_BLUR_2)
+			j = 32;
+		else if (m_MenuIDMotionBlur == IDM_BLUR_4)
+			j = 16;
+		else // blur 8 frames
+			j = 8;
+
+		for (i = 0; i < 800*512; ++i)
+		{
+			if (m_screen[i] != 0)
+			{
+				m_screen_blur[i] = m_screen[i];
+			}
+			else if (m_screen_blur[i] != 0)
+			{
+				m_screen_blur[i] += j;
+				if (m_screen_blur[i] > 63)
+					m_screen_blur[i] = 0;
+			}
+		}
+
+		memcpy(m_screen, m_screen_blur, 800*512);
+	}
+
+	
+	//MacVideo
 	// Work out where on screen to blit image
 	// ACH - normally get width and height from the window
 	RECT destRect;
@@ -57,16 +162,13 @@ void BeebWin::MacVideo(int top, int left, int bottom, int right)
 
 	// Blit the whole of the secondary buffer onto the screen
 	RECT srcRect;
-	srcRect.left   = left;
-	srcRect.top    = top;
-	srcRect.right  = right;
-	srcRect.bottom = bottom;
+	srcRect.left   = 0;
+	srcRect.top    = TeletextEnabled ? 0 : starty;
+	srcRect.right  = TeletextEnabled ? 552 : ActualScreenWidth;
+	srcRect.bottom = TeletextEnabled ? TeletextLines : starty+nlines;
 
-	Blt(m_screen, destRect, srcRect);
-}
 
-void Blt(char* screenbuffer, RECT destR, RECT srcR)
-{
+	//BLT
 	int_fast32_t *pPtr32; // on 32 bit machine this was 'long' which ought to be 32 bits
 	int_fast32_t *pRPtr32;
 	int_fast16_t *pPtr16;  // on 32 bit machine this was 'short' which ought to be 16 bits
@@ -80,7 +182,6 @@ void Blt(char* screenbuffer, RECT destR, RECT srcR)
 	int ppr;
 	int bpp;
 	int width, height;
-	int i,j;
 	char *pixelVal;
 	
 	bpr = 640*4;// 640 pixels per row, 4 bytes per pixel
@@ -100,24 +201,24 @@ void Blt(char* screenbuffer, RECT destR, RECT srcR)
 		ppr = bpr;
 	}
 
-	width = destR.right;
-	height = destR.bottom;
+	width = destRect.right;
+	height = destRect.bottom;
 
 	int xAdj = 0;
 	int yAdj = 0;
 	
-	pixelVal = screenbuffer;
+	pixelVal = m_screen;
 	
 	// screenbuffer from m_screen (built by BeebWin) into videobuffer (use by MacOs Swift)
 	
 
 	
 	// NO IDEA WHAT HAPPENS IF THIS IS FULLSCREEN - WHAT PAINTS IT?
-	char* bufferptr = (buffer - destR.top * bpr - destR.left * 4 - yAdj * bpr);  // Skip past rows for window's menu bar,
+	char* bufferptr = (buffer - destRect.top * bpr - destRect.left * 4 - yAdj * bpr);  // Skip past rows for window's menu bar,
 	pRPtr32 = (int_fast32_t *) bufferptr;
 
-	scalex = (float) ((srcR.right - srcR.left)) / (float) ((width));
-	scaley = (float) ((srcR.bottom - srcR.top)) / (float) ((height));
+	scalex = (float) ((srcRect.right - srcRect.left)) / (float) ((width));
+	scaley = (float) ((srcRect.bottom - srcRect.top)) / (float) ((height));
 	int sx[2000];
 
 	for (i = 0; i < width; ++i)
@@ -127,7 +228,7 @@ void Blt(char* screenbuffer, RECT destR, RECT srcR)
 
 	for (j = 0; j < height; ++j)
 	{
-		pixelVal = screenbuffer + (srcR.top + (int) (j * scaley)) * 800 + srcR.left;
+		pixelVal = m_screen + (srcRect.top + (int) (j * scaley)) * 800 + srcRect.left;
 		pPtr32 = pRPtr32 + xAdj;
 		for (i = 0; i < width; ++i)
 		{
@@ -143,20 +244,20 @@ void Blt(char* screenbuffer, RECT destR, RECT srcR)
 
 // END TEST
 	
-	if (destR.top != 0)        // running full screen - don't paint !
+	if (destRect.top != 0)        // running full screen - don't paint !
 	{
 	
-		pixelVal = screenbuffer;
+		pixelVal = m_screen;
 
 		printf("%d : %d\n",
-			   0 - destR.top * bpr - destR.left * 4 - yAdj * bpr,
-			   0 - destR.top * bpr - destR.left * 2 - yAdj * bpr);
+			   0 - destRect.top * bpr - destRect.left * 4 - yAdj * bpr,
+			   0 - destRect.top * bpr - destRect.left * 2 - yAdj * bpr);
 		
-		pRPtr32 = (int_fast32_t *) (buffer - destR.top * bpr - destR.left * 4 - yAdj * bpr);        // Skip past rows for window's menu bar, rect.top = -22 (on my system), plus any left margin
-		pRPtr16 = (short *) (buffer - destR.top * bpr - destR.left * 2 - yAdj * bpr);        // Skip past rows for window's menu bar, rect.top = -22 (on my system)
+		pRPtr32 = (int_fast32_t *) (buffer - destRect.top * bpr - destRect.left * 4 - yAdj * bpr);        // Skip past rows for window's menu bar, rect.top = -22 (on my system), plus any left margin
+		pRPtr16 = (short *) (buffer - destRect.top * bpr - destRect.left * 2 - yAdj * bpr);        // Skip past rows for window's menu bar, rect.top = -22 (on my system)
 
-		scalex = (float) ((srcR.right - srcR.left)) / (float) ((width));
-		scaley = (float) ((srcR.bottom - srcR.top)) / (float) ((height));
+		scalex = (float) ((srcRect.right - srcRect.left)) / (float) ((width));
+		scaley = (float) ((srcRect.bottom - srcRect.top)) / (float) ((height));
 	
 
 		// Pre-calculate the x scaling factor for speed
@@ -173,7 +274,7 @@ void Blt(char* screenbuffer, RECT destR, RECT srcR)
 		case 32 :
 			for (j = 0; j < height; ++j)
 			{
-				pixelVal = screenbuffer + (srcR.top + (int) (j * scaley)) * 800 + srcR.left;
+				pixelVal = m_screen + (srcRect.top + (int) (j * scaley)) * 800 + srcRect.left;
 				pPtr32 = pRPtr32 + xAdj;
 				for (i = 0; i < width; ++i)
 					*pPtr32++ = m_RGB32[pixelVal[sx[i]]];
@@ -186,7 +287,7 @@ void Blt(char* screenbuffer, RECT destR, RECT srcR)
 		case 16 :
 			for (j = 0; j < height; ++j)
 			{
-				pixelVal = screenbuffer + (srcR.top + (int) (j * scaley)) * 800 + srcR.left;
+				pixelVal = m_screen + (srcRect.top + (int) (j * scaley)) * 800 + srcRect.left;
 				pPtr16 = pRPtr16 + xAdj;
 				
 				for (i = 0; i < width; ++i)
@@ -202,5 +303,65 @@ void Blt(char* screenbuffer, RECT destR, RECT srcR)
 	
 	}
 		
+}
 
+
+/****************************************************************************/
+bool BeebWin::IsWindowMinimized() const
+{
+	return swift_IsMiniaturized();
+}
+
+/****************************************************************************/
+
+static const char* pszReleaseCaptureMessage = "(Press Ctrl+Alt to release mouse)";
+
+bool BeebWin::ShouldDisplayTiming() const
+{
+	return m_ShowSpeedAndFPS && (m_DisplayRenderer == IDM_DISPGDI || !m_isFullScreen);
+}
+
+void BeebWin::DisplayTiming()
+{
+	if (ShouldDisplayTiming())
+	{
+		if (m_MouseCaptured)
+		{
+			sprintf(m_szTitle, "%s  Speed: %2.2f  fps: %2d  %s",
+					WindowTitle, m_RelativeSpeed, (int)m_FramesPerSecond, pszReleaseCaptureMessage);
+		}
+		else
+		{
+			sprintf(m_szTitle, "%s  Speed: %2.2f  fps: %2d",
+					WindowTitle, m_RelativeSpeed, (int)m_FramesPerSecond);
+		}
+		SetWindowText(m_hWnd, m_szTitle);
+	}
+}
+
+void BeebWin::UpdateWindowTitle()
+{
+	if (ShouldDisplayTiming())
+	{
+		DisplayTiming();
+	}
+	else
+	{
+		if (m_MouseCaptured)
+		{
+			sprintf(m_szTitle, "%s  %s",
+					WindowTitle, pszReleaseCaptureMessage);
+		}
+		else
+		{
+			strcpy(m_szTitle, WindowTitle);
+		}
+		SetWindowText(m_hWnd, m_szTitle);
+	}
+}
+
+
+/****************************************************************************/
+void BeebWin::UpdateSmoothing()
+{
 }

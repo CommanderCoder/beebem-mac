@@ -114,18 +114,11 @@ constexpr UINT WIN_STYLE = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZE
 // Some LED based constants
 constexpr int LED_COL_BASE = 64;
 
-#ifndef __APPLE__
 static const char *CFG_REG_KEY = "Software\\BeebEm";
 
 static const unsigned char CFG_DISABLE_WINDOWS_KEYS[24] = {
 	00,00,00,00,00,00,00,00,03,00,00,00,00,00,0x5B,0xE0,00,00,0x5C,0xE0,00,00,00,00
 };
-
-#else
-
-#include "beebemrcids.h"
-
-#endif
 
 CArm *arm = nullptr;
 CSprowCoPro *sprow = nullptr;
@@ -140,9 +133,7 @@ const char *WindowTitle = "BeebEm - BBC Model B / Master 128 Emulator";
 BeebWin::BeebWin()
 {
 	m_hWnd = nullptr;
-#ifndef __APPLE__
 	m_DXInit = false;
-#endif
 	m_LastStartY = 0;
 	m_LastNLines = 256;
 	m_LastTickCount = 0;
@@ -164,18 +155,16 @@ BeebWin::BeebWin()
 	m_DisableKeysEscape = false;
 	m_DisableKeysShortcut = false;
 	memset(m_UserKeyMapPath, 0, sizeof(m_UserKeyMapPath));
-#ifndef __APPLE__
 	m_hBitmap = m_hOldObj = m_hDCBitmap = NULL;
-#endif
 	m_screen = m_screen_blur = NULL;
 	m_ScreenRefreshCount = 0;
 	m_RelativeSpeed = 1;
 	m_FramesPerSecond = 50;
 	strcpy(m_szTitle, WindowTitle);
-#ifndef __APPLE__
 	m_AviDC = nullptr;
 	m_AviDIB = nullptr;
 	m_CaptureBitmapPending = false;
+#ifndef __APPLE__
 	m_SpVoice = nullptr;
 	m_hTextView = nullptr;
 	m_TextViewPrevWndProc = nullptr;
@@ -204,13 +193,11 @@ BeebWin::BeebWin()
 	m_printerbufferlen = 0;
 	m_translateCRLF = true;
 	m_CurrentDisplayRenderer = 0;
-#ifndef __APPLE__
 	m_DXSmoothing = true;
 	m_DXSmoothMode7Only = false;
 	m_DXResetPending = false;
 
 	m_JoystickCaptured = false;
-#endif
 	m_isFullScreen = false;
 	m_MaintainAspectRatio = true;
 	m_startFullScreen = false;
@@ -229,10 +216,8 @@ BeebWin::BeebWin()
 	m_MenuOn = true;
 	m_PaletteType = PaletteType::RGB;
 	m_WriteInstructionCounts = false;
-#ifndef __APPLE__
 	m_CaptureMouse = false;
 	m_MouseCaptured = false;
-#endif
 	m_TextToSpeechEnabled = false;
 #ifndef __APPLE__
 	m_hVoiceMenu = nullptr;
@@ -283,7 +268,7 @@ BeebWin::BeebWin()
 		// Default user data path to a sub-directory in My Docs
 		if (SHGetFolderPath(m_UserDataPath))
 		{
-			strcat(m_UserDataPath, "\\BeebEm\\");
+			strcat(m_UserDataPath, "/BeebEm/");
 		}
 	}
 #endif
@@ -429,7 +414,6 @@ void BeebWin::ApplyPrefs()
 		strcpy(EconetCfgPath, m_UserDataPath);
 		strcat(EconetCfgPath, "Econet.cfg");
 	}
-#ifndef __APPLE__
 	else if (PathIsRelative(EconetCfgPath))
 	{
 		char Filename[_MAX_PATH];
@@ -437,14 +421,12 @@ void BeebWin::ApplyPrefs()
 		strcpy(EconetCfgPath, m_UserDataPath);
 		strcat(EconetCfgPath, Filename);
 	}
-#endif
 	
 	if (AUNMapPath[0] == '\0')
 	{
 		strcpy(AUNMapPath, m_UserDataPath);
 		strcat(AUNMapPath, "AUNMap");
 	}
-#ifndef __APPLE__
 	else if (PathIsRelative(AUNMapPath))
 	{
 		char Filename[_MAX_PATH];
@@ -452,7 +434,6 @@ void BeebWin::ApplyPrefs()
 		strcpy(AUNMapPath, m_UserDataPath);
 		strcat(AUNMapPath, Filename);
 	}
-#endif
 	strcpy(RomPath, m_UserDataPath);
 
 	char Path[_MAX_PATH];
@@ -502,11 +483,9 @@ void BeebWin::ApplyPrefs()
 	else
 		PrinterDisable();
 
-#ifndef __APPLE__
 	/* Joysticks can only be initialised after the window is created (needs hwnd) */
 	if (m_MenuIDSticks == IDM_JOYSTICK)
 		InitJoystick();
-#endif
 	
 	LoadFDC(NULL, true);
 	RTCInit();
@@ -976,22 +955,12 @@ void BeebWin::CreateBitmap()
 	m_bmi.bmiColors[LED_COL_BASE+2].rgbGreen=80;	m_bmi.bmiColors[LED_COL_BASE+3].rgbGreen=255;
 	m_bmi.bmiColors[LED_COL_BASE+2].rgbBlue=0;		m_bmi.bmiColors[LED_COL_BASE+3].rgbBlue=0;
 	m_bmi.bmiColors[LED_COL_BASE+2].rgbReserved=0;	m_bmi.bmiColors[LED_COL_BASE+3].rgbReserved=0;
-#ifndef __APPLE__
 	m_hBitmap = CreateDIBSection(m_hDCBitmap, (BITMAPINFO *)&m_bmi, DIB_RGB_COLORS,
-	                             (void**)&m_screen, NULL,0);
-#else
-	m_screen = (char *)calloc(m_bmi.bmiHeader.biSizeImage,1);
-
-	fprintf(stderr, "Base Address = %08lx\n", (unsigned long) m_screen);
-
-	CreateColours(m_bmi, LED_COL_BASE);
-#endif
-	
+	                             (void**)&m_screen, NULL,0);	
 #endif
 
 	m_screen_blur = (char *)calloc(m_bmi.bmiHeader.biSizeImage,1);
 
-#ifndef __APPLE__
 	m_hOldObj = SelectObject(m_hDCBitmap, m_hBitmap);
 
 	if (m_hOldObj == NULL)
@@ -999,7 +968,6 @@ void BeebWin::CreateBitmap()
 		Report(MessageType::Error,
 		       "Cannot select the screen bitmap\nTry running in a 256 colour mode");
 	}
-#endif
 	
 }
 
@@ -1083,7 +1051,6 @@ void BeebWin::CreateBeebWindow(void)
 }
 
 /****************************************************************************/
-#ifndef __APPLE__
 
 // Windows 11 draws windows with rounded corners by default, so this function
 // disables them, so the Beeb video image isn't affected.
@@ -1092,6 +1059,7 @@ void BeebWin::CreateBeebWindow(void)
 
 void BeebWin::DisableRoundedCorners(HWND hWnd)
 {
+#ifndef __APPLE__
 	HMODULE hDwmApi = LoadLibrary("dwmapi.dll");
 
 	if (hDwmApi == nullptr)
@@ -1120,16 +1088,18 @@ void BeebWin::DisableRoundedCorners(HWND hWnd)
 	}
 
 	FreeLibrary(hDwmApi);
+#endif
 }
 
 /****************************************************************************/
 void BeebWin::FlashWindow()
 {
+#ifndef __APPLE__
 	::FlashWindow(m_hWnd, TRUE);
 
 	MessageBeep(MB_ICONEXCLAMATION);
-}
 #endif
+}
 
 /****************************************************************************/
 void BeebWin::ShowMenu(bool on)
@@ -1141,9 +1111,7 @@ void BeebWin::ShowMenu(bool on)
 
 	if (on != m_MenuOn)
 	{
-#ifndef __APPLE__
 		SetMenu(m_hWnd, on ? m_hMenu : nullptr);
-#endif
 	}
 
 	m_MenuOn = on;
@@ -1171,35 +1139,12 @@ void BeebWin::TrackPopupMenu(int x, int y)
 /****************************************************************************/
 void BeebWin::CheckMenuItem(UINT id, bool checked)
 {
-#ifndef __APPLE__
 	::CheckMenuItem(m_hMenu, id, checked ? MF_CHECKED : MF_UNCHECKED);
-#else
-	if (id == ID_FDC_DLL)
-	{
-		swift_SetMenuCheck(beebwin_RC2ID(ID_FDC_ACORN), checked);
-		swift_SetMenuCheck(beebwin_RC2ID(ID_FDC_OPUS), checked);
-		swift_SetMenuCheck(beebwin_RC2ID(ID_FDC_WATFORD), checked);
-	}
-
-	swift_SetMenuCheck(beebwin_RC2ID(id), checked);
-#endif
 }
 
 void BeebWin::EnableMenuItem(UINT id, bool enabled)
 {
-#ifndef __APPLE__
 	::EnableMenuItem(m_hMenu, id, enabled ? MF_ENABLED : MF_GRAYED);
-#else
-	
-	if (id == ID_FDC_DLL)
-	{
-		swift_SetMenuEnable(beebwin_RC2ID(ID_FDC_ACORN), enabled);
-		swift_SetMenuEnable(beebwin_RC2ID(ID_FDC_OPUS), enabled);
-		swift_SetMenuEnable(beebwin_RC2ID(ID_FDC_WATFORD), enabled);
-	}
-
-	swift_SetMenuEnable(beebwin_RC2ID(id), enabled);
-#endif
 }
 
 void BeebWin::InitMenu(void)
@@ -1216,10 +1161,8 @@ void BeebWin::InitMenu(void)
 	CheckMenuItem(IDM_VIDEOSKIP3, false);
 	CheckMenuItem(IDM_VIDEOSKIP4, false);
 	CheckMenuItem(IDM_VIDEOSKIP5, false);
-#ifndef __APPLE__
 	CheckMenuItem(m_MenuIDAviResolution, true);
 	CheckMenuItem(m_MenuIDAviSkip, true);
-#endif
 	
 	// File -> Disc Options
 	CheckMenuItem(IDM_WRITE_PROTECT_DISC0, m_WriteProtectDisc[0]);
@@ -1235,10 +1178,8 @@ void BeebWin::InitMenu(void)
 	CheckMenuItem(IDM_CAPTUREJPEG, false);
 	CheckMenuItem(IDM_CAPTUREGIF, false);
 	CheckMenuItem(IDM_CAPTUREPNG, false);
-#ifndef __APPLE__
 	CheckMenuItem(m_MenuIDCaptureResolution, true);
 	CheckMenuItem(m_MenuIDCaptureFormat, true);
-#endif
 	
 	// Edit
 	CheckMenuItem(IDM_EDIT_CRLF, m_translateCRLF);
@@ -5344,19 +5285,22 @@ bool BeebWin::CheckUserDataPath(bool Persist)
 	// Check that the folder exists
 	if (!FolderExists(m_UserDataPath))
 	{
-#ifndef __APPLE__
 		if (Report(MessageType::Question,
 		           "BeebEm data folder does not exist:\n  %s\n\nCreate the folder?",
 		           m_UserDataPath) != MessageResult::Yes)
 		{
 			// Use data dir installed with BeebEm
 			strcpy(m_UserDataPath, m_AppPath);
+#ifndef __APPLE__
 			strcat(m_UserDataPath, "UserData\\");
-
+#else
+			strcat(m_UserDataPath, "UserData/");
+#endif
 			store_user_data_path = true;
 		}
 		else
 		{
+#ifndef __APPLE__
 			// Create the folder
 			int result = SHCreateDirectoryEx(nullptr, m_UserDataPath, nullptr);
 
@@ -5370,15 +5314,14 @@ bool BeebWin::CheckUserDataPath(bool Persist)
 				       m_UserDataPath);
 				success = false;
 			}
-		}
 #else
-		// checked if Application Support/BeebEm/UserData exists
-		// it doesn't so create it and copy the files
-		mode_t mode = 0755;
-		mkdir(m_UserDataPath, mode);
-		copy_user_files=true;
-
+			// checked if Application Support/BeebEm/UserData exists
+			// it doesn't so create it and copy the files
+			mode_t mode = 0755;
+			mkdir(m_UserDataPath, mode);
+			copy_user_files=true;
 #endif
+		}
 	}
 	else
 	{
@@ -5433,7 +5376,6 @@ bool BeebWin::CheckUserDataPath(bool Persist)
 
 		if (copy_user_files)
 		{
-#ifndef __APPLE__
 			if (Report(MessageType::Question,
 			           "Essential or new files missing from BeebEm data folder:\n  %s"
 			           "\n\nCopy essential or new files into folder?",
@@ -5441,7 +5383,6 @@ bool BeebWin::CheckUserDataPath(bool Persist)
 			{
 				success = false;
 			}
-#endif
 		}
 	}
 
@@ -5502,9 +5443,7 @@ bool BeebWin::CheckUserDataPath(bool Persist)
 	if (success)
 	{
 		// Check that roms file exists and create its full path
-#ifndef __APPLE__
 		if (PathIsRelative(RomFile))
-#endif
 		{
 			sprintf(path, "%s%s", m_UserDataPath, RomFile);
 			strcpy(RomFile, path);
@@ -5520,9 +5459,7 @@ bool BeebWin::CheckUserDataPath(bool Persist)
 	if (success)
 	{
 		// Fill out full path of prefs file
-#ifndef __APPLE__
 		if (PathIsRelative(m_PrefsFile))
-#endif
 		{
 			sprintf(path, "%s%s", m_UserDataPath, m_PrefsFile);
 			strcpy(m_PrefsFile, path);
@@ -5555,7 +5492,6 @@ void BeebWin::StoreUserDataPath()
 
 void BeebWin::SelectUserDataPath()
 {
-#ifndef __APPLE__
 	std::string PathBackup;
 
 	FolderSelectDialog Dialog(
@@ -5567,6 +5503,8 @@ void BeebWin::SelectUserDataPath()
 	FolderSelectDialog::Result result = Dialog.DoModal();
 
 	switch (result) {
+		case FolderSelectDialog::Result::Cancel:
+			break;
 		case FolderSelectDialog::Result::OK:
 			PathBackup = m_UserDataPath;
 			strcpy(m_UserDataPath, Dialog.GetFolder().c_str());
@@ -5597,7 +5535,6 @@ void BeebWin::SelectUserDataPath()
 			Report(MessageType::Warning, "Invalid folder selected");
 			break;
 	}
-#endif
 }
 
 /****************************************************************************/

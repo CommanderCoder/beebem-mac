@@ -56,7 +56,6 @@
 		DC9B41352BC2190500C3D9D8 /* BeebWin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996E22BBA0C9B00A109A5 /* BeebWin.cpp */; };
 		DC9B41362BC2255900C3D9D8 /* TapeControlDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0997172BBA0C9C00A109A5 /* TapeControlDialog.cpp */; };
 		DC9B41372BC22AE700C3D9D8 /* BeebWinIo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC09971D2BBA0C9C00A109A5 /* BeebWinIo.cpp */; };
-		DC9B41382BC22DB300C3D9D8 /* BeebWinDx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996F22BBA0C9C00A109A5 /* BeebWinDx.cpp */; };
 		DC9B41392BC22E9800C3D9D8 /* BeebWinSpeech.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996F42BBA0C9C00A109A5 /* BeebWinSpeech.cpp */; };
 		DC9B413A2BC22FE200C3D9D8 /* BeebWinPrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC09970B2BBA0C9C00A109A5 /* BeebWinPrefs.cpp */; };
 		DCACDAC12BC5DD2E00CEF154 /* apples.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCACDAC02BC5DD2E00CEF154 /* apples.cpp */; };
@@ -978,7 +977,6 @@
 				DCDC732D2BBF5E1500D83402 /* thumbemu.cpp in Sources */,
 				DCDC73512BC0B99700D83402 /* Z80Support.cpp in Sources */,
 				DCDC73332BBFE79800D83402 /* Disc1770.cpp in Sources */,
-				DC9B41382BC22DB300C3D9D8 /* BeebWinDx.cpp in Sources */,
 				DCDC730E2BBE13BF00D83402 /* DiscInfo.cpp in Sources */,
 				DC9B41372BC22AE700C3D9D8 /* BeebWinIo.cpp in Sources */,
 				DC904DA02BCF3C240069DCDF /* BeebEm-ExportFiles.swift in Sources */,

@@ -294,3 +294,10 @@ public func swift_Report(_ text: UnsafePointer<CChar>, _ title: UnsafePointer<CC
 	return val
 }
 
+
+// allow access to this in C
+@_cdecl("swift_IsMiniaturized")
+public func swift_IsMiniaturized() -> Bool
+{
+	return NSApp.mainWindow!.isMiniaturized
+}

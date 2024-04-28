@@ -7,7 +7,6 @@
 
 #include "BeebEm-Bridging-ExportFIles.hpp"
 #include "beebemrcids.h"
-#include "Main.h"
 
 #include "ExportFileDialog-mac.hpp"
 

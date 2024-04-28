@@ -71,6 +71,7 @@ struct bmiData
 	RGBQUAD bmiColors[256];
 };
 
+
 struct LEDType
 {
 	bool ShiftLock;
@@ -182,18 +183,11 @@ public:
 	void SetDriveControl(unsigned char value);
 	unsigned char GetDriveControl(void);
 	void doLED(int sx,bool on);
-#ifndef __APPLE__
 	void updateLines(HDC hDC, int starty, int nlines);
 	void updateLines(int starty, int nlines) {
 		updateLines(m_hDC, starty, nlines);
 	}
-#else
-	void updateLines(int starty, int nlines);
-	
-	void CreateColours(bmiData bmi, int ledcolbase);
-	void MacVideo(int top, int left, int bottom, int right);
-#endif
-	
+
 	void doHorizLine(int Colour, int y, int sx, int width) {
 		if (TeletextEnabled) y/=TeletextStyle;
 		int d = (y*800)+sx+(int)ScreenAdjust+(TeletextEnabled?36:0);
@@ -232,9 +226,7 @@ public:
 		return((SixteenUChars *)(m_screen + d));
 	}
 
-#ifndef __APPLE__
 	HWND GethWnd() { return m_hWnd; }
-#endif
 	
 	void ResetBeebSystem(Model NewModelType, bool LoadRoms);
 	void Break();
@@ -251,10 +243,8 @@ public:
 	void DisplayTiming();
 	void UpdateWindowTitle();
 	bool IsWindowMinimized() const;
-#ifndef __APPLE__
 	void DisplayClientAreaText(HDC hdc);
 	void DisplayFDCBoardInfo(HDC hDC, int x, int y);
-#endif
 	void ScaleJoystick(unsigned int x, unsigned int y);
 	void SetMousestickButton(int index, bool button);
 	void ScaleMousestick(unsigned int x, unsigned int y);
@@ -265,9 +255,7 @@ public:
 	void ReleaseMouse();
 	void Activate(bool Active);
 	void Focus(bool Focus);
-#ifndef __APPLE__
 	void WinSizeChange(WPARAM size, int width, int height);
-#endif
 	void WinPosChange(int x, int y);
 	bool IsFrozen();
 	void TogglePause();
@@ -318,9 +306,7 @@ public:
 	bool InitClass();
 	void UpdateOptiMenu();
 	void CreateBeebWindow(void);
-#ifndef __APPLE__
 	void DisableRoundedCorners(HWND hWnd);
-#endif
 	void FlashWindow();
 	void CreateBitmap(void);
 	void InitMenu();
@@ -339,7 +325,6 @@ public:
 	void CheckMenuItem(UINT id, bool checked);
 	void EnableMenuItem(UINT id, bool enabled);
 
-#ifndef __APPLE__
 	// DirectX - calls DDraw or DX9 fn
 	void InitDX();
 	void ResetDX();
@@ -356,7 +341,7 @@ public:
 	HRESULT InitDX9();
 	void ExitDX9();
 	void RenderDX9();
-#endif
+	
 	void TranslateWindowSize(void);
 	void TranslateDDSize(void);
 	void CalcAspectRatioAdjustment(int DisplayWidth, int DisplayHeight);
@@ -466,9 +451,7 @@ public:
 	bool m_startFullScreen;
 
 	// Menu
-#ifndef __APPLE__
 	HMENU m_hMenu;
-#endif
 	bool m_MenuOn;
 	bool m_HideMenuEnabled;
 	bool m_DisableMenu;
@@ -519,12 +502,11 @@ public:
 	float m_YRatioCrop;
 
 	// Graphics rendering
-#ifndef __APPLE__
 	HDC m_hDC;
 	HGDIOBJ m_hOldObj;
 	HDC m_hDCBitmap;
 	HGDIOBJ m_hBitmap;
-#endif
+
 	bmiData m_bmi;
 	PaletteType m_PaletteType;
 	char* m_screen;
@@ -538,21 +520,23 @@ public:
 	int m_CurrentDisplayRenderer;
 	int m_DDFullScreenMode;
 
-#ifndef __APPLE__
 	// DirectX stuff
 	bool m_DXInit;
 	bool m_DXResetPending;
 
 	// DirectDraw stuff
 	HINSTANCE m_hInstDDraw;
+#ifndef __APPLE__
 	LPDIRECTDRAW m_DD; // DirectDraw object
 	LPDIRECTDRAW2 m_DD2; // DirectDraw object
 	LPDIRECTDRAWSURFACE m_DDSPrimary; // DirectDraw primary surface
 	LPDIRECTDRAWSURFACE2 m_DDS2Primary; // DirectDraw primary surface
 	LPDIRECTDRAWSURFACE m_DDSOne; // Offscreen surface 1
 	LPDIRECTDRAWSURFACE2 m_DDS2One; // Offscreen surface 1
+#endif
 	bool m_DXSmoothing;
 	bool m_DXSmoothMode7Only;
+#ifndef __APPLE__
 	LPDIRECTDRAWCLIPPER m_Clipper; // clipper for primary
 
 	// Direct3D9 stuff
@@ -569,9 +553,7 @@ public:
 
 	// Joystick input
 	bool m_JoystickCaptured;
-#ifndef __APPLE__
 	JOYCAPS m_JoystickCaps;
-#endif
 	UINT m_MenuIDSticks;
 	
 
@@ -579,9 +561,7 @@ public:
 	bool m_HideCursor;
 	bool m_CaptureMouse;
 	bool m_MouseCaptured;
-#ifndef __APPLE__
 	POINT m_RelMousePos;
-#endif
 
 	// Keyboard input
 	UINT m_MenuIDKeyMapping;
@@ -668,7 +648,6 @@ public:
 	UINT m_MenuIDCaptureResolution;
 	UINT m_MenuIDCaptureFormat;
 
-#ifndef __APPLE__
 	// AVI vars
 	bmiData m_Avibmi;
 	HBITMAP m_AviDIB;
@@ -679,7 +658,6 @@ public:
 	int m_AviFrameCount;
 	UINT m_MenuIDAviResolution;
 	UINT m_MenuIDAviSkip;
-#endif
 
 	// Text to speech variables
 	bool m_TextToSpeechEnabled;
