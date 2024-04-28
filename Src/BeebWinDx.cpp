@@ -27,20 +27,13 @@ Boston, MA  02110-1301, USA.
 
 #include "BeebWin.h"
 #include "6502core.h"
-#include "AVIWriter.h"
+#include "AviWriter.h"
 #include "DebugTrace.h"
 #include "Ext1770.h"
 #include "Main.h"
 #include "Messages.h"
 #include "Resource.h"
 
-
-#ifdef __APPLE__
-extern "C" void swift_SetWindowTitleWithCString(const char* title);
-#endif
-
-
-#ifndef __APPLE__
 typedef HRESULT (WINAPI* LPDIRECTDRAWCREATE)(GUID FAR *lpGUID, LPDIRECTDRAW FAR *lplpDD, IUnknown FAR *pUnkOuter);
 
 /****************************************************************************/
@@ -572,27 +565,17 @@ void BeebWin::RenderDX9()
 		PostMessage(m_hWnd, WM_COMMAND, IDM_DISPGDI, 0);
 	}
 }
-#endif
 
-#ifndef __APPLE__
 /****************************************************************************/
 void BeebWin::updateLines(HDC hDC, int starty, int nlines)
-#else
-void BeebWin::updateLines(int starty, int nlines)
-#endif
 {
 	static bool LastTeletextEnabled = false;
 	static bool First = true;
 
-	
-#ifndef __APPLE__
 	HRESULT ddrval;
 	HDC hdc;
-#endif
 	int TeletextLines = 0;
-#ifndef __APPLE__
 	int TextStart=240;
-#endif
 	int i,j;
 
 	// Not initialised yet?
@@ -609,12 +592,10 @@ void BeebWin::updateLines(int starty, int nlines)
 	// Changed to/from teletext mode?
 	if (LastTeletextEnabled != TeletextEnabled || First)
 	{
-#ifndef __APPLE__
 		if (m_DisplayRenderer != IDM_DISPGDI && m_DXSmoothing && m_DXSmoothMode7Only)
 		{
 			UpdateSmoothing();
 		}
-#endif
 
 		LastTeletextEnabled = TeletextEnabled;
 		First = false;
@@ -662,13 +643,6 @@ void BeebWin::updateLines(int starty, int nlines)
 		memcpy(m_screen, m_screen_blur, 800*512);
 	}
 
-#ifdef __APPLE__
-	// TLBR
-	MacVideo(TeletextEnabled ? 0 : starty,
-			 0,
-			 TeletextEnabled ? TeletextLines : starty+nlines,
-			 TeletextEnabled ? 552 : ActualScreenWidth);
-#else
 	if (m_DisplayRenderer == IDM_DISPGDI)
 	{
 		RECT destRect;
@@ -843,14 +817,11 @@ void BeebWin::updateLines(int starty, int nlines)
 
 		m_CaptureBitmapPending = false;
 	}
-#endif
 }
-
 
 /****************************************************************************/
 bool BeebWin::IsWindowMinimized() const
 {
-#ifndef __APPLE__
 	WINDOWPLACEMENT wndpl;
 	wndpl.length = sizeof(WINDOWPLACEMENT);
 
@@ -859,10 +830,9 @@ bool BeebWin::IsWindowMinimized() const
 		if (wndpl.showCmd == SW_SHOWMINIMIZED)
 			return true;
 	}
-#endif
+
 	return false;
 }
-#ifndef __APPLE__
 
 /****************************************************************************/
 void BeebWin::DisplayClientAreaText(HDC hdc)
@@ -898,18 +868,14 @@ void BeebWin::DisplayFDCBoardInfo(HDC hDC, int x, int y)
 		TextOut(hDC, x, y, BoardName, (int)strlen(BoardName));
 	}
 }
-#endif
+
 /****************************************************************************/
 
 static const char* pszReleaseCaptureMessage = "(Press Ctrl+Alt to release mouse)";
 
 bool BeebWin::ShouldDisplayTiming() const
 {
-#ifndef __APPLE__
 	return m_ShowSpeedAndFPS && (m_DisplayRenderer == IDM_DISPGDI || !m_isFullScreen);
-#else
-	return m_ShowSpeedAndFPS && !m_isFullScreen;
-#endif
 }
 
 void BeebWin::DisplayTiming()
@@ -927,13 +893,7 @@ void BeebWin::DisplayTiming()
 			        WindowTitle, m_RelativeSpeed, (int)m_FramesPerSecond);
 		}
 
-#ifndef __APPLE__
 		SetWindowText(m_hWnd, m_szTitle);
-#else
-		// set the window title via swift
-		swift_SetWindowTitleWithCString(m_szTitle);
-#endif
-		
 	}
 }
 
@@ -954,17 +914,11 @@ void BeebWin::UpdateWindowTitle()
 		{
 			strcpy(m_szTitle, WindowTitle);
 		}
-#ifndef __APPLE__
+
 		SetWindowText(m_hWnd, m_szTitle);
-#else
-		// set the window title via swift
-		swift_SetWindowTitleWithCString(m_szTitle);
-#endif
-		
 	}
 }
 
-#ifndef __APPLE__
 /****************************************************************************/
 void BeebWin::UpdateSmoothing()
 {
@@ -1018,4 +972,3 @@ void BeebWin::UpdateSmoothing()
 		}
 	}
 }
-#endif

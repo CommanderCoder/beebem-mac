@@ -30,8 +30,19 @@ typedef uint8_t UINT8;   // UINT8 = unsigned 8 bit value
 typedef int32_t INT;     // INT = signed 32 bit value
 typedef int16_t INT16;   // INT16 = signed 16 bit value
 
-typedef uint32_t* HWND; // 
+typedef uint32_t* HWND; //  typedef uint32_t*
 typedef uint32_t* HINSTANCE; //
+typedef uint32_t* HDC; //
+typedef uint32_t* HACCEL; //
+typedef uint32_t* HRESULT; //
+typedef uint32_t* WPARAM; //
+typedef uint32_t* HGDIOBJ; //
+typedef uint32_t* HMENU; //
+typedef uint32_t* HBITMAP; //
+
+typedef uint32_t* JOYCAPS; //
+typedef uint32_t* POINT; //
+
 
 typedef struct tagBITMAPINFOHEADER {
   DWORD biSize;
@@ -139,8 +150,10 @@ extern void _makepath(char *path,
 #define MOVEFILE_REPLACE_EXISTING 0
 extern void MoveFileEx(const char* dest, const char* orig, DWORD flags);
 
+bool PathIsRelative(const char* path);
 
 bool SHGetFolderPath(const char* path);
+
 
 
 template < typename T, int N >
@@ -153,6 +166,7 @@ int _countof( T ( & arr )[ N ] )
 extern "C" void swift_SoundStream(BYTE* buffer, int outputType);// outputtype 1 = 8 bit, 1 channel, 2 = 16 bit, 2 channel
 extern "C" void swift_SoundInit();
 
+extern "C" bool swift_IsMiniaturized();
 
 
 extern "C" void swift_GetBundleDirectory(const char* bundlePath, int length);
@@ -169,8 +183,12 @@ extern "C" int swift_ModifyMenu(unsigned int cmd, unsigned int newitem, const ch
 
 extern "C" int swift_Remove(const char* path);
 
+// used in BeebWinDx.h
+extern "C" void swift_SetWindowTitleWithCString(const char* title);
 
-#include "ExportFileDialog-mac.hpp"
+
+
+class ExportFileDialog;
 extern "C" int swift_DoModal(ExportFileDialog* dialog);
 extern "C" int swift_EndDialog();
 
@@ -190,7 +208,13 @@ int beebwin_KeyUpDown(long, long,long);
 
 
 
-
+void SetWindowText(HWND m_hWnd, const char* m_szTitle);
+typedef  enum
+{
+  DIB_RGB_COLORS = 0x00,
+  DIB_PAL_COLORS = 0x01,
+  DIB_PAL_INDICES = 0x02
+} DIBColors;
 
 
 extern "C" void swift_sleepCPU(unsigned long microseconds);
@@ -238,5 +262,22 @@ extern void beebwin_ModifyMenu(
 int MessageBox(HWND m_hWnd, const char* buffer, const char* WindowTitle, int Type);
 
 
+struct bmiData;
+#define BITMAPINFO bmiData
+HGDIOBJ SelectObject(HDC hdc, HGDIOBJ ppvBits);
+HGDIOBJ CreateDIBSection(HDC hdc, const BITMAPINFO *pbmi,
+							   UINT usage, void **ppvBits,
+					 int hSection, DWORD offset);
 
+
+void SetMenu(HWND w, bool s);
+
+#define MF_CHECKED 0
+#define MF_UNCHECKED 1
+#define MF_GRAYED 0
+#define MF_ENABLED 1
+
+
+DWORD CheckMenuItem(  HMENU hMenu,  UINT  uIDCheckItem,UINT  uCheck);
+DWORD EnableMenuItem(  HMENU hMenu,  UINT  uIDCheckItem,UINT  uEnable);
 #endif /* apples_h */

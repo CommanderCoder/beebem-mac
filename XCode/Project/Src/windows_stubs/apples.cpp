@@ -9,6 +9,8 @@
 #include <windows.h>
 #include "beebemrcids.h"
 
+#include <filesystem> // C++17 (or Microsoft-specific implementation in C++14)
+
 int __argc;
 char** __argv;
 
@@ -170,3 +172,66 @@ int MessageBox(HWND m_hWnd, const char* buffer, const char* WindowTitle, int Typ
 
 	return res;
 }
+
+
+
+void SetWindowText(HWND m_hWnd, const char* m_szTitle)
+{
+	// set the window title via swift
+	swift_SetWindowTitleWithCString(m_szTitle);
+}
+
+bool PathIsRelative(const char * winPathString)
+{
+	std::filesystem::path path(winPathString); // Construct the path from a string.
+	if (path.is_absolute()) {
+		// Arriving here if winPathString = "C:/tmp".
+		return false;
+	}
+	if (path.is_relative()) {
+		// Arriving here if winPathString = "".
+		// Arriving here if winPathString = "tmp".
+		// Arriving here in windows if winPathString = "/tmp". (see quote below)
+		return true;
+	}
+	return false;
+}
+
+
+void SetMenu(HWND w, bool s)
+{
+	
+}
+
+
+
+DWORD CheckMenuItem( HMENU hMenu,  UINT  uIDCheckItem,UINT  uCheck)
+{
+	if (uIDCheckItem == ID_FDC_DLL)
+	{
+		swift_SetMenuCheck(beebwin_RC2ID(ID_FDC_ACORN), uCheck);
+		swift_SetMenuCheck(beebwin_RC2ID(ID_FDC_OPUS), uCheck);
+		swift_SetMenuCheck(beebwin_RC2ID(ID_FDC_WATFORD), uCheck);
+	}
+
+	swift_SetMenuCheck(beebwin_RC2ID(uIDCheckItem), uCheck);
+	return uCheck;   // should be the previous value of this item
+}
+
+
+DWORD EnableMenuItem(  HMENU hMenu,  UINT  uIDCheckItem,UINT  uEnable)
+{
+	
+	if (uIDCheckItem == ID_FDC_DLL)
+	{
+		swift_SetMenuEnable(beebwin_RC2ID(ID_FDC_ACORN), uEnable);
+		swift_SetMenuEnable(beebwin_RC2ID(ID_FDC_OPUS), uEnable);
+		swift_SetMenuEnable(beebwin_RC2ID(ID_FDC_WATFORD), uEnable);
+	}
+
+	swift_SetMenuEnable(beebwin_RC2ID(uIDCheckItem), uEnable);
+	
+	return uEnable;  // should be the previous value of this item
+
+}
+
