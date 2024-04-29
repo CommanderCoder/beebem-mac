@@ -176,8 +176,8 @@ extern "C" bool swift_CopyDirectoryRecursively(const char* sourcePath, const cha
 extern "C" void swift_saveScreen(const char * filename);
 
 
-extern "C" void swift_SetMenuCheck(unsigned int cmd, char check);
-extern "C" void swift_SetMenuEnable(unsigned int cmd, char enable);
+extern "C" bool swift_SetMenuCheck(unsigned int cmd, char check);
+extern "C" bool swift_SetMenuEnable(unsigned int cmd, char enable);
 extern "C" int swift_SetMenuItemTextWithCString(unsigned int cmd, const char* text);
 extern "C" int swift_ModifyMenu(unsigned int cmd, unsigned int newitem, const char* itemtext);
 
@@ -272,8 +272,8 @@ HGDIOBJ CreateDIBSection(HDC hdc, const BITMAPINFO *pbmi,
 
 void SetMenu(HWND w, bool s);
 
-#define MF_CHECKED 0
-#define MF_UNCHECKED 1
+#define MF_CHECKED 1
+#define MF_UNCHECKED 0
 #define MF_GRAYED 0
 #define MF_ENABLED 1
 

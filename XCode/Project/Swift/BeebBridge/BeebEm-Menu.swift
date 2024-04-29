@@ -78,19 +78,22 @@ func menuItemByIdentifier(id: String) -> NSMenuItem? {
 
 // set the tick on the menu with a 4 character identifier
 @_cdecl("swift_SetMenuCheck")
-public func swift_SetMenuCheck(_ cmd: UInt32, _ check: Bool)
+public func swift_SetMenuCheck(_ cmd: UInt32, _ check: Bool) -> Bool
 {
 	let cmdSTR =  conv(cmd)
-
 	if let n = menuItemByIdentifier(id:cmdSTR)
 	{
 //        print("\(#function)",cmdSTR,check)
+		let oldstate = n.state
 		n.state = check ? .on : .off
+		return (oldstate == .on)
 	}
 	else
 	{
 		print("\(#function): \(cmd) not found: \(cmdSTR)")
 	}
+	
+	return false
 }
 
 
@@ -115,19 +118,22 @@ public func swift_ModifyMenu(_ cmd: UInt32, _ newitem: UInt32,  _ itemtext: Unsa
 
 // grey the menu with a 4 character identifier
 @_cdecl("swift_SetMenuEnable")
-public func swift_SetMenuEnable(_ cmd: UInt32, _ enable: Bool)
+public func swift_SetMenuEnable(_ cmd: UInt32, _ enable: Bool) -> Bool
 {
 	// There is a checkbox in the Menu's Inspector called "Auto Enables Items" that was overriding my code.
 	let cmdSTR =  conv(cmd)
 	if let n = menuItemByIdentifier(id:cmdSTR)
 	{
+		let oldEnable = n.isEnabled
 //        print("\(#function)",cmdSTR,enable)
 		n.isEnabled = enable
+		return oldEnable
 	}
 	else
 	{
 //        print("\(#function) not found: ",cmdSTR)
 	}
+	return false
 }
 
 
