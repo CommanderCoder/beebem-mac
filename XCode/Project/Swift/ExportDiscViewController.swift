@@ -61,8 +61,6 @@ class ExportDiscViewController: NSViewController {
         tableView.reloadData()
     }
 
-	// this is the ExportFileDialogue
-	static var caller : UnsafeMutableRawPointer?
 	
     @IBAction func exportSelected(_ sender : NSButton) {
         

@@ -58,5 +58,7 @@ class RomConfigDialog : public Dialog
 		ROMConfigFile m_RomConfig;
 		Model m_Model;
 };
-#endif
+#else
+#import "RomConfigDialog-mac.hpp"
+#endif //__APPLE__
 #endif

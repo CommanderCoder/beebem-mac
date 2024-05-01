@@ -22,7 +22,7 @@ RenameFileDialog::RenameFileDialog(HINSTANCE hInstance,
 								   HWND hwndParent,
 								   const char* pszBeebFileName,
 								   const char* pszHostFileName) :
-//	Dialog(hInstance, hwndParent, IDD_RENAME_FILE),
+    Dialog(hInstance, hwndParent, IDD_RENAME_FILE),
 	m_BeebFileName(pszBeebFileName),
 	m_HostFileName(pszHostFileName)
 {
@@ -38,11 +38,13 @@ RenameFileDialog::RenameFileDialog(HINSTANCE hInstance,
 //	switch (nMessage)
 //	{
 //	case WM_INITDIALOG:
+bool RenameFileDialog::WM_INITDIALOG()
+{
 //		SetDlgItemText(IDC_BEEB_FILE_NAME, m_BeebFileName.c_str());
 //		SetDlgItemText(IDC_HOST_FILE_NAME, m_HostFileName.c_str());
-//
-//		return TRUE;
-//
+
+		return true;
+}
 //	case WM_COMMAND:
 //		switch (LOWORD(wParam))
 //		{

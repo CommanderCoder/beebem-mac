@@ -30,6 +30,12 @@ typedef uint8_t UINT8;   // UINT8 = unsigned 8 bit value
 typedef int32_t INT;     // INT = signed 32 bit value
 typedef int16_t INT16;   // INT16 = signed 16 bit value
 
+
+typedef long LPARAM;  
+#define LPCSTR std::string
+#define LPTSTR char *
+
+
 typedef uint32_t* HWND; //  typedef uint32_t*
 typedef uint32_t* HINSTANCE; //
 typedef uint32_t* HDC; //
@@ -75,11 +81,6 @@ struct RECT {
 };
 typedef struct RECT                     RECT;
 
-// 16 rows and 2 columns (only column 0 needs the bank value)
-struct RCItem {
-	int bank;
-	std::string name;
-};
 
 #define _MAX_PATH PATH_MAX
 #define MAX_PATH PATH_MAX
@@ -127,6 +128,8 @@ char* _strerror(const char *strErrMsg);
 #define NOPARITY 2
 
 
+#define LOWORD(_x) _x // nothing special
+
 extern int __argc;
 extern char** __argv;
 
@@ -169,6 +172,12 @@ extern "C" void swift_SoundInit();
 extern "C" bool swift_IsMiniaturized();
 
 
+
+extern "C" void swift_RCSetModelText(const char* n);
+extern "C" int swift_RCGetSelectionMark();
+extern "C" void swift_RCSetFocus();
+
+
 extern "C" void swift_GetBundleDirectory(const char* bundlePath, int length);
 extern "C" void swift_GetApplicationSupportDirectory(const char* appPath, int length);
 extern "C" void swift_GetResourcePath(const char* resourcePath, int length, const char* filename);
@@ -189,8 +198,10 @@ extern "C" void swift_SetWindowTitleWithCString(const char* title);
 
 
 class ExportFileDialog;
-extern "C" int swift_DoModal(ExportFileDialog* dialog);
+
+extern "C" int swift_DoModalEF(ExportFileDialog* dialog); // export files
 extern "C" int swift_EndDialog();
+
 
 // delay the next update of the cpu (i.e. Exec6502Instruction) by this accumulation of
 // this time
@@ -216,6 +227,7 @@ typedef  enum
   DIB_PAL_INDICES = 0x02
 } DIBColors;
 
+void EndDialog(HWND m_hWnd, bool wParam);
 
 extern "C" void swift_sleepCPU(unsigned long microseconds);
 #define Sleep swift_sleepCPU
@@ -234,7 +246,7 @@ extern "C" int swift_SelectFolder (const char *path, int bytes);
 extern "C" int swift_setPasteboard ( const char* clipboard, int length);
 extern "C" int swift_getPasteboard ( char* clipboard, int length);
 
-extern "C" void swift_InitDialog (char* dfsNames[], int max);
+extern "C" void swift_InitExportDialog (char* dfsNames[][6], int max, int columns);
 extern "C" int swift_SelectedFiles ( int fileSelected[], int max);
 
 extern "C" int swift_Report ( const char* message, const char* title, int buttonType);
@@ -243,6 +255,8 @@ extern void beebwin_ModifyMenu(
 						UINT position,
 						UINT newitem,
 						CHAR* newtext);
+
+extern void RCEndDialog();
 
 
 
@@ -280,4 +294,5 @@ void SetMenu(HWND w, bool s);
 
 DWORD CheckMenuItem(  HMENU hMenu,  UINT  uIDCheckItem,UINT  uCheck);
 DWORD EnableMenuItem(  HMENU hMenu,  UINT  uIDCheckItem,UINT  uEnable);
+
 #endif /* apples_h */

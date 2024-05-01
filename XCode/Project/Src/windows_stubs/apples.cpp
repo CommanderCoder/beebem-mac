@@ -139,6 +139,7 @@ bool SHGetFolderPath(const char* path)
 
 long WSAGetLastError()
 {
+
 	return errno;
 }
 
@@ -235,3 +236,8 @@ DWORD EnableMenuItem(  HMENU hMenu,  UINT  uIDCheckItem,UINT  uEnable)
 
 }
 
+
+void EndDialog(HWND m_hWnd, bool wParam)
+{
+	swift_EndDialog();
+}

@@ -114,11 +114,13 @@ constexpr UINT WIN_STYLE = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZE
 // Some LED based constants
 constexpr int LED_COL_BASE = 64;
 
+#ifndef __APPLE__
 static const char *CFG_REG_KEY = "Software\\BeebEm";
 
 static const unsigned char CFG_DISABLE_WINDOWS_KEYS[24] = {
 	00,00,00,00,00,00,00,00,03,00,00,00,00,00,0x5B,0xE0,00,00,0x5C,0xE0,00,00,00,00
 };
+#endif
 
 CArm *arm = nullptr;
 CSprowCoPro *sprow = nullptr;
@@ -4528,7 +4530,6 @@ bool BeebWin::IsPaused()
 
 void BeebWin::EditRomConfig()
 {
-#ifndef __APPLE__
 	RomConfigDialog Dialog(hInst, m_hWnd, RomConfig);
 
 	if (Dialog.DoModal())
@@ -4537,8 +4538,6 @@ void BeebWin::EditRomConfig()
 		memcpy(RomConfig, Dialog.GetRomConfig(), sizeof(ROMConfigFile));
 		BeebReadRoms();
 	}
-#endif
-
 }
 
 /****************************************************************************/
@@ -5483,7 +5482,6 @@ void BeebWin::StoreUserDataPath()
 	RegSetStringValue(HKEY_CURRENT_USER, CFG_REG_KEY,
 	                  "UserDataFolder", m_UserDataPath);
 #endif
-	
 }
 
 /****************************************************************************/

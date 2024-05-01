@@ -14,6 +14,8 @@
 		DC1DBA222BB998B000AAB22F /* KeyboardMappingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1DBA132BB8CF0400AAB22F /* KeyboardMappingViewController.swift */; };
 		DC1DBA232BB9A2BB00AAB22F /* RomConfigViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1DBA152BB8CF0500AAB22F /* RomConfigViewController.swift */; };
 		DC1DBA252BB9A4C900AAB22F /* BreakoutBoxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1DBA142BB8CF0500AAB22F /* BreakoutBoxViewController.swift */; };
+		DC33555F2BDF84C00014DC3A /* RomConfigDialog-mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC33555D2BDF84C00014DC3A /* RomConfigDialog-mac.cpp */; };
+		DC3355602BDF8D720014DC3A /* BeebEm-RomConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC907EB72BB5BB9A00523116 /* BeebEm-RomConfig.swift */; };
 		DC527AD12BC71C21000D7CCF /* BeebEm-Bridging-Video.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCACDAC52BC66F5600CEF154 /* BeebEm-Bridging-Video.cpp */; };
 		DC527AD22BC71CBC000D7CCF /* BeebEm-Bridging-Main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCACDAC82BC67D2500CEF154 /* BeebEm-Bridging-Main.cpp */; };
 		DC527BC82BC75107000D7CCF /* Teletext.fnt in Resources */ = {isa = PBXBuildFile; fileRef = DC527BC42BC75107000D7CCF /* Teletext.fnt */; };
@@ -301,6 +303,8 @@
 		DC1DBA142BB8CF0500AAB22F /* BreakoutBoxViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BreakoutBoxViewController.swift; sourceTree = "<group>"; };
 		DC1DBA152BB8CF0500AAB22F /* RomConfigViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RomConfigViewController.swift; sourceTree = "<group>"; };
 		DC1DBA162BB8CF0500AAB22F /* TapeControlViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TapeControlViewController.swift; sourceTree = "<group>"; };
+		DC33555D2BDF84C00014DC3A /* RomConfigDialog-mac.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "RomConfigDialog-mac.cpp"; sourceTree = "<group>"; };
+		DC33555E2BDF84C00014DC3A /* RomConfigDialog-mac.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "RomConfigDialog-mac.hpp"; sourceTree = "<group>"; };
 		DC527BC42BC75107000D7CCF /* Teletext.fnt */ = {isa = PBXFileReference; lastKnownFileType = file; name = Teletext.fnt; path = ../../Teletext.fnt; sourceTree = "<group>"; };
 		DC527BC52BC75107000D7CCF /* RelayOn.snd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = RelayOn.snd; path = ../../RelayOn.snd; sourceTree = "<group>"; };
 		DC527BC62BC75107000D7CCF /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../../README.md; sourceTree = "<group>"; };
@@ -792,6 +796,8 @@
 				DCB4EBD82BDB890F002AEA8A /* RenameFileDialog-mac.hpp */,
 				DCB4EBD42BDB26F1002AEA8A /* FolderSelectDialog-mac.cpp */,
 				DCB4EBD52BDB26F1002AEA8A /* FolderSelectDialog-mac.hpp */,
+				DC33555D2BDF84C00014DC3A /* RomConfigDialog-mac.cpp */,
+				DC33555E2BDF84C00014DC3A /* RomConfigDialog-mac.hpp */,
 			);
 			path = Src;
 			sourceTree = "<group>";
@@ -894,6 +900,7 @@
 				DCDC73322BBF61F700D83402 /* Debug.cpp in Sources */,
 				DC907EC32BB5C23C00523116 /* BeebViewController.swift in Sources */,
 				DCDC73282BBF574100D83402 /* 6502core.cpp in Sources */,
+				DC33555F2BDF84C00014DC3A /* RomConfigDialog-mac.cpp in Sources */,
 				DCDC732A2BBF5AF400D83402 /* ArmDisassembler.cpp in Sources */,
 				DCB4EBD32BD5BDC4002AEA8A /* BeebEm-Bridging-ExportFIles.cpp in Sources */,
 				DC7E1E652BCE58D400494CBE /* FileDialog-mac.cpp in Sources */,
@@ -927,6 +934,7 @@
 				DCDC733C2BC0ACE200D83402 /* Log.cpp in Sources */,
 				DCDC734B2BC0B78E00D83402 /* UefState.cpp in Sources */,
 				DCDC73462BC0B5B500D83402 /* SysVia.cpp in Sources */,
+				DC3355602BDF8D720014DC3A /* BeebEm-RomConfig.swift in Sources */,
 				DCB4EBCD2BD5BD22002AEA8A /* BeebEm-Bridging-UserKeyboard.cpp in Sources */,
 				DCDC73342BBFE87C00D83402 /* Disc8271.cpp in Sources */,
 				DC527AD12BC71C21000D7CCF /* BeebEm-Bridging-Video.cpp in Sources */,

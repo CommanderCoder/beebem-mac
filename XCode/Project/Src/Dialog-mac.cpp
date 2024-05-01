@@ -25,18 +25,6 @@ Dialog::Dialog(HINSTANCE hInstance,
 
 /****************************************************************************/
 
-bool Dialog::DoModal()
-{
-//	// Show dialog box
-//	INT_PTR Result = DialogBoxParam(m_hInstance,
-//									MAKEINTRESOURCE(m_DialogID),
-//									m_hwndParent,
-//									sDlgProc,
-//									reinterpret_cast<LPARAM>(this));
-//
-//	return Result == IDOK;
-	return true;
-}
 
 /****************************************************************************/
 //

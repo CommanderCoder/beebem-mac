@@ -12,7 +12,7 @@
 
 // Dummy functions for building the BeebEm shim
 	
-extern "C" void beeb_exportSelected(ExportFileDialog* d)
+extern "C" void beeb_ModalOK(Dialog* d)
 {
 	if (d!=NULL)
 	{

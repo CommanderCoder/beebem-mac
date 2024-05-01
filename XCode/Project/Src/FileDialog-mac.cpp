@@ -54,6 +54,14 @@ FileDialog::FileDialog(HWND hwndOwner, LPTSTR result, DWORD resultLength,
 	{
 		fileFilter = DISCFILE;
 	}
+	else if (strstr(filter,".rom")!=0)
+	{
+		fileFilter = ANYFILE;
+	}
+	else if (strstr(filter,".cfg")!=0)
+	{
+		fileFilter = ROMCFG;
+	}
 	else if (strstr(filter,"All Files")!=0)
 	{
 		fileFilter = ANYFILE;

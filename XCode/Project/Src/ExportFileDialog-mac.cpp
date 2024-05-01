@@ -23,6 +23,13 @@
 #include "StringUtils.h"
 
 
+#ifndef TRUE
+#define TRUE true
+#endif
+#ifndef FALSE
+#define FALSE false
+#endif
+
 
 #define LVIS_SELECTED 0
 #define LVNI_SELECTED 1
@@ -37,26 +44,11 @@ int heads;
 int side;
 
 
-void LVInsertItem(HWND a, int row, int col, const LPTSTR text, const FileExportEntry* data)
-{
-
-}
-
-void LVSetItemText(HWND a, int row, int col, const LPTSTR text)
-{
-
-}
-
-FileExportEntry* LVGetItemData(HWND a, UINT b)
+FileExportEntry* LVGetItemDataEF(HWND a, UINT b)
 {
 	return NULL;
 //	return &(m_ExportFiles[filesSelected[b]]);
 }
-
-//FileExportEntry LVSetItemText(HWND a, )
-//{
-//	return nullptr;
-//}
 
 
 
@@ -101,88 +93,73 @@ ExportFileDialog::ExportFileDialog(HINSTANCE hInstance,
 
 
 
-// from ExportFileDialog.cpp
 
-#ifndef __APPLE__
-INT_PTR ExportFileDialog::DlgProc(UINT   nMessage,
-								  WPARAM wParam,
-								  LPARAM lParam)
+// 6 columns
+char* dfsNames[DFS_MAX_CAT_SIZE][6];
+ 
+int LVInsertItemEF(HWND hWnd, UINT uRow, UINT uCol, const char* pszText, LPARAM lParam)
 {
-	switch (nMessage)
+	for (int c=0;c<6;c++)
+		dfsNames[uRow][c] = (char*)malloc(100);
+	sprintf(dfsNames[uRow][uCol], "%-7s", pszText);
+	return 0;
+}
+
+
+void LVSetItemTextEF(HWND hWnd, UINT uRow, UINT uCol, const LPTSTR pszText)
+{
+	sprintf(dfsNames[uRow][uCol], "%-7s", pszText);
+}
+
+bool ExportFileDialog::DoModal()
+{
+	WM_INITDIALOG();
+	return swift_DoModalEF(this);
+}
+
+
+bool ExportFileDialog::WM_INITDIALOG()
+{
+
+	// Make a list view that is row select with grid lines and make left formatted columns
+	// 'Columns' count ; filename, load addr, ..etc
+	// autosize column widths
+	
+	int Row = 0;
+
+	// add each of m_ExportFiles as rows
+	for (const FileExportEntry& Entry : m_ExportFiles)
 	{
-	case WM_INITDIALOG: {
-		m_hwndListView = GetDlgItem(m_hwnd, IDC_EXPORTFILELIST);
+		// List is sorted so store catalogue index in list's item data
+		LVInsertItemEF(m_hwndListView,
+					 Row,
+					 0,
+					 const_cast<LPTSTR>(Entry.BeebFileName.c_str()),
+					 reinterpret_cast<LPARAM>(&Entry));
 
-		ListView_SetExtendedListViewStyle(m_hwndListView, LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
+		char str[100];
+		sprintf(str, "%06X", Entry.DfsAttrs.loadAddr & 0xffffff);
+		LVSetItemTextEF(m_hwndListView, Row, 1, str);
 
-		for (int i = 0; i < _countof(Columns); ++i)
-		{
-			LVInsertColumn(m_hwndListView, i, Columns[i], LVCFMT_LEFT, 50);
-		}
+		sprintf(str, "%06X", Entry.DfsAttrs.execAddr & 0xffffff);
+		LVSetItemTextEF(m_hwndListView, Row, 2, str);
 
-		// Make a list view that is row select with grid lines and make left formatted columns
-		// 'Columns' count ; filename, load addr, ..etc
-		
-		int Row = 0;
+		sprintf(str, "%06X", Entry.DfsAttrs.length);
+		LVSetItemTextEF(m_hwndListView, Row, 3, str);
 
-		// add each of m_ExportFiles as rows
-		for (const FileExportEntry& Entry : m_ExportFiles)
-		{
-			// List is sorted so store catalogue index in list's item data
-			LVInsertItem(m_hwndListView,
-						 Row,
-						 0,
-						 const_cast<LPTSTR>(Entry.BeebFileName.c_str()),
-						 reinterpret_cast<LPARAM>(&Entry));
+		LVSetItemTextEF(m_hwndListView, Row, 4, const_cast<LPTSTR>(Entry.HostFileName.c_str()));
 
-			char str[100];
-			sprintf(str, "%06X", Entry.DfsAttrs.loadAddr & 0xffffff);
-			LVSetItemText(m_hwndListView, Row, 1, str);
-
-			sprintf(str, "%06X", Entry.DfsAttrs.execAddr & 0xffffff);
-			LVSetItemText(m_hwndListView, Row, 2, str);
-
-			sprintf(str, "%06X", Entry.DfsAttrs.length);
-			LVSetItemText(m_hwndListView, Row, 3, str);
-
-			LVSetItemText(m_hwndListView, Row, 4, const_cast<LPTSTR>(Entry.HostFileName.c_str()));
-
-			Row++;
-		}
-
-		// autosize column widths
-		for (int i = 0; i < _countof(Columns); ++i)
-		{
-			ListView_SetColumnWidth(m_hwndListView, i, LVSCW_AUTOSIZE_USEHEADER);
-		}
-
-		return TRUE;
+		Row++;
 	}
-#else
 
-void ExportFileDialog::WM_INITDIALOG()
-   {
-			char* dfsNames[DFS_MAX_CAT_SIZE];
-			int numFiles = 0;
-			for (const FileExportEntry& Entry : m_ExportFiles)
-			{
-				dfsNames[numFiles] = (char*)malloc(100);
-				sprintf(dfsNames[numFiles], "%c.%-7s %06X %06X %06X",
-						Entry.DfsAttrs.directory,
-						Entry.DfsAttrs.filename,
-						Entry.DfsAttrs.loadAddr & 0xffffff,
-						Entry.DfsAttrs.execAddr & 0xffffff,
-						Entry.DfsAttrs.length);
-				numFiles++;
-				
-			}
-	   
-	   // this sets the rows in the ExportDiscViewController.beeblistdata
-	   // to be displayed in the list
-	   swift_InitDialog(dfsNames, numFiles);
 
-   }
-#endif
+  
+   // this sets the rows in the ExportDiscViewController.beeblistdata
+   // to be displayed in the list
+   swift_InitExportDialog(dfsNames, Row, 6);
+
+   return TRUE;
+}
 
 #ifndef __APPLE__
 	case WM_NOTIFY: {
@@ -225,7 +202,7 @@ void ExportFileDialog::WM_NOTIFY()
 	
 	// if Notified of DOUBLECLICK on a valid SELECTED ITEM
 	FileExportEntry* Entry = reinterpret_cast<FileExportEntry*>(
-		LVGetItemData(m_hwndListView, hitItem)
+		LVGetItemDataEF(m_hwndListView, hitItem)
 	);
 
 	if (Entry)
@@ -235,11 +212,11 @@ void ExportFileDialog::WM_NOTIFY()
 								Entry->BeebFileName.c_str(),
 								Entry->HostFileName.c_str());
 
-		// DoModal
+		if (Dialog.DoModal())
 		{
 			Entry->HostFileName = Dialog.GetHostFileName();
 
-			LVSetItemText(m_hwndListView, hitItem, 4, const_cast<LPTSTR>(Entry->HostFileName.c_str()));
+			LVSetItemTextEF(m_hwndListView, hitItem, 4, const_cast<LPTSTR>(Entry->HostFileName.c_str()));
 		}
 	}
 	
@@ -292,21 +269,6 @@ bool ExportFileDialog::WM_COMMAND(int param)
 
 
 
-bool ExportFileDialog::DoModal()
-{
-// Three parts to DoModal -
-	// 1.WM_INITDIALOG ; done here
-	// 2.WM_NOTIFY ; done in swift
-	// 3.WM_COMMAND ; done here
-	
-	// Need to set up a SAVE dialog with the list of files.
-	// see DiscExportDlgProc
-	WM_INITDIALOG();
-	
-	swift_DoModal(this);
-
-	return true;
-}
 
 
 /****************************************************************************/
@@ -402,7 +364,7 @@ void ExportFileDialog::ExportSelectedFiles()
 	while (Item != -1)
 	{
 //		FileExportEntry* Entry = reinterpret_cast<FileExportEntry*>(
-//			LVGetItemData(m_hwndListView, Item)
+//			LVGetItemDataEF(m_hwndListView, Item)
 //		);
 		FileExportEntry* Entry =
 					&(m_ExportFiles[Item]);

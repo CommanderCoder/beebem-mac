@@ -41,15 +41,14 @@ class ExportFileDialog : public Dialog
 		std::string GetPath() const;
 	
 		bool DoModal();
-
 		bool WM_COMMAND(int param);
 	private:
 		void ExportSelectedFiles();
 		bool ExportFile(DFS_FILE_ATTR* DfsAttrs, const char* LocalFileName);
 	
-		void WM_INITDIALOG();
-		void WM_NOTIFY();
-
+		virtual bool WM_INITDIALOG();
+		virtual void WM_NOTIFY();
+	
 	private:
 		const char* m_DiscFile;
 		int m_NumSides;

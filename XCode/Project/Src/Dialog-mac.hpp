@@ -21,9 +21,6 @@ class Dialog
 			int DialogID
 		);
 
-	public:
-		bool DoModal();
-
 	private:
 //		static INT_PTR CALLBACK sDlgProc(
 //			HWND   hwnd,
@@ -37,6 +34,11 @@ class Dialog
 //			WPARAM wParam,
 //			LPARAM lParam
 //		) = 0;
+public:
+
+	virtual bool WM_INITDIALOG() = 0;
+	virtual bool WM_COMMAND(int wParam) = 0;
+	virtual void WM_NOTIFY() = 0;
 
 	protected:
 //		std::string GetDlgItemText(int nID);

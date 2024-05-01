@@ -60,10 +60,12 @@ class RomConfigViewController: NSViewController
     }
     
     @IBAction func OK(_ sender: Any) {
-        beeb_FinishROMConfig()
+		RCWindowCommandHandler(0x30) //IDOK
         self.view.window!.performClose(nil)
     }
+	
     @IBAction func Cancel(_ sender: Any) {
+		RCWindowCommandHandler(0x40) //IDCANCEL
     }
 
     override func viewDidLoad() {

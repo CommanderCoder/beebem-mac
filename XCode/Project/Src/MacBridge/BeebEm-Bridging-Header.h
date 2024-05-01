@@ -37,7 +37,6 @@ void beeb_ukhandlekeys(long eventkind, unsigned int keycode, char charCode);
 
 // Exposed to RomConfigViewController
 void beeb_EditROMConfig();
-void beeb_FinishROMConfig();
 int RCWindowCommandHandler(int);
 const char* beeb_getRCEntry(int row, int column);
 
@@ -49,7 +48,7 @@ long beeb_BBHandleCommand(unsigned int cmdID);
 
 
 // Exposed to ExportDiscViewController
-void beeb_exportSelected(void* d);  //ExportFileDialog*
+void beeb_ModalOK(void* d);  //Dialog*
 
 // make it bridge between C++ and Swift code
 

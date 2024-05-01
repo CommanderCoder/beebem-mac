@@ -14,9 +14,9 @@
 
 #include <string>
 
-//#include "Dialog.h"
+#include "Dialog.h"
 
-class RenameFileDialog //: public Dialog
+class RenameFileDialog : public Dialog
 {
 	public:
 		RenameFileDialog(
@@ -29,6 +29,8 @@ class RenameFileDialog //: public Dialog
 	public:
 		const std::string& GetHostFileName() const;
 
+	bool DoModal()	{ WM_INITDIALOG(); return true; }
+	
 	private:
 		void ExportSelectedFiles();
 
@@ -38,6 +40,10 @@ class RenameFileDialog //: public Dialog
 //			WPARAM wParam,
 //			LPARAM lParam
 //		);
+
+		virtual bool WM_INITDIALOG();
+		virtual bool WM_COMMAND(int wParam){return false;}
+		virtual void WM_NOTIFY(){}
 
 	private:
 		std::string m_BeebFileName;
