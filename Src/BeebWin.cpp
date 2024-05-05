@@ -4058,28 +4058,24 @@ void BeebWin::HandleCommand(UINT MenuID)
 	case IDM_CAPTURERES_1280:
 	case IDM_CAPTURERES_640:
 	case IDM_CAPTURERES_320:
-#ifndef __APPLE__
 		if (MenuID != m_MenuIDCaptureResolution)
 		{
 			CheckMenuItem(m_MenuIDCaptureResolution, false);
 			m_MenuIDCaptureResolution = MenuID;
 			CheckMenuItem(m_MenuIDCaptureResolution, true);
 		}
-#endif
 			break;
 
 	case IDM_CAPTUREBMP:
 	case IDM_CAPTUREJPEG:
 	case IDM_CAPTUREGIF:
 	case IDM_CAPTUREPNG:
-#ifndef __APPLE__
 		if (MenuID != m_MenuIDCaptureFormat)
 		{
 			CheckMenuItem(m_MenuIDCaptureFormat, false);
 			m_MenuIDCaptureFormat = MenuID;
 			CheckMenuItem(m_MenuIDCaptureFormat, true);
 		}
-#endif
 		break;
 
 	case IDM_CAPTURESCREEN:
@@ -4105,14 +4101,12 @@ void BeebWin::HandleCommand(UINT MenuID)
 	case IDM_VIDEORES1:
 	case IDM_VIDEORES2:
 	case IDM_VIDEORES3:
-#ifndef __APPLE__
 		if (MenuID != m_MenuIDAviResolution)
 		{
 			CheckMenuItem(m_MenuIDAviResolution, false);
 			m_MenuIDAviResolution = MenuID;
 			CheckMenuItem(m_MenuIDAviResolution, true);
 		}
-#endif
 		break;
 
 	case IDM_VIDEOSKIP0:
@@ -4121,14 +4115,12 @@ void BeebWin::HandleCommand(UINT MenuID)
 	case IDM_VIDEOSKIP3:
 	case IDM_VIDEOSKIP4:
 	case IDM_VIDEOSKIP5:
-#ifndef __APPLE__
 		if (MenuID != m_MenuIDAviSkip)
 		{
 			CheckMenuItem(m_MenuIDAviSkip, false);
 			m_MenuIDAviSkip = MenuID;
 			CheckMenuItem(m_MenuIDAviSkip, true);
 		}
-#endif
 		break;
 
 	case IDM_CAPTUREVIDEO:

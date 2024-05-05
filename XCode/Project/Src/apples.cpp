@@ -291,3 +291,9 @@ BOOL SetWindowPos( HWND hWnd, HWND hWndInsertAfter,
 BOOL SetWindowText(HWND    hWnd, LPCSTR lpString) {return false;}
 
 HWND SetFocus(HWND focus) {return 0;}
+
+
+void ModifyMenu(HMENU m_hMenu, UINT pf, UINT flags, UINT_PTR newID, LPCSTR str)
+{
+
+}

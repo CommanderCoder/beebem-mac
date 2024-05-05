@@ -357,4 +357,7 @@ BOOL SetWindowText(HWND    hWnd, LPCSTR lpString);
 
 HWND SetFocus(HWND focus);
 
+
+void ModifyMenu(HMENU m_hMenu, UINT pf, UINT flags, UINT_PTR newID, LPCSTR str);
+
 #endif /* apples_h */
