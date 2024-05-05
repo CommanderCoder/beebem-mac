@@ -4255,7 +4255,6 @@ void BeebWin::HandleCommand(UINT MenuID)
 		Disc1770Enabled = !Disc1770Enabled;
 		CheckMenuItem(ID_FLOPPYDRIVE, Disc8271Enabled);
 		break;
-#ifndef __APPLE__
 	case IDM_TEXTTOSPEECH_ENABLE:
 		if (m_TextToSpeechEnabled)
 		{
@@ -4309,7 +4308,6 @@ void BeebWin::HandleCommand(UINT MenuID)
 		m_TextViewEnabled = !m_TextViewEnabled;
 		InitTextView();
 		break;
-#endif
 			
 	case IDM_DISABLEKEYSWINDOWS:
 	{

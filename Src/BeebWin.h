@@ -388,7 +388,6 @@ public:
 	bool GetImageEncoderClsid(const WCHAR *mimeType, CLSID *encoderClsid);
 #endif
 	
-#ifndef __APPLE__
 	bool InitTextToSpeech();
 	void TextToSpeechResetState();
 	void CloseTextToSpeech();
@@ -399,10 +398,8 @@ public:
 	void TextToSpeechSetVoice(int Index);
 	void TextToSpeechSetVoice(ISpObjectToken* pToken);
 	void TextToSpeechSelectVoiceMenuItem(int Index);
-#endif
 	void Speak(const char *text, DWORD flags);
 	void SpeakChar(unsigned char c);
-#ifndef __APPLE__
 	void TextToSpeechClearBuffer();
 	void TextToSpeechToggleAutoSpeak();
 	void TextToSpeechToggleSpeakPunctuation();
@@ -416,7 +413,6 @@ public:
 	void TextToSpeechReadSentence();
 	void TextToSpeechReadScreen();
 	void TextToSpeechKey(WPARAM wParam);
-#endif
 
 	void InitTextView();
 	void CloseTextView();
@@ -661,7 +657,6 @@ public:
 
 	// Text to speech variables
 	bool m_TextToSpeechEnabled;
-#ifndef __APPLE__
 	std::vector<TextToSpeechVoice> m_TextToSpeechVoices;
 	HMENU m_hVoiceMenu;
 	ISpVoice *m_SpVoice;
@@ -672,7 +667,6 @@ public:
 	static const int MAX_SPEECH_SCREEN_LEN = 128 * 32;
 	char m_SpeechText[MAX_SPEECH_LINE_LEN + 1];
 	bool m_SpeechSpeakPunctuation;
-#endif
 	bool m_SpeechWriteChar;
 	static const int MAX_SPEECH_BUF_LEN = 160;
 	char m_SpeechBuf[MAX_SPEECH_BUF_LEN + 1];

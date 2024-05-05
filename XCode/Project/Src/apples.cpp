@@ -279,10 +279,6 @@ void DeleteDC(HDC m_hDCBitmap)
 
 }
 
-void InitTextToSpeechVoices(){}
-void InitVoiceMenu(){}
-void CloseTextToSpeech(){}
-
 UINT_PTR SetTimer(HWND hWnd, UINT_PTR  nIDEvent, UINT uElapse, TIMERPROC lpTimerFunc) {return 0;}
 
 BOOL KillTimer(HWND hWnd, UINT_PTR  nIDEvent) {return 0;}

@@ -55,6 +55,8 @@ typedef uint32_t* JOYCAPS; //
 typedef uint32_t* POINT; //
 
 typedef uint32_t* ISpVoice;//
+typedef uint32_t ISpObjectToken;//
+typedef uint32_t WCHAR;//
 
 typedef struct tagBITMAPINFOHEADER {
   DWORD biSize;
@@ -97,7 +99,7 @@ typedef struct RECT                     RECT;
 #define u_short uint16_t
 
 #define CHAR char
-
+#define WM_APP 0
 
 
 // ECONET
@@ -335,10 +337,6 @@ void ReleaseDC(HWND m_hWnd, HDC m_hDC);
 void DeleteObject(HBITMAP x);
 void DeleteDC(HDC m_hDCBitmap);
 
-void InitTextToSpeechVoices();
-void InitVoiceMenu();
-void CloseTextToSpeech();
-
 
 UINT_PTR SetTimer(HWND hWnd, UINT_PTR  nIDEvent, UINT uElapse, TIMERPROC lpTimerFunc);
 BOOL KillTimer(HWND hWnd, UINT_PTR  nIDEvent);
@@ -359,9 +357,4 @@ BOOL SetWindowText(HWND    hWnd, LPCSTR lpString);
 
 HWND SetFocus(HWND focus);
 
-
-//TextToSpeechToggleAutoSpeak
-//TextToSpeechToggleSpeakPunctuation
-//TextToSpeechIncreaseRate
-//TextToSpeechDecreaseRate
 #endif /* apples_h */

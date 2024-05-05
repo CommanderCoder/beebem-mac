@@ -62,7 +62,6 @@
 		DC9B41342BC215BD00C3D9D8 /* Econet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC09971E2BBA0C9C00A109A5 /* Econet.cpp */; };
 		DC9B41352BC2190500C3D9D8 /* BeebWin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996E22BBA0C9B00A109A5 /* BeebWin.cpp */; };
 		DC9B41372BC22AE700C3D9D8 /* BeebWinIo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC09971D2BBA0C9C00A109A5 /* BeebWinIo.cpp */; };
-		DC9B41392BC22E9800C3D9D8 /* BeebWinSpeech.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996F42BBA0C9C00A109A5 /* BeebWinSpeech.cpp */; };
 		DC9B413A2BC22FE200C3D9D8 /* BeebWinPrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC09970B2BBA0C9C00A109A5 /* BeebWinPrefs.cpp */; };
 		DCACDAC12BC5DD2E00CEF154 /* apples.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCACDAC02BC5DD2E00CEF154 /* apples.cpp */; };
 		DCACDAC42BC669B600CEF154 /* BeebWinDx-mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCACDAC22BC669B600CEF154 /* BeebWinDx-mac.cpp */; };
@@ -76,6 +75,7 @@
 		DCB4EBD92BDB890F002AEA8A /* RenameFileDialog-mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCB4EBD72BDB890F002AEA8A /* RenameFileDialog-mac.cpp */; };
 		DCB4EBDC2BDB89E5002AEA8A /* Dialog-mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCB4EBDA2BDB89E5002AEA8A /* Dialog-mac.cpp */; };
 		DCD283F22BE6E17100ABD9F8 /* SelectKeyDialog-mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCD283F02BE6E17100ABD9F8 /* SelectKeyDialog-mac.cpp */; };
+		DCD283FA2BE8427900ABD9F8 /* BeebWinSpeech-mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCD283F92BE8427900ABD9F8 /* BeebWinSpeech-mac.cpp */; };
 		DCDC73062BBE043A00D83402 /* Acorn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0997AF2BBAA91E00A109A5 /* Acorn.cpp */; };
 		DCDC73072BBE043D00D83402 /* Watford.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0997B72BBAA91E00A109A5 /* Watford.cpp */; };
 		DCDC73092BBE108600D83402 /* Bcd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996FE2BBA0C9C00A109A5 /* Bcd.cpp */; };
@@ -394,6 +394,8 @@
 		DCD283F52BE6E66C00ABD9F8 /* shlobj.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = shlobj.h; sourceTree = "<group>"; };
 		DCD283F62BE6E67A00ABD9F8 /* shlwapi.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = shlwapi.h; sourceTree = "<group>"; };
 		DCD283F72BE6E6A600ABD9F8 /* gdiplus.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gdiplus.h; sourceTree = "<group>"; };
+		DCD283F82BE8415000ABD9F8 /* sphelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sphelper.h; sourceTree = "<group>"; };
+		DCD283F92BE8427900ABD9F8 /* BeebWinSpeech-mac.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "BeebWinSpeech-mac.cpp"; sourceTree = "<group>"; };
 		DCDC73122BBE192200D83402 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		DCDC73182BBE1B9F00D83402 /* commctrl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = commctrl.h; sourceTree = "<group>"; };
 		DCE94C142BD3109500A5C12A /* BeebEm-Menu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BeebEm-Menu.swift"; sourceTree = "<group>"; };
@@ -621,6 +623,7 @@
 				DCD283F52BE6E66C00ABD9F8 /* shlobj.h */,
 				DCD283F62BE6E67A00ABD9F8 /* shlwapi.h */,
 				DCD283F72BE6E6A600ABD9F8 /* gdiplus.h */,
+				DCD283F82BE8415000ABD9F8 /* sphelper.h */,
 			);
 			path = windows_stubs;
 			sourceTree = "<group>";
@@ -833,6 +836,7 @@
 				DC84500D2BE4616C002015D9 /* TapeControlDialog-mac.hpp */,
 				DCD283F02BE6E17100ABD9F8 /* SelectKeyDialog-mac.cpp */,
 				DCD283F12BE6E17100ABD9F8 /* SelectKeyDialog-mac.hpp */,
+				DCD283F92BE8427900ABD9F8 /* BeebWinSpeech-mac.cpp */,
 			);
 			path = Src;
 			sourceTree = "<group>";
@@ -1014,10 +1018,10 @@
 				DC84500B2BE45931002015D9 /* BeebEm-BreakoutBox.swift in Sources */,
 				DC8450062BE2DA04002015D9 /* BeebEm-KeyboardMapping.swift in Sources */,
 				DCDC730B2BBE118B00D83402 /* Preferences.cpp in Sources */,
+				DCD283FA2BE8427900ABD9F8 /* BeebWinSpeech-mac.cpp in Sources */,
 				DC1DBA232BB9A2BB00AAB22F /* RomConfigViewController.swift in Sources */,
 				DCDC731E2BBE215F00D83402 /* IC32Latch.cpp in Sources */,
 				DCDC734F2BC0B8C500D83402 /* Z80.cpp in Sources */,
-				DC9B41392BC22E9800C3D9D8 /* BeebWinSpeech.cpp in Sources */,
 				DCDC734A2BC0B75800D83402 /* Tube.cpp in Sources */,
 				DC907ECE2BB70E7B00523116 /* BeebSKView.swift in Sources */,
 				DCDC732D2BBF5E1500D83402 /* thumbemu.cpp in Sources */,
