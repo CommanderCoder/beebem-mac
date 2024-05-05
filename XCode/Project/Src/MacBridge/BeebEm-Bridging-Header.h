@@ -16,8 +16,8 @@ void beeb_handlekeys(long eventkind, unsigned long keycode, char charCode);
 
 
 // Exposed to TapeControlViewController
-void beeb_TapeControlOpenDialog();
-void beeb_TapeControlCloseDialog();
+//void beeb_TapeControlOpenDialog();
+//void beeb_TapeControlCloseDialog();
 long beeb_TCHandleCommand(unsigned int cmdID);
 
 
@@ -30,13 +30,12 @@ void beeb_MainCpuLoop();
 int beeb_end();
 
 // Exposed to KeyboardMappingViewController [User Keyboard]
-void beeb_UserKeyboardOpen();
+void beeb_UserKeyboardClosed();
 long beeb_UKHandleCommand(unsigned int cmdID);
 void beeb_ukhandlekeys(long eventkind, unsigned int keycode, char charCode);
 
 
 // Exposed to RomConfigViewController
-void beeb_EditROMConfig();
 int RCWindowCommandHandler(int);
 const char* beeb_getRCEntry(int row, int column);
 

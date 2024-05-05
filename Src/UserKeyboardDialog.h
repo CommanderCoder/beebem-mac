@@ -27,5 +27,7 @@ Boston, MA  02110-1301, USA.
 // Public declarations.
 
 bool UserKeyboardDialog(HWND hwndParent);
+#else
+#include "UserKeyboardDialog-mac.hpp"
 #endif
 #endif

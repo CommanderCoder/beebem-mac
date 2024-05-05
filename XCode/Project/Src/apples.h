@@ -18,6 +18,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+#include "appleKeyCodes.h"
+
 
 typedef uint32_t DWORD;   // DWORD = unsigned 32 bit value
 typedef uint16_t WORD;    // WORD = unsigned 16 bit value
@@ -31,7 +33,6 @@ typedef int32_t INT;     // INT = signed 32 bit value
 typedef int16_t INT16;   // INT16 = signed 16 bit value
 
 
-typedef long LPARAM;  
 #define LPCSTR std::string
 #define LPTSTR char *
 
@@ -41,7 +42,9 @@ typedef uint32_t* HINSTANCE; //
 typedef uint32_t* HDC; //
 typedef uint32_t* HACCEL; //
 typedef uint32_t* HRESULT; //
-typedef uint32_t* WPARAM; //
+typedef uint32_t* WNDPROC; //
+typedef long LPARAM;
+typedef long WPARAM; //
 typedef uint32_t* HGDIOBJ; //
 typedef uint32_t* HMENU; //
 typedef uint32_t* HBITMAP; //
@@ -49,6 +52,7 @@ typedef uint32_t* HBITMAP; //
 typedef uint32_t* JOYCAPS; //
 typedef uint32_t* POINT; //
 
+typedef uint32_t* ISpVoice;//
 
 typedef struct tagBITMAPINFOHEADER {
   DWORD biSize;
@@ -171,12 +175,16 @@ extern "C" void swift_SoundInit();
 
 extern "C" bool swift_IsMiniaturized();
 
-
+extern "C" void swift_BreakoutBoxDialog();
 
 extern "C" void swift_RCSetModelText(const char* n);
 extern "C" int swift_RCGetSelectionMark();
 extern "C" void swift_RCSetFocus();
 
+extern "C" void swift_TCSelectItem(long item);
+extern "C" void swift_TCReload();
+extern "C" void swift_TCOpenDialog();
+extern "C" unsigned int swift_TCGetSelected();
 
 extern "C" void swift_GetBundleDirectory(const char* bundlePath, int length);
 extern "C" void swift_GetApplicationSupportDirectory(const char* appPath, int length);
@@ -200,12 +208,18 @@ extern "C" void swift_SetWindowTitleWithCString(const char* title);
 class ExportFileDialog;
 
 extern "C" int swift_DoModalEF(ExportFileDialog* dialog); // export files
-extern "C" int swift_EndDialog();
+extern "C" int swift_EndDialog(bool ok);
 
+class RomConfigDialog;
+extern "C" int swift_DoModalRC(RomConfigDialog* dialog); //
+extern "C" int swift_UserKeyboardDialog();
 
 // delay the next update of the cpu (i.e. Exec6502Instruction) by this accumulation of
 // this time
 extern "C" void swift_sleepCPU(unsigned long microseconds);
+
+extern "C" void swift_UKSetAssignedTo(const char* title);
+extern "C" void swift_buttonSetControlValue(unsigned int cmd, int state);
 
 int beebwin_RC2ID(int rc);
 void beebwin_ModifyMenu(
@@ -256,9 +270,6 @@ extern void beebwin_ModifyMenu(
 						UINT newitem,
 						CHAR* newtext);
 
-extern void RCEndDialog();
-
-
 
 
 #define MB_ICONERROR 0
@@ -269,10 +280,13 @@ extern void RCEndDialog();
 #define MB_YESNO 0x100
 #define MB_OKCANCEL 0x200
 
+#ifndef IDYES
 #define IDYES 0x10
 #define IDNO 0x20
 #define IDOK 0x30
 #define IDCANCEL 0x40
+#endif
+
 int MessageBox(HWND m_hWnd, const char* buffer, const char* WindowTitle, int Type);
 
 
@@ -294,5 +308,34 @@ void SetMenu(HWND w, bool s);
 
 DWORD CheckMenuItem(  HMENU hMenu,  UINT  uIDCheckItem,UINT  uCheck);
 DWORD EnableMenuItem(  HMENU hMenu,  UINT  uIDCheckItem,UINT  uEnable);
+
+
+int GetSystemMetrics(int);
+#define SM_CXSCREEN 0
+#define SM_CYSCREEN 0
+#define SM_CXSIZEFRAME 0
+#define SM_CYSIZEFRAME 0
+#define SM_CYMENUSIZE 0
+#define SM_CYCAPTION 0
+
+#define WS_OVERLAPPED 0
+#define WS_CAPTION 0
+#define WS_SYSMENU 0
+#define WS_MINIMIZEBOX 0
+#define WS_MAXIMIZEBOX 0
+#define WS_SIZEBOX 0
+
+void TextToSpeechResetState();
+HMENU GetMenu(HWND);
+HDC GetDC(HWND);
+
+void ReleaseDC(HWND m_hWnd, HDC m_hDC);
+void DeleteObject(HBITMAP x);
+void DeleteDC(HDC m_hDCBitmap);
+
+void InitTextToSpeechVoices();
+void InitVoiceMenu();
+void CloseTextToSpeech();
+
 
 #endif /* apples_h */

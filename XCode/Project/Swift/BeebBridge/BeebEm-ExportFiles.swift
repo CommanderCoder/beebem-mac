@@ -91,9 +91,17 @@ public func swift_DoModalEF(caller : UnsafeMutableRawPointer)
 }
 
 
+// THIS SHOULD BE IN A GENERAL LOCATION
 // allow access to this in C
 @_cdecl("swift_EndDialog")
-public func swift_EndDialog()
+public func swift_EndDialog(_ ok: Bool)
 {
-//	NSApp.abortModal()
+	if ok
+	{
+		NSApp.stopModal(withCode: NSApplication.ModalResponse.OK)
+	}
+	else
+	{
+		NSApp.stopModal(withCode: NSApplication.ModalResponse.cancel)
+	}
 }

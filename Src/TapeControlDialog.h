@@ -26,9 +26,7 @@ Boston, MA  02110-1301, USA.
 
 #include "TapeMap.h"
 
-#ifndef __APPLE__
 void TapeControlOpenDialog(HINSTANCE hinst, HWND hwndMain);
-#endif
 void TapeControlAddMapLines();
 void TapeControlUpdateCounter(int Time);
 void TapeControlStopRecording(bool RefreshControl);

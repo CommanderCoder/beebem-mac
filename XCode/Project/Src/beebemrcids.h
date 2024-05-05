@@ -18,6 +18,11 @@
 #define ID_FDC_OPUS                       39902
 #define ID_FDC_WATFORD                    39903
 
+#define IDYES 0x10
+#define IDNO 0x20
+#define IDOK 0x30
+#define IDCANCEL 0x40
+
 
 extern std::map<int,int> ID2RC;
 extern std::map<int,int> RC2ID;

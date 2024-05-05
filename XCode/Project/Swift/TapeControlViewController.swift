@@ -10,8 +10,6 @@ import Cocoa
 
 class TapeControlViewController: NSViewController {
 
-    static var tcViewControllerInstance : TapeControlViewController?
-
     @IBOutlet weak var tableView: NSTableView!
     
     private var dirty = 0
@@ -22,8 +20,6 @@ class TapeControlViewController: NSViewController {
         
         tableView.delegate = self
         tableView.dataSource = self
-        
-        TapeControlViewController.tcViewControllerInstance = self
     }
     
     func selectRowInTable(_ row: UInt){
@@ -40,7 +36,6 @@ class TapeControlViewController: NSViewController {
     }
 
     override func viewDidAppear() {
-        beeb_TapeControlOpenDialog()
         // setAutoenablesItems must be disabled on the NSMenu containing this item in the storyboard
         
         if let appDel = NSApplication.shared.delegate as? AppDelegate {
@@ -50,7 +45,7 @@ class TapeControlViewController: NSViewController {
     }
 
     override func viewDidDisappear() {
-        beeb_TapeControlCloseDialog()
+		beeb_TCHandleCommand(conv("idcl")); //IDCANCEL
         // setAutoenablesItems must be disabled on the NSMenu containing this item in the storyboard
         if let appDel = NSApplication.shared.delegate as? AppDelegate {
             appDel.tapeControlMenuItem.isEnabled = true;
@@ -125,15 +120,16 @@ extension TapeControlViewController: NSTableViewDelegate {
     
     func tableViewSelectionDidChange(_ notification: Notification) {
 //        print("\(#function) \(tableView.selectedRow) \(notification.name)")
-        beeb_getTableCellData(3,tableView.selectedRow) // needs to start at 1
+		let x = notification.object as! NSTableView
+		print("\(#function) \(x.selectedRow)")
+		if x.selectedRow >= 0
+		{
+			selectRowInTable(UInt(x.selectedRow))
+		}
+		let cmd: String = "tpmp"
+		beeb_TCHandleCommand(conv(cmd));
+
+//        beeb_getTableCellData(3,tableView.selectedRow) // needs to start at 1
         
     }
-}
-
-
-
-
-func tape_update()
-{
-	TapeControlViewController.tcViewControllerInstance?.update()
 }

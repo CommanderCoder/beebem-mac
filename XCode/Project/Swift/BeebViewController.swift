@@ -171,7 +171,7 @@ class BeebViewController: NSViewController {
 		skimage.texture = SKTexture(image: bmImage)
 
 		// update the tape controller
-		tape_update()
+		tapeControlView.update()
 
         LEDs_update()
 

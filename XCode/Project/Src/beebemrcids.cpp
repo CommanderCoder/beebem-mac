@@ -155,7 +155,7 @@ std::map<int,int> ID2RC =
 {'ddso', ID_SFX_DISCDRIVES},
 {'tpre', ID_REWINDTAPE},
 {'tpul', ID_UNLOCKTAPE},
-{'tpco', IDD_TAPECONTROL},
+{'tpco', ID_TAPECONTROL},
 {'dbgr', IDM_SHOWDEBUGGER},
 {'upbo', ID_BREAKOUT},
 {'uprm', ID_USER_PORT_RTC_MODULE},
@@ -315,11 +315,14 @@ std::map<int,int> ID2RC =
     {'uspd',IDK_UNDERSCORE},
     
     
-    
+	{'tpmp', IDC_TAPE_CONTROL_MAP},
     {'tppl', IDC_TAPE_CONTROL_PLAY},
     {'tpst', IDC_TAPE_CONTROL_STOP},
     {'tpej', IDC_TAPE_CONTROL_EJECT},
     {'tprc', IDC_TAPE_CONTROL_RECORD},
+	
+	{'idok', IDOK},
+	{'idcl', IDCANCEL},
 
 };
 

@@ -80,5 +80,7 @@ class UserPortBreakoutDialog
 extern int BitKeys[8];
 
 extern UserPortBreakoutDialog* userPortBreakoutDialog;
+#else
+#include "UserPortBreakoutBox-mac.hpp"
 #endif
 #endif

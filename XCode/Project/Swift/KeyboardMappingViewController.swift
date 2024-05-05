@@ -14,21 +14,19 @@ import Carbon // for key events
 
 
 
-weak var kbViewControllerInstance : KeyboardMappingViewController?
-
 
 class KeyboardMappingViewController: NSViewController {
 
     @IBOutlet weak var keyboardBtns: NSStackView!
     
-    @IBOutlet weak var ass: NSTextField!
+    @IBOutlet weak var assignedTo: NSTextField!
     
     override func viewDidAppear() {
-        beeb_UserKeyboardOpen()
     }
     
     override func viewDidDisappear() {
-//        beeb_UserKeyboardClosed()
+		beeb_UKHandleCommand(conv("idcl")) //IDCANCEL
+		beeb_UserKeyboardClosed();
     }
     
     override func viewDidLoad() {
@@ -40,8 +38,7 @@ class KeyboardMappingViewController: NSViewController {
             print("\(btn.title) {\(btn.identifier?.rawValue ?? "unknown")}")
             btn.action = #selector(kbdbtnPressed)
         }
-        
-        kbViewControllerInstance = self
+
     }
     
     @objc
@@ -80,9 +77,9 @@ class KeyboardMappingViewController: NSViewController {
         beeb_ukhandlekeys(kEventRawKeyDown, UInt32(event.keyCode), cs)
     }
     
-    func setasstitle(_ text: String)
+    func setAssignedToText(_ text: String)
     {
-        ass.stringValue = text
+        assignedTo.stringValue = text
     }
 
     func ButtonByIdentifier(_ id: String) -> NSButton? {

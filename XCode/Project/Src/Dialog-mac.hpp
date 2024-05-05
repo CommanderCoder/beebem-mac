@@ -8,7 +8,7 @@
 #ifndef Dialog_mac_hpp
 #define Dialog_mac_hpp
 
-#include <apples.h>
+#include "apples.h"
 #include <stdio.h>
 #include <string>
 

@@ -11,7 +11,6 @@ import Cocoa
 
 class RomConfigViewController: NSViewController 
 {
-    static var rcViewControllerInstance : RomConfigViewController?
 
     private var selectedRow : Int = 0
 
@@ -61,7 +60,7 @@ class RomConfigViewController: NSViewController
     
     @IBAction func OK(_ sender: Any) {
 		RCWindowCommandHandler(0x30) //IDOK
-        self.view.window!.performClose(nil)
+//        self.view.window!.performClose(nil)
     }
 	
     @IBAction func Cancel(_ sender: Any) {
@@ -76,10 +75,7 @@ class RomConfigViewController: NSViewController
         tableView.delegate = self
         tableView.dataSource = self
 
-        RomConfigViewController.rcViewControllerInstance = self
         tableView.reloadData()
-        
-        beeb_EditROMConfig();
     }
     
     func returnRowInTable() -> Int {

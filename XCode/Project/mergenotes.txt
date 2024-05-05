@@ -116,7 +116,19 @@ Fixed up the Export File option.
 Next to add the table columns
 
 ===
-The 'romconfig' uses a 'modal' seque in the Application in the Storyboard.  This is set up here. 'modal seque to romconfig'
+The 'romconfig' uses a 'modal' which is triggered from code
+The 'keyboardmapping', exportdiscview is also modal
+The tapecontrol and breakoutbox are not modal
+
+===
+need to look at reverting
+KeyMap.h
+Main.cpp
+SelectKeyDialog.h
+TapeCOntroDialog.cpp and h
+userkeybaorddialog.h
+userportbreakout.h
+uservia.cpp
 
 
 

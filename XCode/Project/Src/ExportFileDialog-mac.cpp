@@ -250,7 +250,7 @@ bool ExportFileDialog::WM_COMMAND(int param)
 		return true;
 
 	case IDCANCEL:
-		swift_EndDialog();
+//		swift_EndDialog(false);
 		return true;
 	}
 	return false;

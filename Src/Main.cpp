@@ -33,18 +33,16 @@ Boston, MA  02110-1301, USA.
 #include "6502core.h"
 #include "BeebWin.h"
 #include "Log.h"
-#ifndef __APPLE__
 #include "SelectKeyDialog.h"
-#endif
 #include "Serial.h"
 
 Model MachineType;
 BeebWin *mainWin = nullptr;
 HINSTANCE hInst;
-#ifndef __APPLE__
 HWND hCurrentDialog = nullptr;
 HACCEL hCurrentAccelTable = nullptr;
 
+#ifndef __APPLE__
 int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE /* hPrevInstance */,
                      LPSTR /* lpszCmdLine */, int /* nCmdShow */)
 {
@@ -63,7 +61,7 @@ int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE /* hPrevInstance */,
 int mainInit()
 {
 #endif
-	
+
 	mainWin = new(std::nothrow) BeebWin();
 
 	if (mainWin == nullptr)
@@ -143,7 +141,7 @@ int mainStep()
 	return 0;
 }
 #else
-	 }
+	}
 #endif
 
 #ifdef __APPLE__

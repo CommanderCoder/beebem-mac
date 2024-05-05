@@ -160,6 +160,18 @@ void RomConfigDialog::FillROMList()
 
 /****************************************************************************/
 
+extern RomConfigDialog* runningRCDialog;
+
+
+bool RomConfigDialog::DoModal() {
+	runningRCDialog = this;
+	WM_INITDIALOG();
+	bool ret = swift_DoModalRC(this);
+	runningRCDialog = NULL;
+	return ret;
+}
+
+
 bool RomConfigDialog::WM_INITDIALOG()
 {
 	FillROMList();
@@ -287,19 +299,10 @@ bool RomConfigDialog::WM_COMMAND(int wParam)
 		break;
 
 	case IDOK:
-		{
-			// this is from BeebWin.cpp
-			
-			// Copy in new config and read ROMs
-			memcpy(RomConfig, GetRomConfig(), sizeof(ROMConfigFile));
-			BeebReadRoms();
-		}
-		RCEndDialog();
 		EndDialog(m_hwnd, TRUE);
 		return TRUE;
 
 	case IDCANCEL:
-		RCEndDialog();
 		EndDialog(m_hwnd, FALSE);
 		return TRUE;
 	}

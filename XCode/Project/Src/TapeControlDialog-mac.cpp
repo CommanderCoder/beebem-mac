@@ -1,25 +1,13 @@
-/****************************************************************
-BeebEm - BBC Micro and Master 128 Emulator
-Copyright (C) 2001  Richard Gellman
-Copyright (C) 2004  Mike Wyatt
+//
+//  TapeControlDialog-mac.cpp
+//  BeebEm
+//
+//  Created by Commander Coder on 03/05/2024.
+//
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+#include "TapeControlDialog-mac.hpp"
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public
-License along with this program; if not, write to the Free
-Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-Boston, MA  02110-1301, USA.
-****************************************************************/
-
-#include <windows.h>
+//#include <windows.h>
 
 #include <string>
 
@@ -27,53 +15,66 @@ Boston, MA  02110-1301, USA.
 #include "Main.h"
 #include "Resource.h"
 #include "Serial.h"
+extern std::vector<TapeMapEntry> beeb_TapeMap;
+
+
+#ifndef TRUE
+#define TRUE true
+#endif
+#ifndef FALSE
+#define FALSE false
+#endif
+
 
 // Tape control dialog box variables
 std::vector<TapeMapEntry> TapeMap;
 bool TapeControlEnabled = false;
 
-#ifndef __APPLE__
 static HWND hwndTapeControl;
 static HWND hwndMap;
-#endif
 
-#ifndef __APPLE__
 static void TapeControlRecord();
 static void UpdateState(HWND hwndDlg);
 
-static INT_PTR CALLBACK TapeControlDlgProc(HWND hwndDlg, UINT message, WPARAM wParam, LPARAM lParam);
+//static INT_PTR CALLBACK TapeControlDlgProc(HWND hwndDlg, UINT message, WPARAM wParam, LPARAM lParam);
 
 void TapeControlOpenDialog(HINSTANCE hinst, HWND /* hwndMain */)
 {
 	TapeControlEnabled = true;
 
+#ifndef __APPLE__
 	if (!IsWindow(hwndTapeControl))
 	{
 		hwndTapeControl = CreateDialog(hinst, MAKEINTRESOURCE(IDD_TAPECONTROL),
-		                               NULL, TapeControlDlgProc);
+									   NULL, TapeControlDlgProc);
 		hCurrentDialog = hwndTapeControl;
 		ShowWindow(hwndTapeControl, SW_SHOW);
 
 		hwndMap = GetDlgItem(hwndTapeControl, IDC_TAPE_CONTROL_MAP);
 		SendMessage(hwndMap, WM_SETFONT, (WPARAM)GetStockObject(ANSI_FIXED_FONT),
-		            (LPARAM)MAKELPARAM(FALSE,0));
+					(LPARAM)MAKELPARAM(FALSE,0));
 
 		int Time = SerialGetTapeClock();
 		TapeControlAddMapLines();
 		TapeControlUpdateCounter(Time);
 	}
-}
+#else
+	swift_TCOpenDialog();
+	int Time = SerialGetTapeClock();
+	TapeControlAddMapLines();
+	TapeControlUpdateCounter(Time);
 #endif
+}
 
 void TapeControlCloseDialog()
 {
 #ifndef __APPLE__
 	DestroyWindow(hwndTapeControl);
+#endif
 	hwndTapeControl = nullptr;
 	hwndMap = nullptr;
 	TapeControlEnabled = false;
 	hCurrentDialog = nullptr;
-#endif
 }
 
 void TapeControlAddMapLines()
@@ -85,10 +86,11 @@ void TapeControlAddMapLines()
 	{
 		SendMessage(hwndMap, LB_ADDSTRING, 0, (LPARAM)line.desc.c_str());
 	}
-
-	UpdateState(hwndTapeControl);
+#else
+	beeb_TapeMap = TapeMap;
+	swift_TCReload();
 #endif
-
+	UpdateState(hwndTapeControl);
 }
 
 void TapeControlUpdateCounter(int tape_time)
@@ -102,26 +104,55 @@ void TapeControlUpdateCounter(int tape_time)
 
 		if (i > 0)
 			i--;
-
+#ifndef __APPLE__
 		SendMessage(hwndMap, LB_SETCURSEL, (WPARAM)i, 0);
+#else
+		swift_TCSelectItem(i);
+#endif
+		
 	}
 
 }
 
-#ifndef __APPLE__
+static void SetDlgItemText(HWND hDlg, int nID, const char* str)
+{
+	printf("tapecontrol text %d %s", nID, str);
+}
+
 static void EnableDlgItem(HWND hDlg, UINT nIDDlgItem, bool Enable)
 {
+#ifndef __APPLE__
 	EnableWindow(GetDlgItem(hDlg, nIDDlgItem), Enable);
+#endif
 }
 
 static bool IsDlgItemChecked(HWND hDlg, UINT nIDDlgItem)
 {
+#ifndef __APPLE__
 	return SendDlgItemMessage(hDlg, nIDDlgItem, BM_GETCHECK, 0, 0) == BST_CHECKED;
+#else
+	return FALSE;
+#endif
 }
 
 static void SetDlgItemChecked(HWND hDlg, UINT nIDDlgItem, bool Checked)
 {
+#ifndef __APPLE__
 	SendDlgItemMessage(hDlg, nIDDlgItem, BM_SETCHECK, Checked ? BST_CHECKED : BST_UNCHECKED, 0);
+#endif
+}
+
+void SetFocus(HWND hwndDlg)
+{
+	
+}
+
+void CheckRadioButton(HWND hwndDlg,
+					  int a,
+					  int b,
+					  int c)
+{
+	
 }
 
 static void UpdateState(HWND hwndDlg)
@@ -181,10 +212,12 @@ static void UpdateState(HWND hwndDlg)
 	}
 
 	CheckRadioButton(hwndDlg,
-	                 IDC_PLAYING,
-	                 IDC_STOPPED,
-	                 nIDCheckButton);
+					 IDC_PLAYING,
+					 IDC_STOPPED,
+					 nIDCheckButton);
 }
+
+#ifndef __APPLE__
 
 INT_PTR CALLBACK TapeControlDlgProc(HWND hwndDlg, UINT message, WPARAM wParam, LPARAM /* lParam */)
 {
@@ -268,9 +301,75 @@ INT_PTR CALLBACK TapeControlDlgProc(HWND hwndDlg, UINT message, WPARAM wParam, L
 
 	return FALSE;
 }
+#else
+
+
+long TCWindowCommandHandler(UINT32 cmdID)
+{
+	HWND hwndDlg = NULL;
+	
+	switch(cmdID)
+	{
+		case IDC_TAPE_CONTROL_MAP:
+// Select a row on the tape map
+// Handled by tableViewSelectionDidChange()
+// and in turn: beeb_getTableCellData
+		{
+			unsigned int s = swift_TCGetSelected();
+			if (s >= 0 && s < (int)TapeMap.size())
+			{
+				SetTapePosition(TapeMap[s].time);
+			}
+			return FALSE;
+		}
+		case IDC_TAPE_CONTROL_PLAY:
+			SerialStopTapeRecording(true);
+			SerialPlayTape();
+			UpdateState(hwndDlg);
+			return TRUE;
+
+		case IDC_TAPE_CONTROL_STOP:
+			SerialStopTapeRecording(true);
+			SerialStopTape();
+			UpdateState(hwndDlg);
+			return TRUE;
+
+		case IDC_TAPE_CONTROL_EJECT:
+			SerialStopTapeRecording(false);
+			SerialEjectTape();
+			SetDlgItemText(hwndDlg, IDC_TAPE_FILENAME, "");
+			UpdateState(hwndDlg);
+			return TRUE;
+
+		case IDC_TAPE_CONTROL_REWIND:
+			RewindTape();
+			UpdateState(hwndDlg);
+			return TRUE;
+
+		case IDC_TAPE_CONTROL_LOAD_TAPE:
+			mainWin->LoadTape();
+			return TRUE;
+
+		case IDC_TAPE_CONTROL_RECORD:
+			TapeControlRecord();
+			UpdateState(hwndDlg);
+			return TRUE;
+
+		case IDC_TAPE_CONTROL_UNLOCK: {
+			bool Unlock = IsDlgItemChecked(hwndDlg, IDC_TAPE_CONTROL_UNLOCK);
+			mainWin->SetUnlockTape(Unlock);
+			return TRUE;
+		}
+
+		case IDCANCEL:
+			TapeControlCloseDialog();
+			return TRUE;
+	}
+
+	return false;
+}
 #endif
 
-#ifndef __APPLE__
 void TapeControlRecord()
 {
 	if (!TapeState.Recording)
@@ -287,34 +386,30 @@ void TapeControlRecord()
 			if (!SerialRecordTape(FileName))
 			{
 				mainWin->Report(MessageType::Error,
-				                "Error creating tape file:\n  %s", FileName);
+								"Error creating tape file:\n  %s", FileName);
 			}
 		}
 	}
-
 	UpdateState(hwndTapeControl);
 }
-#endif
 
 void TapeControlCloseTape()
 {
 #ifndef __APPLE__
 	SendMessage(hwndMap, LB_RESETCONTENT, 0, 0);
-	UpdateState(hwndTapeControl);
+#else
+	beeb_TapeMap.clear();
+	swift_TCReload();
 #endif
+	UpdateState(hwndTapeControl);
 }
 
 void TapeControlSetFileName(const char *FileName)
 {
-#ifndef __APPLE__
 	SetDlgItemText(hwndTapeControl, IDC_TAPE_FILENAME, FileName);
-#endif
 }
 
 void TapeControlSetUnlock(bool Unlock)
 {
-#ifndef __APPLE__
 	SetDlgItemChecked(hwndTapeControl, IDC_TAPE_CONTROL_UNLOCK, Unlock);
-#endif
-	
 }

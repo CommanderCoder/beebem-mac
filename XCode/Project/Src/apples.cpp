@@ -239,5 +239,47 @@ DWORD EnableMenuItem(  HMENU hMenu,  UINT  uIDCheckItem,UINT  uEnable)
 
 void EndDialog(HWND m_hWnd, bool wParam)
 {
-	swift_EndDialog();
+	swift_EndDialog(wParam);
 }
+
+
+int GetSystemMetrics(int  x)
+{
+	// value should never be used
+	return 0;
+}
+
+void TextToSpeechResetState()
+{
+	
+}
+
+HMENU GetMenu(HWND m)
+{
+	return 0;
+}
+
+HDC GetDC(HWND m)
+{
+	return 0;
+}
+
+void ReleaseDC(HWND m_hWnd, HDC m_hDC)
+{
+	
+}
+
+void DeleteObject(HBITMAP x)
+{
+	
+}
+
+void DeleteDC(HDC m_hDCBitmap)
+{
+
+}
+
+void InitTextToSpeechVoices(){}
+void InitVoiceMenu(){}
+void CloseTextToSpeech(){}
+

@@ -403,7 +403,7 @@
                                         <menuItem title="Tape Control" keyEquivalent="t" identifier="tpco" id="SKV-Tt-ndz">
                                             <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
                                             <connections>
-                                                <segue destination="T4f-Fh-Zp8" kind="show" id="Kwo-wY-9ji"/>
+                                                <action selector="HandleCommand:" target="Voe-Tx-rLC" id="2bO-eV-uxR"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="7zK-jb-yBs"/>
@@ -1268,7 +1268,6 @@
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="HandleCommand:" target="Voe-Tx-rLC" id="JRS-mg-J7m"/>
-                                                <segue destination="eDc-XL-zaz" kind="modal" id="GrH-M1-Xpp"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="39z-hv-2GQ"/>
@@ -1351,7 +1350,7 @@
                                         <menuItem title="User Port Breakout box" identifier="upbo" id="pal-E8-XOQ">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
-                                                <segue destination="aao-ZM-AXI" kind="show" id="v9V-x6-usa"/>
+                                                <action selector="HandleCommand:" target="Voe-Tx-rLC" id="ons-fQ-LUQ"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="User Port RTC Module" identifier="uprm" id="pVE-u1-k5X">
@@ -1408,7 +1407,6 @@
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="HandleCommand:" target="Voe-Tx-rLC" id="b5A-c1-OKR"/>
-                                                <segue destination="Z3G-lH-LH8" kind="show" id="lQr-K2-Upq"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="Load User Key Mapping..." identifier="lukm" id="DY7-0r-t6c">
@@ -1594,7 +1592,7 @@
         <!--TapeControl Window Controller-->
         <scene sceneID="fZF-S2-gbQ">
             <objects>
-                <windowController id="T4f-Fh-Zp8" userLabel="TapeControl Window Controller" sceneMemberID="viewController">
+                <windowController storyboardIdentifier="TapeControlSB" id="T4f-Fh-Zp8" userLabel="TapeControl Window Controller" sceneMemberID="viewController">
                     <window key="window" title="Tape Control" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" tabbingMode="disallowed" id="XCU-zb-9yP">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
@@ -1740,11 +1738,11 @@
                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                     <prototypeCellViews>
                                                         <tableCellView id="upp-7c-lhu">
-                                                            <rect key="frame" x="1" y="1" width="124" height="17"/>
+                                                            <rect key="frame" x="1" y="1" width="125" height="17"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="k3C-f7-Sk5">
-                                                                    <rect key="frame" x="0.0" y="1" width="124" height="16"/>
+                                                                    <rect key="frame" x="0.0" y="1" width="125" height="16"/>
                                                                     <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="DJP-ja-yWj">
                                                                         <font key="font" metaFont="system"/>
                                                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -1776,11 +1774,11 @@
                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                     <prototypeCellViews>
                                                         <tableCellView id="eE8-AA-waO">
-                                                            <rect key="frame" x="128.5" y="1" width="128" height="17"/>
+                                                            <rect key="frame" x="128.5" y="1" width="127" height="17"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="5fe-H1-wPI">
-                                                                    <rect key="frame" x="0.0" y="1" width="128" height="16"/>
+                                                                    <rect key="frame" x="0.0" y="1" width="127" height="16"/>
                                                                     <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="2XC-Y1-V1i">
                                                                         <font key="font" metaFont="system"/>
                                                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -1915,7 +1913,7 @@
         <!--KeyboardMapping Window Controller-->
         <scene sceneID="n2v-38-CaX">
             <objects>
-                <windowController id="Z3G-lH-LH8" userLabel="KeyboardMapping Window Controller" sceneMemberID="viewController">
+                <windowController storyboardIdentifier="KeyMapSB" id="Z3G-lH-LH8" userLabel="KeyboardMapping Window Controller" sceneMemberID="viewController">
                     <window key="window" title="User Defined Keyboard Mapping" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" tabbingMode="disallowed" id="wf3-RK-0Ar">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
@@ -2016,6 +2014,7 @@
                                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                     <font key="font" metaFont="system"/>
                                                 </buttonCell>
+                                                <color key="bezelColor" name="systemRedColor" catalog="System" colorSpace="catalog"/>
                                             </button>
                                             <button identifier="BRK" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="J19-WD-xfD">
                                                 <rect key="frame" x="307" y="0.0" width="45" height="22"/>
@@ -2741,14 +2740,14 @@ DQ
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="gNH-rX-bHK" secondAttribute="trailing" constant="20" symbolic="YES" id="c5t-Uz-i6C"/>
                             <constraint firstItem="fie-Kz-7Cy" firstAttribute="leading" secondItem="sq3-bi-3ml" secondAttribute="leading" constant="27" id="e5Z-wI-39N"/>
                             <constraint firstItem="BXq-t9-maU" firstAttribute="top" secondItem="gNH-rX-bHK" secondAttribute="bottom" constant="16" id="ers-8w-6F1"/>
-                            <constraint firstItem="FwW-EB-MoF" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="BXq-t9-maU" secondAttribute="trailing" symbolic="YES" id="gxf-IA-PKh"/>
+                            <constraint firstItem="FwW-EB-MoF" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="BXq-t9-maU" secondAttribute="trailing" constant="12" symbolic="YES" id="gxf-IA-PKh"/>
                             <constraint firstAttribute="trailing" secondItem="FwW-EB-MoF" secondAttribute="trailing" constant="48" id="mdc-f6-IfL"/>
                             <constraint firstItem="BXq-t9-maU" firstAttribute="leading" secondItem="c65-vV-vh3" secondAttribute="trailing" constant="9" id="sxL-Hh-zOk"/>
                             <constraint firstItem="BXq-t9-maU" firstAttribute="baseline" secondItem="c65-vV-vh3" secondAttribute="baseline" id="xmm-hp-vSN"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="ass" destination="c65-vV-vh3" id="UvF-qn-yYK"/>
+                        <outlet property="assignedTo" destination="c65-vV-vh3" id="UvF-qn-yYK"/>
                         <outlet property="keyboardBtns" destination="qLV-Ji-3mE" id="UoH-2A-Ffp"/>
                     </connections>
                 </viewController>
@@ -2840,7 +2839,7 @@ DQ
                                     </subviews>
                                 </clipView>
                                 <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="gIk-eH-jCr">
-                                    <rect key="frame" x="1" y="108" width="438" height="16"/>
+                                    <rect key="frame" x="1" y="109" width="438" height="15"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                                 <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="NqK-IE-Asl">
@@ -2890,7 +2889,7 @@ Gw
         <!--ROM Config Window Controller-->
         <scene sceneID="L1R-Vb-fon">
             <objects>
-                <windowController showSeguePresentationStyle="single" id="eDc-XL-zaz" userLabel="ROM Config Window Controller" sceneMemberID="viewController">
+                <windowController storyboardIdentifier="ROMConfigSB" showSeguePresentationStyle="single" id="eDc-XL-zaz" userLabel="ROM Config Window Controller" sceneMemberID="viewController">
                     <window key="window" title="ROM Config Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" tabbingMode="disallowed" id="lVJ-Bn-yd3">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
@@ -3011,7 +3010,7 @@ Gw
                                     </subviews>
                                 </clipView>
                                 <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="cKW-VS-RvJ">
-                                    <rect key="frame" x="1" y="293" width="337" height="16"/>
+                                    <rect key="frame" x="1" y="294" width="337" height="15"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                                 <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="gko-cF-Eo8">
@@ -3155,7 +3154,7 @@ Gw
 </string>
                                         </buttonCell>
                                         <connections>
-                                            <action selector="performClose:" target="Ymy-3F-VyW" id="TbS-tG-yiw"/>
+                                            <action selector="Cancel:" target="zrW-dx-nsE" id="4Fu-4I-Gcr"/>
                                         </connections>
                                     </button>
                                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="CgD-Wy-WJI">
@@ -3619,7 +3618,7 @@ DQ
         <!--BreakoutBox Window Controller-->
         <scene sceneID="DBR-Wq-wVO">
             <objects>
-                <windowController id="aao-ZM-AXI" userLabel="BreakoutBox Window Controller" sceneMemberID="viewController">
+                <windowController storyboardIdentifier="BreakoutBoxSB" id="aao-ZM-AXI" userLabel="BreakoutBox Window Controller" sceneMemberID="viewController">
                     <window key="window" title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" tabbingMode="disallowed" id="qcp-sa-0aB" userLabel="BreakoutBox Scene Controller">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>

@@ -6,7 +6,13 @@
 //
 
 import Foundation
+import Cocoa
 
+// need to have given the controller an identified (StoryboardID)
+let romConfigWindow: NSWindowController =  NSStoryboard(name: "Main", bundle: nil)
+	.instantiateController(withIdentifier: "ROMConfigSB") as! NSWindowController
+
+let romConfigView: RomConfigViewController = romConfigWindow.contentViewController as! RomConfigViewController
 
 
 
@@ -17,19 +23,41 @@ public func swift_RCSetModelText(_ n: UnsafePointer<CChar>)
 	let z = String( cString: n )
 	
 	// set model text
-	RomConfigViewController.rcViewControllerInstance!.setModelText(z)
-	RomConfigViewController.rcViewControllerInstance!.tableView.reloadData()
+	romConfigView.setModelText(z)
+	romConfigView.tableView.reloadData()
 
 }
 @_cdecl("swift_RCGetSelectionMark")
 public func  swift_RCGetSelectionMark() -> Int
 {
-	RomConfigViewController.rcViewControllerInstance!.tableView.reloadData()
-	return RomConfigViewController.rcViewControllerInstance!.returnRowInTable()
+	romConfigView.tableView.reloadData()
+	return romConfigView.returnRowInTable()
 }
 
 @_cdecl("swift_RCSetFocus")
 public func  swift_RCSetFocus()
 {
-	RomConfigViewController.rcViewControllerInstance!.setFocus();
+	romConfigView.setFocus();
+}
+
+
+// allow access to this in C
+@_cdecl("swift_DoModalRC")
+public func swift_DoModalRC(caller : UnsafeMutableRawPointer)
+{
+	
+	print(caller)
+	// run the modal until it is closed or the Export Selected (::exportSelected) button
+	// is pressed
+
+	let modalresp = NSApp.runModal(for: romConfigWindow.window!)
+	romConfigWindow.close()
+	NSApp.stopModal()
+
+	//now export the files
+	if (modalresp == NSApplication.ModalResponse.OK)
+	{
+		// this should call the method within Dialog
+
+	}
 }
