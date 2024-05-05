@@ -32,17 +32,19 @@ typedef uint8_t UINT8;   // UINT8 = unsigned 8 bit value
 typedef int32_t INT;     // INT = signed 32 bit value
 typedef int16_t INT16;   // INT16 = signed 16 bit value
 
+#define BOOL bool
 
 #define LPCSTR std::string
 #define LPTSTR char *
 
-
+typedef uint32_t UINT_PTR; //
 typedef uint32_t* HWND; //  typedef uint32_t*
 typedef uint32_t* HINSTANCE; //
 typedef uint32_t* HDC; //
 typedef uint32_t* HACCEL; //
 typedef uint32_t* HRESULT; //
 typedef uint32_t* WNDPROC; //
+typedef uint32_t* TIMERPROC; //
 typedef long LPARAM;
 typedef long WPARAM; //
 typedef uint32_t* HGDIOBJ; //
@@ -338,4 +340,28 @@ void InitVoiceMenu();
 void CloseTextToSpeech();
 
 
+UINT_PTR SetTimer(HWND hWnd, UINT_PTR  nIDEvent, UINT uElapse, TIMERPROC lpTimerFunc);
+BOOL KillTimer(HWND hWnd, UINT_PTR  nIDEvent);
+
+
+#define HWND_TOP 0
+#define SWP_NOSIZE 0
+#define SWP_NOMOVE 0
+#define SWP_SHOWWINDOW 0
+#define SWP_NOACTIVATE 0
+
+BOOL SetWindowPos( HWND hWnd, HWND hWndInsertAfter,
+        int  X,int  Y,
+		int  cx,int  cy,
+		UINT uFlags
+);
+BOOL SetWindowText(HWND    hWnd, LPCSTR lpString);
+
+HWND SetFocus(HWND focus);
+
+
+//TextToSpeechToggleAutoSpeak
+//TextToSpeechToggleSpeakPunctuation
+//TextToSpeechIncreaseRate
+//TextToSpeechDecreaseRate
 #endif /* apples_h */

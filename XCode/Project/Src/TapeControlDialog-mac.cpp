@@ -142,10 +142,6 @@ static void SetDlgItemChecked(HWND hDlg, UINT nIDDlgItem, bool Checked)
 #endif
 }
 
-void SetFocus(HWND hwndDlg)
-{
-	
-}
 
 void CheckRadioButton(HWND hwndDlg,
 					  int a,

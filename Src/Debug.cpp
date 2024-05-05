@@ -106,14 +106,12 @@ static bool DebugParasite = false;
 static bool WatchDecimal = false;
 //static bool WatchRefresh = false;
 static bool WatchBigEndian = false;
-#ifndef __APPLE__
 HWND hwndDebug;
 static HWND hwndInvisibleOwner;
 static HWND hwndInfo;
 static HWND hwndBP;
 static HWND hwndW;
 static HACCEL haccelDebug;
-#endif
 
 static std::vector<Label> Labels;
 static std::vector<Breakpoint> Breakpoints;

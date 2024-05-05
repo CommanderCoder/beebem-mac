@@ -106,9 +106,7 @@ struct DebugCmd
 	const char *help;
 };
 
-#ifndef __APPLE__
 extern HWND hwndDebug;
-#endif
 bool DebugDisassembler(int addr,
                        int prevAddr,
                        int Accumulator,

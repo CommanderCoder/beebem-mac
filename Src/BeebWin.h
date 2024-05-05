@@ -678,17 +678,13 @@ public:
 	char m_SpeechBuf[MAX_SPEECH_BUF_LEN + 1];
 	int m_SpeechBufPos;
 	int m_SpeechRate;
-#ifndef __APPLE__
 
 	// Text view variables
 	HWND m_hTextView;
-#endif
 	bool m_TextViewEnabled;
-#ifndef __APPLE__
 	WNDPROC m_TextViewPrevWndProc;
 	static const int MAX_TEXTVIEW_SCREEN_LEN = 128 * 32;
 	char m_TextViewScreen[MAX_TEXTVIEW_SCREEN_LEN + 1];
-#endif
 
 	// Debug
 	bool m_WriteInstructionCounts;

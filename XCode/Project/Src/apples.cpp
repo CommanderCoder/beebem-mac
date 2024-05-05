@@ -283,3 +283,15 @@ void InitTextToSpeechVoices(){}
 void InitVoiceMenu(){}
 void CloseTextToSpeech(){}
 
+UINT_PTR SetTimer(HWND hWnd, UINT_PTR  nIDEvent, UINT uElapse, TIMERPROC lpTimerFunc) {return 0;}
+
+BOOL KillTimer(HWND hWnd, UINT_PTR  nIDEvent) {return 0;}
+
+BOOL SetWindowPos( HWND hWnd, HWND hWndInsertAfter,
+		int  X,int  Y,
+		int  cx,int  cy,
+		UINT uFlags
+				  ) {return false;}
+BOOL SetWindowText(HWND    hWnd, LPCSTR lpString) {return false;}
+
+HWND SetFocus(HWND focus) {return 0;}

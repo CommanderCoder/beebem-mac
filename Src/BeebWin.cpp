@@ -4255,9 +4255,8 @@ void BeebWin::HandleCommand(UINT MenuID)
 		Disc1770Enabled = !Disc1770Enabled;
 		CheckMenuItem(ID_FLOPPYDRIVE, Disc8271Enabled);
 		break;
-
-	case IDM_TEXTTOSPEECH_ENABLE:
 #ifndef __APPLE__
+	case IDM_TEXTTOSPEECH_ENABLE:
 		if (m_TextToSpeechEnabled)
 		{
 			CloseTextToSpeech();
@@ -4269,40 +4268,30 @@ void BeebWin::HandleCommand(UINT MenuID)
 		}
 
 		CheckMenuItem(IDM_TEXTTOSPEECH_ENABLE, m_TextToSpeechEnabled);
-#endif
 		break;
 
 	case IDM_TEXTTOSPEECH_AUTO_SPEAK:
-#ifndef __APPLE__
 		TextToSpeechToggleAutoSpeak();
 		CheckMenuItem(IDM_TEXTTOSPEECH_AUTO_SPEAK, m_SpeechWriteChar);
-#endif
 		break;
 
 	case IDM_TEXTTOSPEECH_SPEAK_PUNCTUATION:
-#ifndef __APPLE__
 		TextToSpeechToggleSpeakPunctuation();
 		CheckMenuItem(IDM_TEXTTOSPEECH_SPEAK_PUNCTUATION, m_SpeechSpeakPunctuation);
-#endif
 		break;
 
 	case IDM_TEXTTOSPEECH_INCREASE_RATE:
-#ifndef __APPLE__
 		TextToSpeechIncreaseRate();
 		EnableMenuItem(IDM_TEXTTOSPEECH_INCREASE_RATE, m_SpeechRate < 10);
 		EnableMenuItem(IDM_TEXTTOSPEECH_DECREASE_RATE, m_SpeechRate > -10);
-#endif
 		break;
 
 	case IDM_TEXTTOSPEECH_DECREASE_RATE:
-#ifndef __APPLE__
 		TextToSpeechDecreaseRate();
 		EnableMenuItem(IDM_TEXTTOSPEECH_INCREASE_RATE, m_SpeechRate < 10);
 		EnableMenuItem(IDM_TEXTTOSPEECH_DECREASE_RATE, m_SpeechRate > -10);
-#endif
 		break;
 
-#ifndef __APPLE__
 	case ID_TEXT_TO_SPEECH_VOICE_BASE:
 	case ID_TEXT_TO_SPEECH_VOICE_BASE + 1:
 	case ID_TEXT_TO_SPEECH_VOICE_BASE + 2:
@@ -4386,15 +4375,8 @@ void BeebWin::HandleCommand(UINT MenuID)
 		break;
 
 	case IDM_DISABLEKEYSALL:
-#ifndef __APPLE__
 		if (m_DisableKeysWindows && m_DisableKeysBreak &&
 			m_DisableKeysEscape && m_DisableKeysShortcut)
-#else
-		// only consider break and escape on MACOS for now
-		if (m_DisableKeysBreak &&
-			m_DisableKeysEscape)
-#endif
-			
 		{
 			if (m_DisableKeysWindows)
 				HandleCommand(IDM_DISABLEKEYSWINDOWS);
@@ -4443,7 +4425,6 @@ void BeebWin::Activate(bool Active)
 		m_Frozen = true;
 	}
 
-#ifndef __APPLE__
 	if (Active)
 	{
 		// Bring debug window to foreground BEHIND main window.
@@ -4453,7 +4434,6 @@ void BeebWin::Activate(bool Active)
 			SetWindowPos(m_hWnd, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
 		}
 	}
-#endif
 	if (m_MouseCaptured && !Active)
 	{
 		ReleaseMouse();
@@ -4464,13 +4444,10 @@ void BeebWin::Focus(bool Focus)
 {
 	if (Focus)
 	{
-#ifndef __APPLE__
 		if (m_TextViewEnabled)
 		{
 			::SetFocus(m_hTextView);
 		}
-#endif
-		
 	}
 	else
 	{
@@ -4490,18 +4467,13 @@ void BeebWin::TogglePause()
 	if (m_ShowSpeedAndFPS && m_EmuPaused)
 	{
 		sprintf(m_szTitle, "%s  Paused", WindowTitle);
-#ifndef __APPLE__
 		SetWindowText(m_hWnd, m_szTitle);
-#endif
-		
 	}
 
 	if (m_EmuPaused)
 	{
-#ifndef __APPLE__
 		KillTimer(m_hWnd, 1);
 		KillTimer(m_hWnd, 2);
-#endif
 	}
 	else
 	{
@@ -4816,16 +4788,12 @@ void BeebWin::CheckForLocalPrefs(const char *path, bool bLoadPrefs)
 		{
 			LoadPreferences();
 
-#ifndef __APPLE__
 			// Reinit with new prefs
 			SetWindowPos(m_hWnd, HWND_TOP, m_XWinPos, m_YWinPos,
 			             0, 0, SWP_NOSIZE);
-#endif
 			HandleCommand(m_DisplayRenderer);
 			InitMenu();
-#ifndef __APPLE__
 			SetWindowText(m_hWnd, WindowTitle);
-#endif
 			if (m_MenuIDSticks == IDM_JOYSTICK)
 				InitJoystick();
 		}
@@ -5208,27 +5176,18 @@ bool BeebWin::HasKbdCmd() const
 
 void BeebWin::SetKeyboardTimer()
 {
-#ifndef __APPLE__
 	SetTimer(m_hWnd, 1, 1000, NULL);
-#endif
-	
 }
 
 void BeebWin::SetBootDiscTimer()
 {
-#ifndef __APPLE__
 	SetTimer(m_hWnd, 2, m_AutoBootDelay, NULL);
-#endif
-	
 }
 
 void BeebWin::KillBootDiscTimer()
 {
 	m_BootDiscTimerElapsed = true;
-#ifndef __APPLE__
 	KillTimer(m_hWnd, 2);
-#endif
-	
 }
 
 /****************************************************************************/
@@ -5540,10 +5499,7 @@ void BeebWin::HandleTimer()
 	// Do nothing if emulation is not running (e.g. if Window is being moved)
 	if ((TotalCycles - m_KbdCmdLastCycles) / 2000 < m_KbdCmdDelay)
 	{
-#ifndef __APPLE__
-
 		SetTimer(m_hWnd, 1, m_KbdCmdDelay, NULL);
-#endif
 		return;
 	}
 	m_KbdCmdLastCycles = TotalCycles;
@@ -5554,11 +5510,7 @@ void BeebWin::HandleTimer()
 	{
 		TranslateKey(m_KbdCmdKey, true, row, col);
 		m_KbdCmdPress = false;
-#ifndef __APPLE__
-
 		SetTimer(m_hWnd, 1, m_KbdCmdDelay, NULL);
-#endif
-		
 	}
 	else
 	{
@@ -5566,10 +5518,7 @@ void BeebWin::HandleTimer()
 
 		if (m_KbdCmd[m_KbdCmdPos] == 0)
 		{
-#ifndef __APPLE__
 			KillTimer(m_hWnd, 1);
-#endif
-			
 		}
 		else
 		{
@@ -5627,9 +5576,7 @@ void BeebWin::HandleTimer()
 					TranslateKey(m_KbdCmdKey, true, row, col);
 			}
 
-#ifndef __APPLE__
 			SetTimer(m_hWnd, 1, m_KbdCmdDelay, NULL);
-#endif
 			
 		}
 	}
