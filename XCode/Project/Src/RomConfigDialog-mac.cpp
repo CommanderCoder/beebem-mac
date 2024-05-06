@@ -24,12 +24,6 @@
 #include "Resource.h"
 #include "SysVia.h"
 
-#ifndef TRUE
-#define TRUE true
-#endif
-#ifndef FALSE
-#define FALSE false
-#endif
 
 static const char* szModel[] = { "BBC B", "Integra-B", "B Plus", "Master 128" };
 static char szDefaultROMPath[MAX_PATH] = {0};

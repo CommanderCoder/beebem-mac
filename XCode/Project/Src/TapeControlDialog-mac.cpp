@@ -7,23 +7,13 @@
 
 #include "TapeControlDialog-mac.hpp"
 
-//#include <windows.h>
-
 #include <string>
-
 #include "TapeControlDialog.h"
 #include "Main.h"
 #include "Resource.h"
 #include "Serial.h"
 extern std::vector<TapeMapEntry> beeb_TapeMap;
 
-
-#ifndef TRUE
-#define TRUE true
-#endif
-#ifndef FALSE
-#define FALSE false
-#endif
 
 
 // Tape control dialog box variables

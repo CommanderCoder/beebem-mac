@@ -15,13 +15,6 @@
 #include "UserVia.h"
 
 
-#ifndef TRUE
-#define TRUE true
-#endif
-#ifndef FALSE
-#define FALSE false
-#endif
-
 /****************************************************************************/
 
 /* User Port Breakout Box */

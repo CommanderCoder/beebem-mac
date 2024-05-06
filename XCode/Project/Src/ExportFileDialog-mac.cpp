@@ -23,12 +23,6 @@
 #include "StringUtils.h"
 
 
-#ifndef TRUE
-#define TRUE true
-#endif
-#ifndef FALSE
-#define FALSE false
-#endif
 
 
 #define LVIS_SELECTED 0
