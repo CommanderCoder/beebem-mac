@@ -31,13 +31,9 @@ Boston, MA  02110-1301, USA.
 // Tape control dialog box variables
 std::vector<TapeMapEntry> TapeMap;
 bool TapeControlEnabled = false;
-
-#ifndef __APPLE__
 static HWND hwndTapeControl;
 static HWND hwndMap;
-#endif
 
-#ifndef __APPLE__
 static void TapeControlRecord();
 static void UpdateState(HWND hwndDlg);
 
@@ -63,22 +59,18 @@ void TapeControlOpenDialog(HINSTANCE hinst, HWND /* hwndMain */)
 		TapeControlUpdateCounter(Time);
 	}
 }
-#endif
 
 void TapeControlCloseDialog()
 {
-#ifndef __APPLE__
 	DestroyWindow(hwndTapeControl);
 	hwndTapeControl = nullptr;
 	hwndMap = nullptr;
 	TapeControlEnabled = false;
 	hCurrentDialog = nullptr;
-#endif
 }
 
 void TapeControlAddMapLines()
 {
-#ifndef __APPLE__
 	SendMessage(hwndMap, LB_RESETCONTENT, 0, 0);
 
 	for (const TapeMapEntry& line : TapeMap)
@@ -87,8 +79,6 @@ void TapeControlAddMapLines()
 	}
 
 	UpdateState(hwndTapeControl);
-#endif
-
 }
 
 void TapeControlUpdateCounter(int tape_time)
@@ -105,10 +95,8 @@ void TapeControlUpdateCounter(int tape_time)
 
 		SendMessage(hwndMap, LB_SETCURSEL, (WPARAM)i, 0);
 	}
-
 }
 
-#ifndef __APPLE__
 static void EnableDlgItem(HWND hDlg, UINT nIDDlgItem, bool Enable)
 {
 	EnableWindow(GetDlgItem(hDlg, nIDDlgItem), Enable);
@@ -268,9 +256,7 @@ INT_PTR CALLBACK TapeControlDlgProc(HWND hwndDlg, UINT message, WPARAM wParam, L
 
 	return FALSE;
 }
-#endif
 
-#ifndef __APPLE__
 void TapeControlRecord()
 {
 	if (!TapeState.Recording)
@@ -294,27 +280,19 @@ void TapeControlRecord()
 
 	UpdateState(hwndTapeControl);
 }
-#endif
 
 void TapeControlCloseTape()
 {
-#ifndef __APPLE__
 	SendMessage(hwndMap, LB_RESETCONTENT, 0, 0);
 	UpdateState(hwndTapeControl);
-#endif
 }
 
 void TapeControlSetFileName(const char *FileName)
 {
-#ifndef __APPLE__
 	SetDlgItemText(hwndTapeControl, IDC_TAPE_FILENAME, FileName);
-#endif
 }
 
 void TapeControlSetUnlock(bool Unlock)
 {
-#ifndef __APPLE__
 	SetDlgItemChecked(hwndTapeControl, IDC_TAPE_CONTROL_UNLOCK, Unlock);
-#endif
-	
 }
