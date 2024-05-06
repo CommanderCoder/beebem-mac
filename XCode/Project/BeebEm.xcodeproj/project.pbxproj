@@ -722,6 +722,35 @@
 			path = MacBridge;
 			sourceTree = "<group>";
 		};
+		DC3FB5482BE8DB4600CF36A0 /* MacDialogs */ = {
+			isa = PBXGroup;
+			children = (
+				DC7E1E632BCE58D400494CBE /* FileDialog-mac.cpp */,
+				DC7E1E642BCE58D400494CBE /* FileDialog-mac.hpp */,
+				DCB4EBDA2BDB89E5002AEA8A /* Dialog-mac.cpp */,
+				DCB4EBDB2BDB89E5002AEA8A /* Dialog-mac.hpp */,
+				DC7E1E662BCF229600494CBE /* ExportFileDialog-mac.cpp */,
+				DC7E1E672BCF229600494CBE /* ExportFileDialog-mac.hpp */,
+				DCB4EBD72BDB890F002AEA8A /* RenameFileDialog-mac.cpp */,
+				DCB4EBD82BDB890F002AEA8A /* RenameFileDialog-mac.hpp */,
+				DCB4EBD42BDB26F1002AEA8A /* FolderSelectDialog-mac.cpp */,
+				DCB4EBD52BDB26F1002AEA8A /* FolderSelectDialog-mac.hpp */,
+				DC33555D2BDF84C00014DC3A /* RomConfigDialog-mac.cpp */,
+				DC33555E2BDF84C00014DC3A /* RomConfigDialog-mac.hpp */,
+				DC8450032BE2D7F1002015D9 /* UserKeyboardDialog-mac.cpp */,
+				DC8450042BE2D7F1002015D9 /* UserKeyboardDialog-mac.hpp */,
+				DC8450072BE3FAF4002015D9 /* UserPortBreakoutBox-mac.cpp */,
+				DC8450082BE3FAF4002015D9 /* UserPortBreakoutBox-mac.hpp */,
+				DC84500C2BE4616C002015D9 /* TapeControlDialog-mac.cpp */,
+				DC84500D2BE4616C002015D9 /* TapeControlDialog-mac.hpp */,
+				DCD283F02BE6E17100ABD9F8 /* SelectKeyDialog-mac.cpp */,
+				DCD283F12BE6E17100ABD9F8 /* SelectKeyDialog-mac.hpp */,
+				DCD283FB2BE8C8DA00ABD9F8 /* Debug-mac.cpp */,
+				DCD283FC2BE8C8DA00ABD9F8 /* Debug-mac.hpp */,
+			);
+			path = MacDialogs;
+			sourceTree = "<group>";
+		};
 		DC527AD32BC7505C000D7CCF /* Bundle */ = {
 			isa = PBXGroup;
 			children = (
@@ -814,38 +843,17 @@
 			isa = PBXGroup;
 			children = (
 				DC0997A62BBAA65E00A109A5 /* windows_stubs */,
-				DCACDAC02BC5DD2E00CEF154 /* apples.cpp */,
-				DCB3B2512BBAB97A00F507F4 /* apples.h */,
-				DCB441642BE63A2000FA2F38 /* appleKeyCodes.h */,
-				DC0997992BBAA51200A109A5 /* beebemrcids.h */,
-				DC09979D2BBAA51300A109A5 /* beebemrcids.cpp */,
 				DC0996DC2BBA0C6400A109A5 /* windows_headers */,
 				DC0996DB2BBA0C5000A109A5 /* windows_code */,
+				DC3FB5482BE8DB4600CF36A0 /* MacDialogs */,
 				DC1DBA1F2BB8CF2B00AAB22F /* MacBridge */,
+				DCB441642BE63A2000FA2F38 /* appleKeyCodes.h */,
+				DC0997992BBAA51200A109A5 /* beebemrcids.h */,
+				DCB3B2512BBAB97A00F507F4 /* apples.h */,
+				DCACDAC02BC5DD2E00CEF154 /* apples.cpp */,
+				DC09979D2BBAA51300A109A5 /* beebemrcids.cpp */,
 				DCACDAC22BC669B600CEF154 /* BeebWinDx-mac.cpp */,
-				DC7E1E632BCE58D400494CBE /* FileDialog-mac.cpp */,
-				DC7E1E642BCE58D400494CBE /* FileDialog-mac.hpp */,
-				DCB4EBDA2BDB89E5002AEA8A /* Dialog-mac.cpp */,
-				DCB4EBDB2BDB89E5002AEA8A /* Dialog-mac.hpp */,
-				DC7E1E662BCF229600494CBE /* ExportFileDialog-mac.cpp */,
-				DC7E1E672BCF229600494CBE /* ExportFileDialog-mac.hpp */,
-				DCB4EBD72BDB890F002AEA8A /* RenameFileDialog-mac.cpp */,
-				DCB4EBD82BDB890F002AEA8A /* RenameFileDialog-mac.hpp */,
-				DCB4EBD42BDB26F1002AEA8A /* FolderSelectDialog-mac.cpp */,
-				DCB4EBD52BDB26F1002AEA8A /* FolderSelectDialog-mac.hpp */,
-				DC33555D2BDF84C00014DC3A /* RomConfigDialog-mac.cpp */,
-				DC33555E2BDF84C00014DC3A /* RomConfigDialog-mac.hpp */,
-				DC8450032BE2D7F1002015D9 /* UserKeyboardDialog-mac.cpp */,
-				DC8450042BE2D7F1002015D9 /* UserKeyboardDialog-mac.hpp */,
-				DC8450072BE3FAF4002015D9 /* UserPortBreakoutBox-mac.cpp */,
-				DC8450082BE3FAF4002015D9 /* UserPortBreakoutBox-mac.hpp */,
-				DC84500C2BE4616C002015D9 /* TapeControlDialog-mac.cpp */,
-				DC84500D2BE4616C002015D9 /* TapeControlDialog-mac.hpp */,
-				DCD283F02BE6E17100ABD9F8 /* SelectKeyDialog-mac.cpp */,
-				DCD283F12BE6E17100ABD9F8 /* SelectKeyDialog-mac.hpp */,
 				DCD283F92BE8427900ABD9F8 /* BeebWinSpeech-mac.cpp */,
-				DCD283FB2BE8C8DA00ABD9F8 /* Debug-mac.cpp */,
-				DCD283FC2BE8C8DA00ABD9F8 /* Debug-mac.hpp */,
 			);
 			path = Src;
 			sourceTree = "<group>";
