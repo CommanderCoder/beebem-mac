@@ -56,10 +56,10 @@ static int BBCRow; // Used to store the Row and Col values while we wait
 static int BBCCol; // for a key press from the User.
 static bool doingShifted; // Selecting shifted or unshifted key press
 
-static const char* szSelectKeyDialogTitle[2] = {
-	"Press key for unshifted press...",
-	"Press key for shifted press..."
-};
+//static const char* szSelectKeyDialogTitle[2] = {
+//	"Press key for unshifted press...",
+//	"Press key for shifted press..."
+//};
 
 /****************************************************************************/
 

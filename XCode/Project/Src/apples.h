@@ -42,7 +42,8 @@ typedef uint32_t* HWND; //  typedef uint32_t*
 typedef uint32_t* HINSTANCE; //
 typedef uint32_t* HDC; //
 typedef uint32_t* HACCEL; //
-typedef uint32_t* HRESULT; //
+typedef uint32_t HRESULT; //
+typedef uint32_t LRESULT; //
 typedef uint32_t* WNDPROC; //
 typedef uint32_t* TIMERPROC; //
 typedef long LPARAM;
@@ -115,7 +116,8 @@ typedef struct RECT                     RECT;
 #define SOCKADDR sockaddr
 long WSAGetLastError();
 
-#define LPCSTR std::string
+#define LPSTR std::string
+#define LPCSTR std::string //const
 #define BYTE __uint8_t
 #define WORD __uint16_t
 #define LOBYTE(w) ((BYTE)(w))
@@ -359,5 +361,38 @@ HWND SetFocus(HWND focus);
 
 
 void ModifyMenu(HMENU m_hMenu, UINT pf, UINT flags, UINT_PTR newID, LPCSTR str);
+
+
+#define BM_GETCHECK 0
+#define BST_CHECKED 1
+#define BM_SETCHECK 2
+#define BST_UNCHECKED 3
+
+LRESULT SendDlgItemMessage(
+   HWND   hDlg,
+   int    nIDDlgItem,
+   UINT   Msg,
+   WPARAM wParam,
+   LPARAM lParam
+);
+
+
+#define BM_GETCHECK 0
+#define BST_CHECKED 1
+#define BM_SETCHECK 2
+#define BST_UNCHECKED 3
+
+BOOL SetDlgItemText(
+  HWND   hDlg,
+  int    nIDDlgItem,
+  LPCSTR lpString
+);
+
+UINT GetDlgItemText(
+   HWND  hDlg,
+   int   nIDDlgItem,
+   LPSTR lpString,
+    int   cchMax
+);
 
 #endif /* apples_h */

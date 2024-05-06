@@ -48,10 +48,10 @@ bool BeebWin::InitTextToSpeechVoices()
 	return true;
 }
 
-static int GetMenuItemPosition(HMENU hMenu, const char *pszMenuItem)
-{
-	return 0;
-}
+//static int GetMenuItemPosition(HMENU hMenu, const char *pszMenuItem)
+//{
+//	return 0;
+//}
 
 void BeebWin::InitVoiceMenu()
 {
@@ -91,10 +91,10 @@ void BeebWin::Speak(const char *text, DWORD flags)
 	
 }
 
-static constexpr bool IsEndSentence(char c)
-{
-	return c == '.' || c == '!' || c == '?';
-}
+//static constexpr bool IsEndSentence(char c)
+//{
+//	return c == '.' || c == '!' || c == '?';
+//}
 
 void BeebWin::SpeakChar(unsigned char c)
 {

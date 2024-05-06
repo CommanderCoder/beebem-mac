@@ -297,3 +297,33 @@ void ModifyMenu(HMENU m_hMenu, UINT pf, UINT flags, UINT_PTR newID, LPCSTR str)
 {
 
 }
+
+LRESULT SendDlgItemMessage(
+   HWND   hDlg,
+   int    nIDDlgItem,
+   UINT   Msg,
+   WPARAM wParam,
+   LPARAM lParam
+)
+{
+	return 0;
+}
+
+BOOL SetDlgItemText(
+  HWND   hDlg,
+  int    nIDDlgItem,
+  LPCSTR lpString
+)
+{
+	return 0;
+}
+
+UINT GetDlgItemText(
+   HWND  hDlg,
+   int   nIDDlgItem,
+  LPSTR lpString,
+	int   cchMax
+)
+{
+	return 0;
+}
