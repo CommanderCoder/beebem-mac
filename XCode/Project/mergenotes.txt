@@ -130,6 +130,10 @@ userkeybaorddialog.h
 userportbreakout.h
 uservia.cpp
 
+===
+Do the SelectKeyDialog and the Debugger Dialog
+
+Check all the Mac menus with the current menus for Windows version
 
 
 
