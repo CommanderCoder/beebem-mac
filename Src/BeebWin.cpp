@@ -4034,12 +4034,10 @@ void BeebWin::HandleCommand(UINT MenuID)
 		break;
 
 	case IDM_SHOWDEBUGGER:
-#ifndef __APPLE__
 		if (DebugEnabled)
 			DebugCloseDialog();
 		else
 			DebugOpenDialog(hInst, m_hWnd);
-#endif
 		break;
 
 	case IDM_BLUR_OFF:

@@ -327,3 +327,19 @@ UINT GetDlgItemText(
 {
 	return 0;
 }
+
+HWND GetDlgItem(
+  HWND hDlg,
+  int  nIDDlgItem
+)
+{
+	return 0;
+}
+
+
+HWND GetFocus()
+{
+	return 0;
+}
+
+

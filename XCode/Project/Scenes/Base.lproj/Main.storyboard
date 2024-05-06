@@ -1497,7 +1497,7 @@
                                         <menuItem title="Debugger" identifier="dbgr" id="EGB-oy-uKF">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
-                                                <segue destination="Epa-0N-Qqh" kind="show" id="Bjv-d8-Hzc"/>
+                                                <action selector="HandleCommand:" target="Voe-Tx-rLC" id="mrv-9P-VYK"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="5kM-tV-NeM"/>
@@ -1774,7 +1774,7 @@
                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                     <prototypeCellViews>
                                                         <tableCellView id="eE8-AA-waO">
-                                                            <rect key="frame" x="128.5" y="1" width="127" height="17"/>
+                                                            <rect key="frame" x="129" y="1" width="127" height="17"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="5fe-H1-wPI">
@@ -1868,7 +1868,7 @@
         <!--Debugger Window Controller-->
         <scene sceneID="NXs-KR-xTs">
             <objects>
-                <windowController id="Epa-0N-Qqh" userLabel="Debugger Window Controller" sceneMemberID="viewController">
+                <windowController storyboardIdentifier="DebuggerSB" id="Epa-0N-Qqh" userLabel="Debugger Window Controller" sceneMemberID="viewController">
                     <window key="window" title="BeebEm Debugger" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" tabbingMode="disallowed" id="3RT-sr-0O8">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
@@ -1889,7 +1889,7 @@
         <!--Debugger View Controller-->
         <scene sceneID="lr1-bs-e2c">
             <objects>
-                <viewController id="zjV-O6-SdV" userLabel="Debugger View Controller" sceneMemberID="viewController">
+                <viewController id="zjV-O6-SdV" userLabel="Debugger View Controller" customClass="DebuggerViewController" customModule="BeebEm" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="g2g-ac-v7T">
                         <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -2839,7 +2839,7 @@ DQ
                                     </subviews>
                                 </clipView>
                                 <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="gIk-eH-jCr">
-                                    <rect key="frame" x="1" y="109" width="438" height="15"/>
+                                    <rect key="frame" x="1" y="108" width="438" height="16"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                                 <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="NqK-IE-Asl">
@@ -3010,7 +3010,7 @@ Gw
                                     </subviews>
                                 </clipView>
                                 <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="cKW-VS-RvJ">
-                                    <rect key="frame" x="1" y="294" width="337" height="15"/>
+                                    <rect key="frame" x="1" y="293" width="337" height="16"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                                 <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="gko-cF-Eo8">

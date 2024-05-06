@@ -8,6 +8,13 @@
 #include "Debug-mac.hpp"
 
 
+#ifndef TRUE
+#define TRUE true
+#endif
+#ifndef FALSE
+#define FALSE false
+#endif
+
 
 #include <windows.h>
 
@@ -84,11 +91,15 @@ static bool WatchDecimal = false;
 //static bool WatchRefresh = false;
 static bool WatchBigEndian = false;
 HWND hwndDebug;
+#ifndef __APPLE__
 static HWND hwndInvisibleOwner;
 static HWND hwndInfo;
 static HWND hwndBP;
 static HWND hwndW;
 static HACCEL haccelDebug;
+#else
+static HWND hwndInfo;
+#endif
 
 static std::vector<Label> Labels;
 static std::vector<Breakpoint> Breakpoints;
@@ -1001,7 +1012,6 @@ void DebugOpenDialog(HINSTANCE hinst, HWND /* hwndMain */)
 	{
 		DebugCloseDialog();
 	}
-#else
 #endif
 	
 	DebugEnabled = true;
@@ -1029,6 +1039,7 @@ void DebugOpenDialog(HINSTANCE hinst, HWND /* hwndMain */)
 	SendMessage(hwndW, WM_SETFONT, (WPARAM)GetStockObject(ANSI_FIXED_FONT),
 				MAKELPARAM(FALSE, 0));
 #else
+	swift_DbgOpenDialog();
 #endif
 	SetDlgItemChecked(hwndDebug, IDC_DEBUGBPS, true);
 	SetDlgItemChecked(hwndDebug, IDC_DEBUGHOST, true);
@@ -1039,6 +1050,7 @@ void DebugCloseDialog()
 #ifndef __APPLE__
 	DestroyWindow(hwndDebug);
 #else
+	
 #endif
 	hwndDebug = nullptr;
 	hwndInfo = nullptr;
@@ -1200,6 +1212,73 @@ INT_PTR CALLBACK DebugDlgProc(HWND hwndDlg, UINT message, WPARAM wParam, LPARAM 
 					DebugCloseDialog();
 					return TRUE;
 			}
+	}
+
+	return FALSE;
+}
+
+#else
+
+//WM_COMMAND
+long DbgWindowCommandHandler(UINT32 cmdID)
+{
+//	HWND hwndDlg = NULL;
+	
+	switch(cmdID)
+	{
+		case ID_ACCELUP:
+			if(GetFocus() == GetDlgItem(hwndDebug, IDC_DEBUGCOMMAND))
+				DebugHistoryMove(-1);
+			return TRUE;
+
+		case ID_ACCELDOWN:
+			if(GetFocus() == GetDlgItem(hwndDebug, IDC_DEBUGCOMMAND))
+				DebugHistoryMove(1);
+			return TRUE;
+
+		case IDC_DEBUGBREAK:
+			DebugToggleRun();
+			return TRUE;
+
+		case IDC_DEBUGEXECUTE:
+			DebugExecuteCommand();
+			SetFocus(GetDlgItem(hwndDebug, IDC_DEBUGCOMMAND));
+			return TRUE;
+
+		case IDC_DEBUGBPS:
+			BPSOn = IsDlgItemChecked(hwndDebug, IDC_DEBUGBPS);
+			break;
+
+		case IDC_DEBUGBRK:
+			BRKOn = IsDlgItemChecked(hwndDebug, IDC_DEBUGBRK);
+			break;
+
+		case IDC_DEBUGOS:
+			DebugOS = IsDlgItemChecked(hwndDebug, IDC_DEBUGOS);
+			break;
+
+		case IDC_DEBUGROM:
+			DebugROM = IsDlgItemChecked(hwndDebug, IDC_DEBUGROM);
+			break;
+
+		case IDC_DEBUGHOST:
+			DebugHost = IsDlgItemChecked(hwndDebug, IDC_DEBUGHOST);
+			break;
+
+		case IDC_DEBUGPARASITE:
+			DebugParasite = IsDlgItemChecked(hwndDebug, IDC_DEBUGPARASITE);
+			break;
+
+		case IDC_WATCHDECIMAL:
+		case IDC_WATCHENDIAN:
+			WatchDecimal = IsDlgItemChecked(hwndDebug, IDC_WATCHDECIMAL);
+			WatchBigEndian = IsDlgItemChecked(hwndDebug, IDC_WATCHENDIAN);
+			DebugUpdateWatches(true);
+			break;
+
+		case IDCANCEL:
+			DebugCloseDialog();
+			return TRUE;
 	}
 
 	return FALSE;
@@ -2229,7 +2308,6 @@ int DebugParseLabel(const char *label)
 	return it != Labels.end() ? it->addr : -1;
 }
 
-#ifndef __APPLE__
 static void DebugHistoryAdd(const char *command)
 {
 	// Do nothing if this is the same as the last command
@@ -2248,7 +2326,6 @@ static void DebugHistoryAdd(const char *command)
 
 	DebugHistoryIndex = -1;
 }
-#endif
 
 static void DebugHistoryMove(int delta)
 {
@@ -2303,7 +2380,6 @@ static void DebugSetCommandString(const char* str)
 	}
 }
 
-#ifndef __APPLE__
 static void DebugParseCommand(char *command)
 {
 
@@ -2375,7 +2451,6 @@ static void DebugParseCommand(char *command)
 
 	DebugDisplayInfoF("Invalid command %s - try 'help'",command);
 }
-#endif //__APPLE__
 
 /**************************************************************
  * Start of debugger command handlers                         *

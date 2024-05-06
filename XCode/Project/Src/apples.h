@@ -192,6 +192,8 @@ extern "C" void swift_TCReload();
 extern "C" void swift_TCOpenDialog();
 extern "C" unsigned int swift_TCGetSelected();
 
+extern "C" void swift_DbgOpenDialog();
+
 extern "C" void swift_GetBundleDirectory(const char* bundlePath, int length);
 extern "C" void swift_GetApplicationSupportDirectory(const char* appPath, int length);
 extern "C" void swift_GetResourcePath(const char* resourcePath, int length, const char* filename);
@@ -394,5 +396,13 @@ UINT GetDlgItemText(
    LPSTR lpString,
     int   cchMax
 );
+
+
+HWND GetDlgItem(
+  HWND hDlg,
+  int  nIDDlgItem
+);
+
+HWND GetFocus();
 
 #endif /* apples_h */

@@ -77,6 +77,9 @@
 		DCD283F22BE6E17100ABD9F8 /* SelectKeyDialog-mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCD283F02BE6E17100ABD9F8 /* SelectKeyDialog-mac.cpp */; };
 		DCD283FA2BE8427900ABD9F8 /* BeebWinSpeech-mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCD283F92BE8427900ABD9F8 /* BeebWinSpeech-mac.cpp */; };
 		DCD283FD2BE8C8DA00ABD9F8 /* Debug-mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCD283FB2BE8C8DA00ABD9F8 /* Debug-mac.cpp */; };
+		DCD283FF2BE8D17400ABD9F8 /* BeebEm-Debug.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCD283FE2BE8D17400ABD9F8 /* BeebEm-Debug.swift */; };
+		DCD284022BE8D22C00ABD9F8 /* DebuggerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCD284012BE8D22C00ABD9F8 /* DebuggerViewController.swift */; };
+		DCD284052BE8D2D400ABD9F8 /* BeebEm-Debugger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCD284032BE8D2D400ABD9F8 /* BeebEm-Debugger.cpp */; };
 		DCDC73062BBE043A00D83402 /* Acorn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0997AF2BBAA91E00A109A5 /* Acorn.cpp */; };
 		DCDC73072BBE043D00D83402 /* Watford.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0997B72BBAA91E00A109A5 /* Watford.cpp */; };
 		DCDC73092BBE108600D83402 /* Bcd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996FE2BBA0C9C00A109A5 /* Bcd.cpp */; };
@@ -398,6 +401,10 @@
 		DCD283F92BE8427900ABD9F8 /* BeebWinSpeech-mac.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "BeebWinSpeech-mac.cpp"; sourceTree = "<group>"; };
 		DCD283FB2BE8C8DA00ABD9F8 /* Debug-mac.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "Debug-mac.cpp"; sourceTree = "<group>"; };
 		DCD283FC2BE8C8DA00ABD9F8 /* Debug-mac.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "Debug-mac.hpp"; sourceTree = "<group>"; };
+		DCD283FE2BE8D17400ABD9F8 /* BeebEm-Debug.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BeebEm-Debug.swift"; sourceTree = "<group>"; };
+		DCD284012BE8D22C00ABD9F8 /* DebuggerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebuggerViewController.swift; sourceTree = "<group>"; };
+		DCD284032BE8D2D400ABD9F8 /* BeebEm-Debugger.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "BeebEm-Debugger.cpp"; sourceTree = "<group>"; };
+		DCD284042BE8D2D400ABD9F8 /* BeebEm-Debugger.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "BeebEm-Debugger.hpp"; sourceTree = "<group>"; };
 		DCDC73122BBE192200D83402 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		DCDC73182BBE1B9F00D83402 /* commctrl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = commctrl.h; sourceTree = "<group>"; };
 		DCE94C142BD3109500A5C12A /* BeebEm-Menu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BeebEm-Menu.swift"; sourceTree = "<group>"; };
@@ -682,6 +689,7 @@
 				DC907EB72BB5BB9A00523116 /* BeebEm-RomConfig.swift */,
 				DCE94C162BD310C600A5C12A /* BeebEm-Sound.swift */,
 				DC907EB32BB5BB7700523116 /* BeebEm-TapeControl.swift */,
+				DCD283FE2BE8D17400ABD9F8 /* BeebEm-Debug.swift */,
 			);
 			path = BeebBridge;
 			sourceTree = "<group>";
@@ -708,6 +716,8 @@
 				DCB4EBCF2BD5BD4E002AEA8A /* BeebEm-Bridging-TapeControl.hpp */,
 				DCB4EBD12BD5BDC4002AEA8A /* BeebEm-Bridging-ExportFIles.cpp */,
 				DCB4EBD22BD5BDC4002AEA8A /* BeebEm-Bridging-ExportFIles.hpp */,
+				DCD284032BE8D2D400ABD9F8 /* BeebEm-Debugger.cpp */,
+				DCD284042BE8D2D400ABD9F8 /* BeebEm-Debugger.hpp */,
 			);
 			path = MacBridge;
 			sourceTree = "<group>";
@@ -787,15 +797,10 @@
 		DC907EAE2BB5BA2500523116 /* Swift */ = {
 			isa = PBXGroup;
 			children = (
+				DCD284002BE8D1CA00ABD9F8 /* BeebControllers */,
 				DC1DBA1E2BB8CF2500AAB22F /* BeebBridge */,
-				DC1DBA142BB8CF0500AAB22F /* BreakoutBoxViewController.swift */,
-				DC1DBA132BB8CF0400AAB22F /* KeyboardMappingViewController.swift */,
-				DC1DBA152BB8CF0500AAB22F /* RomConfigViewController.swift */,
-				DC1DBA162BB8CF0500AAB22F /* TapeControlViewController.swift */,
-				DC904DA12BCF3CD60069DCDF /* ExportDiscViewController.swift */,
 				DC907EAF2BB5BA4000523116 /* AppDelegate.swift */,
 				DC907EC02BB5C1F100523116 /* BeebApplication.swift */,
-				DC907EC22BB5C23C00523116 /* BeebViewController.swift */,
 				DC907EC52BB6D48600523116 /* Renderer.swift */,
 				DC907EC92BB6D76F00523116 /* Colour.swift */,
 				DC907EC72BB6D55100523116 /* Bitmap.swift */,
@@ -843,6 +848,20 @@
 				DCD283FC2BE8C8DA00ABD9F8 /* Debug-mac.hpp */,
 			);
 			path = Src;
+			sourceTree = "<group>";
+		};
+		DCD284002BE8D1CA00ABD9F8 /* BeebControllers */ = {
+			isa = PBXGroup;
+			children = (
+				DC907EC22BB5C23C00523116 /* BeebViewController.swift */,
+				DC1DBA142BB8CF0500AAB22F /* BreakoutBoxViewController.swift */,
+				DC1DBA132BB8CF0400AAB22F /* KeyboardMappingViewController.swift */,
+				DC1DBA152BB8CF0500AAB22F /* RomConfigViewController.swift */,
+				DC1DBA162BB8CF0500AAB22F /* TapeControlViewController.swift */,
+				DCD284012BE8D22C00ABD9F8 /* DebuggerViewController.swift */,
+				DC904DA12BCF3CD60069DCDF /* ExportDiscViewController.swift */,
+			);
+			path = BeebControllers;
 			sourceTree = "<group>";
 		};
 		DCDC73112BBE192200D83402 /* Frameworks */ = {
@@ -953,6 +972,7 @@
 				DCB3B2592BBB865E00F507F4 /* opus.cpp in Sources */,
 				DCE94C172BD310C600A5C12A /* BeebEm-Sound.swift in Sources */,
 				DCDC733E2BC0AED800D83402 /* Music5000.cpp in Sources */,
+				DCD284052BE8D2D400ABD9F8 /* BeebEm-Debugger.cpp in Sources */,
 				DCDC73062BBE043A00D83402 /* Acorn.cpp in Sources */,
 				DCDC73142BBE198A00D83402 /* TapeMap.cpp in Sources */,
 				DCDC73352BC0A73600D83402 /* DiscEdit.cpp in Sources */,
@@ -974,6 +994,7 @@
 				DCB4EBCA2BD5BD02002AEA8A /* BeebEm-Bridging-BreakoutBox.cpp in Sources */,
 				DCDC733C2BC0ACE200D83402 /* Log.cpp in Sources */,
 				DCDC734B2BC0B78E00D83402 /* UefState.cpp in Sources */,
+				DCD283FF2BE8D17400ABD9F8 /* BeebEm-Debug.swift in Sources */,
 				DCDC73462BC0B5B500D83402 /* SysVia.cpp in Sources */,
 				DC3355602BDF8D720014DC3A /* BeebEm-RomConfig.swift in Sources */,
 				DCB4EBCD2BD5BD22002AEA8A /* BeebEm-Bridging-UserKeyboard.cpp in Sources */,
@@ -1043,6 +1064,7 @@
 				DC8450052BE2D7F1002015D9 /* UserKeyboardDialog-mac.cpp in Sources */,
 				DCDC730F2BBE13EE00D83402 /* FileUtils.cpp in Sources */,
 				DC9B41312BC2108600C3D9D8 /* Serial.cpp in Sources */,
+				DCD284022BE8D22C00ABD9F8 /* DebuggerViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -21,6 +21,9 @@ void beeb_handlekeys(long eventkind, unsigned long keycode, char charCode);
 long beeb_TCHandleCommand(unsigned int cmdID);
 
 
+long beeb_DbgHandleCommand(unsigned int cmdID);
+
+
 long beeb_getTableRowsCount(const char* tablename);
 const char* beeb_getTableCellData(unsigned int property, long itemID);
 
