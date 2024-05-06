@@ -1,22 +1,10 @@
-/****************************************************************
-BeebEm - BBC Micro and Master 128 Emulator
-Copyright (C) 1997  Laurie Whiffen
+//
+//  KeyMap-mac.cpp
+//  BeebEm
+//
+//  Created by Commander Coder on 06/05/2024.
+//
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public
-License along with this program; if not, write to the Free
-Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-Boston, MA  02110-1301, USA.
-****************************************************************/
 
 // User defined keyboard functionality.
 
@@ -24,12 +12,12 @@ Boston, MA  02110-1301, USA.
 #include "Main.h"
 
 // Keyboard mappings
-KeyMap UserKeyMap;
-KeyMap DefaultKeyMap;
-KeyMap LogicalKeyMap;
+beebEmKeyMap UserKeyMap;
+beebEmKeyMap DefaultKeyMap;
+beebEmKeyMap LogicalKeyMap;
 
 // Currently selected translation table
-const KeyMap *transTable = &DefaultKeyMap;
+const beebEmKeyMap *transTable = &DefaultKeyMap;
 
 // Token written to start of map file
 #define KEYMAP_TOKEN "*** BeebEm Keymap ***"
@@ -38,7 +26,7 @@ static const char* GetVirtualKeyCode(int Key);
 
 /*--------------------------------------------------------------------------*/
 
-static void ResetKeyMap(KeyMap* keymap)
+static void ResetKeyMap(beebEmKeyMap* keymap)
 {
 	for (int PCKey = 0; PCKey < KEYMAP_SIZE; PCKey++)
 	{
@@ -62,7 +50,7 @@ void InitKeyMap()
 
 /*--------------------------------------------------------------------------*/
 
-bool ReadKeyMap(const char *filename, KeyMap *keymap)
+bool ReadKeyMap(const char *filename, beebEmKeyMap *keymap)
 {
 	bool success = true;
 	char buf[256];
@@ -72,17 +60,17 @@ bool ReadKeyMap(const char *filename, KeyMap *keymap)
 	if (infile == NULL)
 	{
 		mainWin->Report(MessageType::Error,
-		                "Failed to read key map file:\n  %s", filename);
+						"Failed to read key map file:\n  %s", filename);
 
 		success = false;
 	}
 	else
 	{
 		if (fgets(buf, 255, infile) == nullptr ||
-		    strcmp(buf, KEYMAP_TOKEN "\n") != 0)
+			strcmp(buf, KEYMAP_TOKEN "\n") != 0)
 		{
 			mainWin->Report(MessageType::Error,
-			                "Invalid key map file:\n  %s\n", filename);
+							"Invalid key map file:\n  %s\n", filename);
 
 			success = false;
 		}
@@ -95,7 +83,7 @@ bool ReadKeyMap(const char *filename, KeyMap *keymap)
 				if (fgets(buf, 255, infile) == NULL)
 				{
 					mainWin->Report(MessageType::Error,
-					                "Data missing from key map file:\n  %s\n", filename);
+									"Data missing from key map file:\n  %s\n", filename);
 
 					success = false;
 					break;
@@ -104,12 +92,12 @@ bool ReadKeyMap(const char *filename, KeyMap *keymap)
 				int shift0 = 0, shift1 = 0;
 
 				sscanf(buf, "%d %d %d %d %d %d",
-				       &(*keymap)[i][0].row,
-				       &(*keymap)[i][0].col,
-				       &shift0,
-				       &(*keymap)[i][1].row,
-				       &(*keymap)[i][1].col,
-				       &shift1);
+					   &(*keymap)[i][0].row,
+					   &(*keymap)[i][0].col,
+					   &shift0,
+					   &(*keymap)[i][1].row,
+					   &(*keymap)[i][1].col,
+					   &shift1);
 
 				(*keymap)[i][0].shift = shift0 != 0;
 				(*keymap)[i][1].shift = shift1 != 0;
@@ -124,14 +112,14 @@ bool ReadKeyMap(const char *filename, KeyMap *keymap)
 
 /*--------------------------------------------------------------------------*/
 
-bool WriteKeyMap(const char *filename, KeyMap *keymap)
+bool WriteKeyMap(const char *filename, beebEmKeyMap *keymap)
 {
 	FILE *outfile = fopen(filename, "w");
 
 	if (outfile == nullptr)
 	{
 		mainWin->Report(MessageType::Error,
-		                "Failed to write key map file:\n  %s", filename);
+						"Failed to write key map file:\n  %s", filename);
 		return false;
 	}
 
@@ -140,13 +128,13 @@ bool WriteKeyMap(const char *filename, KeyMap *keymap)
 	for (int i = 0; i < KEYMAP_SIZE; i++)
 	{
 		fprintf(outfile, "%d %d %d %d %d %d # 0x%02X",
-		        (*keymap)[i][0].row,
-		        (*keymap)[i][0].col,
-		        (*keymap)[i][0].shift,
-		        (*keymap)[i][1].row,
-		        (*keymap)[i][1].col,
-		        (*keymap)[i][1].shift,
-		        i);
+				(*keymap)[i][0].row,
+				(*keymap)[i][0].col,
+				(*keymap)[i][0].shift,
+				(*keymap)[i][1].row,
+				(*keymap)[i][1].col,
+				(*keymap)[i][1].shift,
+				i);
 
 		const char* KeyCode = GetVirtualKeyCode(i);
 
@@ -172,7 +160,7 @@ static const char* GetVirtualKeyCode(int Key)
 	static char Name[2];
 
 	if ((Key >= '0' && Key <= '9') ||
-	    (Key >= 'A' && Key <= 'Z'))
+		(Key >= 'A' && Key <= 'Z'))
 	{
 		Name[0] = (char)Key;
 		Name[1] = '\0';
@@ -430,8 +418,8 @@ void ClearUserKeyMapping(int Row, int Column, bool Shift)
 		for (int PCShift = 0; PCShift < 2; PCShift++)
 		{
 			if (UserKeyMap[PCKey][PCShift].row == Row &&
-			    UserKeyMap[PCKey][PCShift].col == Column &&
-			    UserKeyMap[PCKey][PCShift].shift == Shift)
+				UserKeyMap[PCKey][PCShift].col == Column &&
+				UserKeyMap[PCKey][PCShift].shift == Shift)
 			{
 				UserKeyMap[PCKey][PCShift].row = -9;
 				UserKeyMap[PCKey][PCShift].col = 0;
@@ -455,8 +443,8 @@ std::string GetKeysUsed(int Row, int Column, bool Shift)
 			for (int PCShift = 0; PCShift < 2; PCShift++)
 			{
 				if (UserKeyMap[PCKey][PCShift].row == Row &&
-				    UserKeyMap[PCKey][PCShift].col == Column &&
-				    UserKeyMap[PCKey][PCShift].shift == Shift)
+					UserKeyMap[PCKey][PCShift].col == Column &&
+					UserKeyMap[PCKey][PCShift].shift == Shift)
 				{
 					// We have found a key that matches.
 					if (!Keys.empty())

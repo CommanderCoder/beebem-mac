@@ -21,6 +21,8 @@ Boston, MA  02110-1301, USA.
 #ifndef KEYMAP_HEADER
 #define KEYMAP_HEADER
 
+#ifndef __APPLE__
+
 #include <string>
 
 #include "BeebWin.h"
@@ -33,12 +35,12 @@ struct KeyMapping {
 
 constexpr int KEYMAP_SIZE = 256;
 
-typedef KeyMapping beebEmKeyMap[KEYMAP_SIZE][2]; // Indices are: [Virt key][shift state]
+typedef KeyMapping KeyMap[KEYMAP_SIZE][2]; // Indices are: [Virt key][shift state]
 
 void InitKeyMap();
 
-bool ReadKeyMap(const char *filename, beebEmKeyMap *keymap);
-bool WriteKeyMap(const char *filename, beebEmKeyMap *keymap);
+bool ReadKeyMap(const char *filename, KeyMap *keymap);
+bool WriteKeyMap(const char *filename, KeyMap *keymap);
 
 const char* GetPCKeyName(int PCKey);
 
@@ -46,11 +48,13 @@ void SetUserKeyMapping(int Row, int Column, bool BBCShift, int PCKey, bool PCShi
 void ClearUserKeyMapping(int Row, int Column, bool Shift);
 std::string GetKeysUsed(int Row, int Column, bool Shift);
 
-extern beebEmKeyMap DefaultKeyMap;
-extern beebEmKeyMap LogicalKeyMap;
-extern beebEmKeyMap UserKeyMap;
+extern KeyMap DefaultKeyMap;
+extern KeyMap LogicalKeyMap;
+extern KeyMap UserKeyMap;
 
-extern const beebEmKeyMap *transTable;
-
+extern const KeyMap *transTable;
+#else
+#include "KeyMap-mac.hpp"
+#endif
 
 #endif

@@ -16,6 +16,7 @@
 		DC1DBA252BB9A4C900AAB22F /* BreakoutBoxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1DBA142BB8CF0500AAB22F /* BreakoutBoxViewController.swift */; };
 		DC33555F2BDF84C00014DC3A /* RomConfigDialog-mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC33555D2BDF84C00014DC3A /* RomConfigDialog-mac.cpp */; };
 		DC3355602BDF8D720014DC3A /* BeebEm-RomConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC907EB72BB5BB9A00523116 /* BeebEm-RomConfig.swift */; };
+		DC3FB54C2BE8E02300CF36A0 /* KeyMap-mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC3FB5492BE8DEDB00CF36A0 /* KeyMap-mac.cpp */; };
 		DC527AD12BC71C21000D7CCF /* BeebEm-Bridging-Video.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCACDAC52BC66F5600CEF154 /* BeebEm-Bridging-Video.cpp */; };
 		DC527AD22BC71CBC000D7CCF /* BeebEm-Bridging-Main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCACDAC82BC67D2500CEF154 /* BeebEm-Bridging-Main.cpp */; };
 		DC527BC82BC75107000D7CCF /* Teletext.fnt in Resources */ = {isa = PBXBuildFile; fileRef = DC527BC42BC75107000D7CCF /* Teletext.fnt */; };
@@ -107,7 +108,6 @@
 		DCDC73352BC0A73600D83402 /* DiscEdit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0997142BBA0C9C00A109A5 /* DiscEdit.cpp */; };
 		DCDC73372BC0A93800D83402 /* Ext1770.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC09970C2BBA0C9C00A109A5 /* Ext1770.cpp */; };
 		DCDC73382BC0A9F800D83402 /* Ide.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0997112BBA0C9C00A109A5 /* Ide.cpp */; };
-		DCDC73392BC0AB8200D83402 /* KeyMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0997132BBA0C9C00A109A5 /* KeyMap.cpp */; };
 		DCDC733C2BC0ACE200D83402 /* Log.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996DF2BBA0C9B00A109A5 /* Log.cpp */; };
 		DCDC733D2BC0AD1600D83402 /* Master512CoPro.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996F82BBA0C9C00A109A5 /* Master512CoPro.cpp */; };
 		DCDC733E2BC0AED800D83402 /* Music5000.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0997152BBA0C9C00A109A5 /* Music5000.cpp */; };
@@ -313,6 +313,8 @@
 		DC1DBA162BB8CF0500AAB22F /* TapeControlViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TapeControlViewController.swift; sourceTree = "<group>"; };
 		DC33555D2BDF84C00014DC3A /* RomConfigDialog-mac.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "RomConfigDialog-mac.cpp"; sourceTree = "<group>"; };
 		DC33555E2BDF84C00014DC3A /* RomConfigDialog-mac.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "RomConfigDialog-mac.hpp"; sourceTree = "<group>"; };
+		DC3FB5492BE8DEDB00CF36A0 /* KeyMap-mac.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "KeyMap-mac.cpp"; sourceTree = "<group>"; };
+		DC3FB54A2BE8DEDB00CF36A0 /* KeyMap-mac.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "KeyMap-mac.hpp"; sourceTree = "<group>"; };
 		DC527BC42BC75107000D7CCF /* Teletext.fnt */ = {isa = PBXFileReference; lastKnownFileType = file; name = Teletext.fnt; path = ../../Teletext.fnt; sourceTree = "<group>"; };
 		DC527BC52BC75107000D7CCF /* RelayOn.snd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = RelayOn.snd; path = ../../RelayOn.snd; sourceTree = "<group>"; };
 		DC527BC62BC75107000D7CCF /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../../README.md; sourceTree = "<group>"; };
@@ -854,6 +856,8 @@
 				DC09979D2BBAA51300A109A5 /* beebemrcids.cpp */,
 				DCACDAC22BC669B600CEF154 /* BeebWinDx-mac.cpp */,
 				DCD283F92BE8427900ABD9F8 /* BeebWinSpeech-mac.cpp */,
+				DC3FB5492BE8DEDB00CF36A0 /* KeyMap-mac.cpp */,
+				DC3FB54A2BE8DEDB00CF36A0 /* KeyMap-mac.hpp */,
 			);
 			path = Src;
 			sourceTree = "<group>";
@@ -976,8 +980,8 @@
 				DCE94C152BD3109500A5C12A /* BeebEm-Menu.swift in Sources */,
 				DC0997AA2BBAA6E300A109A5 /* beebemrcids.cpp in Sources */,
 				DC0D30E32BC12C8E00AFEF01 /* Main.cpp in Sources */,
-				DCDC73392BC0AB8200D83402 /* KeyMap.cpp in Sources */,
 				DCB3B2592BBB865E00F507F4 /* opus.cpp in Sources */,
+				DC3FB54C2BE8E02300CF36A0 /* KeyMap-mac.cpp in Sources */,
 				DCE94C172BD310C600A5C12A /* BeebEm-Sound.swift in Sources */,
 				DCDC733E2BC0AED800D83402 /* Music5000.cpp in Sources */,
 				DCD284052BE8D2D400ABD9F8 /* BeebEm-Debugger.cpp in Sources */,
