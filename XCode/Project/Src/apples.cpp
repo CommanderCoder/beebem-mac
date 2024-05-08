@@ -99,6 +99,10 @@ int SendMessage(HWND w, int a, int b, long c)
 void DestroyWindow(HWND w)
 {}
 
+void GetWindowRect(HWND h, RECT* r)
+{
+}
+
 #include "FileUtils.h"
 
 void _splitpath(const char *path,

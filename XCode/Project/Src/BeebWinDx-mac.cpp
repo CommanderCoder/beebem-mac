@@ -28,6 +28,7 @@ void BeebWin::ExitDX(){}
 
 
 extern char bridgingVideobuffer[];
+void VideoAddLeds_Mac();
 
 
 // colour information in 32 and 16 bit RGB
@@ -93,6 +94,9 @@ void BeebWin::updateLines(HDC hDC, int starty, int nlines)
 		return;
 	}
 
+	// make sure the LEDs are up to date
+	VideoAddLeds_Mac();
+	
 	// Changed to/from teletext mode?
 	if (LastTeletextEnabled != TeletextEnabled || First)
 	{
@@ -369,4 +373,25 @@ void BeebWin::UpdateWindowTitle()
 /****************************************************************************/
 void BeebWin::UpdateSmoothing()
 {
+}
+
+
+void VideoAddLeds_Mac()
+{
+	// Swift LEDs here
+	swift_SetMachineType(MachineType);
+	if (MachineType == Model::Master128)
+		swift_SetLED(CASS,true);
+	else
+		swift_SetLED(CASS,LEDs.Motor);
+	
+	swift_SetLED(CAPS,LEDs.CapsLock);
+	swift_SetLED(SHIFT,LEDs.ShiftLock);
+
+	swift_SetLED(HD0,LEDs.HDisc[0]);
+	swift_SetLED(HD1,LEDs.HDisc[1]);
+	swift_SetLED(HD2,LEDs.HDisc[2]);
+	swift_SetLED(HD3,LEDs.HDisc[3]);
+	swift_SetLED(FD0,LEDs.FloppyDisc[0]);
+	swift_SetLED(FD1,LEDs.FloppyDisc[1]);
 }

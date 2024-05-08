@@ -281,7 +281,12 @@ extern "C" int swift_Remove(const char* path);
 // used in BeebWinDx.h
 extern "C" void swift_SetWindowTitleWithCString(const char* title);
 
+#include "Model.h"
+extern "C" enum KB_LEDS { CASS, CAPS, SHIFT, HD0, HD1, HD2, HD3, FD0, FD1 };
+extern "C" int swift_SetLED(KB_LEDS led, bool on);
+extern "C" int swift_SetMachineType(Model machinetype);
 
+void GetWindowRect(HWND h, RECT* r);
 
 class ExportFileDialog;
 
