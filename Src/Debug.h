@@ -100,8 +100,8 @@ struct AddrInfo
 
 struct DebugCmd
 {
-	const char *name;
-	bool (*handler)(const char* arguments);
+	char *name;
+	bool (*handler)(char* arguments);
 	const char *argdesc;
 	const char *help;
 };

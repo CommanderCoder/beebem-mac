@@ -113,8 +113,33 @@ typedef struct RECT                     RECT;
 
 // ECONET
 #include <sys/socket.h>
-#include <arpa/inet.h>
-#include <netdb.h>
+//#include <arpa/inet.h>
+struct in_addr {
+  union {
+	struct {
+	  u_char s_b1;
+	  u_char s_b2;
+	  u_char s_b3;
+	  u_char s_b4;
+	} S_un_b;
+	struct {
+	  u_short s_w1;
+	  u_short s_w2;
+	} S_un_w;
+	u_long S_addr;
+  } S_un;
+  u_long s_addr;
+};
+typedef unsigned short USHORT;
+typedef struct in_addr IN_ADDR;
+
+typedef struct sockaddr_in {
+  short          sin_family;
+  USHORT         sin_port;
+  IN_ADDR        sin_addr;
+  CHAR           sin_zero[8];
+} SOCKADDR_IN, *PSOCKADDR_IN;
+//#include <netdb.h>
 //#include <unistd.h>  // NOTE this has redefinitions of 'read' and 'write'
 
 #define SOCKET int
@@ -123,8 +148,28 @@ typedef struct RECT                     RECT;
 #define SOCKADDR sockaddr
 #define WSAEWOULDBLOCK -1
 #define ioctlsocket ioctl
+#define IPPROTO_UDP -1
+#define INADDR_ANY -1
+#define INADDR_BROADCAST -1
+typedef struct hostent {
+  char  *h_name;
+  char  **h_aliases;
+  short h_addrtype;
+  short h_length;
+  char  **h_addr_list;
+} HOSTENT, *PHOSTENT, *LPHOSTENT;
+
+
 long WSAGetLastError();
 int closesocket(SOCKET s);
+int recvfrom(int a, char * b, int c, int d, SOCKADDR *e, int*f);
+int connect(int a, SOCKADDR *b, int c);
+int connect(int a, sockaddr_in *b, int c);
+const char* inet_ntoa(IN_ADDR in);
+int inet_addr(const char* c);
+int gethostname(const char*, int);
+hostent* gethostbyname(const char*);
+int select(int, fd_set*, int, int, const timeval*);
 
 #define LPSTR std::string
 #define LPCSTR std::string //const

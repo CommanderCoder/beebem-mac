@@ -53,13 +53,9 @@ Boston, MA  02110-1301, USA.
 
 constexpr int MAX_LINES = 4096;          // Max lines in info window
 constexpr int LINES_IN_INFO = 28;        // Visible lines in info window
-#ifndef __APPLE__
 constexpr int MAX_COMMAND_LEN = 200;     // Max debug command length
-#endif
 constexpr int MAX_BPS = 50;              // Max num of breakpoints/watches
-#ifndef __APPLE__
 constexpr int MAX_HISTORY = 20;          // Number of commands in the command history.
-#endif
 
 // Instruction format
 constexpr int IMM = 0x20;
@@ -89,9 +85,7 @@ static int InstCount = 0;       // Instructions to execute before breaking
 static int DumpAddress = 0;     // Next address for memory dump command
 static int DisAddress = 0;      // Next address for disassemble command
 static int LastBreakAddr = 0;   // Address of last break
-#ifndef __APPLE__
 static int DebugInfoWidth = 0;  // Width of debug info window
-#endif
 static bool BPSOn = true;
 static bool BRKOn = false;
 static bool StepOver = false;
@@ -104,7 +98,7 @@ static bool LastAddrInROM = false;
 static bool DebugHost = true;
 static bool DebugParasite = false;
 static bool WatchDecimal = false;
-//static bool WatchRefresh = false;
+static bool WatchRefresh = false;
 static bool WatchBigEndian = false;
 HWND hwndDebug;
 static HWND hwndInvisibleOwner;
@@ -121,51 +115,43 @@ typedef std::vector<AddrInfo> MemoryMap;
 
 static MemoryMap MemoryMaps[17];
 
-#ifndef __APPLE__
 INT_PTR CALLBACK DebugDlgProc(HWND hwndDlg, UINT message, WPARAM wParam, LPARAM lParam);
-#endif
 
 std::deque<std::string> DebugHistory;
 int DebugHistoryIndex = 0;
 
-#ifndef __APPLE__
 static void DebugParseCommand(char *command);
-#endif
 static void DebugWriteMem(int addr, bool host, unsigned char data);
 static int DebugDisassembleCommand(int addr, int count, bool host);
 static void DebugMemoryDump(int addr, int count, bool host);
-#ifndef __APPLE__
 static void DebugExecuteCommand();
-#endif
 static void DebugToggleRun();
 static void DebugUpdateWatches(bool all);
 static bool DebugLookupAddress(int addr, AddrInfo* addrInfo);
 static void DebugHistoryMove(int delta);
-#ifndef __APPLE__
-static void DebugHistoryAdd(const char* command);
-#endif
+static void DebugHistoryAdd(char* command);
 static void DebugSetCommandString(const char* str);
 static void DebugChompString(char* str);
 
 // Command handlers
-static bool DebugCmdBreakContinue(const char* args);
-static bool DebugCmdToggleBreak(const char* args);
-static bool DebugCmdLabels(const char* args);
-static bool DebugCmdHelp(const char* args);
-static bool DebugCmdSet(const char* args);
-static bool DebugCmdNext(const char* args);
-static bool DebugCmdOver(const char* args);
-static bool DebugCmdPeek(const char* args);
-static bool DebugCmdCode(const char* args);
-static bool DebugCmdWatch(const char* args);
-static bool DebugCmdState(const char* args);
-static bool DebugCmdSave(const char* args);
-static bool DebugCmdPoke(const char* args);
-static bool DebugCmdGoto(const char* args);
-static bool DebugCmdFile(const char* args);
-static bool DebugCmdEcho(const char* args);
-static bool DebugCmdScript(const char *args);
-static bool DebugCmdClear(const char *args);
+static bool DebugCmdBreakContinue(char* args);
+static bool DebugCmdToggleBreak(char* args);
+static bool DebugCmdLabels(char* args);
+static bool DebugCmdHelp(char* args);
+static bool DebugCmdSet(char* args);
+static bool DebugCmdNext(char* args);
+static bool DebugCmdOver(char* args);
+static bool DebugCmdPeek(char* args);
+static bool DebugCmdCode(char* args);
+static bool DebugCmdWatch(char* args);
+static bool DebugCmdState(char* args);
+static bool DebugCmdSave(char* args);
+static bool DebugCmdPoke(char* args);
+static bool DebugCmdGoto(char* args);
+static bool DebugCmdFile(char* args);
+static bool DebugCmdEcho(char* args);
+static bool DebugCmdScript(char *args);
+static bool DebugCmdClear(char *args);
 
 // Debugger commands go here. Format is COMMAND, HANDLER, ARGSPEC, HELPSTRING
 // Aliases are supported, put these below the command they reference and leave argspec/help
@@ -1005,7 +991,6 @@ static const InstInfo* GetOpcodeTable(bool host)
 	}
 }
 
-#ifndef __APPLE__
 static bool IsDlgItemChecked(HWND hDlg, int nIDDlgItem)
 {
 	return SendDlgItemMessage(hDlg, nIDDlgItem, BM_GETCHECK, 0, 0) == BST_CHECKED;
@@ -1086,13 +1071,10 @@ void DebugCloseDialog()
 	DebugParasite = false;
 	DebugInfoWidth = 0;
 }
-#endif
 
 //*******************************************************************
 void DebugDisplayInfoF(const char *format, ...)
 {
-#ifndef __APPLE__
-
 	va_list args;
 	va_start(args, format);
 
@@ -1108,13 +1090,10 @@ void DebugDisplayInfoF(const char *format, ...)
 		DebugDisplayInfo(buffer);
 		free(buffer);
 	}
-#endif
 }
 
 void DebugDisplayInfo(const char *info)
 {
-#ifndef __APPLE__
-
 	HDC pDC = GetDC(hwndInfo);
 	SIZE size;
 	HGDIOBJ oldFont = SelectObject(pDC, (HFONT)SendMessage(hwndInfo, WM_GETFONT, 0, 0));
@@ -1138,10 +1117,7 @@ void DebugDisplayInfo(const char *info)
 	}
 	if (LinesDisplayed > LINES_IN_INFO)
 		SendMessage(hwndInfo, LB_SETTOPINDEX, LinesDisplayed - LINES_IN_INFO, 0);
-#endif
 }
-
-#ifndef __APPLE__
 
 INT_PTR CALLBACK DebugDlgProc(HWND hwndDlg, UINT message, WPARAM wParam, LPARAM /* lParam */)
 {
@@ -1226,8 +1202,6 @@ INT_PTR CALLBACK DebugDlgProc(HWND hwndDlg, UINT message, WPARAM wParam, LPARAM 
 
 	return FALSE;
 }
-#endif
-
 
 //*******************************************************************
 
@@ -1253,17 +1227,12 @@ void DebugBreakExecution(DebugType type)
 	{
 		InstCount = 0;
 		LastBreakAddr = 0;
-#ifndef __APPLE__
 		SetDlgItemText(hwndDebug, IDC_DEBUGBREAK, "Break");
-#endif
-		
 	}
 	else
 	{
 		InstCount = 1;
-#ifndef __APPLE__
 		SetDlgItemText(hwndDebug, IDC_DEBUGBREAK, "Continue");
-#endif
 		LastAddrInBIOS = LastAddrInOS = LastAddrInROM = false;
 
 		DebugUpdateWatches(true);
@@ -1353,10 +1322,8 @@ void DebugAssertBreak(int addr, int prevAddr, bool host)
 	AddrInfo addrInfo;
 
 	DebugUpdateWatches(false);
-#ifndef __APPLE__
 	SetDlgItemText(hwndDebug, IDC_DEBUGBREAK, "Continue");
-#endif
-	
+
 	if (LastBreakAddr == 0)
 	{
 		LastBreakAddr = addr;
@@ -1424,7 +1391,6 @@ void DebugDisplayTrace(DebugType type, bool host, const char *info)
 
 	if (DebugEnabled && ((DebugHost && host) || (DebugParasite && !host)))
 	{
-#ifndef __APPLE__
 		switch (type)
 		{
 		case DebugType::Video:
@@ -1494,10 +1460,7 @@ void DebugDisplayTrace(DebugType type, bool host, const char *info)
 			if (IsDlgItemChecked(hwndDebug, IDC_DEBUG_CMOS_BRK))
 				DebugBreakExecution(type);
 			break;
-		default: //None, Manual, Breakpoint, BRK
-			break;
 		}
-#endif //__APPLE__
 	}
 }
 
@@ -1513,7 +1476,6 @@ void DebugDisplayTraceF(DebugType type, bool host, const char *format, ...)
 
 void DebugDisplayTraceV(DebugType type, bool host, const char *format, va_list args)
 {
-#ifndef __APPLE__
 	// _vscprintf doesn't count terminating '\0'
 	int len = _vscprintf(format, args) + 1;
 
@@ -1526,7 +1488,6 @@ void DebugDisplayTraceV(DebugType type, bool host, const char *format, va_list a
 		DebugDisplayTrace(type, host, buffer);
 		free(buffer);
 	}
-#endif
 }
 
 static void DebugUpdateWatches(bool all)
@@ -1577,10 +1538,8 @@ static void DebugUpdateWatches(bool all)
 		{
 			Watches[i].value = value;
 
-#ifndef __APPLE__
 			SendMessage(hwndW, LB_DELETESTRING, i, 0);
-#endif
-			
+
 			if (WatchDecimal)
 			{
 				sprintf(str, "%s%04X %s=%d (%c)", (Watches[i].host ? "" : "p"), Watches[i].start, Watches[i].name.c_str(), Watches[i].value, Watches[i].type);
@@ -1603,10 +1562,7 @@ static void DebugUpdateWatches(bool all)
 				}
 			}
 
-#ifndef __APPLE__
 			SendMessage(hwndW, LB_INSERTSTRING, i, (LPARAM)str);
-#endif
-			
 		}
 	}
 }
@@ -2007,14 +1963,12 @@ static bool DebugLookupAddress(int addr, AddrInfo* addrInfo)
 	return false;
 }
 
-#ifndef __APPLE__
 static void DebugExecuteCommand()
 {
 	char command[MAX_COMMAND_LEN + 1];
 	GetDlgItemText(hwndDebug, IDC_DEBUGCOMMAND, command, MAX_COMMAND_LEN);
 	DebugParseCommand(command);
 }
-#endif
 
 void DebugInitMemoryMaps()
 {
@@ -2123,8 +2077,6 @@ void DebugLoadLabels(char *filename)
 
 void DebugRunScript(const char *filename)
 {
-#ifndef __APPLE__
-
 	FILE *infile = fopen(filename,"r");
 	if (infile == NULL)
 	{
@@ -2144,7 +2096,6 @@ void DebugRunScript(const char *filename)
 		}
 		fclose(infile);
 	}
-#endif
 }
 
 // Loads Swift format labels, used by BeebAsm
@@ -2258,7 +2209,7 @@ static void DebugChompString(char *str)
 	}
 }
 
-int DebugParseLabel(const char *label)
+int DebugParseLabel(char *label)
 {
 	auto it = std::find_if(Labels.begin(), Labels.end(), [=](const Label& Label) {
 		return _stricmp(label, Label.name.c_str()) == 0;
@@ -2267,8 +2218,7 @@ int DebugParseLabel(const char *label)
 	return it != Labels.end() ? it->addr : -1;
 }
 
-#ifndef __APPLE__
-static void DebugHistoryAdd(const char *command)
+static void DebugHistoryAdd(char *command)
 {
 	// Do nothing if this is the same as the last command
 
@@ -2286,7 +2236,6 @@ static void DebugHistoryAdd(const char *command)
 
 	DebugHistoryIndex = -1;
 }
-#endif
 
 static void DebugHistoryMove(int delta)
 {
@@ -2295,9 +2244,7 @@ static void DebugHistoryMove(int delta)
 	if (newIndex < 0)
 	{
 		DebugHistoryIndex = -1;
-#ifndef __APPLE__
 		SetDlgItemText(hwndDebug, IDC_DEBUGCOMMAND, "");
-#endif
 		return;
 	}
 
@@ -2333,18 +2280,13 @@ static void DebugSetCommandString(const char* str)
 	}
 	else
 	{
-#ifndef __APPLE__
 		SetDlgItemText(hwndDebug, IDC_DEBUGCOMMAND, str);
 		SendDlgItemMessage(hwndDebug, IDC_DEBUGCOMMAND, EM_SETSEL, strlen(str), strlen(str));
-#endif
-		
 	}
 }
 
-#ifndef __APPLE__
 static void DebugParseCommand(char *command)
 {
-
 	char label[65], addrStr[6];
 	char info[MAX_PATH + 100];
 
@@ -2360,7 +2302,7 @@ static void DebugParseCommand(char *command)
 	char *args = strchr(command, ' ');
 	if(args == NULL)
 	{
-		args = strdup("");
+		args = "";
 	}
 	else
 	{
@@ -2399,6 +2341,7 @@ static void DebugParseCommand(char *command)
 
 		commandEnd[0] = '\0';
 	}
+
 	SetDlgItemText(hwndDebug, IDC_DEBUGCOMMAND, "");
 
 	for(int i = 0; i < _countof(DebugCmdTable); i++)
@@ -2413,19 +2356,18 @@ static void DebugParseCommand(char *command)
 
 	DebugDisplayInfoF("Invalid command %s - try 'help'",command);
 }
-#endif //__APPLE__
 
 /**************************************************************
  * Start of debugger command handlers                         *
  **************************************************************/
 
-static bool DebugCmdEcho(const char* args)
+static bool DebugCmdEcho(char* args)
 {
 	DebugDisplayInfo(args);
 	return true;
 }
 
-static bool DebugCmdGoto(const char* args)
+static bool DebugCmdGoto(char* args)
 {
 	bool host = true;
 	int addr = 0;
@@ -2450,7 +2392,7 @@ static bool DebugCmdGoto(const char* args)
 	return false;
 }
 
-static bool DebugCmdFile(const char* args)
+static bool DebugCmdFile(char* args)
 {
 	char mode;
 	int i = 0;
@@ -2470,7 +2412,6 @@ static bool DebugCmdFile(const char* args)
 
 	if (filename[0] == '\0')
 	{
-#ifndef __APPLE__
 		const char* filter = "Memory Dump Files (*.dat)\0*.dat\0" "All Files (*.*)\0*.*\0";
 
 		FileDialog Dialog(hwndDebug, filename, MAX_PATH, nullptr, filter);
@@ -2495,7 +2436,6 @@ static bool DebugCmdFile(const char* args)
 				return false;
 			}
 		}
-#endif
 	}
 
 	if (filename[0] != '\0')
@@ -2556,7 +2496,7 @@ static bool DebugCmdFile(const char* args)
 	return false;
 }
 
-static bool DebugCmdPoke(const char* args)
+static bool DebugCmdPoke(char* args)
 {
 	int addr, data;
 	int i = 0;
@@ -2605,12 +2545,12 @@ static bool DebugCmdPoke(const char* args)
 		return false;
 }
 
-static bool DebugCmdSave(const char* args)
+static bool DebugCmdSave(char* args)
 {
 	int count = 0;
 	char filename[MAX_PATH];
 	char* info = NULL;
-//	int infoSize = 0;
+	int infoSize = 0;
 	memset(filename, 0, MAX_PATH);
 
 	int result = sscanf(args, "%u %259c", &count, filename);
@@ -2621,7 +2561,6 @@ static bool DebugCmdSave(const char* args)
 
 	if (filename[0] == '\0')
 	{
-#ifndef __APPLE__
 		const char* filter = "Text Files (*.txt)\0*.txt\0";
 
 		FileDialog Dialog(hwndDebug, filename, MAX_PATH, nullptr, filter);
@@ -2630,8 +2569,7 @@ static bool DebugCmdSave(const char* args)
 		{
 			return false;
 		}
-#endif
-		
+
 		// Add a file extension if the user did not specify one
 		if (strchr(filename, '.') == nullptr)
 		{
@@ -2649,8 +2587,6 @@ static bool DebugCmdSave(const char* args)
 		{
 			for (int i = LinesDisplayed - count; i < LinesDisplayed; ++i)
 			{
-#ifndef __APPLE__
-
 				int len = (int)(SendMessage(hwndInfo, LB_GETTEXTLEN, i, NULL) + 1) * sizeof(TCHAR);
 
 				if(len > infoSize)
@@ -2669,7 +2605,6 @@ static bool DebugCmdSave(const char* args)
 					fclose(fd);
 					return true;
 				}
-#endif
 			}
 			fclose(fd);
 			free(info);
@@ -2685,7 +2620,7 @@ static bool DebugCmdSave(const char* args)
 	return false;
 }
 
-static bool DebugCmdState(const char* args)
+static bool DebugCmdState(char* args)
 {
 	switch (tolower(args[0]))
 	{
@@ -2758,7 +2693,7 @@ static bool DebugCmdState(const char* args)
 	return true;
 }
 
-static bool DebugCmdCode(const char* args)
+static bool DebugCmdCode(char* args)
 {
 	bool host = true;
 	int count = LINES_IN_INFO;
@@ -2778,7 +2713,7 @@ static bool DebugCmdCode(const char* args)
 	return true;
 }
 
-static bool DebugCmdPeek(const char* args)
+static bool DebugCmdPeek(char* args)
 {
 	int count = 256;
 	bool host = true;
@@ -2798,7 +2733,7 @@ static bool DebugCmdPeek(const char* args)
 	return true;
 }
 
-static bool DebugCmdNext(const char* args)
+static bool DebugCmdNext(char* args)
 {
 	int count = 1;
 	if(args[0] != '\0' && sscanf(args, "%u", &count) == 0)
@@ -2812,7 +2747,7 @@ static bool DebugCmdNext(const char* args)
 
 // TODO: currently host only, enable for Tube debugging
 
-static bool DebugCmdOver(const char* args)
+static bool DebugCmdOver(char* args)
 {
 	// If current instruction is JSR, run to the following instruction,
 	// otherwise do a regular 'Next'
@@ -2839,7 +2774,7 @@ static bool DebugCmdOver(const char* args)
 	return true;
 }
 
-static bool DebugCmdSet(const char* args)
+static bool DebugCmdSet(char* args)
 {
 	char name[20];
 	char state[4];
@@ -2896,23 +2831,21 @@ static bool DebugCmdSet(const char* args)
 		else
 			return false;
 
-#ifndef __APPLE__
 		SetDlgItemChecked(hwndDebug, dlgItem, checked);
-#endif
 		return true;
 	}
 	else
 		return false;
 }
 
-static bool DebugCmdBreakContinue(const char* /* args */)
+static bool DebugCmdBreakContinue(char* /* args */)
 {
 	DebugToggleRun();
 	DebugSetCommandString(".");
 	return true;
 }
 
-static bool DebugCmdHelp(const char* args)
+static bool DebugCmdHelp(char* args)
 {
 	int addr;
 	int li = 0;
@@ -3023,7 +2956,7 @@ static bool DebugCmdHelp(const char* args)
 	return true;
 }
 
-static bool DebugCmdScript(const char *args)
+static bool DebugCmdScript(char *args)
 {
 	char filename[MAX_PATH];
 	memset(filename, 0, sizeof(filename));
@@ -3032,7 +2965,6 @@ static bool DebugCmdScript(const char *args)
 
 	if (filename[0] == '\0')
 	{
-#ifndef __APPLE__
 		const char* filter = "Debugger Script Files (*.txt)\0*.txt\0" "All Files (*.*)\0*.*\0";
 
 		FileDialog Dialog(hwndDebug, filename, MAX_PATH, nullptr, filter);
@@ -3041,8 +2973,6 @@ static bool DebugCmdScript(const char *args)
 		{
 			return false;
 		}
-#endif
-		
 	}
 
 	if (filename[0] != '\0')
@@ -3053,12 +2983,10 @@ static bool DebugCmdScript(const char *args)
 	return true;
 }
 
-static bool DebugCmdClear(const char * /* args */)
+static bool DebugCmdClear(char * /* args */)
 {
 	LinesDisplayed = 0;
-#ifndef __APPLE__
 	SendMessage(hwndInfo, LB_RESETCONTENT, 0, 0);
-#endif
 	return true;
 }
 
@@ -3079,7 +3007,7 @@ static void DebugShowLabels()
 	}
 }
 
-static bool DebugCmdLabels(const char *args)
+static bool DebugCmdLabels(char *args)
 {
 	if (stricmp(args, "show") == 0)
 	{
@@ -3097,12 +3025,11 @@ static bool DebugCmdLabels(const char *args)
 
 		if (filename[0] == '\0')
 		{
-#ifndef __APPLE__
 			const char* filter = "Label Files (*.txt)\0*.txt\0" "All Files (*.*)\0*.*\0";
 
 			FileDialog Dialog(hwndDebug, filename, MAX_PATH, nullptr, filter);
+
 			success = Dialog.Open();
-#endif
 		}
 
 		if (success && filename[0] != '\0')
@@ -3116,11 +3043,11 @@ static bool DebugCmdLabels(const char *args)
 	return true;
 }
 
-static bool DebugCmdWatch(const char *args)
+static bool DebugCmdWatch(char *args)
 {
 	Watch w;
 	char info[64];
-//	int i;
+	int i;
 	w.start = -1;
 	w.host = true;
 	w.type = 'w';
@@ -3153,8 +3080,6 @@ static bool DebugCmdWatch(const char *args)
 
 			sprintf(info, "%s%04X", (w.host ? "" : "p"), w.start);
 
-#ifndef __APPLE__
-
 			// Check if watch in list
 			i = (int)SendMessage(hwndW, LB_FINDSTRING, 0, (LPARAM)info);
 
@@ -3177,7 +3102,6 @@ static bool DebugCmdWatch(const char *args)
 			}
 
 			SetDlgItemText(hwndDebug, IDC_DEBUGCOMMAND, "");
-#endif
 		}
 		else
 		{
@@ -3191,7 +3115,7 @@ static bool DebugCmdWatch(const char *args)
 	return true;
 }
 
-static bool DebugCmdToggleBreak(const char *args)
+static bool DebugCmdToggleBreak(char *args)
 {
 	Breakpoint bp;
 	bp.start = bp.end = -1;
@@ -3211,13 +3135,13 @@ static bool DebugCmdToggleBreak(const char *args)
 			char info[64];
 			sprintf(info, "%04X", bp.start);
 
-#ifndef __APPLE__
 			int i = (int)SendMessage(hwndBP, LB_FINDSTRING, 0, (LPARAM)info);
 
 			if (i != LB_ERR)
 			{
 				// Yes - delete
 				SendMessage(hwndBP, LB_DELETESTRING, i, 0);
+
 				auto it = std::find_if(Breakpoints.begin(), Breakpoints.end(), [&bp](const Breakpoint& b){
 					return b.start == bp.start;
 				});
@@ -3243,11 +3167,11 @@ static bool DebugCmdToggleBreak(const char *args)
 				{
 					sprintf(info, "%04X %s", bp.start, bp.name.c_str());
 				}
+
 				SendMessage(hwndBP, LB_ADDSTRING, 0, (LPARAM)info);
 			}
 
 			SetDlgItemText(hwndDebug, IDC_DEBUGCOMMAND, "");
-#endif
 		}
 		else
 		{

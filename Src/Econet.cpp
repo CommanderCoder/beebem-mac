@@ -374,9 +374,8 @@ static void EconetError(const char *Format, ...);
 static const char* IpAddressStr(unsigned long inet_addr)
 {
 	in_addr in;
-#ifndef __APPLE__
 	in.S_un.S_addr = inet_addr;
-#endif
+
 	return inet_ntoa(in);
 }
 
@@ -412,7 +411,6 @@ static ECOLAN* FindNetworkConfig(unsigned char Station)
 	return nullptr;
 }
 
-#ifndef __APPLE__
 static ECOLAN* FindHost(sockaddr_in* pAddress)
 {
 	for (int i = 0; i < networkp; i++)
@@ -426,10 +424,8 @@ static ECOLAN* FindHost(sockaddr_in* pAddress)
 
 	return nullptr;
 }
-#endif
 
 //---------------------------------------------------------------------------
-#ifndef __APPLE__
 
 static ECOLAN* AddHost(sockaddr_in* pAddress)
 {
@@ -457,7 +453,6 @@ static ECOLAN* AddHost(sockaddr_in* pAddress)
 
 	return nullptr;
 }
-#endif
 
 //---------------------------------------------------------------------------
 
@@ -562,7 +557,6 @@ void EconetReset()
 			return;
 		}
 
-#ifndef __APPLE__
 		service.sin_port = htons(EconetListenPort);
 		service.sin_addr.s_addr = EconetListenIP;
 
@@ -573,11 +567,9 @@ void EconetReset()
 			ListenSocket = INVALID_SOCKET;
 			return;
 		}
-#endif
 	}
 	else
 	{
-#ifndef __APPLE__
 		// Station number not specified, find first one not already in use.
 		char localhost[256];
 		hostent *host;
@@ -654,7 +646,6 @@ void EconetReset()
 			}
 		}
 		else
-#endif
 		{
 			EconetError("Econet: Failed to resolve local IP address");
 			return;
@@ -1691,7 +1682,6 @@ bool EconetPoll_real() // return NMI status
 						FD_ZERO(&ReadFds);
 						FD_SET(ListenSocket, &ReadFds);
 
-#ifndef __APPLE__
 						static const timeval TimeOut = {0, 0};
 
 						int RetVal = select((int)ListenSocket + 1, &ReadFds, NULL, NULL, &TimeOut);
@@ -1923,8 +1913,6 @@ bool EconetPoll_real() // return NMI status
 							}
 						}
 						else if (RetVal == SOCKET_ERROR)
-#endif
-
 						{
 							EconetError("Econet: Failed to check for new packet");
 						}

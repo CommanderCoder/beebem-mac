@@ -124,24 +124,24 @@ static void DebugSetCommandString(const char* str);
 static void DebugChompString(char* str);
 
 // Command handlers
-static bool DebugCmdBreakContinue(const char* args);
-static bool DebugCmdToggleBreak(const char* args);
-static bool DebugCmdLabels(const char* args);
-static bool DebugCmdHelp(const char* args);
-static bool DebugCmdSet(const char* args);
-static bool DebugCmdNext(const char* args);
-static bool DebugCmdOver(const char* args);
-static bool DebugCmdPeek(const char* args);
-static bool DebugCmdCode(const char* args);
-static bool DebugCmdWatch(const char* args);
-static bool DebugCmdState(const char* args);
-static bool DebugCmdSave(const char* args);
-static bool DebugCmdPoke(const char* args);
-static bool DebugCmdGoto(const char* args);
-static bool DebugCmdFile(const char* args);
-static bool DebugCmdEcho(const char* args);
-static bool DebugCmdScript(const char *args);
-static bool DebugCmdClear(const char *args);
+static bool DebugCmdBreakContinue(char* args);
+static bool DebugCmdToggleBreak(char* args);
+static bool DebugCmdLabels(char* args);
+static bool DebugCmdHelp(char* args);
+static bool DebugCmdSet(char* args);
+static bool DebugCmdNext(char* args);
+static bool DebugCmdOver(char* args);
+static bool DebugCmdPeek(char* args);
+static bool DebugCmdCode(char* args);
+static bool DebugCmdWatch(char* args);
+static bool DebugCmdState(char* args);
+static bool DebugCmdSave(char* args);
+static bool DebugCmdPoke(char* args);
+static bool DebugCmdGoto(char* args);
+static bool DebugCmdFile(char* args);
+static bool DebugCmdEcho(char* args);
+static bool DebugCmdScript(char *args);
+static bool DebugCmdClear(char *args);
 
 // Debugger commands go here. Format is COMMAND, HANDLER, ARGSPEC, HELPSTRING
 // Aliases are supported, put these below the command they reference and leave argspec/help
@@ -2457,13 +2457,13 @@ static void DebugParseCommand(char *command)
  * Start of debugger command handlers                         *
  **************************************************************/
 
-static bool DebugCmdEcho(const char* args)
+static bool DebugCmdEcho(char* args)
 {
 	DebugDisplayInfo(args);
 	return true;
 }
 
-static bool DebugCmdGoto(const char* args)
+static bool DebugCmdGoto(char* args)
 {
 	bool host = true;
 	int addr = 0;
@@ -2488,7 +2488,7 @@ static bool DebugCmdGoto(const char* args)
 	return false;
 }
 
-static bool DebugCmdFile(const char* args)
+static bool DebugCmdFile(char* args)
 {
 	char mode;
 	int i = 0;
@@ -2594,7 +2594,7 @@ static bool DebugCmdFile(const char* args)
 	return false;
 }
 
-static bool DebugCmdPoke(const char* args)
+static bool DebugCmdPoke(char* args)
 {
 	int addr, data;
 	int i = 0;
@@ -2643,7 +2643,7 @@ static bool DebugCmdPoke(const char* args)
 		return false;
 }
 
-static bool DebugCmdSave(const char* args)
+static bool DebugCmdSave(char* args)
 {
 	int count = 0;
 	char filename[MAX_PATH];
@@ -2723,7 +2723,7 @@ static bool DebugCmdSave(const char* args)
 	return false;
 }
 
-static bool DebugCmdState(const char* args)
+static bool DebugCmdState(char* args)
 {
 	switch (tolower(args[0]))
 	{
@@ -2796,7 +2796,7 @@ static bool DebugCmdState(const char* args)
 	return true;
 }
 
-static bool DebugCmdCode(const char* args)
+static bool DebugCmdCode(char* args)
 {
 	bool host = true;
 	int count = LINES_IN_INFO;
@@ -2816,7 +2816,7 @@ static bool DebugCmdCode(const char* args)
 	return true;
 }
 
-static bool DebugCmdPeek(const char* args)
+static bool DebugCmdPeek(char* args)
 {
 	int count = 256;
 	bool host = true;
@@ -2836,7 +2836,7 @@ static bool DebugCmdPeek(const char* args)
 	return true;
 }
 
-static bool DebugCmdNext(const char* args)
+static bool DebugCmdNext(char* args)
 {
 	int count = 1;
 	if(args[0] != '\0' && sscanf(args, "%u", &count) == 0)
@@ -2850,7 +2850,7 @@ static bool DebugCmdNext(const char* args)
 
 // TODO: currently host only, enable for Tube debugging
 
-static bool DebugCmdOver(const char* args)
+static bool DebugCmdOver(char* args)
 {
 	// If current instruction is JSR, run to the following instruction,
 	// otherwise do a regular 'Next'
@@ -2877,7 +2877,7 @@ static bool DebugCmdOver(const char* args)
 	return true;
 }
 
-static bool DebugCmdSet(const char* args)
+static bool DebugCmdSet(char* args)
 {
 	char name[20];
 	char state[4];
@@ -2943,14 +2943,14 @@ static bool DebugCmdSet(const char* args)
 		return false;
 }
 
-static bool DebugCmdBreakContinue(const char* /* args */)
+static bool DebugCmdBreakContinue(char* /* args */)
 {
 	DebugToggleRun();
 	DebugSetCommandString(".");
 	return true;
 }
 
-static bool DebugCmdHelp(const char* args)
+static bool DebugCmdHelp(char* args)
 {
 	int addr;
 	int li = 0;
@@ -3061,7 +3061,7 @@ static bool DebugCmdHelp(const char* args)
 	return true;
 }
 
-static bool DebugCmdScript(const char *args)
+static bool DebugCmdScript(char *args)
 {
 	char filename[MAX_PATH];
 	memset(filename, 0, sizeof(filename));
@@ -3091,7 +3091,7 @@ static bool DebugCmdScript(const char *args)
 	return true;
 }
 
-static bool DebugCmdClear(const char * /* args */)
+static bool DebugCmdClear(char * /* args */)
 {
 	LinesDisplayed = 0;
 #ifndef __APPLE__
@@ -3117,7 +3117,7 @@ static void DebugShowLabels()
 	}
 }
 
-static bool DebugCmdLabels(const char *args)
+static bool DebugCmdLabels(char *args)
 {
 	if (stricmp(args, "show") == 0)
 	{
@@ -3154,7 +3154,7 @@ static bool DebugCmdLabels(const char *args)
 	return true;
 }
 
-static bool DebugCmdWatch(const char *args)
+static bool DebugCmdWatch(char *args)
 {
 	Watch w;
 	char info[64];
@@ -3229,7 +3229,7 @@ static bool DebugCmdWatch(const char *args)
 	return true;
 }
 
-static bool DebugCmdToggleBreak(const char *args)
+static bool DebugCmdToggleBreak(char *args)
 {
 	Breakpoint bp;
 	bp.start = bp.end = -1;

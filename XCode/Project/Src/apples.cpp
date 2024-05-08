@@ -137,6 +137,37 @@ bool SHGetFolderPath(const char* path)
 	return false;
 }
 
+int connect(int a, SOCKADDR *b, int c)
+{
+	return 0;
+}
+int connect(int a, sockaddr_in *b, int c)
+{
+	return 0;
+}
+int recvfrom(int a, char * b, int c, int d, SOCKADDR *e, int*f)
+{
+	return 0;
+}
+const char* inet_ntoa(IN_ADDR in){
+	return "";
+}
+int inet_addr(const char* c)
+{
+	return 0;
+}
+int gethostname(const char*, int){
+	return 0;
+}
+hostent* gethostbyname(const char*)
+{
+	return 0;
+}
+int select(int, fd_set*, int, int, const timeval*)
+{
+	return 0;
+}
+
 int closesocket(SOCKET s)
 {
 //	close(s);
