@@ -66,6 +66,8 @@ typedef uint32_t* POINT; //
 typedef uint32_t* ISpVoice;//
 typedef uint32_t ISpObjectToken;//
 typedef uint32_t WCHAR;//
+typedef uint32_t TCHAR;//
+
 
 typedef struct tagBITMAPINFOHEADER {
   DWORD biSize;
@@ -198,11 +200,24 @@ char* _strerror(const char *strErrMsg);
 extern int __argc;
 extern char** __argv;
 
+#define LB_ADDSTRING -1
+#define LB_INSERTSTRING -1
+#define LB_DELETESTRING -1
+#define LB_GETTEXT -1
+#define EM_SETSEL -1
+#define LB_GETTEXTLEN -1
+#define LB_RESETCONTENT -1
+#define LB_FINDSTRING -1
+#define LB_ERR -1
+int SendMessage(HWND w, int a, int b, long c);
+void DestroyWindow(HWND w);
+
 
 // used in BeebMem.h
 extern DWORD GetTickCount();
 
 extern int _vscprintf (const char * format, va_list pargs);
+int vsprintf_s(char* f, int l, const char * format, va_list pargs);
 
 extern void _splitpath(const char *path,
 				char *drive,

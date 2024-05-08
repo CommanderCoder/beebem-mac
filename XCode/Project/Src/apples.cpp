@@ -77,6 +77,10 @@ int _vscprintf (const char * format, va_list pargs) {
 	va_end(argcopy);
 	return retval;
  }
+int vsprintf_s(char* f, int l, const char * format, va_list pargs)
+{
+	return 0;
+}
 
 char* _strerror(const char *strErrMsg)
 {
@@ -88,6 +92,12 @@ char* _strerror(const char *strErrMsg)
 	return errorstring;
 }
 
+int SendMessage(HWND w, int a, int b, long c)
+{
+	return 0;
+}
+void DestroyWindow(HWND w)
+{}
 
 #include "FileUtils.h"
 

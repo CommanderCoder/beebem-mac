@@ -132,9 +132,13 @@ uservia.cpp
 
 ===
 Do the SelectKeyDialog and the Debugger Dialog
+And SerialPortDialog, and TeletextDialog
+And use a Combobox for the RomConfig dialog
 
-Check all the Mac menus with the current menus for Windows version
+Check all the Mac menus with the current menus for Windows version;
+> noted the romconfig dialog now uses a dropdown for the machine - probably to add more machine
+
+debug.cpp, econet.cpp need reverting.
+Done, and made sure that debug.cpp was copied to debug-mac.cpp
 
 
-
-debug.cpp, econet.cpp need reverting
