@@ -28,16 +28,21 @@ class RomConfigViewController: NSViewController
     }
     
     @IBAction func BBC_B(_ sender: Any) {
-        RCWindowCommandHandler(IDC_BBCB)
+		let m = Int32(MachineModel.B.rawValue)
+		RCWindowCommandHandler(IDC_MODEL & (m<<16))
+		// model value in HIWORD
     }
     @IBAction func IntegraB(_ sender: Any) {
-        RCWindowCommandHandler(IDC_INTEGRAB)
+		let m = Int32(MachineModel.IntegraB.rawValue)
+		RCWindowCommandHandler(IDC_MODEL & (m<<16))
     }
     @IBAction func BBCBPlus(_ sender: Any) {
-        RCWindowCommandHandler(IDC_BBCBPLUS)
+		let m = Int32(MachineModel.BPlus.rawValue)
+		RCWindowCommandHandler(IDC_MODEL & (m<<16))
     }
     @IBAction func Master128(_ sender: Any) {
-        RCWindowCommandHandler(IDC_MASTER128)
+		let m = Int32(MachineModel.Master128.rawValue)
+		RCWindowCommandHandler(IDC_MODEL & (m<<16))
     }
     @IBAction func SelectROM(_ sender: Any) {
         RCWindowCommandHandler(IDC_SELECTROM)

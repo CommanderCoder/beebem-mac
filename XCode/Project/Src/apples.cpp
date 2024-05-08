@@ -137,9 +137,14 @@ bool SHGetFolderPath(const char* path)
 	return false;
 }
 
+int closesocket(SOCKET s)
+{
+//	close(s);
+	return 0;
+}
+
 long WSAGetLastError()
 {
-
 	return errno;
 }
 
@@ -342,4 +347,9 @@ HWND GetFocus()
 	return 0;
 }
 
+
+int WSACleanup()
+{
+	return 0;
+}
 

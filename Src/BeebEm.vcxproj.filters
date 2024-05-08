@@ -153,6 +153,9 @@
     <ClCompile Include="Master512CoPro.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Music5000.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -208,6 +211,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Teletext.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TeletextDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Thread.cpp">
@@ -491,6 +497,9 @@
     <ClInclude Include="Teletext.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="TeletextDialog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="Thread.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -634,6 +643,12 @@
     <Image Include="res\UEF.ico">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="..\Help\teletext-files.png">
+      <Filter>Help Files</Filter>
+    </Image>
+    <Image Include="..\Help\teletext-ip.png">
+      <Filter>Help Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Help\65c02copro.html">
@@ -706,6 +721,9 @@
       <Filter>Help Files</Filter>
     </None>
     <None Include="..\Help\state.html">
+      <Filter>Help Files</Filter>
+    </None>
+    <None Include="..\Help\style.css">
       <Filter>Help Files</Filter>
     </None>
     <None Include="..\Help\tapes.html">

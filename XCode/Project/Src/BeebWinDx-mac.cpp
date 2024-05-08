@@ -21,6 +21,11 @@
 
 
 
+void BeebWin::InitDX(){}
+void BeebWin::ExitDX(){}
+
+
+
 
 extern char bridgingVideobuffer[];
 

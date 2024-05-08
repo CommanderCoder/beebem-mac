@@ -30,7 +30,6 @@ Boston, MA  02110-1301, USA.
 // 26/12/2011: Added IDE Drive to Hardware options, JGH
 
 #include <windows.h>
-#ifndef __APPLE__
 #include <windowsx.h>
 #include <initguid.h>
 
@@ -40,20 +39,18 @@ Boston, MA  02110-1301, USA.
 #pragma warning(pop)
 
 #include <shlwapi.h>
-#endif
 
 #include <stdio.h>
 
 #include <algorithm>
+#include <string>
 
-#ifndef __APPLE__
 #pragma warning(push)
 #pragma warning(disable: 4458) // declaration of 'xxx' hides class member
 using std::min;
 using std::max;
 #include <gdiplus.h>
 #pragma warning(pop)
-#endif
 
 #include "BeebWin.h"
 #include "6502core.h"
@@ -94,6 +91,7 @@ using std::max;
 #include "SysVia.h"
 #include "TapeControlDialog.h"
 #include "Teletext.h"
+#include "TeletextDialog.h"
 #include "TouchScreen.h"
 #include "Tube.h"
 #include "UefState.h"
@@ -105,22 +103,18 @@ using std::max;
 #include "Z80mem.h"
 #include "Z80.h"
 
-#ifndef __APPLE__
 using namespace Gdiplus;
 
 constexpr UINT WIN_STYLE = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_SIZEBOX;
-#endif
 
 // Some LED based constants
 constexpr int LED_COL_BASE = 64;
 
-#ifndef __APPLE__
 static const char *CFG_REG_KEY = "Software\\BeebEm";
 
 static const unsigned char CFG_DISABLE_WINDOWS_KEYS[24] = {
 	00,00,00,00,00,00,00,00,03,00,00,00,00,00,0x5B,0xE0,00,00,0x5C,0xE0,00,00,00,00
 };
-#endif
 
 CArm *arm = nullptr;
 CSprowCoPro *sprow = nullptr;
@@ -130,6 +124,9 @@ LEDType LEDs;
 LEDColour DiscLedColour = LEDColour::Red;
 
 const char *WindowTitle = "BeebEm - BBC Model B / Master 128 Emulator";
+
+constexpr int TIMER_KEYBOARD       = 1;
+constexpr int TIMER_AUTOBOOT_DELAY = 2;
 
 /****************************************************************************/
 BeebWin::BeebWin()
@@ -166,11 +163,9 @@ BeebWin::BeebWin()
 	m_AviDC = nullptr;
 	m_AviDIB = nullptr;
 	m_CaptureBitmapPending = false;
-#ifndef __APPLE__
 	m_SpVoice = nullptr;
 	m_hTextView = nullptr;
 	m_TextViewPrevWndProc = nullptr;
-#endif
 	m_Frozen = false;
 	m_WriteProtectDisc[0] = !IsDiscWritable(0);
 	m_WriteProtectDisc[1] = !IsDiscWritable(1);
@@ -205,14 +200,12 @@ BeebWin::BeebWin()
 	m_startFullScreen = false;
 	m_XDXSize = 640;
 	m_YDXSize = 480;
-#ifndef __APPLE__
 	m_XScrSize = GetSystemMetrics(SM_CXSCREEN);
 	m_YScrSize = GetSystemMetrics(SM_CYSCREEN);
 	m_XWinBorder = GetSystemMetrics(SM_CXSIZEFRAME) * 2;
 	m_YWinBorder = GetSystemMetrics(SM_CYSIZEFRAME) * 2 +
 	               GetSystemMetrics(SM_CYMENUSIZE) +
 	               GetSystemMetrics(SM_CYCAPTION) + 1;
-#endif
 	m_HideMenuEnabled = false;
 	m_DisableMenu = false;
 	m_MenuOn = true;
@@ -220,13 +213,13 @@ BeebWin::BeebWin()
 	m_WriteInstructionCounts = false;
 	m_CaptureMouse = false;
 	m_MouseCaptured = false;
+
 	m_TextToSpeechEnabled = false;
-#ifndef __APPLE__
 	m_hVoiceMenu = nullptr;
 	m_SpVoice = nullptr;
 	m_SpeechRate = 0;
 	TextToSpeechResetState();
-#endif
+
 	InitKeyMap();
 
 #ifndef __APPLE__
@@ -352,19 +345,15 @@ bool BeebWin::Initialise()
 	CreateBeebWindow();
 	CreateBitmap();
 
-#ifndef __APPLE__
 	m_hMenu = GetMenu(m_hWnd);
 	m_hDC = GetDC(m_hWnd);
-#endif
-	
+
 	ReadROMConfigFile(RomFile, RomConfig);
 	ApplyPrefs();
 
 	if (!m_DebugScriptFileName.empty())
 	{
-#ifndef __APPLE__
-		DebugOpenDialog(hInst, m_hWnd);
-#endif
+		OpenDebugWindow();
 		DebugRunScript(m_DebugScriptFileName.c_str());
 	}
 
@@ -423,7 +412,7 @@ void BeebWin::ApplyPrefs()
 		strcpy(EconetCfgPath, m_UserDataPath);
 		strcat(EconetCfgPath, Filename);
 	}
-	
+
 	if (AUNMapPath[0] == '\0')
 	{
 		strcpy(AUNMapPath, m_UserDataPath);
@@ -436,6 +425,7 @@ void BeebWin::ApplyPrefs()
 		strcpy(AUNMapPath, m_UserDataPath);
 		strcat(AUNMapPath, Filename);
 	}
+
 	strcpy(RomPath, m_UserDataPath);
 
 	char Path[_MAX_PATH];
@@ -464,20 +454,19 @@ void BeebWin::ApplyPrefs()
 	InitMenu();
 	ShowMenu(true);
 
-#ifndef __APPLE__
 	ExitDX();
 	if (m_DisplayRenderer != IDM_DISPGDI)
 		InitDX();
 
 	InitTextToSpeechVoices();
 	InitVoiceMenu();
-	
+
 	if (m_TextToSpeechEnabled)
 	{
 		m_TextToSpeechEnabled = InitTextToSpeech();
 	}
+
 	InitTextView();
-#endif
 
 	/* Initialise printer */
 	if (PrinterEnabled)
@@ -488,7 +477,7 @@ void BeebWin::ApplyPrefs()
 	/* Joysticks can only be initialised after the window is created (needs hwnd) */
 	if (m_MenuIDSticks == IDM_JOYSTICK)
 		InitJoystick();
-	
+
 	LoadFDC(NULL, true);
 	RTCInit();
 
@@ -565,17 +554,13 @@ void BeebWin::Shutdown()
 
 	Music5000Reset();
 
-#ifndef __APPLE__
 	CloseTextToSpeech();
 	CloseTextView();
-#endif
 
 	IP232Close();
 
-#ifndef __APPLE__
 	WSACleanup();
-#endif
-	
+
 	if (m_WriteInstructionCounts) {
 		char FileName[_MAX_PATH];
 		strcpy(FileName, m_UserDataPath);
@@ -957,8 +942,9 @@ void BeebWin::CreateBitmap()
 	m_bmi.bmiColors[LED_COL_BASE+2].rgbGreen=80;	m_bmi.bmiColors[LED_COL_BASE+3].rgbGreen=255;
 	m_bmi.bmiColors[LED_COL_BASE+2].rgbBlue=0;		m_bmi.bmiColors[LED_COL_BASE+3].rgbBlue=0;
 	m_bmi.bmiColors[LED_COL_BASE+2].rgbReserved=0;	m_bmi.bmiColors[LED_COL_BASE+3].rgbReserved=0;
+
 	m_hBitmap = CreateDIBSection(m_hDCBitmap, (BITMAPINFO *)&m_bmi, DIB_RGB_COLORS,
-	                             (void**)&m_screen, NULL,0);	
+	                             (void**)&m_screen, NULL,0);
 #endif
 
 	m_screen_blur = (char *)calloc(m_bmi.bmiHeader.biSizeImage,1);
@@ -970,7 +956,6 @@ void BeebWin::CreateBitmap()
 		Report(MessageType::Error,
 		       "Cannot select the screen bitmap\nTry running in a 256 colour mode");
 	}
-	
 }
 
 /****************************************************************************/
@@ -1165,7 +1150,7 @@ void BeebWin::InitMenu(void)
 	CheckMenuItem(IDM_VIDEOSKIP5, false);
 	CheckMenuItem(m_MenuIDAviResolution, true);
 	CheckMenuItem(m_MenuIDAviSkip, true);
-	
+
 	// File -> Disc Options
 	CheckMenuItem(IDM_WRITE_PROTECT_DISC0, m_WriteProtectDisc[0]);
 	CheckMenuItem(IDM_WRITE_PROTECT_DISC1, m_WriteProtectDisc[1]);
@@ -1182,7 +1167,7 @@ void BeebWin::InitMenu(void)
 	CheckMenuItem(IDM_CAPTUREPNG, false);
 	CheckMenuItem(m_MenuIDCaptureResolution, true);
 	CheckMenuItem(m_MenuIDCaptureFormat, true);
-	
+
 	// Edit
 	CheckMenuItem(IDM_EDIT_CRLF, m_translateCRLF);
 
@@ -1234,7 +1219,7 @@ void BeebWin::InitMenu(void)
 	CheckMenuItem(ID_HIDEMENU, m_HideMenuEnabled);
 	UpdateLEDMenu();
 	CheckMenuItem(IDM_TEXTVIEW, m_TextViewEnabled);
-	
+
 	// View -> Win size
 	CheckMenuItem(IDM_320X256, false);
 	CheckMenuItem(IDM_640X512, false);
@@ -1359,9 +1344,6 @@ void BeebWin::InitMenu(void)
 	UpdateOptiMenu();
 	UpdateEconetMenu();
 	CheckMenuItem(ID_TELETEXT, TeletextAdapterEnabled);
-	CheckMenuItem(ID_TELETEXTFILES, TeletextFiles);
-	CheckMenuItem(ID_TELETEXTLOCALHOST, TeletextLocalhost);
-	CheckMenuItem(ID_TELETEXTCUSTOM, TeletextCustom);
 	CheckMenuItem(ID_FLOPPYDRIVE, Disc8271Enabled);
 	CheckMenuItem(ID_HARDDRIVE, SCSIDriveEnabled);
 	CheckMenuItem(ID_IDEDRIVE, IDEDriveEnabled);
@@ -1371,14 +1353,10 @@ void BeebWin::InitMenu(void)
 	CheckMenuItem(IDM_JOYSTICK, false);
 	CheckMenuItem(IDM_ANALOGUE_MOUSESTICK, false);
 	CheckMenuItem(IDM_DIGITAL_MOUSESTICK, false);
-#ifndef __APPLE__
 	if (m_MenuIDSticks != 0)
 		CheckMenuItem(m_MenuIDSticks, true);
-#endif
 	CheckMenuItem(IDM_FREEZEINACTIVE, m_FreezeWhenInactive);
-#ifndef __APPLE__
 	CheckMenuItem(IDM_HIDECURSOR, m_HideCursor);
-#endif
 	CheckMenuItem(IDM_DEFAULTKYBDMAPPING, false);
 	CheckMenuItem(IDM_LOGICALKYBDMAPPING, false);
 	CheckMenuItem(IDM_USERKYBDMAPPING, false);
@@ -2083,11 +2061,11 @@ LRESULT BeebWin::WndProc(UINT nMessage, WPARAM wParam, LPARAM lParam)
 			break;
 
 		case WM_TIMER:
-			if (wParam == 1)
+			if (wParam == TIMER_KEYBOARD)
 			{
 				HandleTimer();
 			}
-			else if (wParam == 2) // Handle timer for automatic disc boot delay
+			else if (wParam == TIMER_AUTOBOOT_DELAY) // Handle timer for automatic disc boot delay
 			{
 				KillBootDiscTimer();
 				DoShiftBreak();
@@ -2831,6 +2809,7 @@ void BeebWin::SetWindowAttributes(bool wasFullScreen)
 
 			ShowWindow(m_hWnd, SW_MAXIMIZE);
 		}
+
 		// Experiment: hide menu in full screen
 		HideMenu(true);
 	}
@@ -2842,7 +2821,7 @@ void BeebWin::SetWindowAttributes(bool wasFullScreen)
 #ifndef __APPLE__
 		if (wasFullScreen)
 			ShowWindow(m_hWnd, SW_RESTORE);
-		
+
 		// Note: Window size gets lost in DDraw mode when DD is reset
 		int xs = m_XLastWinSize;
 		int ys = m_YLastWinSize;
@@ -3641,8 +3620,7 @@ void BeebWin::HandleCommand(UINT MenuID)
 			break;
 
 	case IDM_FREEZEINACTIVE:
-		m_FreezeWhenInactive = !m_FreezeWhenInactive;
-		CheckMenuItem(IDM_FREEZEINACTIVE, m_FreezeWhenInactive);
+		SetFreezeWhenInactive(!m_FreezeWhenInactive);
 		break;
 
 	case IDM_HIDECURSOR:
@@ -4037,7 +4015,7 @@ void BeebWin::HandleCommand(UINT MenuID)
 		if (DebugEnabled)
 			DebugCloseDialog();
 		else
-			DebugOpenDialog(hInst, m_hWnd);
+			OpenDebugWindow();
 		break;
 
 	case IDM_BLUR_OFF:
@@ -4062,7 +4040,7 @@ void BeebWin::HandleCommand(UINT MenuID)
 			m_MenuIDCaptureResolution = MenuID;
 			CheckMenuItem(m_MenuIDCaptureResolution, true);
 		}
-			break;
+		break;
 
 	case IDM_CAPTUREBMP:
 	case IDM_CAPTUREJPEG:
@@ -4159,49 +4137,35 @@ void BeebWin::HandleCommand(UINT MenuID)
 		CheckMenuItem(ID_TELETEXT, TeletextAdapterEnabled);
 		break;
 
-	case ID_TELETEXTFILES:
-		if (!TeletextFiles)
-		{
-			TeletextFiles = true;
-			TeletextLocalhost = false;
-			TeletextCustom = false;
-			TeletextInit();
-		}
-		CheckMenuItem(ID_TELETEXTFILES, TeletextFiles);
-		CheckMenuItem(ID_TELETEXTLOCALHOST, TeletextLocalhost);
-		CheckMenuItem(ID_TELETEXTCUSTOM, TeletextCustom);
-		break;
+	case IDM_SELECT_TELETEXT_DATA_SOURCE: {
+		std::string DiscsPath;
+		m_Preferences.GetStringValue("DiscsPath", DiscsPath);
 
-	case ID_TELETEXTLOCALHOST:
-		if (!TeletextLocalhost)
-		{
-			TeletextFiles = false;
-			TeletextLocalhost = true;
-			TeletextCustom = false;
-			TeletextInit();
-		}
-		CheckMenuItem(ID_TELETEXTFILES, TeletextFiles);
-		CheckMenuItem(ID_TELETEXTLOCALHOST, TeletextLocalhost);
-		CheckMenuItem(ID_TELETEXTCUSTOM, TeletextCustom);
-		break;
+#ifndef __APPLE__
+		TeletextDialog Dialog(hInst,
+		                      m_hWnd,
+		                      TeletextSource,
+		                      DiscsPath,
+		                      TeletextFileName,
+		                      TeletextIP,
+		                      TeletextPort);
 
-	case ID_TELETEXTCUSTOM:
-		if (!TeletextCustom)
+		if (Dialog.DoModal())
 		{
-			TeletextFiles = false;
-			TeletextLocalhost = false;
-			TeletextCustom = true;
-			for (int ch=0; ch<4; ch++)
+			TeletextSource = Dialog.GetSource();
+
+			for (int i = 0; i < TELETEXT_CHANNEL_COUNT; i++)
 			{
-				strcpy(TeletextIP[ch],TeletextCustomIP[ch]);
-				TeletextPort[ch] = TeletextCustomPort[ch];
+				TeletextFileName[i] = Dialog.GetFileName(i);
+				TeletextIP[i] = Dialog.GetIPAddress(i);
+				TeletextPort[i] = Dialog.GetPort(i);
 			}
+
 			TeletextInit();
 		}
-		CheckMenuItem(ID_TELETEXTFILES, TeletextFiles);
-		CheckMenuItem(ID_TELETEXTLOCALHOST, TeletextLocalhost);
-		CheckMenuItem(ID_TELETEXTCUSTOM, TeletextCustom);
+#endif
 		break;
+	}
 
 	case IDM_SET_KEYBOARD_LINKS: {
 #ifndef __APPLE__
@@ -4245,6 +4209,7 @@ void BeebWin::HandleCommand(UINT MenuID)
 		Disc1770Enabled = !Disc1770Enabled;
 		CheckMenuItem(ID_FLOPPYDRIVE, Disc8271Enabled);
 		break;
+
 	case IDM_TEXTTOSPEECH_ENABLE:
 		if (m_TextToSpeechEnabled)
 		{
@@ -4298,7 +4263,7 @@ void BeebWin::HandleCommand(UINT MenuID)
 		m_TextViewEnabled = !m_TextViewEnabled;
 		InitTextView();
 		break;
-			
+
 	case IDM_DISABLEKEYSWINDOWS:
 	{
 		bool reboot = false;
@@ -4328,7 +4293,6 @@ void BeebWin::HandleCommand(UINT MenuID)
 		{
 #ifndef __APPLE__
 			int binsize=0;
-
 			RegSetBinaryValue(HKEY_LOCAL_MACHINE, CFG_KEYBOARD_LAYOUT,
 			                  CFG_SCANCODE_MAP, CFG_DISABLE_WINDOWS_KEYS, &binsize);
 #endif
@@ -4422,6 +4386,7 @@ void BeebWin::Activate(bool Active)
 			SetWindowPos(m_hWnd, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
 		}
 	}
+
 	if (m_MouseCaptured && !Active)
 	{
 		ReleaseMouse();
@@ -4460,8 +4425,8 @@ void BeebWin::TogglePause()
 
 	if (m_EmuPaused)
 	{
-		KillTimer(m_hWnd, 1);
-		KillTimer(m_hWnd, 2);
+		KillTimer(m_hWnd, TIMER_KEYBOARD);
+		KillTimer(m_hWnd, TIMER_AUTOBOOT_DELAY);
 	}
 	else
 	{
@@ -4480,6 +4445,12 @@ void BeebWin::TogglePause()
 bool BeebWin::IsPaused()
 {
 	return m_EmuPaused;
+}
+
+void BeebWin::SetFreezeWhenInactive(bool State)
+{
+	m_FreezeWhenInactive = State;
+	CheckMenuItem(IDM_FREEZEINACTIVE, m_FreezeWhenInactive);
 }
 
 /****************************************************************************/
@@ -4757,7 +4728,6 @@ void BeebWin::CheckForLocalPrefs(const char *path, bool bLoadPrefs)
 	if (path[0] == '\0')
 		return;
 
-
 	char file[_MAX_PATH];
 	char drive[_MAX_DRIVE];
 	char dir[_MAX_DIR];
@@ -4789,7 +4759,7 @@ void BeebWin::CheckForLocalPrefs(const char *path, bool bLoadPrefs)
 
 	// Look for ROMs file
 	_makepath(file, drive, dir, "Roms", "cfg");
-	
+
 	if (FileExists(file))
 	{
 		// File exists, use it
@@ -5164,18 +5134,18 @@ bool BeebWin::HasKbdCmd() const
 
 void BeebWin::SetKeyboardTimer()
 {
-	SetTimer(m_hWnd, 1, 1000, NULL);
+	SetTimer(m_hWnd, TIMER_KEYBOARD, 1000, NULL);
 }
 
 void BeebWin::SetBootDiscTimer()
 {
-	SetTimer(m_hWnd, 2, m_AutoBootDelay, NULL);
+	SetTimer(m_hWnd, TIMER_AUTOBOOT_DELAY, m_AutoBootDelay, NULL);
 }
 
 void BeebWin::KillBootDiscTimer()
 {
 	m_BootDiscTimerElapsed = true;
-	KillTimer(m_hWnd, 2);
+	KillTimer(m_hWnd, TIMER_AUTOBOOT_DELAY);
 }
 
 /****************************************************************************/
@@ -5388,7 +5358,7 @@ bool BeebWin::CheckUserDataPath(bool Persist)
 			sprintf(path, "%s%s", m_UserDataPath, RomFile);
 			strcpy(RomFile, path);
 		}
-		
+
 		if (!FileExists(RomFile))
 		{
 			Report(MessageType::Error, "Cannot open ROMs file:\n  %s", RomFile);
@@ -5404,7 +5374,6 @@ bool BeebWin::CheckUserDataPath(bool Persist)
 			sprintf(path, "%s%s", m_UserDataPath, m_PrefsFile);
 			strcpy(m_PrefsFile, path);
 		}
-		
 	}
 
 	if (success && Persist && (copy_user_files || store_user_data_path))
@@ -5487,7 +5456,7 @@ void BeebWin::HandleTimer()
 	// Do nothing if emulation is not running (e.g. if Window is being moved)
 	if ((TotalCycles - m_KbdCmdLastCycles) / 2000 < m_KbdCmdDelay)
 	{
-		SetTimer(m_hWnd, 1, m_KbdCmdDelay, NULL);
+		SetTimer(m_hWnd, TIMER_KEYBOARD, m_KbdCmdDelay, NULL);
 		return;
 	}
 	m_KbdCmdLastCycles = TotalCycles;
@@ -5498,7 +5467,7 @@ void BeebWin::HandleTimer()
 	{
 		TranslateKey(m_KbdCmdKey, true, row, col);
 		m_KbdCmdPress = false;
-		SetTimer(m_hWnd, 1, m_KbdCmdDelay, NULL);
+		SetTimer(m_hWnd, TIMER_KEYBOARD, m_KbdCmdDelay, NULL);
 	}
 	else
 	{
@@ -5506,7 +5475,7 @@ void BeebWin::HandleTimer()
 
 		if (m_KbdCmd[m_KbdCmdPos] == 0)
 		{
-			KillTimer(m_hWnd, 1);
+			KillTimer(m_hWnd, TIMER_KEYBOARD);
 		}
 		else
 		{
@@ -5564,10 +5533,17 @@ void BeebWin::HandleTimer()
 					TranslateKey(m_KbdCmdKey, true, row, col);
 			}
 
-			SetTimer(m_hWnd, 1, m_KbdCmdDelay, NULL);
-			
+			SetTimer(m_hWnd, TIMER_KEYBOARD, m_KbdCmdDelay, NULL);
 		}
 	}
+}
+
+/****************************************************************************/
+
+void BeebWin::OpenDebugWindow()
+{
+	SetFreezeWhenInactive(false);
+	DebugOpenDialog(hInst, m_hWnd);
 }
 
 /****************************************************************************/
@@ -5646,6 +5622,7 @@ MessageResult BeebWin::ReportV(MessageType type, const char *format, va_list arg
 					break;
 			}
 		}
+
 		free(buffer);
 	}
 

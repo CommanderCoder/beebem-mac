@@ -8,5 +8,8 @@
 #ifndef gdiplus_h
 #define gdiplus_h
 
+namespace Gdiplus
+{
 
+}
 #endif /* gdiplus_h */

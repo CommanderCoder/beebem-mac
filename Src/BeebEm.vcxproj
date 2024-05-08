@@ -208,6 +208,7 @@
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Master512CoPro.cpp" />
+    <ClCompile Include="Model.cpp" />
     <ClCompile Include="Music5000.cpp" />
     <ClCompile Include="PALRom.cpp" />
     <ClCompile Include="Preferences.cpp" />
@@ -228,6 +229,7 @@
     <ClCompile Include="TapeMap.cpp" />
     <ClCompile Include="TapeControlDialog.cpp" />
     <ClCompile Include="Teletext.cpp" />
+    <ClCompile Include="TeletextDialog.cpp" />
     <ClCompile Include="Thread.cpp" />
     <ClCompile Include="TouchScreen.cpp" />
     <ClCompile Include="Tube.cpp" />
@@ -391,6 +393,7 @@
     <ClInclude Include="TapeMap.h" />
     <ClInclude Include="TarmacGlobals.h" />
     <ClInclude Include="Teletext.h" />
+    <ClInclude Include="TeletextDialog.h" />
     <ClInclude Include="Thread.h" />
     <ClInclude Include="TouchScreen.h" />
     <ClInclude Include="Tube.h" />
@@ -422,6 +425,8 @@
     <Image Include="..\Help\beeb.gif" />
     <Image Include="..\Help\keyboard.jpg" />
     <Image Include="..\Help\startup.jpg" />
+    <Image Include="..\Help\teletext-files.png" />
+    <Image Include="..\Help\teletext-ip.png" />
     <Image Include="res\ADF.ico" />
     <Image Include="res\ADL.ico" />
     <Image Include="res\ADM.ico" />
@@ -487,6 +492,7 @@
     <None Include="..\Help\speech.html" />
     <None Include="..\Help\sprowcopro.html" />
     <None Include="..\Help\state.html" />
+    <None Include="..\Help\style.css" />
     <None Include="..\Help\tapes.html" />
     <None Include="..\Help\teletext.html" />
     <None Include="..\Help\troubleshooting.html" />

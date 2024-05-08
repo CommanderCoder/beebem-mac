@@ -56,6 +56,7 @@ class Dialog
 		bool IsDlgItemChecked(int nID);
 		void SetDlgItemChecked(int nID, bool bChecked);
 		void SetDlgItemFocus(int nID);
+		void EnableDlgItem(int nID, bool bEnable);
 
 	private:
 		void CenterDialog();

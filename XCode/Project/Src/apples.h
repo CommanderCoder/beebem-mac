@@ -18,6 +18,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+#include <sys/ioctl.h>
+
 #include "appleKeyCodes.h"
 
 
@@ -31,6 +33,12 @@ typedef uint32_t UINT32; // UINT32 = unsigned 32 bit value
 typedef uint8_t UINT8;   // UINT8 = unsigned 8 bit value
 typedef int32_t INT;     // INT = signed 32 bit value
 typedef int16_t INT16;   // INT16 = signed 16 bit value
+
+typedef float FLOAT;
+
+typedef uint32_t ULONG_PTR;
+typedef ULONG_PTR DWORD_PTR;
+
 
 #define BOOL bool
 
@@ -110,11 +118,13 @@ typedef struct RECT                     RECT;
 //#include <unistd.h>  // NOTE this has redefinitions of 'read' and 'write'
 
 #define SOCKET int
-#define closesocket close
 #define INVALID_SOCKET -1
 #define SOCKET_ERROR -1
 #define SOCKADDR sockaddr
+#define WSAEWOULDBLOCK -1
+#define ioctlsocket ioctl
 long WSAGetLastError();
+int closesocket(SOCKET s);
 
 #define LPSTR std::string
 #define LPCSTR std::string //const
@@ -137,8 +147,8 @@ char* _strerror(const char *strErrMsg);
 #define ODDPARITY 0
 #define NOPARITY 2
 
-
-#define LOWORD(_x) _x // nothing special
+#define LOWORD(l)           ((WORD)(((DWORD_PTR)(l)) & 0xffff))
+#define HIWORD(l)           ((WORD)((((DWORD_PTR)(l)) >> 16) & 0xffff))
 
 extern int __argc;
 extern char** __argv;
@@ -404,5 +414,8 @@ HWND GetDlgItem(
 );
 
 HWND GetFocus();
+
+
+int WSACleanup();
 
 #endif /* apples_h */

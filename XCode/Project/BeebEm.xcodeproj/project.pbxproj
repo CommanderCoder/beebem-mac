@@ -56,6 +56,7 @@
 		DC907ECA2BB6D76F00523116 /* Colour.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC907EC92BB6D76F00523116 /* Colour.swift */; };
 		DC907ECC2BB70CE000523116 /* NSImage+Bitmap.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC907ECB2BB70CE000523116 /* NSImage+Bitmap.swift */; };
 		DC907ECE2BB70E7B00523116 /* BeebSKView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC907ECD2BB70E7B00523116 /* BeebSKView.swift */; };
+		DC90FFD12BEB5B820007EB37 /* Model.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC90FFD02BEB5B820007EB37 /* Model.cpp */; };
 		DC9B41302BC20C0500C3D9D8 /* IP232.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996E92BBA0C9B00A109A5 /* IP232.cpp */; };
 		DC9B41312BC2108600C3D9D8 /* Serial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC09970D2BBA0C9C00A109A5 /* Serial.cpp */; };
 		DC9B41322BC2145D00C3D9D8 /* Thread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996EB2BBA0C9B00A109A5 /* Thread.cpp */; };
@@ -368,6 +369,9 @@
 		DC907ECD2BB70E7B00523116 /* BeebSKView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BeebSKView.swift; sourceTree = "<group>"; };
 		DC907ECF2BB7101900523116 /* BeebEm-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BeebEm-Bridging-Header.h"; sourceTree = "<group>"; };
 		DC907ED32BB7191300523116 /* mergenotes.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = mergenotes.txt; sourceTree = "<group>"; };
+		DC90FFCD2BEB5B4D0007EB37 /* TeletextDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TeletextDialog.cpp; path = ../../../Src/TeletextDialog.cpp; sourceTree = "<group>"; };
+		DC90FFCE2BEB5B4D0007EB37 /* TeletextDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TeletextDialog.h; path = ../../../Src/TeletextDialog.h; sourceTree = "<group>"; };
+		DC90FFD02BEB5B820007EB37 /* Model.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Model.cpp; path = ../../../Src/Model.cpp; sourceTree = "<group>"; };
 		DCACDAC02BC5DD2E00CEF154 /* apples.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = apples.cpp; sourceTree = "<group>"; };
 		DCACDAC22BC669B600CEF154 /* BeebWinDx-mac.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "BeebWinDx-mac.cpp"; sourceTree = "<group>"; };
 		DCACDAC52BC66F5600CEF154 /* BeebEm-Bridging-Video.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "BeebEm-Bridging-Video.cpp"; sourceTree = "<group>"; };
@@ -431,6 +435,8 @@
 		DC0996DB2BBA0C5000A109A5 /* windows_code */ = {
 			isa = PBXGroup;
 			children = (
+				DC90FFD02BEB5B820007EB37 /* Model.cpp */,
+				DC90FFCD2BEB5B4D0007EB37 /* TeletextDialog.cpp */,
 				DC0996E72BBA0C9B00A109A5 /* 6502core.cpp */,
 				DC0997022BBA0C9C00A109A5 /* AboutDialog.cpp */,
 				DC09971B2BBA0C9C00A109A5 /* Arm.cpp */,
@@ -511,6 +517,7 @@
 		DC0996DC2BBA0C6400A109A5 /* windows_headers */ = {
 			isa = PBXGroup;
 			children = (
+				DC90FFCE2BEB5B4D0007EB37 /* TeletextDialog.h */,
 				DC0997582BBA0E2500A109A5 /* 6502core.h */,
 				DC09975D2BBA0E2600A109A5 /* AboutDialog.h */,
 				DC09977A2BBA0E2600A109A5 /* Arm.h */,
@@ -1045,6 +1052,7 @@
 				DCDC73162BBE1AC600D83402 /* RingBuffer.cpp in Sources */,
 				DC907EC62BB6D48600523116 /* Renderer.swift in Sources */,
 				DCDC73102BBE188400D83402 /* Uef.cpp in Sources */,
+				DC90FFD12BEB5B820007EB37 /* Model.cpp in Sources */,
 				DCE94C192BD3117200A5C12A /* BeebEm-Files.swift in Sources */,
 				DC907EC82BB6D55100523116 /* Bitmap.swift in Sources */,
 				DC9B413A2BC22FE200C3D9D8 /* BeebWinPrefs.cpp in Sources */,

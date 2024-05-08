@@ -137,3 +137,4 @@ Check all the Mac menus with the current menus for Windows version
 
 
 
+debug.cpp, econet.cpp need reverting

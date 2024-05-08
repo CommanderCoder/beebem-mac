@@ -15,4 +15,6 @@
 #define TRUE 1
 #define FALSE 0
 
+#include "windowsx.h"
+
 #endif /* windows_h */

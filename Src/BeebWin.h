@@ -71,7 +71,6 @@ struct bmiData
 	RGBQUAD bmiColors[256];
 };
 
-
 struct LEDType
 {
 	bool ShiftLock;
@@ -112,7 +111,6 @@ struct TextToSpeechVoice
 	std::string Description;
 };
 
-#ifndef __APPLE__
 // A structure for our custom vertex type. We added texture coordinates
 struct CUSTOMVERTEX
 {
@@ -123,8 +121,6 @@ struct CUSTOMVERTEX
 
 // Our custom FVF, which describes our custom vertex structure
 #define D3DFVF_CUSTOMVERTEX (D3DFVF_XYZ|D3DFVF_DIFFUSE|D3DFVF_TEX1)
-
-#endif
 
 enum class MessageType {
 	Error,
@@ -190,7 +186,7 @@ public:
 
 	void doHorizLine(int Colour, int y, int sx, int width) {
 		if (TeletextEnabled) y/=TeletextStyle;
-		int d = (y*800)+sx+(int)ScreenAdjust+(TeletextEnabled?36:0);
+		int d = (y*800)+sx+ScreenAdjust+(TeletextEnabled?36:0);
 		if ((d+width)>(500*800)) return;
 		if (d<0) return;
 		memset(m_screen+d, Colour, width);
@@ -198,7 +194,7 @@ public:
 
 	void doInvHorizLine(int Colour, int y, int sx, int width) {
 		if (TeletextEnabled) y/=TeletextStyle;
-		int d = (y*800)+sx+(int)ScreenAdjust+(TeletextEnabled?36:0);
+		int d = (y*800)+sx+ScreenAdjust+(TeletextEnabled?36:0);
 		char *vaddr;
 		if ((d+width)>(500*800)) return;
 		if (d<0) return;
@@ -213,21 +209,21 @@ public:
 	}
 
 	EightUChars *GetLinePtr(int y) {
-		int d = (y*800)+(int)ScreenAdjust;
+		int d = (y*800)+ScreenAdjust;
 		if (d > (MAX_VIDEO_SCAN_LINES*800))
 			return((EightUChars *)(m_screen+(MAX_VIDEO_SCAN_LINES*800)));
 		return((EightUChars *)(m_screen + d));
 	}
 
 	SixteenUChars *GetLinePtr16(int y) {
-		int d = (y*800)+(int)ScreenAdjust;
+		int d = (y*800)+ScreenAdjust;
 		if (d > (MAX_VIDEO_SCAN_LINES*800))
 			return((SixteenUChars *)(m_screen+(MAX_VIDEO_SCAN_LINES*800)));
 		return((SixteenUChars *)(m_screen + d));
 	}
 
 	HWND GethWnd() { return m_hWnd; }
-	
+
 	void ResetBeebSystem(Model NewModelType, bool LoadRoms);
 	void Break();
 
@@ -260,6 +256,7 @@ public:
 	bool IsFrozen();
 	void TogglePause();
 	bool IsPaused();
+	void SetFreezeWhenInactive(bool State);
 	void EditRomConfig();
 	void OpenUserKeyboardDialog();
 	void UserKeyboardDialogClosed();
@@ -341,7 +338,7 @@ public:
 	HRESULT InitDX9();
 	void ExitDX9();
 	void RenderDX9();
-	
+
 	void TranslateWindowSize(void);
 	void TranslateDDSize(void);
 	void CalcAspectRatioAdjustment(int DisplayWidth, int DisplayHeight);
@@ -384,10 +381,11 @@ public:
 	                   int SourceHeight,
 	                   bool Teletext);
 	bool GetImageFile(char *FileName, int Size);
-#ifndef __APPLE__
 	bool GetImageEncoderClsid(const WCHAR *mimeType, CLSID *encoderClsid);
-#endif
-	
+
+	// Debugger
+	void OpenDebugWindow();
+
 	bool InitTextToSpeech();
 	void TextToSpeechResetState();
 	void CloseTextToSpeech();
@@ -502,7 +500,6 @@ public:
 	HGDIOBJ m_hOldObj;
 	HDC m_hDCBitmap;
 	HGDIOBJ m_hBitmap;
-
 	bmiData m_bmi;
 	PaletteType m_PaletteType;
 	char* m_screen;
@@ -551,7 +548,6 @@ public:
 	bool m_JoystickCaptured;
 	JOYCAPS m_JoystickCaps;
 	UINT m_MenuIDSticks;
-	
 
 	// Mouse capture
 	bool m_HideCursor;

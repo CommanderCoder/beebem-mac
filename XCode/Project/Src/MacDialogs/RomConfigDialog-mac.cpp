@@ -130,6 +130,24 @@ void ListView_DeleteAllItems(HWND wnd)
 	}
 }
 
+/****************************************************************************/
+
+void RomConfigDialog::FillModelList()
+{
+#ifndef __APPLE__
+	HWND hWndModel = GetDlgItem(m_hwnd, IDC_MODEL);
+
+	for (int i = 0; i < static_cast<int>(Model::Last); i++)
+	{
+		ComboBox_AddString(hWndModel, GetModelName(static_cast<Model>(i)));
+	}
+
+	ComboBox_SetCurSel(hWndModel, static_cast<int>(m_Model));
+#endif
+	
+}
+
+
 void RomConfigDialog::FillROMList()
 {
 	Edit_SetText(m_hWndModel, szModel[static_cast<int>(m_Model)]);
@@ -183,26 +201,14 @@ bool RomConfigDialog::WM_COMMAND(int wParam)
 {
 	switch (LOWORD(wParam))
 	{
-	case IDC_BBCB:
-		m_Model = Model::B;
+	case IDC_MODEL:{
+		// model is the currently selected Model
+		// from the model combo box
+		int model = HIWORD(wParam);
+		m_Model = static_cast<Model>(model);
 		FillROMList();
-		return TRUE;
-
-	case IDC_INTEGRAB:
-		m_Model = Model::IntegraB;
-		FillROMList();
-		return TRUE;
-
-	case IDC_BBCBPLUS:
-		m_Model = Model::BPlus;
-		FillROMList();
-		return TRUE;
-
-	case IDC_MASTER128:
-		m_Model = Model::Master128;
-		FillROMList();
-		return TRUE;
-
+			return TRUE;
+	}
 	case IDC_SELECTROM: {
 		int Row = ListView_GetSelectionMark(m_hWndROMList);
 
