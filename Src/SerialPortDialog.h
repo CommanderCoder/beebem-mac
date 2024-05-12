@@ -67,5 +67,7 @@ class SerialPortDialog : public Dialog
 		bool m_IP232RawComms;
 		bool m_IP232Handshake;
 };
+#else
+#include "SerialPortDialog-mac.hpp"
 #endif
 #endif

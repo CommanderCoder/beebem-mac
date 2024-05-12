@@ -2886,6 +2886,120 @@ Gw
             </objects>
             <point key="canvasLocation" x="954" y="1671"/>
         </scene>
+        <!--Serial Port Window Controller-->
+        <scene sceneID="CJL-EU-a1M">
+            <objects>
+                <windowController storyboardIdentifier="SerialPortSB" id="jKj-AK-4zZ" userLabel="Serial Port Window Controller" sceneMemberID="viewController">
+                    <window key="window" title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="qio-Cw-AgI">
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+                        <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+                        <rect key="contentRect" x="196" y="239" width="480" height="270"/>
+                        <rect key="screenRect" x="0.0" y="0.0" width="1440" height="875"/>
+                        <view key="contentView" id="QUj-GQ-jfc">
+                            <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                        </view>
+                        <connections>
+                            <outlet property="delegate" destination="jKj-AK-4zZ" id="iSg-Ck-jAp"/>
+                        </connections>
+                    </window>
+                    <connections>
+                        <segue destination="as8-pM-7O7" kind="relationship" relationship="window.shadowedContentViewController" id="H5R-db-gCz"/>
+                    </connections>
+                </windowController>
+                <customObject id="UHw-j4-8q1" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1537" y="355"/>
+        </scene>
+        <!--Select Key Window Controller-->
+        <scene sceneID="RTj-8p-r6g">
+            <objects>
+                <windowController id="vmv-Qu-nWg" userLabel="Select Key Window Controller" sceneMemberID="viewController">
+                    <window key="window" title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="U1u-go-Tj0">
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+                        <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+                        <rect key="contentRect" x="196" y="239" width="480" height="270"/>
+                        <rect key="screenRect" x="0.0" y="0.0" width="1440" height="875"/>
+                        <view key="contentView" id="hZm-X9-GeE">
+                            <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                        </view>
+                        <connections>
+                            <outlet property="delegate" destination="vmv-Qu-nWg" id="TS7-BX-ysT"/>
+                        </connections>
+                    </window>
+                    <connections>
+                        <segue destination="abj-xJ-8Kb" kind="relationship" relationship="window.shadowedContentViewController" id="Vhx-sO-aDb"/>
+                    </connections>
+                </windowController>
+                <customObject id="o6e-df-kLg" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-2752" y="328"/>
+        </scene>
+        <!--SelectKey View Controller-->
+        <scene sceneID="eSN-xz-2x3">
+            <objects>
+                <viewController id="abj-xJ-8Kb" userLabel="SelectKey View Controller" customClass="SelectKeyViewController" customModule="BeebEm" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" id="DUR-sH-dOs">
+                        <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </view>
+                </viewController>
+                <customObject id="y8b-jw-MDA" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-2752" y="761"/>
+        </scene>
+        <!--Teletext Window Controller-->
+        <scene sceneID="FKL-Gg-SYa">
+            <objects>
+                <windowController storyboardIdentifier="TeletextSB" id="dfy-bB-rsd" userLabel="Teletext Window Controller" sceneMemberID="viewController">
+                    <window key="window" title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="4Hl-Iw-w8P">
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+                        <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+                        <rect key="contentRect" x="196" y="239" width="480" height="270"/>
+                        <rect key="screenRect" x="0.0" y="0.0" width="1440" height="875"/>
+                        <view key="contentView" id="K8U-I9-r1P">
+                            <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                        </view>
+                        <connections>
+                            <outlet property="delegate" destination="dfy-bB-rsd" id="Wi5-c3-K1a"/>
+                        </connections>
+                    </window>
+                    <connections>
+                        <segue destination="NEo-lt-B5h" kind="relationship" relationship="window.shadowedContentViewController" id="bOj-QI-ptN"/>
+                    </connections>
+                </windowController>
+                <customObject id="mq6-nm-zEB" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-2085" y="364"/>
+        </scene>
+        <!--Serial Port View Controller-->
+        <scene sceneID="lTr-ki-QBH">
+            <objects>
+                <viewController id="as8-pM-7O7" userLabel="Serial Port View Controller" customClass="SerialPortViewController" customModule="BeebEm" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" id="zJj-39-CPf">
+                        <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </view>
+                </viewController>
+                <customObject id="bPf-dx-zLs" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1537" y="754"/>
+        </scene>
+        <!--Teletext View Controller-->
+        <scene sceneID="KbS-xg-7Kc">
+            <objects>
+                <viewController id="NEo-lt-B5h" userLabel="Teletext View Controller" customClass="TeletextViewController" customModule="BeebEm" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" id="v7K-Ut-nZp">
+                        <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </view>
+                </viewController>
+                <customObject id="WZ3-W3-DZE" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-2062" y="754"/>
+        </scene>
         <!--ROM Config Window Controller-->
         <scene sceneID="L1R-Vb-fon">
             <objects>
@@ -2909,12 +3023,12 @@ Gw
                 </windowController>
                 <customObject id="Aaj-Uu-pwj" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-945" y="496"/>
+            <point key="canvasLocation" x="-891" y="413"/>
         </scene>
-        <!--ROM Configuration-->
+        <!--ROM Config View Controller-->
         <scene sceneID="Dwl-zq-04v">
             <objects>
-                <viewController title="ROM Configuration" showSeguePresentationStyle="single" id="zrW-dx-nsE" customClass="RomConfigViewController" customModule="BeebEm" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="ROM Configuration" showSeguePresentationStyle="single" id="zrW-dx-nsE" userLabel="ROM Config View Controller" customClass="RomConfigViewController" customModule="BeebEm" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="m1H-fk-nQ2">
                         <rect key="frame" x="0.0" y="0.0" width="534" height="418"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -3237,10 +3351,26 @@ DQ
                                     <real value="3.4028234663852886e+38"/>
                                 </customSpacing>
                             </stackView>
+                            <comboBox verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ctZ-uy-xdz">
+                                <rect key="frame" x="152" y="346" width="99" height="25"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <comboBoxCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" sendsActionOnEndEditing="YES" title="Model" drawsBackground="YES" completes="NO" numberOfVisibleItems="5" id="JZX-pg-W0M">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                    <objectValues>
+                                        <string>BBC B</string>
+                                        <string>BBC B Plus</string>
+                                        <string>Integra B</string>
+                                        <string>Master 128</string>
+                                    </objectValues>
+                                </comboBoxCell>
+                            </comboBox>
                         </subviews>
                     </view>
                     <connections>
                         <outlet property="modelName" destination="DrN-k8-gGx" id="5fI-5e-Mxu"/>
+                        <outlet property="modelSelection" destination="ctZ-uy-xdz" id="EF3-Ff-3tQ"/>
                         <outlet property="tableView" destination="avX-a4-TnW" id="xvo-ur-8Jm"/>
                     </connections>
                 </viewController>
@@ -3252,11 +3382,12 @@ DQ
         <scene sceneID="R2V-B0-nI4">
             <objects>
                 <windowController storyboardIdentifier="Document Window Controller" id="jGA-0Y-lOj" userLabel="BeebEm Window Controller" sceneMemberID="viewController">
-                    <window key="window" title="BeebEmulator" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" tabbingMode="disallowed" id="Ckk-yw-fiv">
-                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+                    <window key="window" title="BeebEmulator" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" tabbingMode="disallowed" toolbarStyle="expanded" id="Ckk-yw-fiv">
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" texturedBackground="YES" fullSizeContentView="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-                        <rect key="contentRect" x="196" y="240" width="640" height="512"/>
+                        <rect key="contentRect" x="44" y="339" width="640" height="512"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
+                        <contentBorderThickness minY="22"/>
                         <connections>
                             <outlet property="delegate" destination="jGA-0Y-lOj" id="98r-iN-zZc"/>
                         </connections>
@@ -3274,11 +3405,11 @@ DQ
             <objects>
                 <viewController title="TITLE for BeebViewController" showSeguePresentationStyle="single" id="5gI-5U-AMq" userLabel="BeebEm View Controller" customClass="BeebViewController" customModule="BeebEm" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="ERx-hH-rdd">
-                        <rect key="frame" x="0.0" y="0.0" width="641" height="600"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <rect key="frame" x="0.0" y="0.0" width="640" height="512"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <stackView distribution="fill" orientation="horizontal" alignment="top" spacing="25" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2kC-QC-Xw0" userLabel="KB">
-                                <rect key="frame" x="7" y="41" width="180" height="89"/>
+                            <stackView distribution="fill" orientation="horizontal" alignment="top" spacing="25" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" ambiguous="YES" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2kC-QC-Xw0" userLabel="KB">
+                                <rect key="frame" x="20" y="81" width="180" height="89"/>
                                 <subviews>
                                     <stackView distribution="fill" orientation="vertical" alignment="centerX" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="I7R-gx-0rT" userLabel="cass">
                                         <rect key="frame" x="0.0" y="0.0" width="58" height="89"/>
@@ -3393,8 +3524,21 @@ DQ
                                     <real value="3.4028234663852886e+38"/>
                                 </customSpacing>
                             </stackView>
-                            <stackView distribution="fill" orientation="horizontal" alignment="top" spacing="10" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nHZ-ef-vPG" userLabel="Disc">
-                                <rect key="frame" x="418" y="41" width="208" height="33"/>
+                            <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DU3-gu-y6b" userLabel="BeebView" customClass="BeebSKView" customModule="BeebEm" customModuleProvider="target">
+                                <rect key="frame" x="121" y="178" width="399" height="314"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            </customView>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" textCompletion="NO" id="KAZ-Fy-G48">
+                                <rect key="frame" x="208" y="150" width="204" height="20"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <textFieldCell key="cell" refusesFirstResponder="YES" allowsUndo="NO" borderStyle="border" alignment="center" title="Work In Progress" drawsBackground="YES" id="hzH-UM-YpH">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <stackView distribution="fill" orientation="horizontal" alignment="top" spacing="10" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" fixedFrame="YES" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nHZ-ef-vPG" userLabel="Disc">
+                                <rect key="frame" x="420" y="137" width="208" height="33"/>
                                 <subviews>
                                     <stackView distribution="fill" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ijy-eb-7St">
                                         <rect key="frame" x="0.0" y="0.0" width="28" height="33"/>
@@ -3570,30 +3714,7 @@ DQ
                                     <real value="3.4028234663852886e+38"/>
                                 </customSpacing>
                             </stackView>
-                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="DU3-gu-y6b" userLabel="BeebView" customClass="BeebSKView" customModule="BeebEm" customModuleProvider="target">
-                                <rect key="frame" x="7" y="167" width="619" height="433"/>
-                            </customView>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" textCompletion="NO" id="KAZ-Fy-G48">
-                                <rect key="frame" x="195" y="41" width="205" height="20"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <textFieldCell key="cell" refusesFirstResponder="YES" allowsUndo="NO" borderStyle="border" alignment="center" title="Work In Progress" drawsBackground="YES" id="hzH-UM-YpH">
-                                    <font key="font" metaFont="system"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
                         </subviews>
-                        <constraints>
-                            <constraint firstItem="DU3-gu-y6b" firstAttribute="top" secondItem="ERx-hH-rdd" secondAttribute="top" id="6fi-wA-yih"/>
-                            <constraint firstItem="DU3-gu-y6b" firstAttribute="leading" secondItem="2kC-QC-Xw0" secondAttribute="leading" id="95e-89-5Vy"/>
-                            <constraint firstItem="2kC-QC-Xw0" firstAttribute="baseline" secondItem="nHZ-ef-vPG" secondAttribute="baseline" id="E8D-gh-kwa"/>
-                            <constraint firstItem="2kC-QC-Xw0" firstAttribute="bottom" secondItem="KAZ-Fy-G48" secondAttribute="bottom" id="RPD-fj-8oo"/>
-                            <constraint firstItem="DU3-gu-y6b" firstAttribute="centerX" secondItem="KAZ-Fy-G48" secondAttribute="centerX" id="Wru-BT-yFC"/>
-                            <constraint firstItem="DU3-gu-y6b" firstAttribute="leading" secondItem="ERx-hH-rdd" secondAttribute="leading" constant="7" id="YDH-nN-E4p"/>
-                            <constraint firstItem="DU3-gu-y6b" firstAttribute="trailing" secondItem="nHZ-ef-vPG" secondAttribute="trailing" id="bZM-UK-954"/>
-                            <constraint firstItem="KAZ-Fy-G48" firstAttribute="leading" secondItem="2kC-QC-Xw0" secondAttribute="trailing" constant="27" id="fMp-tu-SsE"/>
-                            <constraint firstItem="2kC-QC-Xw0" firstAttribute="top" secondItem="DU3-gu-y6b" secondAttribute="bottom" constant="37" id="yP6-Qb-gx0"/>
-                        </constraints>
                     </view>
                     <connections>
                         <outlet property="CapsLED" destination="t43-t0-IER" id="iVk-yO-tIT"/>
@@ -3613,7 +3734,7 @@ DQ
                 </viewController>
                 <customObject id="2Tp-Fl-jBw" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-226.5" y="1152"/>
+            <point key="canvasLocation" x="-227" y="1152"/>
         </scene>
         <!--BreakoutBox Window Controller-->
         <scene sceneID="DBR-Wq-wVO">

@@ -47,3 +47,30 @@ public func swift_UserKeyboardDialog() -> Bool
 	return false
 }
 
+
+
+
+
+// need to have given the controller an identified (StoryboardID)
+let selectKeyWindow: NSWindowController =  NSStoryboard(name: "Main", bundle: nil)
+	.instantiateController(withIdentifier: "SelectKeySB") as! NSWindowController
+
+let selectKeyView: SelectKeyViewController = selectKeyWindow.contentViewController as! SelectKeyViewController
+
+
+
+// allow access to this in C
+@_cdecl("swift_DoModalSK")
+public func swift_DoModalSK(caller : UnsafeMutableRawPointer)
+{
+	let modalresp = NSApp.runModal(for: selectKeyWindow.window!)
+	selectKeyWindow.close()
+	NSApp.stopModal()
+
+	//now export the files
+	if (modalresp == NSApplication.ModalResponse.OK)
+	{
+		// this should call the method within Dialog
+
+	}
+}

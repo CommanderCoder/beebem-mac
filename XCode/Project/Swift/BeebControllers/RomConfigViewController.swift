@@ -21,7 +21,10 @@ class RomConfigViewController: NSViewController
     
     @IBOutlet weak var tableView: NSTableView!
 
+	@IBOutlet weak var modelSelection: NSComboBox!
+
     override func viewDidAppear() {
+		modelSelection.selectItem(at: 2)
     }
     
     override func viewDidDisappear() {
@@ -77,10 +80,16 @@ class RomConfigViewController: NSViewController
         super.viewDidLoad()
         // Do view setup here.
 
+		
         tableView.delegate = self
         tableView.dataSource = self
-
         tableView.reloadData()
+		
+		
+		modelSelection.delegate = self
+//		modelSelection.dataSource = self
+		modelSelection.reloadData()
+
     }
     
     func returnRowInTable() -> Int {
@@ -95,7 +104,21 @@ class RomConfigViewController: NSViewController
 }
 
 
+// combo box
 
+//extension RomConfigViewController: NSComboBoxDataSource {
+//
+//	func numberOfRows(in tableView: NSComboBox) -> Int {
+//	  return rows
+//	}
+//}
+extension RomConfigViewController: NSComboBoxDelegate {
+	func comboBoxSelectionDidChange(_ notification: Notification) {
+		print((notification.object as! NSComboBox).indexOfSelectedItem)
+	}
+}
+
+//table view
 
 extension RomConfigViewController: NSTableViewDataSource {
 
@@ -129,7 +152,6 @@ extension RomConfigViewController: NSTableViewDelegate {
 
     func setModelText(_ n : String )
     {
-        print(n)
         modelName.stringValue = n
     }
     

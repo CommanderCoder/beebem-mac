@@ -152,6 +152,7 @@ typedef struct sockaddr_in {
 #define ioctlsocket ioctl
 #define IPPROTO_UDP -1
 #define INADDR_ANY -1
+#define INADDR_NONE -1
 #define INADDR_BROADCAST -1
 typedef struct hostent {
   char  *h_name;

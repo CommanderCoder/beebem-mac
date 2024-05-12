@@ -133,7 +133,7 @@ static void SetDlgItemChecked(HWND hDlg, UINT nIDDlgItem, bool Checked)
 }
 
 
-void CheckRadioButton(HWND hwndDlg,
+static void CheckRadioButton(HWND hwndDlg,
 					  int a,
 					  int b,
 					  int c)
