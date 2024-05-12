@@ -1257,7 +1257,11 @@ void BeebReadRoms(void) {
 	{
 		RomName = RomConfig[static_cast<int>(MachineType)][16-bank];
 		strcpy(fullname,RomName);
+#ifndef __APPLE__
 		if ((RomName[0]!='\\') && (RomName[1]!=':')) {
+#else
+		if ((RomName[0]!='\\') && (RomName[0]!='/') && (RomName[1]!=':') ) {
+#endif
 			strcpy(fullname,RomPath);
 			strcat(fullname,"BeebFile/");
 			strcat(fullname,RomName);

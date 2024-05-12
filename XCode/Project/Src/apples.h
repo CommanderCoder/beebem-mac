@@ -297,6 +297,8 @@ extern "C" int swift_EndDialog(bool ok);
 class RomConfigDialog;
 extern "C" int swift_DoModalRC(RomConfigDialog* dialog); //
 extern "C" int swift_UserKeyboardDialog();
+extern "C" int swift_SetCurSelRC(int m);
+
 
 // delay the next update of the cpu (i.e. Exec6502Instruction) by this accumulation of
 // this time

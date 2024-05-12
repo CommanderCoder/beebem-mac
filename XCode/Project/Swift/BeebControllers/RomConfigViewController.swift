@@ -17,36 +17,18 @@ class RomConfigViewController: NSViewController
     var rows = 16
 
     
-    @IBOutlet weak var modelName: NSTextField!
-    
     @IBOutlet weak var tableView: NSTableView!
 
 	@IBOutlet weak var modelSelection: NSComboBox!
 
     override func viewDidAppear() {
-		modelSelection.selectItem(at: 2)
+		tableView.reloadData()
     }
     
     override func viewDidDisappear() {
+		NSApp.stopModal()
     }
     
-    @IBAction func BBC_B(_ sender: Any) {
-		let m = Int32(MachineModel.B.rawValue)
-		RCWindowCommandHandler(IDC_MODEL & (m<<16))
-		// model value in HIWORD
-    }
-    @IBAction func IntegraB(_ sender: Any) {
-		let m = Int32(MachineModel.IntegraB.rawValue)
-		RCWindowCommandHandler(IDC_MODEL & (m<<16))
-    }
-    @IBAction func BBCBPlus(_ sender: Any) {
-		let m = Int32(MachineModel.BPlus.rawValue)
-		RCWindowCommandHandler(IDC_MODEL & (m<<16))
-    }
-    @IBAction func Master128(_ sender: Any) {
-		let m = Int32(MachineModel.Master128.rawValue)
-		RCWindowCommandHandler(IDC_MODEL & (m<<16))
-    }
     @IBAction func SelectROM(_ sender: Any) {
         RCWindowCommandHandler(IDC_SELECTROM)
     }
@@ -114,7 +96,11 @@ class RomConfigViewController: NSViewController
 //}
 extension RomConfigViewController: NSComboBoxDelegate {
 	func comboBoxSelectionDidChange(_ notification: Notification) {
-		print((notification.object as! NSComboBox).indexOfSelectedItem)
+		let m = (notification.object as! NSComboBox).indexOfSelectedItem
+		let p = IDC_MODEL | Int32(m<<16)
+		
+		RCWindowCommandHandler(p)
+		tableView.reloadData()
 	}
 }
 
@@ -149,15 +135,10 @@ extension RomConfigViewController: NSTableViewDelegate {
         return nil
     }
     
-
-    func setModelText(_ n : String )
-    {
-        modelName.stringValue = n
-    }
     
     func tableViewSelectionDidChange(_ notification: Notification) {
         selectedRow = tableView.selectedRow
-        print("\(#function) \(selectedRow) \(notification.name)")
+//        print("\(#function) \(selectedRow) \(notification.name)")
 
     }
 }

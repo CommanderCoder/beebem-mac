@@ -46,7 +46,7 @@ static int LVInsertItem(
 	return 0;
 }
 
-static void LVSetItemTextRC(
+static void LVSetItemText(
 	HWND hWnd, UINT uRow, UINT uCol, const LPTSTR pszText)
 {
 	// change the row/column data which is read by swift dialogue
@@ -94,11 +94,11 @@ void RomConfigDialog::UpdateROMField(int Row)
 
 		if (Bank >= 0 && Bank <= 7)
 		{
-			Unplugged = (CMOSRAM[20] & (1 << Bank)) != 0;
+			Unplugged = (CMOSRAM[20] & (1 << Bank)) == 0;
 		}
 		else if (Bank >= 8 && Bank <= 15)
 		{
-			Unplugged = (CMOSRAM[21] & (1 << (Bank - 8))) != 0;
+			Unplugged = (CMOSRAM[21] & (1 << (Bank - 8))) == 0;
 		}
 	}
 
@@ -109,15 +109,10 @@ void RomConfigDialog::UpdateROMField(int Row)
 		strncat(szROMFile, " (unplugged)", _MAX_PATH);
 	}
 
-	LVSetItemTextRC(m_hWndROMList, Row, 1, szROMFile);
+	LVSetItemText(m_hWndROMList, Row, 1, szROMFile);
 }
 
 /****************************************************************************/
-
-void Edit_SetText(HWND wnd, const char* model)
-{
-	swift_RCSetModelText(model);
-}
 
 void ListView_DeleteAllItems(HWND wnd)
 {
@@ -130,11 +125,22 @@ void ListView_DeleteAllItems(HWND wnd)
 	}
 }
 
+static void ComboBox_AddString(UINT* nIDDlgItem,
+							   std::string b)
+{
+//	swift_AddStringRC(b);
+}
+
+
+static void ComboBox_SetCurSel(UINT* nIDDlgItem,
+							   INT b)
+{
+	swift_SetCurSelRC(b);
+}
 /****************************************************************************/
 
 void RomConfigDialog::FillModelList()
 {
-#ifndef __APPLE__
 	HWND hWndModel = GetDlgItem(m_hwnd, IDC_MODEL);
 
 	for (int i = 0; i < static_cast<int>(Model::Last); i++)
@@ -143,20 +149,16 @@ void RomConfigDialog::FillModelList()
 	}
 
 	ComboBox_SetCurSel(hWndModel, static_cast<int>(m_Model));
-#endif
-	
 }
 
 
 void RomConfigDialog::FillROMList()
 {
-	Edit_SetText(m_hWndModel, szModel[static_cast<int>(m_Model)]);
-
 	ListView_DeleteAllItems(m_hWndROMList);
 
 	int Row = 0;
 	LVInsertItem(m_hWndROMList, Row, 0, "OS", 16);
-	LVSetItemTextRC(m_hWndROMList, Row, 1, m_RomConfig[static_cast<int>(m_Model)][0]);
+	LVSetItemText(m_hWndROMList, Row, 1, m_RomConfig[static_cast<int>(m_Model)][0]);
 
 	for (Row = 1; Row <= 16; ++Row)
 	{
@@ -168,6 +170,7 @@ void RomConfigDialog::FillROMList()
 		LVInsertItem(m_hWndROMList, Row, 0, str, Bank);
 		UpdateROMField(Row);
 	}
+	
 }
 
 /****************************************************************************/
@@ -186,6 +189,7 @@ bool RomConfigDialog::DoModal() {
 
 bool RomConfigDialog::WM_INITDIALOG()
 {
+	FillModelList();
 	FillROMList();
 	return TRUE;
 }
@@ -445,7 +449,8 @@ bool RomConfigDialog::GetROMFile(char *pszFileName)
 	if (fileDialog.Open())
 	{
 		// Save directory as default for next time
-		unsigned int PathLength = (unsigned int)(strrchr(pszFileName, '\\') - pszFileName);
+//		unsigned int PathLength = (unsigned int)(strrchr(pszFileName, '\\') - pszFileName);
+		unsigned int PathLength = (unsigned int)(strrchr(pszFileName, '/') - pszFileName);
 		strncpy(szDefaultROMPath, pszFileName, PathLength);
 		szDefaultROMPath[PathLength] = 0;
 

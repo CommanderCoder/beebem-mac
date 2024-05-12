@@ -15,18 +15,6 @@ let romConfigWindow: NSWindowController =  NSStoryboard(name: "Main", bundle: ni
 let romConfigView: RomConfigViewController = romConfigWindow.contentViewController as! RomConfigViewController
 
 
-
-@_cdecl("swift_RCSetModelText")
-public func swift_RCSetModelText(_ n: UnsafePointer<CChar>)
-{
-	print(n)
-	let z = String( cString: n )
-	
-	// set model text
-	romConfigView.setModelText(z)
-	romConfigView.tableView.reloadData()
-
-}
 @_cdecl("swift_RCGetSelectionMark")
 public func  swift_RCGetSelectionMark() -> Int
 {
@@ -60,4 +48,11 @@ public func swift_DoModalRC(caller : UnsafeMutableRawPointer)
 		// this should call the method within Dialog
 
 	}
+}
+
+@_cdecl("swift_SetCurSelRC")
+public func swift_SetCurSelRC(selection : Int)
+{
+	romConfigView.modelSelection.selectItem(at: selection)
+	romConfigView.tableView.reloadData()
 }
