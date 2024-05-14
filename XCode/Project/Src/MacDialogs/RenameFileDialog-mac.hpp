@@ -42,7 +42,7 @@ class RenameFileDialog : public Dialog
 //		);
 
 		virtual bool WM_INITDIALOG();
-		virtual bool WM_COMMAND(int wParam){return false;}
+		virtual bool WM_COMMAND(WPARAM wParam){return false;}
 		virtual void WM_NOTIFY(){}
 
 	private:

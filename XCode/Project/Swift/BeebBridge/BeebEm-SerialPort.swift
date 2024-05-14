@@ -18,8 +18,10 @@ let serialPortView: SerialPortViewController = serialPortWindow.contentViewContr
 
 // Serial Port
 
-@_cdecl("swift_SPOpenDialog")
-public func swift_SPOpenDialog()
+@_cdecl("swift_DoModalSP")
+public func swift_DoModalSP(caller : UnsafeMutableRawPointer)
 {
+	print(caller)
+
 	serialPortWindow.showWindow(nil);
 }

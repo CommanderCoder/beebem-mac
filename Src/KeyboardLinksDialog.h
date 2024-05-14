@@ -45,5 +45,7 @@ class KeyboardLinksDialog : public Dialog
 	private:
 		unsigned char m_Value;
 };
+#else
+#include "KeyboardLinksDialog-mac.hpp"
 #endif
 #endif

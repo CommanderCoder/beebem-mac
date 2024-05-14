@@ -1,0 +1,135 @@
+//
+//  KeyboardLinksDialog-mac.cpp
+//  BeebEm
+//
+//  Created by Commander Coder on 13/05/2024.
+//
+
+#include "KeyboardLinksDialog-mac.hpp"
+
+
+#include <windows.h>
+
+#include "KeyboardLinksDialog.h"
+#include "Resource.h"
+#include "beebemrcids.h"
+#include "Main.h"
+
+
+/****************************************************************************/
+
+KeyboardLinksDialog::KeyboardLinksDialog(HINSTANCE hInstance,
+										 HWND hwndParent,
+										 unsigned char Value) :
+	Dialog(hInstance, hwndParent, IDD_KEYBOARD_LINKS),
+	m_Value(Value)
+{
+}
+
+/****************************************************************************/
+
+static const UINT nControlIDs[] = {
+	IDC_KEYBOARD_BIT0,
+	IDC_KEYBOARD_BIT1,
+	IDC_KEYBOARD_BIT2,
+	IDC_KEYBOARD_BIT3,
+	IDC_KEYBOARD_BIT4,
+	IDC_KEYBOARD_BIT5,
+	IDC_KEYBOARD_BIT6,
+	IDC_KEYBOARD_BIT7
+};
+
+
+static bool IsDlgItemChecked(UINT nIDDlgItem)
+{
+	auto cmdID = RC2ID.find(nIDDlgItem);
+	if (cmdID != RC2ID.end())
+	{
+		return swift_GetDlgCheck(cmdID->second);
+	}
+	else
+	{
+		mainWin->Report(MessageType::Error, "cannot find menu item %d\n", nIDDlgItem);
+	}
+	return FALSE;
+}
+
+
+static void SetDlgItemChecked(UINT nIDDlgItem, bool Checked)
+{
+	auto cmdID = RC2ID.find(nIDDlgItem);
+	if (cmdID != RC2ID.end())
+	{
+		swift_SetDlgCheck(cmdID->second, Checked);
+	}
+	else
+	{
+		mainWin->Report(MessageType::Error, "cannot find menu item %d\n", nIDDlgItem);
+	}
+}
+
+extern KeyboardLinksDialog* runningKLDialog;
+
+bool KeyboardLinksDialog::DoModal() {
+	runningKLDialog = this;
+	WM_INITDIALOG();
+	bool ret = swift_DoModalKL(this);
+	//runningKLDialog// = NULL;
+	return ret;
+}
+
+//INT_PTR KeyboardLinksDialog::DlgProc(UINT   nMessage,
+//									 WPARAM wParam,
+//									 LPARAM /* lParam */)
+//{
+//	switch (nMessage)
+//	{
+//
+//		case WM_INITDIALOG: {
+bool KeyboardLinksDialog::WM_INITDIALOG()
+{
+			for (int i = 0; i < 8; i++)
+			{
+				SetDlgItemChecked(nControlIDs[i], (m_Value & (1 << i)) != 0);
+			}
+			
+			return TRUE;
+}
+
+//		case WM_COMMAND:
+bool KeyboardLinksDialog::WM_COMMAND(WPARAM wParam)
+{
+			switch (LOWORD(wParam))
+			{
+			case IDOK:
+				m_Value = 0;
+
+				for (int i = 0; i < 8; i++)
+				{
+					if (IsDlgItemChecked(nControlIDs[i]))
+					{
+						m_Value |= 1 << i;
+					}
+				}
+
+					runningKLDialog = NULL;
+
+				EndDialog(m_hwnd, wParam);
+				return TRUE;
+
+			case IDCANCEL:
+					runningKLDialog = NULL;
+				EndDialog(m_hwnd, wParam);
+				return TRUE;
+			}
+//	}
+
+	return FALSE;
+}
+
+/****************************************************************************/
+
+unsigned char KeyboardLinksDialog::GetValue() const
+{
+	return m_Value;
+}

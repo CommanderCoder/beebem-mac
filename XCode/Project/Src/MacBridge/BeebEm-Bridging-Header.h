@@ -19,6 +19,7 @@ void beeb_handlekeys(long eventkind, unsigned long keycode, char charCode);
 //void beeb_TapeControlOpenDialog();
 //void beeb_TapeControlCloseDialog();
 long beeb_TCHandleCommand(unsigned int cmdID);
+long beeb_KLHandleCommand(unsigned int cmdID);
 
 
 long beeb_DbgHandleCommand(unsigned int cmdID);

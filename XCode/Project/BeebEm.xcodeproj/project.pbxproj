@@ -34,6 +34,10 @@
 		DC527D122BC75316000D7CCF /* UserData in Resources */ = {isa = PBXBuildFile; fileRef = DC527D112BC75316000D7CCF /* UserData */; };
 		DC527D142BC7532E000D7CCF /* Help in Resources */ = {isa = PBXBuildFile; fileRef = DC527D132BC7532E000D7CCF /* Help */; };
 		DC527D172BC9110E000D7CCF /* BeebEm-Bridging-Keyboard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC527D152BC9110E000D7CCF /* BeebEm-Bridging-Keyboard.cpp */; };
+		DC69C9F52BF2BDB600610067 /* KeyboardLinksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC69C9F42BF2BDB600610067 /* KeyboardLinksViewController.swift */; };
+		DC69C9F72BF2BDC700610067 /* BeebEm-KeyboardLinks.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC69C9F62BF2BDC700610067 /* BeebEm-KeyboardLinks.swift */; };
+		DC69C9FA2BF2BDE100610067 /* KeyboardLinksDialog-mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC69C9F82BF2BDE100610067 /* KeyboardLinksDialog-mac.cpp */; };
+		DC69C9FD2BF2C87A00610067 /* BeebEm-Bridging-KeyboardLinks.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC69C9FB2BF2C87A00610067 /* BeebEm-Bridging-KeyboardLinks.cpp */; };
 		DC7E1E622BCE53E000494CBE /* BeebEm-Bridging-IO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC7E1E602BCE53E000494CBE /* BeebEm-Bridging-IO.cpp */; };
 		DC7E1E652BCE58D400494CBE /* FileDialog-mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC7E1E632BCE58D400494CBE /* FileDialog-mac.cpp */; };
 		DC7E1E682BCF229600494CBE /* ExportFileDialog-mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC7E1E662BCF229600494CBE /* ExportFileDialog-mac.cpp */; };
@@ -339,6 +343,12 @@
 		DC527D132BC7532E000D7CCF /* Help */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Help; path = ../../Help; sourceTree = "<group>"; };
 		DC527D152BC9110E000D7CCF /* BeebEm-Bridging-Keyboard.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "BeebEm-Bridging-Keyboard.cpp"; sourceTree = "<group>"; };
 		DC527D162BC9110E000D7CCF /* BeebEm-Bridging-Keyboard.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "BeebEm-Bridging-Keyboard.hpp"; sourceTree = "<group>"; };
+		DC69C9F42BF2BDB600610067 /* KeyboardLinksViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardLinksViewController.swift; sourceTree = "<group>"; };
+		DC69C9F62BF2BDC700610067 /* BeebEm-KeyboardLinks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BeebEm-KeyboardLinks.swift"; sourceTree = "<group>"; };
+		DC69C9F82BF2BDE100610067 /* KeyboardLinksDialog-mac.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "KeyboardLinksDialog-mac.cpp"; sourceTree = "<group>"; };
+		DC69C9F92BF2BDE100610067 /* KeyboardLinksDialog-mac.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "KeyboardLinksDialog-mac.hpp"; sourceTree = "<group>"; };
+		DC69C9FB2BF2C87A00610067 /* BeebEm-Bridging-KeyboardLinks.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "BeebEm-Bridging-KeyboardLinks.cpp"; sourceTree = "<group>"; };
+		DC69C9FC2BF2C87A00610067 /* BeebEm-Bridging-KeyboardLinks.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "BeebEm-Bridging-KeyboardLinks.hpp"; sourceTree = "<group>"; };
 		DC7E1E602BCE53E000494CBE /* BeebEm-Bridging-IO.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "BeebEm-Bridging-IO.cpp"; sourceTree = "<group>"; };
 		DC7E1E612BCE53E000494CBE /* BeebEm-Bridging-IO.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "BeebEm-Bridging-IO.hpp"; sourceTree = "<group>"; };
 		DC7E1E632BCE58D400494CBE /* FileDialog-mac.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "FileDialog-mac.cpp"; sourceTree = "<group>"; };
@@ -717,6 +727,7 @@
 				DCD283FE2BE8D17400ABD9F8 /* BeebEm-Debug.swift */,
 				DC9427AB2BF038090012C4E4 /* BeebEm-SerialPort.swift */,
 				DC9427AD2BF0386C0012C4E4 /* BeebEm-Teletext.swift */,
+				DC69C9F62BF2BDC700610067 /* BeebEm-KeyboardLinks.swift */,
 			);
 			path = BeebBridge;
 			sourceTree = "<group>";
@@ -745,6 +756,8 @@
 				DCB4EBD22BD5BDC4002AEA8A /* BeebEm-Bridging-ExportFIles.hpp */,
 				DCD284032BE8D2D400ABD9F8 /* BeebEm-Debugger.cpp */,
 				DCD284042BE8D2D400ABD9F8 /* BeebEm-Debugger.hpp */,
+				DC69C9FB2BF2C87A00610067 /* BeebEm-Bridging-KeyboardLinks.cpp */,
+				DC69C9FC2BF2C87A00610067 /* BeebEm-Bridging-KeyboardLinks.hpp */,
 			);
 			path = MacBridge;
 			sourceTree = "<group>";
@@ -778,6 +791,8 @@
 				DC9427B42BF0FBAA0012C4E4 /* TeletextDialog-mac.hpp */,
 				DC9427B62BF0FBE90012C4E4 /* SerialPortDialog-mac.cpp */,
 				DC9427B72BF0FBE90012C4E4 /* SerialPortDialog-mac.hpp */,
+				DC69C9F82BF2BDE100610067 /* KeyboardLinksDialog-mac.cpp */,
+				DC69C9F92BF2BDE100610067 /* KeyboardLinksDialog-mac.hpp */,
 			);
 			path = MacDialogs;
 			sourceTree = "<group>";
@@ -904,6 +919,7 @@
 				DC9427A92BF037900012C4E4 /* SelectKeyViewController.swift */,
 				DC9427AF2BF038B90012C4E4 /* TeletextViewController.swift */,
 				DC9427B12BF038F10012C4E4 /* SerialPortViewController.swift */,
+				DC69C9F42BF2BDB600610067 /* KeyboardLinksViewController.swift */,
 			);
 			path = BeebControllers;
 			sourceTree = "<group>";
@@ -1035,6 +1051,7 @@
 				DCB4EBD92BDB890F002AEA8A /* RenameFileDialog-mac.cpp in Sources */,
 				DCDC73452BC0B4A700D83402 /* SprowCoPro.cpp in Sources */,
 				DC907EC12BB5C1F100523116 /* BeebApplication.swift in Sources */,
+				DC69C9F72BF2BDC700610067 /* BeebEm-KeyboardLinks.swift in Sources */,
 				DCACDAC12BC5DD2E00CEF154 /* apples.cpp in Sources */,
 				DCDC73472BC0B5C200D83402 /* Teletext.cpp in Sources */,
 				DCB4EBCA2BD5BD02002AEA8A /* BeebEm-Bridging-BreakoutBox.cpp in Sources */,
@@ -1061,8 +1078,10 @@
 				DCB4EBC72BD5BCD7002AEA8A /* BeebEm-Bridging-Roms.cpp in Sources */,
 				DC9B41352BC2190500C3D9D8 /* BeebWin.cpp in Sources */,
 				DCDC73152BBE1A9500D83402 /* StringUtils.cpp in Sources */,
+				DC69C9FD2BF2C87A00610067 /* BeebEm-Bridging-KeyboardLinks.cpp in Sources */,
 				DCB4EBD62BDB26F1002AEA8A /* FolderSelectDialog-mac.cpp in Sources */,
 				DCD283F22BE6E17100ABD9F8 /* SelectKeyDialog-mac.cpp in Sources */,
+				DC69C9FA2BF2BDE100610067 /* KeyboardLinksDialog-mac.cpp in Sources */,
 				DC904DA22BCF3CD60069DCDF /* ExportDiscViewController.swift in Sources */,
 				DCDC733D2BC0AD1600D83402 /* Master512CoPro.cpp in Sources */,
 				DC9427B52BF0FBAA0012C4E4 /* TeletextDialog-mac.cpp in Sources */,
@@ -1101,6 +1120,7 @@
 				DCDC734A2BC0B75800D83402 /* Tube.cpp in Sources */,
 				DC907ECE2BB70E7B00523116 /* BeebSKView.swift in Sources */,
 				DCDC732D2BBF5E1500D83402 /* thumbemu.cpp in Sources */,
+				DC69C9F52BF2BDB600610067 /* KeyboardLinksViewController.swift in Sources */,
 				DCDC73512BC0B99700D83402 /* Z80Support.cpp in Sources */,
 				DCDC73332BBFE79800D83402 /* Disc1770.cpp in Sources */,
 				DCDC730E2BBE13BF00D83402 /* DiscInfo.cpp in Sources */,

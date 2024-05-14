@@ -34,9 +34,13 @@ class TeletextDialog : public Dialog
 		const std::string& GetIPAddress(int Index) const;
 		u_short GetPort(int Index) const;
 
+	bool DoModal();
+
 	private:
 	virtual bool WM_INITDIALOG();
 	virtual bool WM_COMMAND(WPARAM wParam);
+	virtual void WM_NOTIFY(){};
+
 	BOOL OnCommand(int Notification, int nCommandID);
 
 //		virtual INT_PTR DlgProc(

@@ -604,7 +604,11 @@ void BeebWin::LoadPreferences()
 			GetDataPath(m_UserDataPath, DiscsPath);
 
 			char TeletextFile[256];
+#ifndef __APPLE__
 			sprintf(TeletextFile, "%s\\txt%d.dat", DiscsPath, ch);
+#else
+			sprintf(TeletextFile, "%s/txt%d.dat", DiscsPath, ch);
+#endif
 
 			TeletextFileName[ch] = TeletextFile;
 		}

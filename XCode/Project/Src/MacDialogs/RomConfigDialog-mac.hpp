@@ -44,7 +44,7 @@ class RomConfigDialog : public Dialog
 
 	
 	virtual bool WM_INITDIALOG();
-	virtual bool WM_COMMAND(int wParam);
+	virtual bool WM_COMMAND(WPARAM wParam);
 	virtual void WM_NOTIFY(){}
 	bool DoModal();
 

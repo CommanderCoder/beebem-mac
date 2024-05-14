@@ -41,7 +41,7 @@ class ExportFileDialog : public Dialog
 		std::string GetPath() const;
 	
 		bool DoModal();
-		bool WM_COMMAND(int param);
+		bool WM_COMMAND(WPARAM param);
 	private:
 		void ExportSelectedFiles();
 		bool ExportFile(DFS_FILE_ATTR* DfsAttrs, const char* LocalFileName);

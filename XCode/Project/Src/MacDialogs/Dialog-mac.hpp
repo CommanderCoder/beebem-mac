@@ -37,7 +37,7 @@ class Dialog
 public:
 
 	virtual bool WM_INITDIALOG() = 0;
-	virtual bool WM_COMMAND(int wParam) = 0;
+	virtual bool WM_COMMAND(WPARAM wParam) = 0;
 	virtual void WM_NOTIFY() = 0;
 
 	protected:

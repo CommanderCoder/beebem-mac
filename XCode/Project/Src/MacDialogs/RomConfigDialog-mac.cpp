@@ -201,7 +201,7 @@ int ListView_GetSelectionMark(HWND hwnd)
 }
 
 
-bool RomConfigDialog::WM_COMMAND(int wParam)
+bool RomConfigDialog::WM_COMMAND(WPARAM wParam)
 {
 	switch (LOWORD(wParam))
 	{

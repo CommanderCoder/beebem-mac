@@ -36,10 +36,12 @@ class SerialPortDialog : public Dialog
 		int GetIPPort() const { return m_IPPort; }
 		bool GetIP232RawComms() const { return m_IP232RawComms; }
 		bool GetIP232Handshake() const { return m_IP232Handshake; }
+		bool DoModal();
 
 	private:
 	virtual bool WM_INITDIALOG();
 	virtual bool WM_COMMAND(WPARAM wParam);
+	virtual void WM_NOTIFY() {}
 
 //		virtual INT_PTR DlgProc(
 //			UINT   nMessage,

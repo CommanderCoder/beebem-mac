@@ -189,6 +189,7 @@ std::map<int,int> ID2RC =
 //{'txtd', ID_TELETEXTFILES},
 //{'txts', ID_TELETEXTLOCALHOST},
 //{'txtc', ID_TELETEXTCUSTOM},
+{'txts', IDM_SELECT_TELETEXT_DATA_SOURCE},
 {'flpe', ID_FLOPPYDRIVE},
 {'hdsc', ID_HARDDRIVE},
 {'hdde', ID_IDEDRIVE},
@@ -324,6 +325,16 @@ std::map<int,int> ID2RC =
 	{'idok', IDOK},
 	{'idcl', IDCANCEL},
 
+	// keyboard links
+	{'skbl', IDM_SET_KEYBOARD_LINKS},
+	{'kbl7', IDC_KEYBOARD_BIT7},
+	{'kbl6', IDC_KEYBOARD_BIT6},
+	{'kbl5', IDC_KEYBOARD_BIT5},
+	{'kbl4', IDC_KEYBOARD_BIT4},
+	{'kbl3', IDC_KEYBOARD_BIT3},
+	{'kbl2', IDC_KEYBOARD_BIT2},
+	{'kbl1', IDC_KEYBOARD_BIT1},
+	{'kbl0', IDC_KEYBOARD_BIT0},
 };
 
 std::map<int,int>

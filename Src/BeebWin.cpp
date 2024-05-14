@@ -3192,7 +3192,6 @@ void BeebWin::HandleCommand(UINT MenuID)
 		break;
 
 	case ID_SELECT_SERIAL_DESTINATION: {
-#ifndef __APPLE__
 		SerialPortDialog Dialog(hInst,
 		                        m_hWnd,
 		                        SerialDestination,
@@ -3247,7 +3246,6 @@ void BeebWin::HandleCommand(UINT MenuID)
 
 			UpdateSerialMenu();
 		}
-#endif
 		break;
 	}
 
@@ -4141,7 +4139,6 @@ void BeebWin::HandleCommand(UINT MenuID)
 		std::string DiscsPath;
 		m_Preferences.GetStringValue("DiscsPath", DiscsPath);
 
-#ifndef __APPLE__
 		TeletextDialog Dialog(hInst,
 		                      m_hWnd,
 		                      TeletextSource,
@@ -4163,19 +4160,16 @@ void BeebWin::HandleCommand(UINT MenuID)
 
 			TeletextInit();
 		}
-#endif
 		break;
 	}
 
 	case IDM_SET_KEYBOARD_LINKS: {
-#ifndef __APPLE__
 		KeyboardLinksDialog Dialog(hInst, m_hWnd, KeyboardLinks);
 
 		if (Dialog.DoModal())
 		{
 			KeyboardLinks = Dialog.GetValue();
 		}
-#endif
 		break;
 	}
 

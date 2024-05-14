@@ -16,10 +16,13 @@ let teletextWindow: NSWindowController =  NSStoryboard(name: "Main", bundle: nil
 let teletextView: TeletextViewController = teletextWindow.contentViewController as! TeletextViewController
 
 
-// Serial Port
+// Teletext
 
-@_cdecl("swift_TTOpenDialog")
-public func swift_TTOpenDialog()
+@_cdecl("swift_DoModalTX")
+public func swift_DoModalTX(caller : UnsafeMutableRawPointer)
 {
+	print(caller)
+
 	teletextWindow.showWindow(nil);
 }
+

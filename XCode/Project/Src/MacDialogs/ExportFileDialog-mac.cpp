@@ -235,7 +235,7 @@ void ExportFileDialog::WM_NOTIFY()
 	return FALSE;
 }
 #else
-bool ExportFileDialog::WM_COMMAND(int param)
+bool ExportFileDialog::WM_COMMAND(WPARAM param)
 {
 	switch (param)
 	{

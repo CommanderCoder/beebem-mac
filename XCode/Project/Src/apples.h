@@ -277,6 +277,10 @@ extern "C" bool swift_SetMenuEnable(unsigned int cmd, char enable);
 extern "C" int swift_SetMenuItemTextWithCString(unsigned int cmd, const char* text);
 extern "C" int swift_ModifyMenu(unsigned int cmd, unsigned int newitem, const char* itemtext);
 
+
+extern "C" bool swift_SetDlgCheck(unsigned int cmd, char check);
+extern "C" bool swift_GetDlgCheck(unsigned int cmd);
+
 extern "C" int swift_Remove(const char* path);
 
 // used in BeebWinDx.h
@@ -298,6 +302,16 @@ class RomConfigDialog;
 extern "C" int swift_DoModalRC(RomConfigDialog* dialog); //
 extern "C" int swift_UserKeyboardDialog();
 extern "C" int swift_SetCurSelRC(int m);
+
+
+class SerialPortDialog;
+extern "C" int swift_DoModalSP(SerialPortDialog* dialog); 
+
+class TeletextDialog;
+extern "C" int swift_DoModalTX(TeletextDialog* dialog);
+
+class KeyboardLinksDialog;
+extern "C" int swift_DoModalKL(KeyboardLinksDialog* dialog);
 
 
 // delay the next update of the cpu (i.e. Exec6502Instruction) by this accumulation of
