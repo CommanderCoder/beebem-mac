@@ -38,6 +38,26 @@ var allViews = [
 	Modals.keyboardMapping : keyMapView
 ] as [AnyHashable : NSViewController]
 
+var allStoryboardNames = [
+	Dialogs.breakoutBox : "BreakoutBoxSB",
+	Dialogs.tapeControl : "TapeControlSB",
+	Dialogs.debugWindow : "DebuggerSB",
+	Dialogs.serialPort : "SerialPortSB",
+	Dialogs.teletextSelect : "TeletextSB",
+	Modals.keyboardLinks : "KeyboardLinksSB",
+	Modals.selectKey : "SelectKeySB",
+	Modals.romConfig : "ROMConfigSB",
+	Modals.exportFiles : "ExportFilesSB",
+	Modals.keyboardMapping : "KeyMapSB"
+] as [AnyHashable : String]
+
+
+func GetWindowCtrl(for f: AnyHashable) -> NSWindowController
+{
+	return NSStoryboard(name: "Main", bundle: nil)
+	.instantiateController(withIdentifier: allStoryboardNames[f]!) as! NSWindowController
+}
+
 
 func recurse2(find id: String, viewcontroller vc: NSViewController) -> NSButton? {
 	for item in vc.view.subviewsRecursive() {
@@ -105,8 +125,8 @@ public func swift_GetDlgCheck(_ dlg: Dialogs, _ cmd: UInt32) -> Bool
 
 
 // need to have given the controller an identified (StoryboardID)
-let keyboardLinksWindow: NSWindowController = NSStoryboard(name: "Main", bundle: nil)
-	.instantiateController(withIdentifier: "KeyboardLinksSB") as! NSWindowController
+let keyboardLinksWindow: NSWindowController = GetWindowCtrl(for: Modals.keyboardLinks)
+
 
 let keyboardLinksView: KeyboardLinksViewController = keyboardLinksWindow.contentViewController as! KeyboardLinksViewController
 
@@ -124,11 +144,11 @@ public func swift_OpenDialog(_ dlg: Dialogs, caller : UnsafeMutableRawPointer)
 
 // allow access to this in C
 @_cdecl("swift_DoModal")
-public func swift_DoModal(_ mod: Modals, caller : UnsafeMutableRawPointer)
+public func swift_DoModal(_ mod: Modals, caller : UnsafeMutableRawPointer) -> Bool
 {
 	print(caller)
-	guard let modView = allViews[mod] else {return}
-	guard let modWindow = modView.view.window else {return}
+	guard let modView = allViews[mod] else {return false}
+	guard let modWindow = modView.view.window else {return false}
 	let modalresp = NSApp.runModal(for: modWindow)
 	modWindow.close()
 	NSApp.stopModal()
@@ -137,6 +157,22 @@ public func swift_DoModal(_ mod: Modals, caller : UnsafeMutableRawPointer)
 	if (modalresp == NSApplication.ModalResponse.OK)
 	{
 		// this should call the method within Dialog
+		beeb_ModalOK(caller);
+		return true
+	}
+	return false
+}
 
+// allow access to this in C
+@_cdecl("swift_EndModal")
+public func swift_EndModal(_ ok: Bool)
+{
+	if ok
+	{
+		NSApp.stopModal(withCode: NSApplication.ModalResponse.OK)
+	}
+	else
+	{
+		NSApp.stopModal(withCode: NSApplication.ModalResponse.cancel)
 	}
 }

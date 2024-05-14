@@ -9,8 +9,7 @@ import Foundation
 import Cocoa
 
 // need to have given the controller an identified (StoryboardID)
-let romConfigWindow: NSWindowController =  NSStoryboard(name: "Main", bundle: nil)
-	.instantiateController(withIdentifier: "ROMConfigSB") as! NSWindowController
+let romConfigWindow: NSWindowController = GetWindowCtrl(for: Modals.romConfig)
 
 let romConfigView: RomConfigViewController = romConfigWindow.contentViewController as! RomConfigViewController
 
@@ -29,26 +28,6 @@ public func  swift_RCSetFocus()
 }
 
 
-// allow access to this in C
-@_cdecl("swift_DoModalRC")
-public func swift_DoModalRC(caller : UnsafeMutableRawPointer)
-{
-	
-	print(caller)
-	// run the modal until it is closed or the Export Selected (::exportSelected) button
-	// is pressed
-
-	let modalresp = NSApp.runModal(for: romConfigWindow.window!)
-	romConfigWindow.close()
-	NSApp.stopModal()
-
-	//now export the files
-	if (modalresp == NSApplication.ModalResponse.OK)
-	{
-		// this should call the method within Dialog
-
-	}
-}
 
 @_cdecl("swift_SetCurSelRC")
 public func swift_SetCurSelRC(selection : Int)

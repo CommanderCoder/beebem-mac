@@ -9,9 +9,7 @@ import Foundation
 import Cocoa
 
 // need to have given the controller an identified (StoryboardID)
-let tapeControlWindow: NSWindowController =  NSStoryboard(name: "Main", bundle: nil)
-	.instantiateController(withIdentifier: "TapeControlSB") as! NSWindowController
-
+let tapeControlWindow: NSWindowController = GetWindowCtrl(for: Dialogs.tapeControl)
 let tapeControlView: TapeControlViewController = tapeControlWindow.contentViewController as! TapeControlViewController
 
 
@@ -39,13 +37,6 @@ public func swift_TCReturnItem(_ text: UnsafePointer<CChar>) -> UInt
 	return tapeControlView.returnRowInTable()
 }
 
-
-
-@_cdecl("swift_TCOpenDialog")
-public func swift_TCOpenDialog()
-{
-	tapeControlWindow.showWindow(nil);
-}
 
 @_cdecl("swift_TCGetSelected")
 public func swift_TCGetSelected() -> UInt

@@ -99,7 +99,7 @@ static void CheckRadioButton(HWND hwndDlg,
 bool SerialPortDialog::DoModal() {
 //	runningSPDialog = this;
 	WM_INITDIALOG();
-	bool ret = swift_DoModalSP(this);
+	bool ret = swift_OpenDialog(Dialogs::serialPort, this);
 //	runningSPDialog = NULL;
 	return ret;
 }

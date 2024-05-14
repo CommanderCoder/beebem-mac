@@ -1027,7 +1027,7 @@ void DebugOpenDialog(HINSTANCE hinst, HWND /* hwndMain */)
 	SendMessage(hwndW, WM_SETFONT, (WPARAM)GetStockObject(ANSI_FIXED_FONT),
 				MAKELPARAM(FALSE, 0));
 #else
-	swift_DbgOpenDialog();
+	swift_OpenDialog(Dialogs::debugWindow, NULL);
 #endif
 	SetDlgItemChecked(hwndDebug, IDC_DEBUGBPS, true);
 	SetDlgItemChecked(hwndDebug, IDC_DEBUGHOST, true);

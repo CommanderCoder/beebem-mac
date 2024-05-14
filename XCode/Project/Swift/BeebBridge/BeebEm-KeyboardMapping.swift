@@ -8,9 +8,10 @@
 import Foundation
 import Cocoa
 
+
+
 // need to have given the controller an identified (StoryboardID)
-let keyMapWindow: NSWindowController =  NSStoryboard(name: "Main", bundle: nil)
-	.instantiateController(withIdentifier: "KeyMapSB") as! NSWindowController
+let keyMapWindow: NSWindowController = GetWindowCtrl(for:Modals.keyboardMapping)
 
 let keyMapView: KeyboardMappingViewController = keyMapWindow.contentViewController as! KeyboardMappingViewController
 
@@ -52,25 +53,7 @@ public func swift_UserKeyboardDialog() -> Bool
 
 
 // need to have given the controller an identified (StoryboardID)
-let selectKeyWindow: NSWindowController =  NSStoryboard(name: "Main", bundle: nil)
-	.instantiateController(withIdentifier: "SelectKeySB") as! NSWindowController
+let selectKeyWindow: NSWindowController = GetWindowCtrl(for:Modals.selectKey)
 
 let selectKeyView: SelectKeyViewController = selectKeyWindow.contentViewController as! SelectKeyViewController
 
-
-
-// allow access to this in C
-@_cdecl("swift_DoModalSK")
-public func swift_DoModalSK(caller : UnsafeMutableRawPointer)
-{
-	let modalresp = NSApp.runModal(for: selectKeyWindow.window!)
-	selectKeyWindow.close()
-	NSApp.stopModal()
-
-	//now export the files
-	if (modalresp == NSApplication.ModalResponse.OK)
-	{
-		// this should call the method within Dialog
-
-	}
-}

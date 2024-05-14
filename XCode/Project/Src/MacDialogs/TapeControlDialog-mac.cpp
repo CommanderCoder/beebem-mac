@@ -49,7 +49,7 @@ void TapeControlOpenDialog(HINSTANCE hinst, HWND /* hwndMain */)
 		TapeControlUpdateCounter(Time);
 	}
 #else
-	swift_TCOpenDialog();
+	swift_OpenDialog(Dialogs::tapeControl, NULL);
 	int Time = SerialGetTapeClock();
 	TapeControlAddMapLines();
 	TapeControlUpdateCounter(Time);

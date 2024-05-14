@@ -86,7 +86,7 @@ bool UserKeyboardDialog(HWND hwndParent)
 		return true;
 	}
 #else
-	return swift_UserKeyboardDialog();
+	return swift_DoModal(Modals::keyboardMapping, NULL);
 #endif
 
 	return false;

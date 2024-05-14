@@ -60,7 +60,7 @@ bool UserPortBreakoutDialog::Open()
 //		reinterpret_cast<LPARAM>(this)
 //	);
 	
-	swift_BreakoutBoxDialog();
+	swift_OpenDialog(Dialogs::breakoutBox, this);
 
 //	if (m_hwnd != nullptr)
 //	{

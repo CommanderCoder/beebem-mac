@@ -253,18 +253,13 @@ extern "C" void swift_SoundInit();
 
 extern "C" bool swift_IsMiniaturized();
 
-extern "C" void swift_BreakoutBoxDialog();
-
 extern "C" void swift_RCSetModelText(const char* n);
 extern "C" int swift_RCGetSelectionMark();
 extern "C" void swift_RCSetFocus();
 
 extern "C" void swift_TCSelectItem(long item);
 extern "C" void swift_TCReload();
-extern "C" void swift_TCOpenDialog();
 extern "C" unsigned int swift_TCGetSelected();
-
-extern "C" void swift_DbgOpenDialog();
 
 extern "C" void swift_GetBundleDirectory(const char* bundlePath, int length);
 extern "C" void swift_GetApplicationSupportDirectory(const char* appPath, int length);
@@ -312,18 +307,8 @@ enum Modals {
 	, keyboardMapping
 };
 
-class ExportFileDialog;
-
-extern "C" int swift_DoModalEF(ExportFileDialog* dialog); // export files
-
-class RomConfigDialog;
-extern "C" int swift_DoModalRC(RomConfigDialog* dialog); //
-extern "C" int swift_UserKeyboardDialog();
 extern "C" int swift_SetCurSelRC(int m);
 
-
-class SerialPortDialog;
-extern "C" int swift_DoModalSP(SerialPortDialog* dialog); 
 
 extern "C" int swift_OpenDialog(Dialogs dlg, void* dialogClass);
 extern "C" int swift_DoModal(Modals mod, void* dialogClass);

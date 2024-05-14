@@ -10,8 +10,7 @@ import Foundation
 import Cocoa
 
 // need to have given the controller an identified (StoryboardID)
-let teletextWindow: NSWindowController = NSStoryboard(name: "Main", bundle: nil)
-	.instantiateController(withIdentifier: "TeletextSB") as! NSWindowController
+let teletextWindow: NSWindowController = GetWindowCtrl(for: Dialogs.teletextSelect)
 
 let teletextView: TeletextViewController = teletextWindow.contentViewController as! TeletextViewController
 

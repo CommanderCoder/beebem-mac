@@ -12,8 +12,7 @@ import Cocoa
 // construct the list view
 
 // need to have given the controller an identified (StoryboardID)
-let exportFilesWindow: NSWindowController =  NSStoryboard(name: "Main", bundle: nil)
-	.instantiateController(withIdentifier: "ExportFilesSB") as! NSWindowController
+let exportFilesWindow: NSWindowController = GetWindowCtrl(for: Modals.exportFiles)
 
 let exportFilesView: ExportDiscViewController = exportFilesWindow.contentViewController as! ExportDiscViewController
 
@@ -65,43 +64,4 @@ public func swift_InitExportDialog(dfsNames : UnsafePointer<UnsafePointer<CChar>
 		
 	}
 
-}
-
-// Alternative: RomConfig uses SEGUE to open the modal and then uses the
-// DIALOG pointer to know when to modal is open or closed
-// Use viewDidLoad to initialise anything
-
-// allow access to this in C
-@_cdecl("swift_DoModalEF")
-public func swift_DoModalEF(caller : UnsafeMutableRawPointer)
-{
-	print(caller)
-	// run the modal until it is closed or the Export Selected (::exportSelected) button
-	// is pressed
-	let modalresp = NSApp.runModal(for: exportFilesWindow.window!)
-	exportFilesWindow.close()
-	NSApp.stopModal()
-
-	//now export the files
-	if (modalresp == NSApplication.ModalResponse.OK)
-	{
-		// this should call the method within Dialog
-		beeb_ModalOK(caller);
-	}
-}
-
-
-// THIS SHOULD BE IN A GENERAL LOCATION
-// allow access to this in C
-@_cdecl("swift_EndModal")
-public func swift_EndModal(_ ok: Bool)
-{
-	if ok
-	{
-		NSApp.stopModal(withCode: NSApplication.ModalResponse.OK)
-	}
-	else
-	{
-		NSApp.stopModal(withCode: NSApplication.ModalResponse.cancel)
-	}
 }

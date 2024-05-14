@@ -108,7 +108,7 @@ void LVSetItemTextEF(HWND hWnd, UINT uRow, UINT uCol, const LPTSTR pszText)
 bool ExportFileDialog::DoModal()
 {
 	WM_INITDIALOG();
-	return swift_DoModalEF(this);
+	return swift_DoModal(Modals::exportFiles, this);
 }
 
 
