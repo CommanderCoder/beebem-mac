@@ -166,7 +166,7 @@ static void ComboBox_SetCurSel(UINT* nIDDlgItem,
 bool TeletextDialog::DoModal() {
 //	runningTXDialog = this;
 	WM_INITDIALOG();
-	bool ret = swift_DoModalTX(this);
+	bool ret = swift_OpenDialog(Dialogs::teletextSelect, this);
 //	runningTXDialog = NULL;
 	return ret;
 }
@@ -211,6 +211,10 @@ bool TeletextDialog::WM_COMMAND(WPARAM wParam){
 //}
 
 /****************************************************************************/
+static void EndDialog(HWND h, WPARAM p)
+{
+	swift_EndModal(p);
+}
 
 //INT_PTR TeletextDialog::OnCommand(int Notification, int nCommandID)
 BOOL TeletextDialog::OnCommand(int Notification, int nCommandID)

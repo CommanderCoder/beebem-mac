@@ -251,6 +251,12 @@ static void SetRowCol(UINT ctrlID)
 }
 
 /****************************************************************************/
+static void EndDialog(HWND h, WPARAM p)
+{
+	swift_EndModal(p);
+}
+
+/****************************************************************************/
 //
 //static INT_PTR CALLBACK UserKeyboardDlgProc(HWND   hwnd,
 //											UINT   nMessage,
@@ -281,9 +287,7 @@ bool UK_WM_COMMAND(WPARAM wParam)
 			hwndUserKeyboard = nullptr;
 
 //			PostMessage(hwndMain, WM_USER_KEYBOARD_DIALOG_CLOSED, 0, 0);
-#ifdef __APPLE__
 			EndDialog(hwnd, wParam);
-#endif
 
 			break;
 

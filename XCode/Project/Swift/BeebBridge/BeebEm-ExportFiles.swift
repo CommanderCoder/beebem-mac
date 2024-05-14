@@ -93,8 +93,8 @@ public func swift_DoModalEF(caller : UnsafeMutableRawPointer)
 
 // THIS SHOULD BE IN A GENERAL LOCATION
 // allow access to this in C
-@_cdecl("swift_EndDialog")
-public func swift_EndDialog(_ ok: Bool)
+@_cdecl("swift_EndModal")
+public func swift_EndModal(_ ok: Bool)
 {
 	if ok
 	{

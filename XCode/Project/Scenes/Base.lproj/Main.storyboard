@@ -2926,7 +2926,7 @@ Gw
         <!--Select Key Window Controller-->
         <scene sceneID="RTj-8p-r6g">
             <objects>
-                <windowController id="vmv-Qu-nWg" userLabel="Select Key Window Controller" sceneMemberID="viewController">
+                <windowController storyboardIdentifier="SelectKeySB" id="vmv-Qu-nWg" userLabel="Select Key Window Controller" sceneMemberID="viewController">
                     <window key="window" title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="U1u-go-Tj0">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>

@@ -45,7 +45,7 @@ static bool IsDlgItemChecked(UINT nIDDlgItem)
 	auto cmdID = RC2ID.find(nIDDlgItem);
 	if (cmdID != RC2ID.end())
 	{
-		return swift_GetDlgCheck(cmdID->second);
+		return swift_GetDlgCheck(Modals::keyboardLinks, cmdID->second);
 	}
 	else
 	{
@@ -60,7 +60,7 @@ static void SetDlgItemChecked(UINT nIDDlgItem, bool Checked)
 	auto cmdID = RC2ID.find(nIDDlgItem);
 	if (cmdID != RC2ID.end())
 	{
-		swift_SetDlgCheck(cmdID->second, Checked);
+		swift_SetDlgCheck(Modals::keyboardLinks, cmdID->second, Checked);
 	}
 	else
 	{
@@ -73,9 +73,16 @@ extern KeyboardLinksDialog* runningKLDialog;
 bool KeyboardLinksDialog::DoModal() {
 	runningKLDialog = this;
 	WM_INITDIALOG();
-	bool ret = swift_DoModalKL(this);
+	bool ret = swift_DoModal(Modals::keyboardLinks, this);
 	//runningKLDialog// = NULL;
 	return ret;
+}
+
+
+/****************************************************************************/
+static void EndDialog(HWND h, WPARAM p)
+{
+	swift_EndModal(p);
 }
 
 //INT_PTR KeyboardLinksDialog::DlgProc(UINT   nMessage,

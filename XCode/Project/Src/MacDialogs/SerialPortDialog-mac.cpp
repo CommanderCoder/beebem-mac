@@ -140,6 +140,12 @@ bool SerialPortDialog::WM_INITDIALOG()
 		return TRUE;
 }
 
+/****************************************************************************/
+static void EndDialog(HWND h, WPARAM p)
+{
+	swift_EndModal(p);
+}
+
 //}
 //
 //	case WM_COMMAND:
@@ -187,12 +193,12 @@ bool SerialPortDialog::WM_COMMAND(WPARAM wParam)
 				m_IP232Handshake = IsDlgItemChecked(IDC_IP232_HANDSHAKE);
 			}
 
-			EndDialog(m_hwnd, wParam);
+			EndDialog(m_hwnd,wParam);
 			break;
 		}
 		
 		case IDCANCEL:
-			EndDialog(m_hwnd, wParam);
+			EndDialog(m_hwnd,wParam);
 			return TRUE;
 
 		case IDC_SERIAL_PORT_DESTINATION_SERIAL_PORT:

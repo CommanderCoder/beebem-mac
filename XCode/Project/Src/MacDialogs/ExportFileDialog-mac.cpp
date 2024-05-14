@@ -244,7 +244,7 @@ bool ExportFileDialog::WM_COMMAND(WPARAM param)
 		return true;
 
 	case IDCANCEL:
-//		swift_EndDialog(false);
+//		swift_EndModal(false);
 		return true;
 	}
 	return false;

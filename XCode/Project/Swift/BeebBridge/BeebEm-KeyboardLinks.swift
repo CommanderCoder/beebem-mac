@@ -8,38 +8,63 @@
 import Foundation
 import Cocoa
 
+// these must match the dialogs and modals in the CPP files
+@objc public enum Dialogs : UInt16 {
+	case breakoutBox = 256
+	case tapeControl
+	case debugWindow
+	case serialPort
+	case teletextSelect
+}
 
-// need to have given the controller an identified (StoryboardID)
-let keyboardLinksWindow: NSWindowController =  NSStoryboard(name: "Main", bundle: nil)
-	.instantiateController(withIdentifier: "KeyboardLinksSB") as! NSWindowController
+@objc public enum Modals : UInt16 {
+	case keyboardLinks = 0
+	case selectKey
+	case romConfig
+	case exportFiles
+	case keyboardMapping
+}
 
-let keyboardLinksView: KeyboardLinksViewController = keyboardLinksWindow.contentViewController as! KeyboardLinksViewController
+var allViews = [
+	Dialogs.breakoutBox : breakoutBoxView,
+	Dialogs.tapeControl : tapeControlView,
+	Dialogs.debugWindow : dbgControlView,
+	Dialogs.serialPort : serialPortView,
+	Dialogs.teletextSelect : teletextView,
+	Modals.keyboardLinks : keyboardLinksView,
+	Modals.selectKey : selectKeyView,
+	Modals.romConfig : romConfigView,
+	Modals.exportFiles : exportFilesView,
+	Modals.keyboardMapping : keyMapView
+] as [AnyHashable : NSViewController]
 
 
-func recurse2(find id: String, viewcontroller: NSViewController) -> NSButton? {
-	for item in viewcontroller.view.subviewsRecursive() {
+func recurse2(find id: String, viewcontroller vc: NSViewController) -> NSButton? {
+	for item in vc.view.subviewsRecursive() {
 	  if item.identifier?.rawValue == id //&& item.isEnabled
 	  {
-		  if let button = item as? NSButton {
-			  return button
-		  }
+		  return (item as? NSButton)  // nil otherwise
 	  }
 	}
   return nil
 }
 
 
-func dlgItemByIdentifier(id: String) -> NSButton? {
+func dlgItemByIdentifier(_ id: String, _ vc: NSViewController) -> NSButton? {
 
-	return recurse2(find: id, viewcontroller: keyboardLinksView)
+	return recurse2(find: id, viewcontroller: vc)
 }
 
 // set the tick on the menu with a 4 character identifier
 @_cdecl("swift_SetDlgCheck")
-public func swift_SetDlgCheck(_ cmd: UInt32, _ check: Bool) -> Bool
+public func swift_SetDlgCheck(_ dlg: Dialogs, _ cmd: UInt32, _ check: Bool) -> Bool
 {
+	guard let v : NSViewController = allViews[dlg] else {
+		return false
+	}
+	
 	let cmdSTR =  conv(cmd)
-	if let n = dlgItemByIdentifier(id:cmdSTR)
+	if let n = dlgItemByIdentifier(cmdSTR, v)
 	{
 //        print("\(#function)",cmdSTR,check)
 		let oldstate = n.state
@@ -55,10 +80,14 @@ public func swift_SetDlgCheck(_ cmd: UInt32, _ check: Bool) -> Bool
 }
 
 @_cdecl("swift_GetDlgCheck")
-public func swift_GetDlgCheck(_ cmd: UInt32) -> Bool
+public func swift_GetDlgCheck(_ dlg: Dialogs, _ cmd: UInt32) -> Bool
 {
+	guard let v : NSViewController = allViews[dlg] else {
+		return false
+	}
+
 	let cmdSTR =  conv(cmd)
-	if let n = dlgItemByIdentifier(id:cmdSTR)
+	if let n = dlgItemByIdentifier(cmdSTR, v)
 	{
 //        print("\(#function)",cmdSTR,check)
 		return n.state == .on
@@ -72,16 +101,36 @@ public func swift_GetDlgCheck(_ cmd: UInt32) -> Bool
 }
 
 
-// Keyboard Links
-@_cdecl("swift_DoModalKL")
-public func swift_DoModalKL(caller : UnsafeMutableRawPointer)
+
+
+
+// need to have given the controller an identified (StoryboardID)
+let keyboardLinksWindow: NSWindowController = NSStoryboard(name: "Main", bundle: nil)
+	.instantiateController(withIdentifier: "KeyboardLinksSB") as! NSWindowController
+
+let keyboardLinksView: KeyboardLinksViewController = keyboardLinksWindow.contentViewController as! KeyboardLinksViewController
+
+
+
+@_cdecl("swift_OpenDialog")
+public func swift_OpenDialog(_ dlg: Dialogs, caller : UnsafeMutableRawPointer)
 {
 	print(caller)
+	guard let dlgView = allViews[dlg] else {return}
+	guard let dlgWindowCtrl = dlgView.view.window?.windowController else {return}
+	dlgWindowCtrl.showWindow(nil)
+}
 
-//	keyboardLinksWindow.showWindow(nil);
-	
-	let modalresp = NSApp.runModal(for: keyboardLinksWindow.window!)
-	keyboardLinksWindow.close()
+
+// allow access to this in C
+@_cdecl("swift_DoModal")
+public func swift_DoModal(_ mod: Modals, caller : UnsafeMutableRawPointer)
+{
+	print(caller)
+	guard let modView = allViews[mod] else {return}
+	guard let modWindow = modView.view.window else {return}
+	let modalresp = NSApp.runModal(for: modWindow)
+	modWindow.close()
 	NSApp.stopModal()
 
 	//now export the files
@@ -90,5 +139,4 @@ public func swift_DoModalKL(caller : UnsafeMutableRawPointer)
 		// this should call the method within Dialog
 
 	}
-
 }

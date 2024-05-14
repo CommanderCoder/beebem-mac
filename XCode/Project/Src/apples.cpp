@@ -287,11 +287,6 @@ DWORD EnableMenuItem(  HMENU hMenu,  UINT  uIDCheckItem,UINT  uEnable)
 }
 
 
-void EndDialog(HWND m_hWnd, bool wParam)
-{
-	swift_EndDialog(wParam);
-}
-
 
 int GetSystemMetrics(int  x)
 {

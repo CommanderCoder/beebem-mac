@@ -181,7 +181,7 @@ extern RomConfigDialog* runningRCDialog;
 bool RomConfigDialog::DoModal() {
 	runningRCDialog = this;
 	WM_INITDIALOG();
-	bool ret = swift_DoModalRC(this);
+	bool ret = swift_DoModal(Modals::romConfig, this);
 	runningRCDialog = NULL;
 	return ret;
 }
@@ -200,6 +200,11 @@ int ListView_GetSelectionMark(HWND hwnd)
 	return swift_RCGetSelectionMark();
 }
 
+/****************************************************************************/
+static void EndDialog(HWND h, WPARAM p)
+{
+	swift_EndModal(p);
+}
 
 bool RomConfigDialog::WM_COMMAND(WPARAM wParam)
 {

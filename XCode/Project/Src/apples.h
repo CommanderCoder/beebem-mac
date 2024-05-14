@@ -101,6 +101,7 @@ struct RECT {
 typedef struct RECT                     RECT;
 
 
+
 #define _MAX_PATH PATH_MAX
 #define MAX_PATH PATH_MAX
 #define _MAX_DRIVE 32
@@ -278,8 +279,8 @@ extern "C" int swift_SetMenuItemTextWithCString(unsigned int cmd, const char* te
 extern "C" int swift_ModifyMenu(unsigned int cmd, unsigned int newitem, const char* itemtext);
 
 
-extern "C" bool swift_SetDlgCheck(unsigned int cmd, char check);
-extern "C" bool swift_GetDlgCheck(unsigned int cmd);
+extern "C" bool swift_SetDlgCheck(unsigned short dlg, unsigned int cmd, char check);
+extern "C" bool swift_GetDlgCheck(unsigned short dlg, unsigned int cmd);
 
 extern "C" int swift_Remove(const char* path);
 
@@ -293,10 +294,27 @@ extern "C" int swift_SetMachineType(Model machinetype);
 
 void GetWindowRect(HWND h, RECT* r);
 
+
+
+ enum Dialogs {
+	breakoutBox = 256
+	, tapeControl
+	, debugWindow
+	, serialPort
+	, teletextSelect
+};
+
+enum Modals {
+	keyboardLinks = 0
+	, selectKey
+	, romConfig
+	, exportFiles
+	, keyboardMapping
+};
+
 class ExportFileDialog;
 
 extern "C" int swift_DoModalEF(ExportFileDialog* dialog); // export files
-extern "C" int swift_EndDialog(bool ok);
 
 class RomConfigDialog;
 extern "C" int swift_DoModalRC(RomConfigDialog* dialog); //
@@ -307,11 +325,9 @@ extern "C" int swift_SetCurSelRC(int m);
 class SerialPortDialog;
 extern "C" int swift_DoModalSP(SerialPortDialog* dialog); 
 
-class TeletextDialog;
-extern "C" int swift_DoModalTX(TeletextDialog* dialog);
-
-class KeyboardLinksDialog;
-extern "C" int swift_DoModalKL(KeyboardLinksDialog* dialog);
+extern "C" int swift_OpenDialog(Dialogs dlg, void* dialogClass);
+extern "C" int swift_DoModal(Modals mod, void* dialogClass);
+extern "C" int swift_EndModal(bool ok);
 
 
 // delay the next update of the cpu (i.e. Exec6502Instruction) by this accumulation of
@@ -340,8 +356,6 @@ typedef  enum
   DIB_PAL_COLORS = 0x01,
   DIB_PAL_INDICES = 0x02
 } DIBColors;
-
-void EndDialog(HWND m_hWnd, bool wParam);
 
 extern "C" void swift_sleepCPU(unsigned long microseconds);
 #define Sleep swift_sleepCPU
@@ -499,5 +513,7 @@ HWND GetFocus();
 
 
 int WSACleanup();
+
+
 
 #endif /* apples_h */
