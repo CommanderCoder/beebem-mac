@@ -12,7 +12,7 @@ import Cocoa
 // construct the list view
 
 // need to have given the controller an identified (StoryboardID)
-let exportFilesWindow: NSWindowController = GetWindowCtrl(for: Modals.exportFiles)
+let exportFilesWindow: NSWindowController = GetWindowCtrl(for: Dialogs.exportFiles)
 
 let exportFilesView: ExportDiscViewController = exportFilesWindow.contentViewController as! ExportDiscViewController
 

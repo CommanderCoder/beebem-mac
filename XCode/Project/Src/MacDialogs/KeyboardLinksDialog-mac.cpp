@@ -47,7 +47,7 @@ extern KeyboardLinksDialog* runningKLDialog;
 bool KeyboardLinksDialog::DoModal() {
 	runningKLDialog = this;
 	WM_INITDIALOG();
-	bool ret = swift_DoModal(Modals::keyboardLinks, this);
+	bool ret = swift_DoModal((Modals)m_DialogID, this);
 	//runningKLDialog// = NULL;
 	return ret;
 }

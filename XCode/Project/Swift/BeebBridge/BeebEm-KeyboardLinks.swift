@@ -9,20 +9,18 @@ import Foundation
 import Cocoa
 
 // these must match the dialogs and modals in the CPP files
-@objc public enum Dialogs : UInt16 {
-	case breakoutBox = 256
-	case tapeControl
-	case debugWindow
-	case serialPort
-	case teletextSelect
-}
 
-@objc public enum Modals : UInt16 {
+@objc public enum Dialogs : UInt16 {
 	case keyboardLinks = 0
 	case selectKey
 	case romConfig
 	case exportFiles
 	case keyboardMapping
+	case breakoutBox = 256
+	case tapeControl
+	case debugWindow
+	case serialPort
+	case teletextSelect
 }
 
 var allViews = [
@@ -31,12 +29,12 @@ var allViews = [
 	Dialogs.debugWindow : dbgControlView,
 	Dialogs.serialPort : serialPortView,
 	Dialogs.teletextSelect : teletextView,
-	Modals.keyboardLinks : keyboardLinksView,
-	Modals.selectKey : selectKeyView,
-	Modals.romConfig : romConfigView,
-	Modals.exportFiles : exportFilesView,
-	Modals.keyboardMapping : keyMapView
-] as [AnyHashable : NSViewController]
+	Dialogs.keyboardLinks : keyboardLinksView,
+	Dialogs.selectKey : selectKeyView,
+	Dialogs.romConfig : romConfigView,
+	Dialogs.exportFiles : exportFilesView,
+	Dialogs.keyboardMapping : keyMapView
+]
 
 var allStoryboardNames = [
 	Dialogs.breakoutBox : "BreakoutBoxSB",
@@ -44,15 +42,15 @@ var allStoryboardNames = [
 	Dialogs.debugWindow : "DebuggerSB",
 	Dialogs.serialPort : "SerialPortSB",
 	Dialogs.teletextSelect : "TeletextSB",
-	Modals.keyboardLinks : "KeyboardLinksSB",
-	Modals.selectKey : "SelectKeySB",
-	Modals.romConfig : "ROMConfigSB",
-	Modals.exportFiles : "ExportFilesSB",
-	Modals.keyboardMapping : "KeyMapSB"
-] as [AnyHashable : String]
+	Dialogs.keyboardLinks : "KeyboardLinksSB",
+	Dialogs.selectKey : "SelectKeySB",
+	Dialogs.romConfig : "ROMConfigSB",
+	Dialogs.exportFiles : "ExportFilesSB",
+	Dialogs.keyboardMapping : "KeyMapSB"
+]
 
 
-func GetWindowCtrl(for f: AnyHashable) -> NSWindowController
+func GetWindowCtrl(for f: Dialogs) -> NSWindowController
 {
 	return NSStoryboard(name: "Main", bundle: nil)
 	.instantiateController(withIdentifier: allStoryboardNames[f]!) as! NSWindowController
@@ -125,7 +123,7 @@ public func swift_GetDlgCheck(_ dlg: Dialogs, _ cmd: UInt32) -> Bool
 
 
 // need to have given the controller an identified (StoryboardID)
-let keyboardLinksWindow: NSWindowController = GetWindowCtrl(for: Modals.keyboardLinks)
+let keyboardLinksWindow: NSWindowController = GetWindowCtrl(for: Dialogs.keyboardLinks)
 
 
 let keyboardLinksView: KeyboardLinksViewController = keyboardLinksWindow.contentViewController as! KeyboardLinksViewController
@@ -144,7 +142,7 @@ public func swift_OpenDialog(_ dlg: Dialogs, caller : UnsafeMutableRawPointer)
 
 // allow access to this in C
 @_cdecl("swift_DoModal")
-public func swift_DoModal(_ mod: Modals, caller : UnsafeMutableRawPointer) -> Bool
+public func swift_DoModal(_ mod: Dialogs, caller : UnsafeMutableRawPointer) -> Bool
 {
 	print(caller)
 	guard let modView = allViews[mod] else {return false}

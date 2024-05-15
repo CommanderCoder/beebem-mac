@@ -11,7 +11,7 @@ import Cocoa
 
 
 // need to have given the controller an identified (StoryboardID)
-let keyMapWindow: NSWindowController = GetWindowCtrl(for:Modals.keyboardMapping)
+let keyMapWindow: NSWindowController = GetWindowCtrl(for:Dialogs.keyboardMapping)
 
 let keyMapView: KeyboardMappingViewController = keyMapWindow.contentViewController as! KeyboardMappingViewController
 
@@ -53,7 +53,7 @@ public func swift_UserKeyboardDialog() -> Bool
 
 
 // need to have given the controller an identified (StoryboardID)
-let selectKeyWindow: NSWindowController = GetWindowCtrl(for:Modals.selectKey)
+let selectKeyWindow: NSWindowController = GetWindowCtrl(for:Dialogs.selectKey)
 
 let selectKeyView: SelectKeyViewController = selectKeyWindow.contentViewController as! SelectKeyViewController
 

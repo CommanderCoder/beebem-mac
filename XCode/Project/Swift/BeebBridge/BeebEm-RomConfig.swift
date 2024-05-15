@@ -9,13 +9,13 @@ import Foundation
 import Cocoa
 
 // need to have given the controller an identified (StoryboardID)
-let romConfigWindow: NSWindowController = GetWindowCtrl(for: Modals.romConfig)
+let romConfigWindow: NSWindowController = GetWindowCtrl(for: Dialogs.romConfig)
 
 let romConfigView: RomConfigViewController = romConfigWindow.contentViewController as! RomConfigViewController
 
 
 @_cdecl("swift_GetSelectionMark")
-public func  swift_GetSelectionMark(_ m : Modals) -> Int
+public func  swift_GetSelectionMark(_ m : Dialogs) -> Int
 {
 	guard let viewCtrl = allViews[m] as? RomConfigViewController else {return 0}
 	viewCtrl.tableView.reloadData()
@@ -23,7 +23,7 @@ public func  swift_GetSelectionMark(_ m : Modals) -> Int
 }
 
 @_cdecl("swift_SetFocus")
-public func  swift_SetFocus(_ m : Modals)
+public func  swift_SetFocus(_ m : Dialogs)
 {
 	guard let viewCtrl = allViews[m] as? RomConfigViewController else {return}
 	viewCtrl.setFocus();
@@ -32,7 +32,7 @@ public func  swift_SetFocus(_ m : Modals)
 
 
 @_cdecl("swift_SetCurSel")
-public func swift_SetCurSel(_ m : Modals, selection : Int)
+public func swift_SetCurSel(_ m : Dialogs, selection : Int)
 {
 	switch allViews[m] {
 	case is RomConfigViewController:
