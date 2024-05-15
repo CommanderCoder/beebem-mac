@@ -5,8 +5,6 @@
 //  Created by Commander Coder on 21/04/2024.
 //
 
-#include "BeebEm-Bridging-TapeControl.hpp"
-
 #include "apples.h"
 #include "beebemrcids.h"
 extern long TCWindowCommandHandler(UINT32 cmdID);

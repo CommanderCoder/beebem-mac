@@ -342,15 +342,12 @@
 		DC527D112BC75316000D7CCF /* UserData */ = {isa = PBXFileReference; lastKnownFileType = folder; name = UserData; path = ../../UserData; sourceTree = "<group>"; };
 		DC527D132BC7532E000D7CCF /* Help */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Help; path = ../../Help; sourceTree = "<group>"; };
 		DC527D152BC9110E000D7CCF /* BeebEm-Bridging-Keyboard.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "BeebEm-Bridging-Keyboard.cpp"; sourceTree = "<group>"; };
-		DC527D162BC9110E000D7CCF /* BeebEm-Bridging-Keyboard.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "BeebEm-Bridging-Keyboard.hpp"; sourceTree = "<group>"; };
 		DC69C9F42BF2BDB600610067 /* KeyboardLinksViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardLinksViewController.swift; sourceTree = "<group>"; };
 		DC69C9F62BF2BDC700610067 /* BeebEm-KeyboardLinks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BeebEm-KeyboardLinks.swift"; sourceTree = "<group>"; };
 		DC69C9F82BF2BDE100610067 /* KeyboardLinksDialog-mac.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "KeyboardLinksDialog-mac.cpp"; sourceTree = "<group>"; };
 		DC69C9F92BF2BDE100610067 /* KeyboardLinksDialog-mac.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "KeyboardLinksDialog-mac.hpp"; sourceTree = "<group>"; };
 		DC69C9FB2BF2C87A00610067 /* BeebEm-Bridging-KeyboardLinks.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "BeebEm-Bridging-KeyboardLinks.cpp"; sourceTree = "<group>"; };
-		DC69C9FC2BF2C87A00610067 /* BeebEm-Bridging-KeyboardLinks.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "BeebEm-Bridging-KeyboardLinks.hpp"; sourceTree = "<group>"; };
 		DC7E1E602BCE53E000494CBE /* BeebEm-Bridging-IO.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "BeebEm-Bridging-IO.cpp"; sourceTree = "<group>"; };
-		DC7E1E612BCE53E000494CBE /* BeebEm-Bridging-IO.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "BeebEm-Bridging-IO.hpp"; sourceTree = "<group>"; };
 		DC7E1E632BCE58D400494CBE /* FileDialog-mac.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "FileDialog-mac.cpp"; sourceTree = "<group>"; };
 		DC7E1E642BCE58D400494CBE /* FileDialog-mac.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "FileDialog-mac.hpp"; sourceTree = "<group>"; };
 		DC7E1E662BCF229600494CBE /* ExportFileDialog-mac.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "ExportFileDialog-mac.cpp"; sourceTree = "<group>"; };
@@ -401,21 +398,14 @@
 		DCACDAC02BC5DD2E00CEF154 /* apples.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = apples.cpp; sourceTree = "<group>"; };
 		DCACDAC22BC669B600CEF154 /* BeebWinDx-mac.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "BeebWinDx-mac.cpp"; sourceTree = "<group>"; };
 		DCACDAC52BC66F5600CEF154 /* BeebEm-Bridging-Video.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "BeebEm-Bridging-Video.cpp"; sourceTree = "<group>"; };
-		DCACDAC62BC66F5600CEF154 /* BeebEm-Bridging-Video.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "BeebEm-Bridging-Video.hpp"; sourceTree = "<group>"; };
 		DCACDAC82BC67D2500CEF154 /* BeebEm-Bridging-Main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "BeebEm-Bridging-Main.cpp"; sourceTree = "<group>"; };
-		DCACDAC92BC67D2500CEF154 /* BeebEm-Bridging-Main.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "BeebEm-Bridging-Main.hpp"; sourceTree = "<group>"; };
 		DCB3B2512BBAB97A00F507F4 /* apples.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = apples.h; sourceTree = "<group>"; };
 		DCB441642BE63A2000FA2F38 /* appleKeyCodes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = appleKeyCodes.h; sourceTree = "<group>"; };
 		DCB4EBC52BD5BCD7002AEA8A /* BeebEm-Bridging-Roms.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "BeebEm-Bridging-Roms.cpp"; sourceTree = "<group>"; };
-		DCB4EBC62BD5BCD7002AEA8A /* BeebEm-Bridging-Roms.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "BeebEm-Bridging-Roms.hpp"; sourceTree = "<group>"; };
 		DCB4EBC82BD5BD02002AEA8A /* BeebEm-Bridging-BreakoutBox.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "BeebEm-Bridging-BreakoutBox.cpp"; sourceTree = "<group>"; };
-		DCB4EBC92BD5BD02002AEA8A /* BeebEm-Bridging-BreakoutBox.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "BeebEm-Bridging-BreakoutBox.hpp"; sourceTree = "<group>"; };
 		DCB4EBCB2BD5BD22002AEA8A /* BeebEm-Bridging-UserKeyboard.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "BeebEm-Bridging-UserKeyboard.cpp"; sourceTree = "<group>"; };
-		DCB4EBCC2BD5BD22002AEA8A /* BeebEm-Bridging-UserKeyboard.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "BeebEm-Bridging-UserKeyboard.hpp"; sourceTree = "<group>"; };
 		DCB4EBCE2BD5BD4E002AEA8A /* BeebEm-Bridging-TapeControl.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "BeebEm-Bridging-TapeControl.cpp"; sourceTree = "<group>"; };
-		DCB4EBCF2BD5BD4E002AEA8A /* BeebEm-Bridging-TapeControl.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "BeebEm-Bridging-TapeControl.hpp"; sourceTree = "<group>"; };
 		DCB4EBD12BD5BDC4002AEA8A /* BeebEm-Bridging-ExportFIles.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "BeebEm-Bridging-ExportFIles.cpp"; sourceTree = "<group>"; };
-		DCB4EBD22BD5BDC4002AEA8A /* BeebEm-Bridging-ExportFIles.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "BeebEm-Bridging-ExportFIles.hpp"; sourceTree = "<group>"; };
 		DCB4EBD42BDB26F1002AEA8A /* FolderSelectDialog-mac.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "FolderSelectDialog-mac.cpp"; sourceTree = "<group>"; };
 		DCB4EBD52BDB26F1002AEA8A /* FolderSelectDialog-mac.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "FolderSelectDialog-mac.hpp"; sourceTree = "<group>"; };
 		DCB4EBD72BDB890F002AEA8A /* RenameFileDialog-mac.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "RenameFileDialog-mac.cpp"; sourceTree = "<group>"; };
@@ -436,7 +426,6 @@
 		DCD283FE2BE8D17400ABD9F8 /* BeebEm-Debug.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BeebEm-Debug.swift"; sourceTree = "<group>"; };
 		DCD284012BE8D22C00ABD9F8 /* DebuggerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebuggerViewController.swift; sourceTree = "<group>"; };
 		DCD284032BE8D2D400ABD9F8 /* BeebEm-Debugger.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "BeebEm-Debugger.cpp"; sourceTree = "<group>"; };
-		DCD284042BE8D2D400ABD9F8 /* BeebEm-Debugger.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "BeebEm-Debugger.hpp"; sourceTree = "<group>"; };
 		DCDC73122BBE192200D83402 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		DCDC73182BBE1B9F00D83402 /* commctrl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = commctrl.h; sourceTree = "<group>"; };
 		DCE94C142BD3109500A5C12A /* BeebEm-Menu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BeebEm-Menu.swift"; sourceTree = "<group>"; };
@@ -737,27 +726,16 @@
 			children = (
 				DC907ECF2BB7101900523116 /* BeebEm-Bridging-Header.h */,
 				DCACDAC52BC66F5600CEF154 /* BeebEm-Bridging-Video.cpp */,
-				DCACDAC62BC66F5600CEF154 /* BeebEm-Bridging-Video.hpp */,
 				DCACDAC82BC67D2500CEF154 /* BeebEm-Bridging-Main.cpp */,
-				DCACDAC92BC67D2500CEF154 /* BeebEm-Bridging-Main.hpp */,
 				DC527D152BC9110E000D7CCF /* BeebEm-Bridging-Keyboard.cpp */,
-				DC527D162BC9110E000D7CCF /* BeebEm-Bridging-Keyboard.hpp */,
 				DC7E1E602BCE53E000494CBE /* BeebEm-Bridging-IO.cpp */,
-				DC7E1E612BCE53E000494CBE /* BeebEm-Bridging-IO.hpp */,
 				DCB4EBC52BD5BCD7002AEA8A /* BeebEm-Bridging-Roms.cpp */,
-				DCB4EBC62BD5BCD7002AEA8A /* BeebEm-Bridging-Roms.hpp */,
 				DCB4EBC82BD5BD02002AEA8A /* BeebEm-Bridging-BreakoutBox.cpp */,
-				DCB4EBC92BD5BD02002AEA8A /* BeebEm-Bridging-BreakoutBox.hpp */,
 				DCB4EBCB2BD5BD22002AEA8A /* BeebEm-Bridging-UserKeyboard.cpp */,
-				DCB4EBCC2BD5BD22002AEA8A /* BeebEm-Bridging-UserKeyboard.hpp */,
 				DCB4EBCE2BD5BD4E002AEA8A /* BeebEm-Bridging-TapeControl.cpp */,
-				DCB4EBCF2BD5BD4E002AEA8A /* BeebEm-Bridging-TapeControl.hpp */,
 				DCB4EBD12BD5BDC4002AEA8A /* BeebEm-Bridging-ExportFIles.cpp */,
-				DCB4EBD22BD5BDC4002AEA8A /* BeebEm-Bridging-ExportFIles.hpp */,
 				DCD284032BE8D2D400ABD9F8 /* BeebEm-Debugger.cpp */,
-				DCD284042BE8D2D400ABD9F8 /* BeebEm-Debugger.hpp */,
 				DC69C9FB2BF2C87A00610067 /* BeebEm-Bridging-KeyboardLinks.cpp */,
-				DC69C9FC2BF2C87A00610067 /* BeebEm-Bridging-KeyboardLinks.hpp */,
 			);
 			path = MacBridge;
 			sourceTree = "<group>";

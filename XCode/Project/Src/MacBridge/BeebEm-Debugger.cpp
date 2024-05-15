@@ -5,8 +5,6 @@
 //  Created by Commander Coder on 06/05/2024.
 //
 
-#include "BeebEm-Debugger.hpp"
-
 #include "apples.h"
 #include "beebemrcids.h"
 extern long DbgWindowCommandHandler(UINT32 cmdID);
