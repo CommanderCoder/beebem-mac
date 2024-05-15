@@ -10,6 +10,8 @@
 #include <vector>
 
 #include "Dialog-mac.hpp"
+#include "Main.h"
+#include "beebemrcids.h"
 
 /****************************************************************************/
 
@@ -18,7 +20,7 @@ Dialog::Dialog(HINSTANCE hInstance,
 			   int DialogID) :
 	m_hInstance(hInstance),
 	m_hwndParent(hwndParent),
-	m_DialogID(DialogID),
+	m_DialogID(DialogID), // Modals::keyboardLinks
 	m_hwnd(nullptr)
 {
 }
@@ -83,7 +85,6 @@ Dialog::Dialog(HINSTANCE hInstance,
 //
 ///****************************************************************************/
 //
-//bool Dialog::IsDlgItemChecked(int nID)
 //{
 //	return SendDlgItemMessage(m_hwnd, nID, BM_GETCHECK, 0, 0) == BST_CHECKED;
 //}
@@ -94,6 +95,36 @@ Dialog::Dialog(HINSTANCE hInstance,
 //{
 //	SendDlgItemMessage(m_hwnd, nID, BM_SETCHECK, bChecked ? BST_CHECKED : BST_UNCHECKED, 0);
 //}
+
+
+
+bool Dialog::IsDlgItemChecked(int nID)
+{
+	auto cmdID = RC2ID.find(nID);
+	if (cmdID != RC2ID.end())
+	{
+		return swift_GetDlgCheck(m_DialogID, cmdID->second);
+	}
+	else
+	{
+		mainWin->Report(MessageType::Error, "cannot find menu item %d\n", nID);
+	}
+	return FALSE;
+}
+
+
+void Dialog::SetDlgItemChecked(int nID, bool bChecked)
+{
+	auto cmdID = RC2ID.find(nID);
+	if (cmdID != RC2ID.end())
+	{
+		swift_SetDlgCheck(m_DialogID, cmdID->second, bChecked);
+	}
+	else
+	{
+		mainWin->Report(MessageType::Error, "cannot find menu item %d\n", nID);
+	}
+}
 //
 ///****************************************************************************/
 //

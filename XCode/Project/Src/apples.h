@@ -247,15 +247,30 @@ int _countof( T ( & arr )[ N ] )
 	return std::extent< T[ N ] >::value;
 }
 
+enum Dialogs {
+   breakoutBox = 256
+   , tapeControl
+   , debugWindow
+   , serialPort
+   , teletextSelect
+};
+
+enum Modals {
+   keyboardLinks = 0
+   , selectKey
+   , romConfig
+   , exportFiles
+   , keyboardMapping
+};
 
 extern "C" void swift_SoundStream(BYTE* buffer, int outputType);// outputtype 1 = 8 bit, 1 channel, 2 = 16 bit, 2 channel
 extern "C" void swift_SoundInit();
 
 extern "C" bool swift_IsMiniaturized();
 
-extern "C" void swift_RCSetModelText(const char* n);
-extern "C" int swift_RCGetSelectionMark();
-extern "C" void swift_RCSetFocus();
+extern "C" void swift_SetModelText(Modals m, const char* n);
+extern "C" int swift_GetSelectionMark(Modals m);
+extern "C" void swift_SetFocus(Modals m);
 
 extern "C" void swift_TCSelectItem(long item);
 extern "C" void swift_TCReload();
@@ -291,23 +306,16 @@ void GetWindowRect(HWND h, RECT* r);
 
 
 
- enum Dialogs {
-	breakoutBox = 256
-	, tapeControl
-	, debugWindow
-	, serialPort
-	, teletextSelect
-};
 
-enum Modals {
-	keyboardLinks = 0
-	, selectKey
-	, romConfig
-	, exportFiles
-	, keyboardMapping
-};
+//#define IDD_SELECT_KEY			Modals::selectKey
+//#define IDD_USERKYBRD			Modals::keyboardMapping
 
-extern "C" int swift_SetCurSelRC(int m);
+//#define IDD_BREAKOUT			Dialogs::breakoutBox
+//#define IDD_TAPECONTROL			Dialogs::tapeControl
+//#define IDD_DEBUG				Dialogs::debugWindow
+
+
+extern "C" int swift_SetCurSel(Modals mod, int m);
 
 
 extern "C" int swift_OpenDialog(Dialogs dlg, void* dialogClass);

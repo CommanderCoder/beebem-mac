@@ -14,24 +14,39 @@ let romConfigWindow: NSWindowController = GetWindowCtrl(for: Modals.romConfig)
 let romConfigView: RomConfigViewController = romConfigWindow.contentViewController as! RomConfigViewController
 
 
-@_cdecl("swift_RCGetSelectionMark")
-public func  swift_RCGetSelectionMark() -> Int
+@_cdecl("swift_GetSelectionMark")
+public func  swift_GetSelectionMark(_ m : Modals) -> Int
 {
-	romConfigView.tableView.reloadData()
-	return romConfigView.returnRowInTable()
+	guard let viewCtrl = allViews[m] as? RomConfigViewController else {return 0}
+	viewCtrl.tableView.reloadData()
+	return viewCtrl.returnRowInTable()
 }
 
-@_cdecl("swift_RCSetFocus")
-public func  swift_RCSetFocus()
+@_cdecl("swift_SetFocus")
+public func  swift_SetFocus(_ m : Modals)
 {
-	romConfigView.setFocus();
+	guard let viewCtrl = allViews[m] as? RomConfigViewController else {return}
+	viewCtrl.setFocus();
 }
 
 
 
-@_cdecl("swift_SetCurSelRC")
-public func swift_SetCurSelRC(selection : Int)
+@_cdecl("swift_SetCurSel")
+public func swift_SetCurSel(_ m : Modals, selection : Int)
 {
-	romConfigView.modelSelection.selectItem(at: selection)
-	romConfigView.tableView.reloadData()
+	switch allViews[m] {
+	case is RomConfigViewController:
+		guard let rcCtrl = allViews[m] as? RomConfigViewController else {break}
+		rcCtrl.modelSelection.selectItem(at: selection)
+		rcCtrl.tableView.reloadData()
+		break
+		
+	case .none:
+		break
+
+	case .some(_):
+		break
+
+	}
+	
 }

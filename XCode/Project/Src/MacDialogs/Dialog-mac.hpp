@@ -43,8 +43,8 @@ public:
 	protected:
 //		std::string GetDlgItemText(int nID);
 //		void SetDlgItemText(int nID, const std::string& str);
-//		bool IsDlgItemChecked(int nID);
-//		void SetDlgItemChecked(int nID, bool bChecked);
+		bool IsDlgItemChecked(int nID);
+		void SetDlgItemChecked(int nID, bool bChecked);
 //		void SetDlgItemFocus(int nID);
 //		void EnableDlgItem(int nID, bool bEnable);
 

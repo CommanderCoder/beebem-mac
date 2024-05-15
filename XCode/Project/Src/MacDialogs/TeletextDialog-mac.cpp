@@ -78,6 +78,8 @@ static const int EnableIPAddressControl[] =
 	IDC_PORT4_STATIC
 };
 
+#define IDD_TELETEXT			Dialogs::teletextSelect
+
 /****************************************************************************/
 
 TeletextDialog::TeletextDialog(HINSTANCE hInstance,

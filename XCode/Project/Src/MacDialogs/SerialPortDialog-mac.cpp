@@ -18,6 +18,9 @@
 #include "Resource.h"
 #include "StringUtils.h"
 
+#define IDD_SERIAL				Dialogs::serialPort
+
+
 /****************************************************************************/
 
 SerialPortDialog::SerialPortDialog(HINSTANCE hInstance,

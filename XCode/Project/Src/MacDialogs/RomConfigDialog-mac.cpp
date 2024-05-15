@@ -55,9 +55,10 @@ static void LVSetItemText(
 
 static void LVSetFocus(HWND hWnd)
 {
-	swift_RCSetFocus();
+	swift_SetFocus((Modals)*hWnd);
 }
 
+#define IDD_ROMCONFIG			Modals::romConfig
 
 /****************************************************************************/
 
@@ -128,20 +129,22 @@ void ListView_DeleteAllItems(HWND wnd)
 static void ComboBox_AddString(UINT* nIDDlgItem,
 							   std::string b)
 {
-//	swift_AddStringRC(b);
+//	swift_AddString(m_DialogID, nIDDlgItem, b);
 }
 
 
 static void ComboBox_SetCurSel(UINT* nIDDlgItem,
 							   INT b)
 {
-	swift_SetCurSelRC(b);
+	swift_SetCurSel((Modals)*nIDDlgItem, b);
 }
 /****************************************************************************/
 
 void RomConfigDialog::FillModelList()
 {
 	HWND hWndModel = GetDlgItem(m_hwnd, IDC_MODEL);
+	hWndModel = (uint*)&m_DialogID;
+
 
 	for (int i = 0; i < static_cast<int>(Model::Last); i++)
 	{
@@ -181,7 +184,7 @@ extern RomConfigDialog* runningRCDialog;
 bool RomConfigDialog::DoModal() {
 	runningRCDialog = this;
 	WM_INITDIALOG();
-	bool ret = swift_DoModal(Modals::romConfig, this);
+	bool ret = swift_DoModal((Modals)m_DialogID, this);
 	runningRCDialog = NULL;
 	return ret;
 }
@@ -189,6 +192,8 @@ bool RomConfigDialog::DoModal() {
 
 bool RomConfigDialog::WM_INITDIALOG()
 {
+	m_hWndROMList = (uint*)&m_DialogID;
+	
 	FillModelList();
 	FillROMList();
 	return TRUE;
@@ -197,7 +202,7 @@ bool RomConfigDialog::WM_INITDIALOG()
 
 int ListView_GetSelectionMark(HWND hwnd)
 {
-	return swift_RCGetSelectionMark();
+	return swift_GetSelectionMark((Modals)*hwnd);
 }
 
 /****************************************************************************/
