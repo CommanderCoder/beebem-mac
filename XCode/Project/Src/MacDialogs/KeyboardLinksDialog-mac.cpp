@@ -42,34 +42,6 @@ static const UINT nControlIDs[] = {
 };
 
 
-static bool IsDlgItemChecked(UINT nIDDlgItem)
-{
-	auto cmdID = RC2ID.find(nIDDlgItem);
-	if (cmdID != RC2ID.end())
-	{
-		return swift_GetDlgCheck(Modals::keyboardLinks, cmdID->second);
-	}
-	else
-	{
-		mainWin->Report(MessageType::Error, "cannot find menu item %d\n", nIDDlgItem);
-	}
-	return FALSE;
-}
-
-
-static void SetDlgItemChecked(UINT nIDDlgItem, bool Checked)
-{
-	auto cmdID = RC2ID.find(nIDDlgItem);
-	if (cmdID != RC2ID.end())
-	{
-		swift_SetDlgCheck(Modals::keyboardLinks, cmdID->second, Checked);
-	}
-	else
-	{
-		mainWin->Report(MessageType::Error, "cannot find menu item %d\n", nIDDlgItem);
-	}
-}
-
 extern KeyboardLinksDialog* runningKLDialog;
 
 bool KeyboardLinksDialog::DoModal() {

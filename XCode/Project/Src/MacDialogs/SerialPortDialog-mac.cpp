@@ -42,10 +42,7 @@ SerialPortDialog::SerialPortDialog(HINSTANCE hInstance,
 }
 
 
-static void SetDlgItemText(HWND hDlg, int nID, const char* str)
-{
-	printf("tapecontrol text %d %s", nID, str);
-}
+
 
 static void EnableDlgItem(UINT nIDDlgItem, bool Enable)
 {
@@ -54,19 +51,11 @@ static void EnableDlgItem(UINT nIDDlgItem, bool Enable)
 #endif
 }
 
-static bool IsDlgItemChecked(HWND hDlg, UINT nIDDlgItem)
-{
-#ifndef __APPLE__
-	return SendDlgItemMessage(hDlg, nIDDlgItem, BM_GETCHECK, 0, 0) == BST_CHECKED;
-#else
-	return FALSE;
-#endif
-}
-
 static void SetDlgItemText(int nID, const std::string& str)
 {
-	
+	printf("serialport text %d %s", nID, str.c_str());
 }
+
 static std::string GetDlgItemText(int nID)
 {
 	return "";
@@ -75,19 +64,6 @@ static std::string GetDlgItemText(int nID)
 static void SetDlgItemFocus(int nID)
 {
 	
-}
-
-static bool IsDlgItemChecked(UINT nIDDlgItem)
-{
-	return false;
-}
-
-
-static void SetDlgItemChecked(UINT nIDDlgItem, bool Checked)
-{
-#ifndef __APPLE__
-	SendDlgItemMessage(hDlg, nIDDlgItem, BM_SETCHECK, Checked ? BST_CHECKED : BST_UNCHECKED, 0);
-#endif
 }
 
 

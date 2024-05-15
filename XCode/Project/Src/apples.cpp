@@ -351,6 +351,13 @@ LRESULT SendDlgItemMessage(
    LPARAM lParam
 )
 {
+	
+	if (Msg == BM_SETCHECK){
+		swift_SetDlgCheck((Dialogs)*hDlg, nIDDlgItem, wParam);
+//	e.g. 	hwndTapeControl, IDC_TAPE_CONTROL_UNLOCK
+//	e.g. 	Modals::tapeControl, 'tcul'
+	}
+
 	return 0;
 }
 

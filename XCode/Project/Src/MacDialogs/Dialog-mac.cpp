@@ -82,19 +82,6 @@ Dialog::Dialog(HINSTANCE hInstance,
 //{
 //	SetWindowText(GetDlgItem(m_hwnd, nID), str.c_str());
 //}
-//
-///****************************************************************************/
-//
-//{
-//	return SendDlgItemMessage(m_hwnd, nID, BM_GETCHECK, 0, 0) == BST_CHECKED;
-//}
-//
-///****************************************************************************/
-//
-//void Dialog::SetDlgItemChecked(int nID, bool bChecked)
-//{
-//	SendDlgItemMessage(m_hwnd, nID, BM_SETCHECK, bChecked ? BST_CHECKED : BST_UNCHECKED, 0);
-//}
 
 
 

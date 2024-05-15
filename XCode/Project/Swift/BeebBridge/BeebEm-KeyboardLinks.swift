@@ -79,12 +79,12 @@ func dlgItemByIdentifier(_ id: String, _ vc: NSViewController) -> NSButton? {
 @_cdecl("swift_SetDlgCheck")
 public func swift_SetDlgCheck(_ dlg: Dialogs, _ cmd: UInt32, _ check: Bool) -> Bool
 {
-	guard let v : NSViewController = allViews[dlg] else {
+	guard let dlgView : NSViewController = allViews[dlg] else {
 		return false
 	}
 	
 	let cmdSTR =  conv(cmd)
-	if let n = dlgItemByIdentifier(cmdSTR, v)
+	if let n = dlgItemByIdentifier(cmdSTR, dlgView)
 	{
 //        print("\(#function)",cmdSTR,check)
 		let oldstate = n.state
@@ -102,12 +102,12 @@ public func swift_SetDlgCheck(_ dlg: Dialogs, _ cmd: UInt32, _ check: Bool) -> B
 @_cdecl("swift_GetDlgCheck")
 public func swift_GetDlgCheck(_ dlg: Dialogs, _ cmd: UInt32) -> Bool
 {
-	guard let v : NSViewController = allViews[dlg] else {
+	guard let dlgView : NSViewController = allViews[dlg] else {
 		return false
 	}
 
 	let cmdSTR =  conv(cmd)
-	if let n = dlgItemByIdentifier(cmdSTR, v)
+	if let n = dlgItemByIdentifier(cmdSTR, dlgView)
 	{
 //        print("\(#function)",cmdSTR,check)
 		return n.state == .on

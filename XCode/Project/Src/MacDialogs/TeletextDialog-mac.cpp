@@ -137,19 +137,6 @@ static void SetDlgItemFocus(int nID)
 	
 }
 
-static bool IsDlgItemChecked(UINT nIDDlgItem)
-{
-	return false;
-}
-
-
-static void SetDlgItemChecked(UINT nIDDlgItem, bool Checked)
-{
-#ifndef __APPLE__
-	SendDlgItemMessage(hDlg, nIDDlgItem, BM_SETCHECK, Checked ? BST_CHECKED : BST_UNCHECKED, 0);
-#endif
-}
-
 
 static void ComboBox_AddString(UINT* nIDDlgItem,
 							   std::string b)

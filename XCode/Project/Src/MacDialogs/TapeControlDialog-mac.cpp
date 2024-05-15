@@ -118,18 +118,12 @@ static void EnableDlgItem(HWND hDlg, UINT nIDDlgItem, bool Enable)
 
 static bool IsDlgItemChecked(HWND hDlg, UINT nIDDlgItem)
 {
-#ifndef __APPLE__
 	return SendDlgItemMessage(hDlg, nIDDlgItem, BM_GETCHECK, 0, 0) == BST_CHECKED;
-#else
-	return FALSE;
-#endif
 }
 
 static void SetDlgItemChecked(HWND hDlg, UINT nIDDlgItem, bool Checked)
 {
-#ifndef __APPLE__
 	SendDlgItemMessage(hDlg, nIDDlgItem, BM_SETCHECK, Checked ? BST_CHECKED : BST_UNCHECKED, 0);
-#endif
 }
 
 

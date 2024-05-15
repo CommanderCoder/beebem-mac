@@ -142,3 +142,12 @@ debug.cpp, econet.cpp need reverting.
 Done, and made sure that debug.cpp was copied to debug-mac.cpp
 
 Need a general way of finding the NSButtons within a ViewController programmatically. Currently got one per viewcontroller (dlgItemByIdentifier)
+DONE.
+
+====
+
+Test everything and make a note of required fixes
+* Fix the dialog layouts
+* RenameFileDialog
+* switch use of Modals/Dialogs to the actual view element for things like SetCurSel()
+
