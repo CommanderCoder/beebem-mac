@@ -3337,7 +3337,7 @@ DQ
             <objects>
                 <viewController title="TITLE for BeebViewController" showSeguePresentationStyle="single" id="5gI-5U-AMq" userLabel="BeebEm View Controller" customClass="BeebViewController" customModule="BeebEm" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="ERx-hH-rdd">
-                        <rect key="frame" x="0.0" y="0.0" width="640" height="512"/>
+                        <rect key="frame" x="0.0" y="0.0" width="640" height="532"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <subviews>
                             <stackView distribution="fill" orientation="horizontal" alignment="centerY" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qAc-0X-wdO" userLabel="LEDS">
@@ -3644,7 +3644,7 @@ DQ
                                 </customSpacing>
                             </stackView>
                             <customView translatesAutoresizingMaskIntoConstraints="NO" id="DU3-gu-y6b" userLabel="BeebView" customClass="BeebSKView" customModule="BeebEm" customModuleProvider="target">
-                                <rect key="frame" x="15" y="53" width="610" height="457"/>
+                                <rect key="frame" x="2" y="53" width="636" height="477"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="DU3-gu-y6b" secondAttribute="height" multiplier="4:3" id="XQt-ES-kNQ"/>
                                 </constraints>
@@ -3654,6 +3654,7 @@ DQ
                             <constraint firstItem="DU3-gu-y6b" firstAttribute="centerX" secondItem="ERx-hH-rdd" secondAttribute="centerX" id="JQt-o2-Aqf"/>
                             <constraint firstItem="DU3-gu-y6b" firstAttribute="top" secondItem="ERx-hH-rdd" secondAttribute="top" constant="2" id="Utv-gg-uSs"/>
                             <constraint firstItem="qAc-0X-wdO" firstAttribute="top" secondItem="DU3-gu-y6b" secondAttribute="bottom" constant="2" id="eri-Vs-9ZP"/>
+                            <constraint firstAttribute="bottom" secondItem="DU3-gu-y6b" secondAttribute="bottom" constant="53" id="jru-FS-TRw"/>
                             <constraint firstAttribute="bottom" secondItem="qAc-0X-wdO" secondAttribute="bottom" constant="2" id="tH8-hd-uma"/>
                             <constraint firstItem="DU3-gu-y6b" firstAttribute="centerX" secondItem="qAc-0X-wdO" secondAttribute="centerX" id="zFe-NQ-u6R"/>
                         </constraints>
