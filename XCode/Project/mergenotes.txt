@@ -1,0 +1,156 @@
+TODO:
+Get rid off all the warnings NOW
+
+
+
+
+Notes:
+=====
+
+Set up a shim for rendering an 'App' using swift
+
+Requires swift files for:
+AppDelegate - all menu handler
+BeebApplication - linked to XCode 'Principle Class', used for Keyboard Shortcuts
+BeebViewController - the main frame renderer and cpu update and LEDs
+BeebEm-Bridging-Code - code that is called by the windows BeebEm C++ to communicate with MacOS
+
+Renderer, Colour, Bitmap, NSImage+Bitmap, BeebSKView - required for rendering the video
+
+
+Requires C++ files for:
+BeebEm-Bridging-Header - This is set in the Xcode Build Settings
+BeebEm-Bridging-Temp - placeholder functions for calls from MacOS to BeebEm C++
+
+
+
+BeebEm-Bridging-[...]Controller
+The bridging code for the following relates to the different Controllers in the Storyboard
+- removed tape, keyboard, rom, files list code into their own files as these access additional view controllers
+
+Renamed hardware update to Leds update
+Move tape_update to the TapeControl file
+
+NSSavePanel has changed to use allowedContentTypes and these types are predefined in info.plist
+
+Fixed some layout issues in Main.Storyboard
+AUTOLAYOUT:
+https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/AutolayoutPG/index.html#//apple_ref/doc/uid/TP40010853-CH7-SW1
+
+https://developer.apple.com/macos/planning/
+
+
+Changes
+All now '.cpp' files, and all using CamelCase filenames
+ 6502core - needed Sleep
+ ArmDisassembler
+ AtoDConv
+
+Added beebemrcids
+Added a windows_stubs folder to the project which will catch all the <windows.h> .etc. includes
+
+Including the additional beebmain files
+
+Following files from Windows will not be used:
+printing
+avi
+beebwin
+beebwinx
+beebwinio
+beebwinprefs
+beebwinspeech
+DirectSoundStreamer
+XAudio2Streamer
+filedialog
+FolderSelectDialog
+Armulator/armdis
+Armulator/armmem
+
+Drive controllers are not DLLs; they are statically linked into namespaces
+
+Had a problem because beebemrc.h was the same as Resource.h - coping Resource.h into the folder got the names mixed up.
+Some of the names in the new Resources have changed, so fixed up these. (y2KAdjust removed)
+
+Fixed the string literal to 'char *' and added Opus/Acorn/WatfordFDC
+
+
+Ran through and added __APPLE__ to every error in Windows version.
+
+Merged video. Removed <Carbon> as it was only used for Ptr which is char*, and UInt32, and it caused a conflict with KeyMap
+
+Merge main.  Should have a log window pop up to show errors on boot up and allow for BeebEm to Wait and then quit
+
+Getting Resource files loaded, which needs them copying to the Bundle for execution (as a Build Phase).  The added folders are resource references and not groups.
+
+Keyboard fixes were basically to ensure that correct kmap was being loaded.  And to make sure the keymap was being copied from the Bundle to App Support.  [the use of Bundle, App Support and Documents folder hasn't been properly decided yet.  Probably distribution in Bundle, Local Settings in AppSupport, and Local discs & Tapes in Documents.]
+
+
+BeebWinIO has a lot of SetMenuItemInfo() calls to disable menu items when the IO state changes.  Instead, a separate system should reflect the current state somewhere else.
+
+Created a mac version of FileDialog which mildly mimics the file dialog.  SelectFDC ignored as these are always available.  It required a mock HWND and m_hWnd
+
+No CaptureAVI option on MacOS
+
+Dialog (not used), FileDialog and ExportFileDialog (not using Dialog)
+
+Changed the Export Type Identifier into Import & Export Type Identifers
+
+Renamed Beeb-Bridge-... to match the view controllers, and moved the Bridging-Code into its own files.  Changed BeebListView to ExportDiscView
+
+SoundStreamer
+FolderSelectDialog
+KeyboardLInksDialog
+ListView
+RenameFileDialog
+RomConfigDialog
+SelectKeyDialog
+SerialPortDialog
+UserKeyboardDialog
+UserPortBreakoutBox
+
+https://developer.apple.com/documentation/xcode/customizing-the-build-schemes-for-a-project
+Removed 'Document Versions' debugging from the scheme
+
+Fixed up the Export File option.
+
+Next to add the table columns
+
+===
+The 'romconfig' uses a 'modal' which is triggered from code
+The 'keyboardmapping', exportdiscview is also modal
+The tapecontrol and breakoutbox are not modal
+
+===
+need to look at reverting
+KeyMap.h
+Main.cpp
+SelectKeyDialog.h
+TapeCOntroDialog.cpp and h
+userkeybaorddialog.h
+userportbreakout.h
+uservia.cpp
+
+===
+Do the SelectKeyDialog and the Debugger Dialog
+And SerialPortDialog, and TeletextDialog
+And use a Combobox for the RomConfig dialog
+
+Check all the Mac menus with the current menus for Windows version;
+> noted the romconfig dialog now uses a dropdown for the machine - probably to add more machine
+
+debug.cpp, econet.cpp need reverting.
+Done, and made sure that debug.cpp was copied to debug-mac.cpp
+
+Need a general way of finding the NSButtons within a ViewController programmatically. Currently got one per viewcontroller (dlgItemByIdentifier)
+DONE.
+
+====
+
+Test everything and make a note of required fixes
+* Fix the dialog layouts
+* RenameFileDialog
+* switch use of Modals/Dialogs to the actual view element for things like SetCurSel()
+* What is required to get Econet to work; how can I test it
+** start with gethostname!!  REMEMBER: set the permissions/capabilities to include network!  Also, since this is broadcasting, will need to check the permissions of the system firewall.
+* similarly for Teletext & Serial ; how can I test these?
+

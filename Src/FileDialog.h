@@ -27,6 +27,7 @@ Boston, MA  02110-1301, USA.
 #ifndef FILEDIALOG_HEADER
 #define FILEDIALOG_HEADER
 
+#ifndef __APPLE__
 class FileDialog
 {
 public:
@@ -73,5 +74,8 @@ private:
 
 	bool ShowDialog(bool open);
 };
+#else
+#include "FileDialog-mac.hpp"
+#endif //__APPLE__
 
 #endif

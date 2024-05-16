@@ -66,6 +66,10 @@ static void SASIRamDiagnostics();
 static void SASIControllerDiagnostics();
 static void SASISeek();
 
+// fix the name class with read & write from unistd.h
+#define read read_sasi
+#define write write_sasi
+
 enum phase_s {
 	busfree,
 	selection,
@@ -114,7 +118,11 @@ void SASIReset()
 
 	for (int i = 0; i < 1; ++i) // only one drive allowed under Torch Z80 ?
 	{
+#ifndef __APPLE__
 		sprintf(buff, "%s\\sasi%d.dat", HardDrivePath, i);
+#else
+		sprintf(buff, "%s/sasi%d.dat", HardDrivePath, i);
+#endif
 
 		if (SASIDisc[i] != NULL)
 		{
@@ -300,15 +308,19 @@ static void SASIWriteData(unsigned char data)
 			}
 			return;
 
+		case execute:
+			break;
+		case read:
+			break;
 		case write:
 			sasi.buffer[sasi.offset] = data;
 			sasi.offset++;
 			sasi.length--;
 			sasi.req = false;
-
+			
 			if (sasi.length > 0)
 				return;
-
+			
 			switch (sasi.cmd[0]) {
 				case 0x0a:
 				case 0x0c:
@@ -317,7 +329,7 @@ static void SASIWriteData(unsigned char data)
 					SASIStatus();
 					return;
 			}
-
+			
 			switch (sasi.cmd[0]) {
 				case 0x0a:
 					if (!SASIWriteSector(sasi.buffer, sasi.next - 1)) {
@@ -336,9 +348,9 @@ static void SASIWriteData(unsigned char data)
 					}
 					break;
 			}
-
+			
 			sasi.blocks--;
-
+			
 			if (sasi.blocks == 0) {
 				SASIStatus();
 				return;
@@ -347,6 +359,10 @@ static void SASIWriteData(unsigned char data)
 			sasi.next++;
 			sasi.offset = 0;
 			return;
+		case status:
+			break;
+		case message:
+			break;
 	}
 
 	SASIBusFree();

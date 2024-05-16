@@ -30,10 +30,12 @@ Boston, MA  02110-1301, USA.
 
 static FILE *LogFile = nullptr;
 
+#ifndef __APPLE__
 static const char* const mon[] = {
 	"Jan", "Feb", "Mar", "Apr", "May", "Jun",
 	"Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
 };
+#endif
 
 void OpenLog()
 {
@@ -55,7 +57,7 @@ void CloseLog()
 	}
 }
 
-void WriteLog(char *fmt, ...)
+void WriteLog(const char *fmt, ...)
 {
 	if (LogFile != nullptr)
 	{
@@ -67,10 +69,16 @@ void WriteLog(char *fmt, ...)
 
 		va_end(argptr);
 
+#ifdef __APPLE__
+		std::time_t result = std::time(nullptr);
+		struct tm* tim = std::localtime(&result);
+		fprintf(LogFile, "[%s] ", asctime(tim));
+#else
 		SYSTEMTIME tim;
 		GetLocalTime(&tim);
 		fprintf(LogFile, "[%02d-%3s-%02d %02d:%02d:%02d.%03d] ",
 		        tim.wDay, mon[tim.wMonth - 1], tim.wYear % 100, tim.wHour, tim.wMinute, tim.wSecond, tim.wMilliseconds);
+#endif
 
 		fprintf(LogFile, "%s", buff);
 	}

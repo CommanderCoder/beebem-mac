@@ -156,13 +156,15 @@ public:
 	void ApplyPrefs();
 	void Shutdown();
 
+#ifndef __APPLE__
 	static LRESULT CALLBACK WndProc(HWND hWnd,
 	                                  UINT nMessage,
 	                                  WPARAM wParam,
 	                                  LPARAM lParam);
 
 	LRESULT WndProc(UINT nMessage, WPARAM wParam, LPARAM lParam);
-
+#endif
+	
 	void UpdateModelMenu();
 	void SetSoundMenu(void);
 	void SetImageName(const char *DiscName, int Drive, DiscType Type);
@@ -424,12 +426,14 @@ public:
 	MessageResult Report(MessageType type, const char *format, ...);
 	MessageResult ReportV(MessageType type, const char *format, va_list args);
 
+#ifndef __APPLE__
 	bool RegCreateKey(HKEY hKeyRoot, LPCSTR lpSubKey);
 	bool RegGetBinaryValue(HKEY hKeyRoot, LPCSTR lpSubKey, LPCSTR lpValue, void* pData, int* pnSize);
 	bool RegSetBinaryValue(HKEY hKeyRoot, LPCSTR lpSubKey, LPCSTR lpValue, const void* pData, int* pnSize);
 	bool RegGetStringValue(HKEY hKeyRoot, LPCSTR lpSubKey, LPCSTR lpValue, LPSTR pData, DWORD dwSize);
 	bool RegSetStringValue(HKEY hKeyRoot, LPCSTR lpSubKey, LPCSTR lpValue, LPCSTR pData);
-
+#endif
+	
 	// Preferences
 	void LoadPreferences();
 	void SavePreferences(bool saveAll);
@@ -515,14 +519,17 @@ public:
 
 	// DirectDraw stuff
 	HINSTANCE m_hInstDDraw;
+#ifndef __APPLE__
 	LPDIRECTDRAW m_DD; // DirectDraw object
 	LPDIRECTDRAW2 m_DD2; // DirectDraw object
 	LPDIRECTDRAWSURFACE m_DDSPrimary; // DirectDraw primary surface
 	LPDIRECTDRAWSURFACE2 m_DDS2Primary; // DirectDraw primary surface
 	LPDIRECTDRAWSURFACE m_DDSOne; // Offscreen surface 1
 	LPDIRECTDRAWSURFACE2 m_DDS2One; // Offscreen surface 1
+#endif
 	bool m_DXSmoothing;
 	bool m_DXSmoothMode7Only;
+#ifndef __APPLE__
 	LPDIRECTDRAWCLIPPER m_Clipper; // clipper for primary
 
 	// Direct3D9 stuff
@@ -531,7 +538,8 @@ public:
 	LPDIRECT3DVERTEXBUFFER9 m_pVB;
 	LPDIRECT3DTEXTURE9 m_pTexture;
 	D3DXMATRIX m_TextureMatrix;
-
+#endif
+	
 	// Audio
 	UINT m_MenuIDSampleRate;
 	UINT m_MenuIDVolume;
@@ -622,8 +630,10 @@ public:
 	// ROMs
 	bool RomWritePrefs[16];
 
+#ifndef __APPLE__
 	// Bitmap capture
 	ULONG_PTR m_gdiplusToken;
+#endif
 	bool m_CaptureBitmapPending;
 	bool m_CaptureBitmapAutoFilename;
 	char m_CaptureFileName[MAX_PATH];

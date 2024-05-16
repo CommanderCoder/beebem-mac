@@ -20,7 +20,7 @@ Boston, MA  02110-1301, USA.
 
 #ifndef TELETEXT_DIALOG_HEADER
 #define TELETEXT_DIALOG_HEADER
-
+#ifndef __APPLE__
 #include <string>
 
 #include "Dialog.h"
@@ -53,7 +53,7 @@ class TeletextDialog : public Dialog
 		);
 
 		INT_PTR OnCommand(int Notification, int nCommandID);
-
+	
 		void SelectFile(int Channel);
 
 		BOOL GetChannelIPControls(int Channel);
@@ -69,5 +69,7 @@ class TeletextDialog : public Dialog
 		std::string m_IPAddress[4];
 		u_short m_IPPort[4];
 };
-
+#else
+#include "TeletextDialog-mac.hpp"
+#endif
 #endif

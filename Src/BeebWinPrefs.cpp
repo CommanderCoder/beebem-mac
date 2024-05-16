@@ -171,7 +171,7 @@ void BeebWin::LoadPreferences()
 
 	if (!m_Preferences.GetBoolValue("DXSmoothMode7Only", m_DXSmoothMode7Only))
 		m_DXSmoothMode7Only = false;
-
+	
 	if (m_Preferences.GetDWORDValue("DDFullScreenMode", dword))
 		m_DDFullScreenMode = dword;
 	else
@@ -251,7 +251,7 @@ void BeebWin::LoadPreferences()
 
 	if (!m_Preferences.GetBoolValue("TextViewEnabled", m_TextViewEnabled))
 		m_TextViewEnabled = false;
-
+	
 	if (m_Preferences.GetDWORDValue(CFG_SPEED_TIMING, dword))
 		m_MenuIDTiming = dword;
 	else
@@ -306,7 +306,6 @@ void BeebWin::LoadPreferences()
 	{
 		m_SpeechRate = 0;
 	}
-
 	if (!m_Preferences.GetBoolValue("Music5000Enabled", Music5000Enabled))
 		Music5000Enabled = false;
 
@@ -315,6 +314,7 @@ void BeebWin::LoadPreferences()
 	else
 		m_MenuIDSticks = 0;
 
+	
 	if (!m_Preferences.GetBoolValue(CFG_OPTIONS_FREEZEINACTIVE, m_FreezeWhenInactive))
 		m_FreezeWhenInactive = true;
 
@@ -376,7 +376,7 @@ void BeebWin::LoadPreferences()
 		for (int key=0; key<8; ++key)
 			BitKeys[key] = keyData[key];
 	}
-
+	
 	if (!m_Preferences.GetBoolValue(CFG_AMX_ENABLED, AMXMouseEnabled))
 		AMXMouseEnabled = false;
 
@@ -604,7 +604,11 @@ void BeebWin::LoadPreferences()
 			GetDataPath(m_UserDataPath, DiscsPath);
 
 			char TeletextFile[256];
+#ifndef __APPLE__
 			sprintf(TeletextFile, "%s\\txt%d.dat", DiscsPath, ch);
+#else
+			sprintf(TeletextFile, "%s/txt%d.dat", DiscsPath, ch);
+#endif
 
 			TeletextFileName[ch] = TeletextFile;
 		}
@@ -695,6 +699,7 @@ void BeebWin::LoadPreferences()
 		m_XWinPos = rect.left;
 		m_YWinPos = rect.top;
 
+#ifndef __APPLE__
 		// Pos can get corrupted if two BeebEm's exited at same time
 		RECT scrrect;
 		SystemParametersInfo(SPI_GETWORKAREA, 0, (PVOID)&scrrect, 0);
@@ -706,6 +711,8 @@ void BeebWin::LoadPreferences()
 			m_YWinPos = 0;
 		if (m_YWinPos > scrrect.bottom - 80)
 			m_YWinPos = 0;
+#endif
+		
 	}
 	else
 	{
@@ -737,6 +744,7 @@ void BeebWin::LoadPreferences()
 	// Update prefs version
 	m_Preferences.SetStringValue("PrefsVersion", "2.1");
 
+#ifndef __APPLE__
 	// Windows key enable/disable still comes from registry
 	int binsize = 24;
 	if (RegGetBinaryValue(HKEY_LOCAL_MACHINE,CFG_KEYBOARD_LAYOUT,
@@ -744,7 +752,8 @@ void BeebWin::LoadPreferences()
 		m_DisableKeysWindows = true;
 	else
 		m_DisableKeysWindows = false;
-
+#endif
+	
 	if (!m_Preferences.GetBoolValue("WriteInstructionCounts", m_WriteInstructionCounts))
 		m_WriteInstructionCounts = false;
 }
@@ -781,7 +790,7 @@ void BeebWin::SavePreferences(bool saveAll)
 		m_Preferences.SetDWORDValue("MotionBlur", m_MenuIDMotionBlur);
 		m_Preferences.SetBinaryValue("MotionBlurIntensities", m_BlurIntensities, 8);
 		m_Preferences.SetBoolValue("TextViewEnabled", m_TextViewEnabled);
-
+		
 		m_Preferences.SetDWORDValue(CFG_SPEED_TIMING, m_MenuIDTiming);
 
 		m_Preferences.SetDWORDValue("SoundConfig::Selection", SoundConfig::Selection);
@@ -817,7 +826,7 @@ void BeebWin::SavePreferences(bool saveAll)
 		{
 			keyData[key] = static_cast<char>(BitKeys[key]);
 		}
-
+		
 		m_Preferences.SetBinaryValue("BitKeys", keyData, 8);
 
 		m_Preferences.SetStringValue(CFG_OPTIONS_USER_KEY_MAP_FILE, m_UserKeyMapPath);
@@ -893,6 +902,7 @@ void BeebWin::SavePreferences(bool saveAll)
 		RECT rect;
 		GetWindowRect(m_hWnd,&rect);
 		m_Preferences.SetBinaryValue("WindowPos", &rect, sizeof(rect));
+		
 	}
 
 	// CMOS RAM now in prefs file

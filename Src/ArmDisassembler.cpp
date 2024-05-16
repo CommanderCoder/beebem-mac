@@ -496,12 +496,12 @@ char *decodeSingleDTRegOffsetPreIndex(uint32 /* address */, uint32 instruction, 
 	uint32 imm = getField(instruction, 7,11);
 
 	// table of shift mnemonics
-	char *shiftMnemonic[4] =
+	const char* shiftMnemonic[4] =
 	{
 		"lsl", "lsr", "asr", "ror"
 	};
 
-	char *shiftType = shiftMnemonic[ getField(instruction, 5,6) ];
+	const char *shiftType = shiftMnemonic[ getField(instruction, 5,6) ];
 
 	// if not LSL #0
 	if( !( (strcmp(shiftType, "lsl") == 0) && imm == 0) )
@@ -838,7 +838,7 @@ char *decodeSoftwareInterrupt(uint32 /* address */, uint32 instruction, char *bu
 	strcpy(buff, "swi");
 	strcat(buff, decodeConditionCode(instruction));
 	
-	char *swiList[] = { "WriteC", "WriteS", "Write0", "NewLine", "ReadC", "CLI", "Byte",
+	const char *swiList[] = { "WriteC", "WriteS", "Write0", "NewLine", "ReadC", "CLI", "Byte",
 					   "Word", "File", "Args", "BGet", "BPut", "Multiple", "Open",
 					   "ReadLine", "Control", "GetEnv", "Exit", "SetEnv",
 					   "IntOn", "IntOff", "CallBack", "EnterOS", "BreakPT",
@@ -967,10 +967,10 @@ char *decodeSingleDataSwap(uint32 /* address */, uint32 instruction, char *buff)
 	return buff;
 }
 
-char *decodeConditionCode(uint32 instruction)
+const char *decodeConditionCode(uint32 instruction)
 {
 	// table of condition code meanings, note that as convention dictates, AL is blank
-	char *conditionCodes[16] =
+	const char *conditionCodes[16] =
 	{
 		"eq", "ne", "cs", "cc",
 		"mi", "pl", "vs", "vc",

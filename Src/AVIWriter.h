@@ -27,6 +27,7 @@ Boston, MA  02110-1301, USA.
 #ifndef AVI_WRITER_HEADER
 #define AVI_WRITER_HEADER
 
+#ifndef __APPLE__
 #include <vfw.h>
 
 #include "BeebWin.h"
@@ -66,5 +67,6 @@ private:
 };
 
 extern AVIWriter *aviWriter;
+#endif
 
 #endif

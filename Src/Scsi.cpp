@@ -68,6 +68,10 @@ static bool DiscVerify(unsigned char *buf);
 static void Verify();
 static void Translate();
 
+// fix the name class with read & write from unistd.h
+#define read read_scsi
+#define write write_scsi
+
 enum phase_t {
 	busfree,
 	selection,
@@ -124,7 +128,11 @@ void SCSIReset()
 
 	for (int i = 0; i < 4; ++i)
 	{
+#ifndef __APPLE__
 		sprintf(buff, "%s\\scsi%d.dat", HardDrivePath, i);
+#else
+		sprintf(buff, "%s/scsi%d.dat", HardDrivePath, i);
+#endif
 
 		SCSIDisc[i] = fopen(buff, "rb+");
 
@@ -338,15 +346,19 @@ static void WriteData(unsigned char data)
 			}
 			return;
 
+		case execute:
+			break;
+		case read:
+			break;
 		case write:
 			scsi.buffer[scsi.offset] = data;
 			scsi.offset++;
 			scsi.length--;
 			scsi.req = false;
-
+			
 			if (scsi.length > 0)
 				return;
-
+			
 			switch (scsi.cmd[0]) {
 				case 0x0a:
 				case 0x15:
@@ -357,7 +369,7 @@ static void WriteData(unsigned char data)
 					Status();
 					return;
 			}
-
+			
 			switch (scsi.cmd[0]) {
 				case 0x0a:
 					if (!WriteSector(scsi.buffer, scsi.next - 1)) {
@@ -367,7 +379,7 @@ static void WriteData(unsigned char data)
 						return;
 					}
 					break;
-
+					
 				case 0x15:
 					if (!WriteGeometory(scsi.buffer)) {
 						scsi.status = (scsi.lun << 5) | 0x02;
@@ -377,9 +389,9 @@ static void WriteData(unsigned char data)
 					}
 					break;
 			}
-
+			
 			scsi.blocks--;
-
+			
 			if (scsi.blocks == 0) {
 				Status();
 				return;
@@ -388,6 +400,10 @@ static void WriteData(unsigned char data)
 			scsi.next++;
 			scsi.offset = 0;
 			return;
+		case status:
+			break;
+		case message:
+			break;
 	}
 
 	BusFree();

@@ -24,18 +24,31 @@ Boston, MA  02110-1301, USA.
 
 bool FileExists(const char* PathName)
 {
+#ifdef __APPLE__
+	struct stat info;
+
+	return stat( PathName, &info ) == 0 && (info.st_mode & S_IFMT);
+
+#else
 	DWORD dwAttrib = GetFileAttributes(PathName);
 
 	return dwAttrib != INVALID_FILE_ATTRIBUTES &&
 	       !(dwAttrib & FILE_ATTRIBUTE_DIRECTORY);
+#endif
 }
 
 bool FolderExists(const char* PathName)
 {
+#ifdef __APPLE__
+	struct stat info;
+
+	return stat( PathName, &info ) == 0 && (info.st_mode & S_IFDIR);
+#else
 	DWORD dwAttrib = GetFileAttributes(PathName);
 
 	return dwAttrib != INVALID_FILE_ATTRIBUTES &&
 	       (dwAttrib & FILE_ATTRIBUTE_DIRECTORY) != 0;
+#endif
 }
 
 std::string AppendPath(const std::string& BasePath, const std::string& Path)
@@ -48,7 +61,12 @@ std::string AppendPath(const std::string& BasePath, const std::string& Path)
 
 		if (LastChar != '\\' && LastChar != '/')
 		{
+#ifndef __APPLE__
 			PathName.append(1, '\\');
+#else
+			PathName.append(1, '/');
+#endif
+			
 		}
 	}
 

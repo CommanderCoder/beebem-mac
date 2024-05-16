@@ -125,7 +125,7 @@ static bool TeletextConnect(int ch)
                            "Teletext: socket %d created, connecting to server", ch);
     }
 
-    u_long iMode = 1;
+	u_long iMode = 1;
     ioctlsocket(TeletextSocket[ch], FIONBIO, &iMode); // non blocking
 
     struct sockaddr_in teletext_serv_addr;
@@ -141,7 +141,11 @@ static bool TeletextConnect(int ch)
             {
                 DebugDisplayTraceF(DebugType::Teletext, true,
                                    "Teletext: Socket %d unable to connect to server %s:%d %d",
-                                   ch, TeletextIP[ch], TeletextPort[ch],
+#ifndef __APPLE__
+								   ch, TeletextIP[ch], TeletextPort[ch],
+#else
+								   ch, (TeletextIP[ch]).c_str(), TeletextPort[ch],
+#endif
                                    WSAGetLastError());
             }
 

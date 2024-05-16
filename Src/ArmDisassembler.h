@@ -31,7 +31,7 @@ char *Arm_disassemble(uint32 address, uint32 instruction, char *buff);
 char *decodeRegisterList(uint32 instruction);
 char *decodeSingleDataSwap(uint32 address, uint32 instruction, char *buff);
 char *decodeMultiply(uint32 address, uint32 instruction, char *buff);
-char *decodeConditionCode(uint32 instruction);
+const char *decodeConditionCode(uint32 instruction);
 char *decodeSoftwareInterrupt(uint32 address, uint32 instruction, char *buff);
 char *decodeCoProRegTransferOrDataOperation(uint32 address, uint32 instruction, char *buff);
 char *decodeCoProDTPostIndex(uint32 address, uint32 instruction, char *buff);

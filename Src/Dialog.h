@@ -20,6 +20,7 @@ Boston, MA  02110-1301, USA.
 
 #ifndef DIALOG_HEADER
 #define DIALOG_HEADER
+#ifndef __APPLE__
 
 #include <string>
 
@@ -66,5 +67,11 @@ class Dialog
 		int m_DialogID;
 		HWND m_hwnd;
 };
+
+#else
+
+#include "Dialog-mac.hpp"
+
+#endif //__APPLE__
 
 #endif

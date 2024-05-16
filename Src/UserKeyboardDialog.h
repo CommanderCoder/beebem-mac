@@ -20,11 +20,14 @@ Boston, MA  02110-1301, USA.
 
 #ifndef USERKEYBOARDDIALOG_HEADER
 #define USERKEYBOARDDIALOG_HEADER
+#ifndef __APPLE__
 
 #include <windows.h>
 
 // Public declarations.
 
 bool UserKeyboardDialog(HWND hwndParent);
-
+#else
+#include "UserKeyboardDialog-mac.hpp"
+#endif
 #endif

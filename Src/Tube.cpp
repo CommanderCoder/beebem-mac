@@ -39,7 +39,7 @@ Boston, MA  02110-1301, USA.
 #include "Log.h"
 #include "Main.h"
 #include "SprowCoPro.h"
-#include "UEFState.h"
+#include "UefState.h"
 #include "Z80mem.h"
 #include "Z80.h"
 
@@ -66,11 +66,13 @@ static unsigned char old_readHTmpData = 0;
 static unsigned char old_readPIOAddr = 0;
 static unsigned char old_readPTmpData = 0;
 
+#ifndef __APPLE__
 static unsigned char old_writeHIOAddr = 0;
 static unsigned char old_writeHTmpData = 0;
 
 static unsigned char old_writePIOAddr = 0;
 static unsigned char old_writePTmpData = 0;
+#endif
 
 int TubeProgramCounter;
 static int PreTPC; // Previous Tube Program Counter;

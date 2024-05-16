@@ -21,6 +21,7 @@ Boston, MA  02110-1301, USA.
 #ifndef RENAME_FILE_DIALOG_HEADER
 #define RENAME_FILE_DIALOG_HEADER
 
+#ifndef __APPLE__
 #include <string>
 
 #include "Dialog.h"
@@ -52,5 +53,9 @@ class RenameFileDialog : public Dialog
 		std::string m_BeebFileName;
 		std::string m_HostFileName;
 };
+
+#else
+#import "RenameFileDialog-mac.hpp"
+#endif //__APPLE__
 
 #endif
