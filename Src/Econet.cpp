@@ -46,6 +46,16 @@ Boston, MA  02110-1301, USA.
 #include "SysVia.h"
 #include "StringUtils.h"
 
+#ifdef __APPLE__
+
+void memcpy_localaddr(struct in_addr_econet* localaddr, char* addr, size_t l)
+{
+	struct in_addr apples_localaddr;
+	memcpy(&apples_localaddr, addr, l);
+	localaddr->S_un.S_addr = apples_localaddr.s_addr;
+}
+#endif
+
 // Emulated 6854 ADLC control registers.
 // control1_b0 is AC
 // this splits register address 0x01 as control2 and control3
@@ -373,8 +383,13 @@ static void EconetError(const char *Format, ...);
 
 static const char* IpAddressStr(unsigned long inet_addr)
 {
+#ifndef __APPLE__
 	in_addr in;
 	in.S_un.S_addr = inet_addr;
+#else
+	in_addr in;
+	in.s_addr = (in_addr_t)inet_addr;
+#endif
 
 	return inet_ntoa(in);
 }
@@ -584,9 +599,14 @@ void EconetReset()
 				// Check address for each network interface/card
 				for (int a = 0; host->h_addr_list[a] != nullptr && EconetStationID == 0; ++a)
 				{
+#ifndef __APPLE__
 					struct in_addr localaddr;
 					memcpy(&localaddr, host->h_addr_list[a], sizeof(struct in_addr));
 
+#else
+					struct in_addr_econet localaddr;
+					memcpy_localaddr(&localaddr, host->h_addr_list[a], sizeof(struct in_addr_econet));
+#endif
 					if (network[i].inet_addr == inet_addr("127.0.0.1") ||
 					    network[i].inet_addr == localaddr.S_un.S_addr)
 					{
@@ -616,8 +636,12 @@ void EconetReset()
 					{
 						for (int a = 0; host->h_addr_list[a] != NULL && EconetStationID == 0; ++a)
 						{
+#ifndef __APPLE__
 							struct in_addr localaddr;
-							memcpy(&localaddr, host->h_addr_list[a], sizeof(struct in_addr));
+#else
+							struct in_addr_econet localaddr;
+							memcpy_localaddr(&localaddr, host->h_addr_list[a], sizeof(struct in_addr_econet));
+#endif
 
 							if (aunnet[j].inet_addr == (localaddr.S_un.S_addr & 0x00FFFFFF))
 							{
@@ -682,7 +706,11 @@ void EconetReset()
 	}
 
 	// this call is what allows broadcast packets to be sent:
+#ifndef __APPLE__
 	const char broadcast = '1';
+#else
+	const int broadcast = 1;
+#endif
 
 	if (setsockopt(SendSocket, SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof(broadcast)) == -1)
 	{
@@ -1682,7 +1710,11 @@ bool EconetPoll_real() // return NMI status
 						FD_ZERO(&ReadFds);
 						FD_SET(ListenSocket, &ReadFds);
 
+#ifndef __APPLE__
 						static const timeval TimeOut = {0, 0};
+#else
+						static timeval TimeOut = {0, 0};
+#endif
 
 						int RetVal = select((int)ListenSocket + 1, &ReadFds, NULL, NULL, &TimeOut);
 
@@ -1690,7 +1722,11 @@ bool EconetPoll_real() // return NMI status
 						{
 							sockaddr_in RecvAddr;
 							// Read the packet
+#ifndef __APPLE__
 							int sizRcvAdr = sizeof(RecvAddr);
+#else
+							socklen_t sizRcvAdr = sizeof(RecvAddr);
+#endif
 
 							if (AUNMode)
 							{

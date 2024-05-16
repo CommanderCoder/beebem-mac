@@ -150,4 +150,7 @@ Test everything and make a note of required fixes
 * Fix the dialog layouts
 * RenameFileDialog
 * switch use of Modals/Dialogs to the actual view element for things like SetCurSel()
+* What is required to get Econet to work; how can I test it
+** start with gethostname!!  REMEMBER: set the permissions/capabilities to include network!  Also, since this is broadcasting, will need to check the permissions of the system firewall.
+* similarly for Teletext & Serial ; how can I test these?
 

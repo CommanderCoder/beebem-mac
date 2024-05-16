@@ -66,6 +66,10 @@ static void SASIRamDiagnostics();
 static void SASIControllerDiagnostics();
 static void SASISeek();
 
+// fix the name class with read & write from unistd.h
+#define read read_sasi
+#define write write_sasi
+
 enum phase_s {
 	busfree,
 	selection,

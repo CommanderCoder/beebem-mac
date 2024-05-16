@@ -17,8 +17,7 @@
 #include <sys/syslimits.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-
-#include <sys/ioctl.h>
+#include <unistd.h>
 
 #include "appleKeyCodes.h"
 
@@ -115,9 +114,12 @@ typedef struct RECT                     RECT;
 
 
 // ECONET
+#include <netdb.h>
+#include <arpa/inet.h>
 #include <sys/socket.h>
-//#include <arpa/inet.h>
-struct in_addr {
+#include <sys/ioctl.h>
+#include <sys/select.h>
+struct in_addr_econet {
   union {
 	struct {
 	  u_char s_b1;
@@ -136,44 +138,23 @@ struct in_addr {
 typedef unsigned short USHORT;
 typedef struct in_addr IN_ADDR;
 
-typedef struct sockaddr_in {
-  short          sin_family;
-  USHORT         sin_port;
-  IN_ADDR        sin_addr;
-  CHAR           sin_zero[8];
-} SOCKADDR_IN, *PSOCKADDR_IN;
-//#include <netdb.h>
-//#include <unistd.h>  // NOTE this has redefinitions of 'read' and 'write'
+#define ioctlsocket ioctl
+#define closesocket close
 
 #define SOCKET int
 #define INVALID_SOCKET -1
 #define SOCKET_ERROR -1
 #define SOCKADDR sockaddr
 #define WSAEWOULDBLOCK -1
-#define ioctlsocket ioctl
-#define IPPROTO_UDP -1
-#define INADDR_ANY -1
-#define INADDR_NONE -1
-#define INADDR_BROADCAST -1
-typedef struct hostent {
-  char  *h_name;
-  char  **h_aliases;
-  short h_addrtype;
-  short h_length;
-  char  **h_addr_list;
-} HOSTENT, *PHOSTENT, *LPHOSTENT;
+#define IPPROTO_UDP             17              /* user datagram protocol */
+#define INADDR_NONE             0xffffffff              /* -1 return */
+#define INADDR_ANY              (u_int32_t)0x00000000
+#define INADDR_BROADCAST        (u_int32_t)0xffffffff   /* must be masked */
 
 
 long WSAGetLastError();
-int closesocket(SOCKET s);
-int recvfrom(int a, char * b, int c, int d, SOCKADDR *e, int*f);
+
 int connect(int a, SOCKADDR *b, int c);
-int connect(int a, sockaddr_in *b, int c);
-const char* inet_ntoa(IN_ADDR in);
-int inet_addr(const char* c);
-int gethostname(const char*, int);
-hostent* gethostbyname(const char*);
-int select(int, fd_set*, int, int, const timeval*);
 
 #define LPSTR std::string
 #define LPCSTR std::string //const
@@ -506,7 +487,5 @@ HWND GetFocus();
 
 
 int WSACleanup();
-
-
 
 #endif /* apples_h */

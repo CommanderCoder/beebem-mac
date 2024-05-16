@@ -5,8 +5,6 @@
 //  Created by Commander Coder on 12/05/2024.
 //
 
-#include "TeletextDialog-mac.hpp"
-
 
 #include <windows.h>
 #include <windowsx.h>

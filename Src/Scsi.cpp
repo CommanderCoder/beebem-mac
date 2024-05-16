@@ -68,6 +68,10 @@ static bool DiscVerify(unsigned char *buf);
 static void Verify();
 static void Translate();
 
+// fix the name class with read & write from unistd.h
+#define read read_scsi
+#define write write_scsi
+
 enum phase_t {
 	busfree,
 	selection,
