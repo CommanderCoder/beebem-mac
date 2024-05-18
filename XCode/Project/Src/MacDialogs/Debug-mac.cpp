@@ -81,14 +81,18 @@ static bool LastAddrInROM = false;
 static bool DebugHost = true;
 static bool DebugParasite = false;
 static bool WatchDecimal = false;
+#ifndef __APPLE__
 static bool WatchRefresh = false;
+#endif
 static bool WatchBigEndian = false;
 HWND hwndDebug;
 static HWND hwndInvisibleOwner;
 static HWND hwndInfo;
 static HWND hwndBP;
 static HWND hwndW;
+#ifndef __APPLE__
 static HACCEL haccelDebug;
+#endif
 
 static std::vector<Label> Labels;
 static std::vector<Breakpoint> Breakpoints;
@@ -1523,6 +1527,21 @@ void DebugDisplayTrace(DebugType type, bool host, const char *info)
 			if (IsDlgItemChecked(hwndDebug, IDC_DEBUG_CMOS_BRK))
 				DebugBreakExecution(type);
 			break;
+#ifndef __APPLE__
+#else
+			case DebugType::None:
+				
+				break;
+			case DebugType::Manual:
+				
+				break;
+			case DebugType::Breakpoint:
+				
+				break;
+			case DebugType::BRK:
+				
+				break;
+#endif
 		}
 	}
 }
@@ -2365,7 +2384,11 @@ static void DebugParseCommand(char *command)
 	char *args = strchr(command, ' ');
 	if(args == NULL)
 	{
+#ifndef __APPLE__
 		args = "";
+#else
+		args = strdup("");
+#endif
 	}
 	else
 	{
@@ -2988,7 +3011,12 @@ static bool DebugCmdHelp(char* args)
 				{
 					// This is an alias:
 					DebugDisplayInfoF("%s - alias of %s",DebugCmdTable[i].name,DebugCmdTable[li].name);
+#ifndef __APPLE__
 					DebugCmdHelp(DebugCmdTable[li].name);
+#else
+					DebugCmdHelp((char*)DebugCmdTable[li].name);
+#endif
+					
 				}
 				else
 				{

@@ -37,7 +37,11 @@ Written by Richard Gellman - Feb 2001
 #include "Main.h"
 #include "Sound.h"
 #include "SysVia.h"
+#ifndef __APPLE__
+#include "UEFState.h"
+#else
 #include "UefState.h"
+#endif
 
 // Control/Status Register, Track, Sector, and Data Registers
 static unsigned char FormatBuffer[2048];
@@ -74,7 +78,11 @@ static FILE *CurrentDisc; // Current Disc Handle
 
 static unsigned char ExtControl; // FDC External Control Register
 static int CurrentDrive = 0; // FDC Control drive setting
+#ifndef __APPLE__
+static long HeadPos[2]; // Position of Head on each drive for swapping
+#else
 static unsigned int HeadPos[2]; // Position of Head on each drive for swapping
+#endif
 static unsigned char CurrentHead[2]; // Current Head on any drive
 static int DiscStep[2]; // Single/Double sided disc step
 static int DiscStrt[2]; // Single/Double sided disc start
@@ -693,7 +701,11 @@ void Poll1770(int NCycles) {
 			            WD1770_STATUS_SPIN_UP_COMPLETE |
 			            WD1770_STATUS_LOST_DATA);
 			ByteCount = SecSize[CurrentDrive] + 1;
+#ifndef __APPLE__
+			HeadPos[CurrentDrive] = ftell(CurrentDisc);
+#else
 			HeadPos[CurrentDrive] = (uint32_t)ftell(CurrentDisc);
+#endif
 			LoadingCycles = 45;
 			fseek(CurrentDisc, DiscStrt[CurrentDrive] + (DiscStep[CurrentDrive] * Track) + (Sector * SecSize[CurrentDrive]), SEEK_SET);
 		}
@@ -859,7 +871,11 @@ void Poll1770(int NCycles) {
 		fseek(CurrentDisc, DiscStrt[CurrentDrive] + (DiscStep[CurrentDrive] * Track), SEEK_SET);
 		Sector = 0;
 		ByteCount = 0;
+#ifndef __APPLE__
+		HeadPos[CurrentDrive] = ftell(CurrentDisc);
+#else
 		HeadPos[CurrentDrive] = (uint32_t)ftell(CurrentDisc);
+#endif
 		// WriteLog("Read/Write Track Prepare - Disc = %d, Track = %d\n", CurrentDrive, Track);
 	}
 
@@ -1418,7 +1434,11 @@ void Load1770UEF(FILE *SUEF, int Version)
 		LightsOn[0] = fgetbool(SUEF);
 		LightsOn[1] = fgetbool(SUEF);
 		ByteCount = fget32(SUEF);
+#ifndef __APPLE__
+		long DataPos = fget32(SUEF);
+#else
 		/*ignore long DataPos = */ fget32(SUEF);
+#endif
 		ExtControl = fget8(SUEF);
 		CurrentDrive = fget8(SUEF);
 		HeadPos[0] = fget32(SUEF);

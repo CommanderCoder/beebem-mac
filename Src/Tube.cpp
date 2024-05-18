@@ -39,7 +39,11 @@ Boston, MA  02110-1301, USA.
 #include "Log.h"
 #include "Main.h"
 #include "SprowCoPro.h"
+#ifndef __APPLE__
+#include "UEFState.h"
+#else
 #include "UefState.h"
+#endif
 #include "Z80mem.h"
 #include "Z80.h"
 

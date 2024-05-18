@@ -57,7 +57,11 @@ using std::max;
 #include "AboutDialog.h"
 #include "Arm.h"
 #include "AtoDConv.h"
+#ifndef __APPLE__
+#include "AviWriter.h"
+#else
 #include "AVIWriter.h"
+#endif
 #include "BeebMem.h"
 #include "Debug.h"
 #include "DebugTrace.h"
@@ -105,16 +109,22 @@ using std::max;
 
 using namespace Gdiplus;
 
+#ifndef __APPLE__
 constexpr UINT WIN_STYLE = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_SIZEBOX;
+#else
+#endif
 
 // Some LED based constants
 constexpr int LED_COL_BASE = 64;
 
+#ifndef __APPLE__
 static const char *CFG_REG_KEY = "Software\\BeebEm";
 
 static const unsigned char CFG_DISABLE_WINDOWS_KEYS[24] = {
 	00,00,00,00,00,00,00,00,03,00,00,00,00,00,0x5B,0xE0,00,00,0x5C,0xE0,00,00,00,00
 };
+#else
+#endif
 
 CArm *arm = nullptr;
 CSprowCoPro *sprow = nullptr;
@@ -865,6 +875,7 @@ void BeebWin::CreateBitmap()
 #endif
 	if (m_screen_blur != NULL)
 		free(m_screen_blur);
+
 #ifndef __APPLE__
 	m_hDCBitmap = CreateCompatibleDC(NULL);
 #endif
@@ -904,12 +915,18 @@ void BeebWin::CreateBitmap()
 
 			switch (m_PaletteType)
 			{
+#ifndef __APPLE__
+#else
 				case PaletteType::RGB:
 					
 					break;
 				case PaletteType::BW:
 					
 					break;
+				case PaletteType::Last:
+					
+					break;
+#endif
 				case PaletteType::Amber:
 					r *= (float) 1.0;
 					g *= (float) 0.8;
@@ -919,9 +936,6 @@ void BeebWin::CreateBitmap()
 					r *= (float) 0.2;
 					g *= (float) 0.9;
 					b *= (float) 0.1;
-					break;
-				case PaletteType::Last:
-					
 					break;
 			}
 		}
@@ -1485,6 +1499,7 @@ void BeebWin::SetRomMenu()
 		Title[0] = '&';
 		_itoa(i, &Title[1], 16);
 		Title[2] = ' ';
+
 #else
 		sprintf(Title,"&%X ",i);
 #endif
@@ -1509,6 +1524,7 @@ void BeebWin::SetRomMenu()
 		           MF_BYCOMMAND,
 		           IDM_ALLOWWRITES_ROM0 + i, // menu item identifier or pop-up menu handle
 		           Title);                   // menu item content
+
 #else
 		beebwin_ModifyMenu(IDM_ALLOWWRITES_ROM0 + i,
 						   IDM_ALLOWWRITES_ROM0 + i,
@@ -2220,6 +2236,7 @@ int BeebWin::StartOfFrame(void)
 			m_AviFrameSkipCount = 0;
 		}
 	}
+
 #endif
 	return FrameNum;
 }
@@ -3121,6 +3138,7 @@ void BeebWin::HandleCommand(UINT MenuID)
 			ModifyMenu(m_hMenu, IDM_PRINTER_FILE,
 				MF_BYCOMMAND, IDM_PRINTER_FILE,
 				menu_string);
+
 #else
 			beebwin_ModifyMenu(IDM_PRINTER_FILE, IDM_PRINTER_FILE, menu_string);
 #endif
@@ -4502,6 +4520,7 @@ void BeebWin::CaptureMouse()
 	GetClientRect(m_hWnd, &clientRect);
 	MapWindowPoints(m_hWnd, nullptr, reinterpret_cast<LPPOINT>(&clientRect), 2);
 	ClipCursor(&clientRect);
+
 #endif
 	// Display info on title bar
 	UpdateWindowTitle();
@@ -4523,6 +4542,7 @@ void BeebWin::ReleaseMouse()
 	RegisterRawInputDevices(Rid, 1, sizeof(Rid[0]));
 
 	ClipCursor(nullptr);
+
 	// Show cursor in the centre of the window
 	POINT centre{ m_XWinSize / 2, m_YWinSize / 2 };
 	ClientToScreen(m_hWnd, &centre);
@@ -5167,6 +5187,7 @@ bool BeebWin::RebootSystem()
 	                   SHTDN_REASON_MINOR_RECONFIG |
 	                   SHTDN_REASON_FLAG_PLANNED))
 		return false;
+
 #endif
 	return true;
 }
@@ -5197,6 +5218,7 @@ bool BeebWin::CheckUserDataPath(bool Persist)
 			strcpy(m_UserDataPath, m_AppPath);
 #ifndef __APPLE__
 			strcat(m_UserDataPath, "UserData\\");
+
 #else
 			strcat(m_UserDataPath, "UserData/");
 #endif
@@ -5405,8 +5427,11 @@ void BeebWin::SelectUserDataPath()
 	FolderSelectDialog::Result result = Dialog.DoModal();
 
 	switch (result) {
+#ifndef __APPLE__
+#else
 		case FolderSelectDialog::Result::Cancel:
 			break;
+#endif
 		case FolderSelectDialog::Result::OK:
 			PathBackup = m_UserDataPath;
 			strcpy(m_UserDataPath, Dialog.GetFolder().c_str());

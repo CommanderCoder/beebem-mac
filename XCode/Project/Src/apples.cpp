@@ -92,7 +92,7 @@ char* _strerror(const char *strErrMsg)
 	return errorstring;
 }
 
-int SendMessage(HWND w, int a, int b, long c)
+int SendMessage(HWND w, int a, size_t b, long c)
 {
 	return 0;
 }
@@ -157,7 +157,7 @@ int connect(int a, SOCKADDR *b, int c)
 }
 
 
-long WSAGetLastError()
+int WSAGetLastError()
 {
 	return errno;
 }
@@ -369,3 +369,7 @@ int WSACleanup()
 	return 0;
 }
 
+void SetEvent(HANDLE)
+{
+	
+}

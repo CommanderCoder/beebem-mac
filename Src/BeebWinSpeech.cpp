@@ -39,7 +39,6 @@ Boston, MA  02110-1301, USA.
 #include "Resource.h"
 #include "StringUtils.h"
 
-
 /****************************************************************************/
 bool BeebWin::InitTextToSpeech()
 {
@@ -947,7 +946,6 @@ void BeebWin::InitTextView()
 	}
 
 	CheckMenuItem(IDM_TEXTVIEW, m_TextViewEnabled);
-	
 }
 
 void BeebWin::CloseTextView()
@@ -958,7 +956,6 @@ void BeebWin::CloseTextView()
 		m_hTextView = nullptr;
 		m_TextViewPrevWndProc = nullptr;
 	}
-	
 }
 
 void BeebWin::TextView()
@@ -1018,4 +1015,3 @@ void BeebWin::TextViewSyncWithBeebCursor()
 	if (m_TextViewEnabled)
 		TextViewSetCursorPos(m_SpeechLine, m_SpeechCol);
 }
-

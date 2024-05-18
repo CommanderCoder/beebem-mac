@@ -154,3 +154,9 @@ Test everything and make a note of required fixes
 ** start with gethostname!!  REMEMBER: set the permissions/capabilities to include network!  Also, since this is broadcasting, will need to check the permissions of the system firewall.
 * similarly for Teletext & Serial ; how can I test these?
 
+After merging, gone through and discarded all the changes due to warnings.  All changes MUST be wrapped in __APPLE__ so that it is easy to see what has changed (even changing the uppercase of UEFState.h).  On windows version, these __APPLE__ changes can be transferred across while making fixes to that version.
+Anything which isn't included in the compilation steps, should just be reverted to the original.
+e.g. ListView.cpp
+Even some blank lines may have been removed or replaced just so that they don't show up on a windows merge later.
+Finally go through all the __APPLE__ cases and check they look useful.
+

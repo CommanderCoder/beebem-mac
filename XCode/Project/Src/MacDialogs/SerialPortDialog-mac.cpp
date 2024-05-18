@@ -18,6 +18,7 @@
 #include "Resource.h"
 #include "StringUtils.h"
 
+#undef IDD_SERIAL
 #define IDD_SERIAL				Dialogs::serialPort
 
 

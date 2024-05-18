@@ -53,6 +53,7 @@ typedef uint32_t HRESULT; //
 typedef uint32_t LRESULT; //
 typedef uint32_t* WNDPROC; //
 typedef uint32_t* TIMERPROC; //
+typedef uint32_t* HANDLE; //
 typedef long LPARAM;
 typedef long WPARAM; //
 typedef uint32_t* HGDIOBJ; //
@@ -131,7 +132,7 @@ struct in_addr_econet {
 	  u_short s_w1;
 	  u_short s_w2;
 	} S_un_w;
-	u_long S_addr;
+	in_addr_t S_addr;
   } S_un;
   u_long s_addr;
 };
@@ -152,7 +153,7 @@ typedef struct in_addr IN_ADDR;
 #define INADDR_BROADCAST        (u_int32_t)0xffffffff   /* must be masked */
 
 
-long WSAGetLastError();
+int WSAGetLastError();
 
 int connect(int a, SOCKADDR *b, int c);
 
@@ -192,7 +193,7 @@ extern char** __argv;
 #define LB_RESETCONTENT -1
 #define LB_FINDSTRING -1
 #define LB_ERR -1
-int SendMessage(HWND w, int a, int b, long c);
+int SendMessage(HWND w, int a, size_t b, long c);
 void DestroyWindow(HWND w);
 
 
@@ -485,7 +486,8 @@ HWND GetDlgItem(
 
 HWND GetFocus();
 
-
 int WSACleanup();
+
+void SetEvent(HANDLE);
 
 #endif /* apples_h */

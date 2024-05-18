@@ -4835,7 +4835,11 @@ inline uint32 CArm::coprocessorDataTransferOffset()
 // Dynamic Profiling routines, for testing ARM feature usage
 //////////////////////////////////////////////////////////////////////
 
+#ifndef __APPLE__
+void CArm::dynamicProfilingExceptionFrequency(char *exceptionName, uint32 &counter)
+#else
 void CArm::dynamicProfilingExceptionFrequency(const char *exceptionName, uint32 &counter)
+#endif
 {
 	WriteLog("%s executionCount=%d\n", exceptionName, executionCount - exceptionLastExecutionCount);
 	exceptionLastExecutionCount = executionCount;

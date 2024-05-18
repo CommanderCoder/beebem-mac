@@ -21,18 +21,14 @@ Boston, MA  02110-1301, USA.
 #include <windows.h>
 
 // use pthread instead
-#ifndef __APPLE__
 #include <process.h>
-#endif
 
 #include "Thread.h"
 
 Thread::Thread()
-#ifndef __APPLE__
 	:
 	m_hThread(nullptr),
 	m_hStartEvent(nullptr)
-#endif
 {
 }
 
@@ -68,6 +64,7 @@ bool Thread::Start()
 
 	CloseHandle(m_hStartEvent);
 	m_hStartEvent = nullptr;
+
 	return bSuccess;
 #else
 	return false;
@@ -76,14 +73,9 @@ bool Thread::Start()
 
 bool Thread::IsStarted() const
 {
-#ifndef __APPLE__
 	return m_hThread != nullptr;
-#else
-	return false;
-#endif	
 }
 
-#ifndef __APPLE__
 unsigned int __stdcall Thread::s_ThreadFunc(void *parameter)
 {
 	Thread* pThread = reinterpret_cast<Thread*>(parameter);
@@ -93,4 +85,3 @@ unsigned int __stdcall Thread::s_ThreadFunc(void *parameter)
 
 	return pThread->ThreadFunc();
 }
-#endif

@@ -27,7 +27,11 @@ Boston, MA  02110-1301, USA.
 #include "Debug.h"
 #include "Log.h"
 #include "Tube.h"
+#ifndef __APPLE__
+#include "UEFState.h"
+#else
 #include "UefState.h"
+#endif
 
 bool trace_z80 = false;
 int PreZPC = 0; // Previous Z80 PC

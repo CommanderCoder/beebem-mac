@@ -44,7 +44,7 @@ FileExportEntry* LVGetItemDataEF(HWND a, UINT b)
 //	return &(m_ExportFiles[filesSelected[b]]);
 }
 
-
+#undef IDD_DISCEXPORT
 #define IDD_DISCEXPORT			Modals::exportFiles
 
 

@@ -306,6 +306,7 @@ void BeebWin::LoadPreferences()
 	{
 		m_SpeechRate = 0;
 	}
+
 	if (!m_Preferences.GetBoolValue("Music5000Enabled", Music5000Enabled))
 		Music5000Enabled = false;
 
@@ -314,7 +315,6 @@ void BeebWin::LoadPreferences()
 	else
 		m_MenuIDSticks = 0;
 
-	
 	if (!m_Preferences.GetBoolValue(CFG_OPTIONS_FREEZEINACTIVE, m_FreezeWhenInactive))
 		m_FreezeWhenInactive = true;
 
@@ -902,7 +902,6 @@ void BeebWin::SavePreferences(bool saveAll)
 		RECT rect;
 		GetWindowRect(m_hWnd,&rect);
 		m_Preferences.SetBinaryValue("WindowPos", &rect, sizeof(rect));
-		
 	}
 
 	// CMOS RAM now in prefs file

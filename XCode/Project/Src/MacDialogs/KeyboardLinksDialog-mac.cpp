@@ -15,6 +15,7 @@
 #include "beebemrcids.h"
 #include "Main.h"
 
+#undef IDD_KEYBOARD_LINKS
 #define IDD_KEYBOARD_LINKS		Modals::keyboardLinks
 
 

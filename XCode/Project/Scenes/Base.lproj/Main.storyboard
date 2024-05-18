@@ -1318,7 +1318,7 @@
                                                             <action selector="HandleCommand:" target="Voe-Tx-rLC" id="gMi-fl-gNq"/>
                                                         </connections>
                                                     </menuItem>
-                                                    <menuItem title="Use UDP Server" enabled="NO" identifier="txts" id="SJ0-sa-HXe">
+                                                    <menuItem title="Use UDP Server" enabled="NO" identifier="upds" id="SJ0-sa-HXe">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
                                                             <action selector="HandleCommand:" target="Voe-Tx-rLC" id="MFZ-kc-UU9"/>
@@ -2863,31 +2863,42 @@ DQ
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableHeaderView>
                             </scrollView>
-                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Bo3-pV-C7y">
-                                <rect key="frame" x="336" y="13" width="131" height="32"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <buttonCell key="cell" type="push" title="Export Selected" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="smv-Wo-wLF">
-                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="system"/>
-                                </buttonCell>
-                                <connections>
-                                    <action selector="exportSelected:" target="CrT-m1-2Aj" id="u2i-Im-Pg2"/>
-                                </connections>
-                            </button>
-                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="m0z-vf-Tqd">
-                                <rect key="frame" x="262" y="13" width="76" height="32"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="m2E-E4-1Sc">
-                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="system"/>
-                                    <string key="keyEquivalent" base64-UTF8="YES">
+                            <stackView distribution="fill" orientation="horizontal" alignment="top" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" fixedFrame="YES" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1XJ-FB-6Gb">
+                                <rect key="frame" x="273" y="20" width="187" height="20"/>
+                                <subviews>
+                                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Bo3-pV-C7y">
+                                        <rect key="frame" x="-7" y="-7" width="131" height="32"/>
+                                        <buttonCell key="cell" type="push" title="Export Selected" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="smv-Wo-wLF">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <action selector="exportSelected:" target="CrT-m1-2Aj" id="u2i-Im-Pg2"/>
+                                        </connections>
+                                    </button>
+                                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="m0z-vf-Tqd">
+                                        <rect key="frame" x="118" y="-7" width="76" height="32"/>
+                                        <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="m2E-E4-1Sc">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                            <string key="keyEquivalent" base64-UTF8="YES">
 Gw
 </string>
-                                </buttonCell>
-                                <connections>
-                                    <action selector="exportClose:" target="Eed-uL-0d0" id="jor-YA-Mkp"/>
-                                </connections>
-                            </button>
+                                        </buttonCell>
+                                        <connections>
+                                            <action selector="exportClose:" target="Eed-uL-0d0" id="jor-YA-Mkp"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <visibilityPriorities>
+                                    <integer value="1000"/>
+                                    <integer value="1000"/>
+                                </visibilityPriorities>
+                                <customSpacing>
+                                    <real value="3.4028234663852886e+38"/>
+                                    <real value="3.4028234663852886e+38"/>
+                                </customSpacing>
+                            </stackView>
                         </subviews>
                     </view>
                     <connections>
@@ -3316,7 +3327,7 @@ DQ
             <objects>
                 <windowController storyboardIdentifier="Document Window Controller" id="jGA-0Y-lOj" userLabel="BeebEm Window Controller" sceneMemberID="viewController">
                     <window key="window" title="BeebEmulator" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" tabbingMode="disallowed" id="Ckk-yw-fiv">
-                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" texturedBackground="YES"/>
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
                         <rect key="contentRect" x="44" y="339" width="640" height="512"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
@@ -4011,49 +4022,49 @@ DQ
                                 <subviews>
                                     <button identifier="kbl0" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="7rb-KH-hD4">
                                         <rect key="frame" x="-2" y="-1" width="55" height="18"/>
-                                        <buttonCell key="cell" type="check" title="link0" bezelStyle="regularSquare" imagePosition="left" state="on" identifier="kbl7" inset="2" id="Lo2-7Z-oXA">
+                                        <buttonCell key="cell" type="check" title="link0" bezelStyle="regularSquare" imagePosition="left" state="on" identifier="kbl0" inset="2" id="Lo2-7Z-oXA">
                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                             <font key="font" metaFont="system"/>
                                         </buttonCell>
                                     </button>
                                     <button identifier="kbl1" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="gbQ-XC-z3J" userLabel="link1">
                                         <rect key="frame" x="59" y="-1" width="53" height="18"/>
-                                        <buttonCell key="cell" type="check" title="link1" bezelStyle="regularSquare" imagePosition="left" state="on" identifier="kbl7" inset="2" id="4lH-cT-AAO">
+                                        <buttonCell key="cell" type="check" title="link1" bezelStyle="regularSquare" imagePosition="left" state="on" identifier="kbl1" inset="2" id="4lH-cT-AAO">
                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                             <font key="font" metaFont="system"/>
                                         </buttonCell>
                                     </button>
                                     <button identifier="kbl2" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="fRr-7Q-ke0" userLabel="link2">
                                         <rect key="frame" x="118" y="-1" width="55" height="18"/>
-                                        <buttonCell key="cell" type="check" title="link2" bezelStyle="regularSquare" imagePosition="left" state="on" identifier="kbl7" inset="2" id="nQh-ms-fH2">
+                                        <buttonCell key="cell" type="check" title="link2" bezelStyle="regularSquare" imagePosition="left" state="on" identifier="kbl2" inset="2" id="nQh-ms-fH2">
                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                             <font key="font" metaFont="system"/>
                                         </buttonCell>
                                     </button>
                                     <button identifier="kbl3" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="1XW-EG-cCi" userLabel="link3">
                                         <rect key="frame" x="179" y="-1" width="55" height="18"/>
-                                        <buttonCell key="cell" type="check" title="link3" bezelStyle="regularSquare" imagePosition="left" state="on" identifier="kbl7" inset="2" id="Wzg-t4-BTQ">
+                                        <buttonCell key="cell" type="check" title="link3" bezelStyle="regularSquare" imagePosition="left" state="on" identifier="kbl3" inset="2" id="Wzg-t4-BTQ">
                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                             <font key="font" metaFont="system"/>
                                         </buttonCell>
                                     </button>
                                     <button identifier="kbl4" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Dlw-Uv-R43" userLabel="link4">
                                         <rect key="frame" x="240" y="-1" width="55" height="18"/>
-                                        <buttonCell key="cell" type="check" title="link4" bezelStyle="regularSquare" imagePosition="left" state="on" identifier="kbl7" inset="2" id="8vO-e2-o9k">
+                                        <buttonCell key="cell" type="check" title="link4" bezelStyle="regularSquare" imagePosition="left" state="on" identifier="kbl4" inset="2" id="8vO-e2-o9k">
                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                             <font key="font" metaFont="system"/>
                                         </buttonCell>
                                     </button>
                                     <button identifier="kbl5" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="iHD-5m-Zxj" userLabel="link5">
                                         <rect key="frame" x="301" y="-1" width="55" height="18"/>
-                                        <buttonCell key="cell" type="check" title="link5" bezelStyle="regularSquare" imagePosition="left" state="on" identifier="kbl7" inset="2" id="PIf-GJ-gW0">
+                                        <buttonCell key="cell" type="check" title="link5" bezelStyle="regularSquare" imagePosition="left" state="on" identifier="kbl5" inset="2" id="PIf-GJ-gW0">
                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                             <font key="font" metaFont="system"/>
                                         </buttonCell>
                                     </button>
                                     <button identifier="kbl6" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Djy-ZL-GOF" userLabel="link6">
                                         <rect key="frame" x="362" y="-1" width="55" height="18"/>
-                                        <buttonCell key="cell" type="check" title="link6" bezelStyle="regularSquare" imagePosition="left" state="on" identifier="kbl7" inset="2" id="r66-c7-88f">
+                                        <buttonCell key="cell" type="check" title="link6" bezelStyle="regularSquare" imagePosition="left" state="on" identifier="kbl6" inset="2" id="r66-c7-88f">
                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                             <font key="font" metaFont="system"/>
                                         </buttonCell>

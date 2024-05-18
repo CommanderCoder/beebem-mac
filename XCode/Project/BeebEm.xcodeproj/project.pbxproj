@@ -323,6 +323,7 @@
 		DC1DBA142BB8CF0500AAB22F /* BreakoutBoxViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BreakoutBoxViewController.swift; sourceTree = "<group>"; };
 		DC1DBA152BB8CF0500AAB22F /* RomConfigViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RomConfigViewController.swift; sourceTree = "<group>"; };
 		DC1DBA162BB8CF0500AAB22F /* TapeControlViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TapeControlViewController.swift; sourceTree = "<group>"; };
+		DC2C9CFE2BF9444F00F2E613 /* process.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = process.h; sourceTree = "<group>"; };
 		DC33555D2BDF84C00014DC3A /* RomConfigDialog-mac.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "RomConfigDialog-mac.cpp"; sourceTree = "<group>"; };
 		DC33555E2BDF84C00014DC3A /* RomConfigDialog-mac.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "RomConfigDialog-mac.hpp"; sourceTree = "<group>"; };
 		DC3FB5492BE8DEDB00CF36A0 /* KeyMap-mac.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "KeyMap-mac.cpp"; sourceTree = "<group>"; };
@@ -657,6 +658,7 @@
 				DCD283F62BE6E67A00ABD9F8 /* shlwapi.h */,
 				DCD283F72BE6E6A600ABD9F8 /* gdiplus.h */,
 				DCD283F82BE8415000ABD9F8 /* sphelper.h */,
+				DC2C9CFE2BF9444F00F2E613 /* process.h */,
 			);
 			path = windows_stubs;
 			sourceTree = "<group>";

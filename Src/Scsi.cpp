@@ -68,9 +68,11 @@ static bool DiscVerify(unsigned char *buf);
 static void Verify();
 static void Translate();
 
+#ifdef __APPLE__
 // fix the name class with read & write from unistd.h
 #define read read_scsi
 #define write write_scsi
+#endif
 
 enum phase_t {
 	busfree,
@@ -346,10 +348,13 @@ static void WriteData(unsigned char data)
 			}
 			return;
 
+#ifndef __APPLE__
+#else
 		case execute:
 			break;
 		case read:
 			break;
+#endif
 		case write:
 			scsi.buffer[scsi.offset] = data;
 			scsi.offset++;
@@ -400,10 +405,13 @@ static void WriteData(unsigned char data)
 			scsi.next++;
 			scsi.offset = 0;
 			return;
+#ifndef __APPLE__
+#else
 		case status:
 			break;
 		case message:
 			break;
+#endif
 	}
 
 	BusFree();

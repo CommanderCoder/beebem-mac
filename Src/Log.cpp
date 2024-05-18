@@ -57,7 +57,11 @@ void CloseLog()
 	}
 }
 
+#ifndef __APPLE__
+void WriteLog(char *fmt, ...)
+#else
 void WriteLog(const char *fmt, ...)
+#endif
 {
 	if (LogFile != nullptr)
 	{

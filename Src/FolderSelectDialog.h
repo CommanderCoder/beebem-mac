@@ -20,6 +20,7 @@ Boston, MA  02110-1301, USA.
 
 #ifndef FOLDER_SELECT_DIALOG_HEADER
 #define FOLDER_SELECT_DIALOG_HEADER
+
 #ifndef __APPLE__
 #include <string>
 

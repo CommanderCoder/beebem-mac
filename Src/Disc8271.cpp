@@ -424,7 +424,11 @@ static SectorType *GetSectorPtr(TrackType *Track, unsigned char LogicalSectorID,
 	}
 
 	// As above, but from sector 0 to the current position
+#ifndef __APPLE__
+	if (FDCState.PositionInTrack > 0)
+#else
 	if (FDCState.PositionInTrack[Drive] > 0)
+#endif
 	{
 		for (unsigned char CurrentSector = 0; CurrentSector < FDCState.PositionInTrack[Drive]; CurrentSector++)
 		{
@@ -2545,7 +2549,11 @@ Disc8271Result LoadFSDDiscImage(const char *FileName, int DriveNum)
 
 		for (int Track = 0; Track < DiscStatus[DriveNum].TotalTracks; Track++)
 		{
+#ifndef __APPLE__
+			/* unsigned char TrackNumber = */(unsigned char)Input.get(); // Read current track details
+#else
 			/* unsigned char TrackNumber = (unsigned char)*/Input.get(); // Read current track details
+#endif
 			unsigned char SectorsPerTrack = (unsigned char)Input.get(); // Read number of sectors on track
 			DiscStatus[DriveNum].Tracks[Head][Track].LogicalSectors = SectorsPerTrack;
 

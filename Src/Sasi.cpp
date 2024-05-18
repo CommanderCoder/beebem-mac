@@ -66,9 +66,11 @@ static void SASIRamDiagnostics();
 static void SASIControllerDiagnostics();
 static void SASISeek();
 
+#ifdef __APPLE__
 // fix the name class with read & write from unistd.h
 #define read read_sasi
 #define write write_sasi
+#endif
 
 enum phase_s {
 	busfree,
@@ -308,10 +310,13 @@ static void SASIWriteData(unsigned char data)
 			}
 			return;
 
+#ifndef __APPLE__
+#else
 		case execute:
 			break;
 		case read:
 			break;
+#endif
 		case write:
 			sasi.buffer[sasi.offset] = data;
 			sasi.offset++;
@@ -359,10 +364,13 @@ static void SASIWriteData(unsigned char data)
 			sasi.next++;
 			sasi.offset = 0;
 			return;
+#ifndef __APPLE__
+#else
 		case status:
 			break;
 		case message:
 			break;
+#endif
 	}
 
 	SASIBusFree();

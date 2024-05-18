@@ -21,30 +21,30 @@ Boston, MA  02110-1301, USA.
 
 // BeebEm IO support - disk, tape, state, printer, AVI capture
 
-#ifndef __APPLE__
 #pragma warning(push)
 #pragma warning(disable: 4091) // ignored on left of 'tagGPFIDL_FLAGS' when no variable is declared
 #include <shlobj.h>
 #pragma warning(pop)
-#endif
 
 #include <assert.h>
 #include <stdio.h>
 
 #include <algorithm>
 
-#ifndef __APPLE__
 #pragma warning(push)
 #pragma warning(disable: 4458) // declaration of 'xxx' hides class member
 using std::min;
 using std::max;
 #include <gdiplus.h>
 #pragma warning(pop)
-#endif
 
 #include "BeebWin.h"
 #include "6502core.h"
+#ifndef __APPLE__
+#include "AviWriter.h"
+#else
 #include "AVIWriter.h"
+#endif
 #include "BeebMem.h"
 #include "Disc1770.h"
 #include "Disc8271.h"
@@ -62,14 +62,18 @@ using std::max;
 #include "Sound.h"
 #include "TapeControlDialog.h"
 #include "Tube.h"
+#ifndef __APPLE__
+#include "UEFState.h"
+#else
 #include "UefState.h"
+#endif
 #include "UserVia.h"
 #include "Version.h"
 
-#ifndef __APPLE__
+//#ifndef __APPLE__
 
 using namespace Gdiplus;
-#endif
+//#endif
 
 /****************************************************************************/
 
@@ -303,6 +307,7 @@ bool BeebWin::ReadDisc(int Drive, bool bCheckForPrefs)
 			SetDiscWriteProtect(Drive, true);
 		}
 	}
+
 	return(gotName);
 }
 
@@ -1082,10 +1087,12 @@ void BeebWin::LoadUEFState(const char *FileName)
 			Report(MessageType::Error, "Cannot open state file:\n  %s",
 			       FileName);
 			break;
-
+#ifndef __APPLE__
+#else
 		case UEFStateResult::WriteFailed:
 			
 			break;
+#endif
 		case UEFStateResult::InvalidUEFFile:
 			Report(MessageType::Error, "The file selected is not a UEF file:\n  %s",
 			       FileName);
@@ -1109,19 +1116,25 @@ void BeebWin::SaveUEFState(const char *FileName)
 		case UEFStateResult::Success:
 			break;
 
+#ifndef __APPLE__
+#else
 		case UEFStateResult::OpenFailed:
 			
 			break;
+#endif
 		case UEFStateResult::WriteFailed:
 			Report(MessageType::Error, "Failed to write state file:\n  %s",
 				   FileName);
 			break;
+#ifndef __APPLE__
+#else
 		case UEFStateResult::InvalidUEFFile:
 			
 			break;
 		case UEFStateResult::InvalidUEFVersion:
 			
 			break;
+#endif
 	}
 }
 
@@ -1385,7 +1398,6 @@ void BeebWin::LoadUserKeyMap()
 		if (ReadKeyMap(FileName, &UserKeyMap))
 			strcpy(m_UserKeyMapPath, FileName);
 	}
-	
 }
 
 /****************************************************************************/
@@ -1462,6 +1474,7 @@ void BeebWin::doPaste()
 			m_ClipboardLength = (int)strlen(m_ClipboardBuffer);
 		}
 	}
+
 	CloseClipboard();
 #else
 	if (swift_getPasteboard(m_ClipboardBuffer,ClipboardBufferSize))
@@ -1506,6 +1519,7 @@ void BeebWin::CopyKey(unsigned char Value)
 	memcpy(lptstrCopy, m_printerbuffer, m_printerbufferlen);
 	lptstrCopy[m_printerbufferlen] = 0;
 	GlobalUnlock(hglbCopy);
+
 	SetClipboardData(CF_TEXT, hglbCopy);
 
 	CloseClipboard();
@@ -1583,7 +1597,6 @@ void BeebWin::ExportDiscFiles(int menuId)
 	{
 		m_Preferences.SetStringValue("ExportPath", ExportPath.c_str());
 	}
-	
 }
 
 // File import
@@ -1646,7 +1659,6 @@ void BeebWin::ImportDiscFiles(int menuId)
 	const char* filter = "INF files (*.inf)\0*.inf\0" "All files (*.*)\0*.*\0";
 
 	FileDialog fileDialog(m_hWnd, fileSelection, sizeof(fileSelection), szExportPath, filter);
-	
 	fileDialog.AllowMultiSelect();
 	fileDialog.SetTitle("Select files to import");
 
@@ -2103,4 +2115,3 @@ void BeebWin::CaptureBitmap(int SourceX,
 	}
 #endif
 }
-

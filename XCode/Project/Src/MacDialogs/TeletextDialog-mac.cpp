@@ -76,6 +76,7 @@ static const int EnableIPAddressControl[] =
 	IDC_PORT4_STATIC
 };
 
+#undef IDD_TELETEXT
 #define IDD_TELETEXT			Dialogs::teletextSelect
 
 /****************************************************************************/
@@ -100,6 +101,7 @@ TeletextDialog::TeletextDialog(HINSTANCE hInstance,
 }
 
 
+#ifndef __APPLE__
 static void SetDlgItemText(HWND hDlg, int nID, const char* str)
 {
 	printf("tapecontrol text %d %s", nID, str);
@@ -107,19 +109,14 @@ static void SetDlgItemText(HWND hDlg, int nID, const char* str)
 
 static void EnableDlgItem(UINT nIDDlgItem, bool Enable)
 {
-#ifndef __APPLE__
 	EnableWindow(GetDlgItem(hDlg, nIDDlgItem), Enable);
-#endif
 }
 
 static bool IsDlgItemChecked(HWND hDlg, UINT nIDDlgItem)
 {
-#ifndef __APPLE__
 	return SendDlgItemMessage(hDlg, nIDDlgItem, BM_GETCHECK, 0, 0) == BST_CHECKED;
-#else
-	return FALSE;
-#endif
 }
+#endif
 
 static void SetDlgItemText(int nID, const std::string& str)
 {
@@ -371,10 +368,11 @@ void TeletextDialog::EnableFileControls(bool bEnable)
 {
 	for (int i = 0; i < _countof(EnableFileControl); i++)
 	{
-		HWND hwndCtrl = GetDlgItem(m_hwnd, EnableFileControl[i]);
 #ifndef __APPLE__
+		HWND hwndCtrl = GetDlgItem(m_hwnd, EnableFileControl[i]);
 		EnableWindow(hwndCtrl, bEnable);
 		ShowWindow(hwndCtrl, bEnable ? SW_SHOW : SW_HIDE);
+#else
 #endif
 		
 	}
@@ -386,8 +384,8 @@ void TeletextDialog::EnableIPControls(bool bEnable)
 {
 	for (int i = 0; i < _countof(EnableIPAddressControl); i++)
 	{
-		HWND hwndCtrl = GetDlgItem(m_hwnd, EnableIPAddressControl[i]);
 #ifndef __APPLE__
+		HWND hwndCtrl = GetDlgItem(m_hwnd, EnableIPAddressControl[i]);
 		EnableWindow(hwndCtrl, bEnable);
 		ShowWindow(hwndCtrl, bEnable ? SW_SHOW : SW_HIDE);
 #endif

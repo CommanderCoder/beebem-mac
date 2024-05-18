@@ -25,7 +25,9 @@
 #include "SysVia.h"
 
 
+#ifndef __APPLE__
 static const char* szModel[] = { "BBC B", "Integra-B", "B Plus", "Master 128" };
+#endif
 static char szDefaultROMPath[MAX_PATH] = {0};
 static char szDefaultROMConfigPath[MAX_PATH] = {0};
 
@@ -58,6 +60,7 @@ static void LVSetFocus(HWND hWnd)
 	swift_SetFocus((Modals)*hWnd);
 }
 
+#undef IDD_ROMCONFIG
 #define IDD_ROMCONFIG			Modals::romConfig
 
 /****************************************************************************/

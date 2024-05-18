@@ -186,7 +186,11 @@ public:
 
 	void doHorizLine(int Colour, int y, int sx, int width) {
 		if (TeletextEnabled) y/=TeletextStyle;
+#ifndef __APPLE__
 		int d = (y*800)+sx+ScreenAdjust+(TeletextEnabled?36:0);
+#else
+		int d = (int)((y*800)+sx+ScreenAdjust+(TeletextEnabled?36:0));
+#endif
 		if ((d+width)>(500*800)) return;
 		if (d<0) return;
 		memset(m_screen+d, Colour, width);
@@ -194,7 +198,11 @@ public:
 
 	void doInvHorizLine(int Colour, int y, int sx, int width) {
 		if (TeletextEnabled) y/=TeletextStyle;
+#ifndef __APPLE__
 		int d = (y*800)+sx+ScreenAdjust+(TeletextEnabled?36:0);
+#else
+		int d = (int)((y*800)+sx+ScreenAdjust+(TeletextEnabled?36:0));
+#endif
 		char *vaddr;
 		if ((d+width)>(500*800)) return;
 		if (d<0) return;
@@ -209,14 +217,22 @@ public:
 	}
 
 	EightUChars *GetLinePtr(int y) {
+#ifndef __APPLE__
 		int d = (y*800)+ScreenAdjust;
+#else
+		int d = (int)((y*800)+ScreenAdjust);
+#endif
 		if (d > (MAX_VIDEO_SCAN_LINES*800))
 			return((EightUChars *)(m_screen+(MAX_VIDEO_SCAN_LINES*800)));
 		return((EightUChars *)(m_screen + d));
 	}
 
 	SixteenUChars *GetLinePtr16(int y) {
+#ifndef __APPLE__
 		int d = (y*800)+ScreenAdjust;
+#else
+		int d = (int)((y*800)+ScreenAdjust);
+#endif
 		if (d > (MAX_VIDEO_SCAN_LINES*800))
 			return((SixteenUChars *)(m_screen+(MAX_VIDEO_SCAN_LINES*800)));
 		return((SixteenUChars *)(m_screen + d));
