@@ -990,6 +990,8 @@ static void SetDlgItemChecked(HWND hDlg, int nIDDlgItem, bool checked)
 	SendDlgItemMessage(hDlg, nIDDlgItem, BM_SETCHECK, checked ? BST_CHECKED : BST_UNCHECKED, 0);
 }
 
+unsigned int dwin=0;
+
 void DebugOpenDialog(HINSTANCE hinst, HWND /* hwndMain */)
 {
 	if (hwndInvisibleOwner == nullptr)
@@ -1031,6 +1033,8 @@ void DebugOpenDialog(HINSTANCE hinst, HWND /* hwndMain */)
 	SendMessage(hwndW, WM_SETFONT, (WPARAM)GetStockObject(ANSI_FIXED_FONT),
 				MAKELPARAM(FALSE, 0));
 #else
+	dwin = (int)Dialogs::debugWindow;
+	hwndDebug = &dwin;
 	swift_OpenDialog(Dialogs::debugWindow, NULL);
 #endif
 	SetDlgItemChecked(hwndDebug, IDC_DEBUGBPS, true);
