@@ -14,6 +14,15 @@
 int __argc;
 char** __argv;
 
+
+void GetLocalTime(SYSTEMTIME* _t)
+{
+	std::time_t result = std::time(nullptr);
+	_t = std::localtime(&result);
+}
+
+
+
 DWORD GetTickCount() // milliseconds
 {
 	auto since_epoch = std::chrono::steady_clock::now().time_since_epoch();

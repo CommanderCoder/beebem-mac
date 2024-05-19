@@ -14,6 +14,9 @@
 		DC1DBA222BB998B000AAB22F /* KeyboardMappingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1DBA132BB8CF0400AAB22F /* KeyboardMappingViewController.swift */; };
 		DC1DBA232BB9A2BB00AAB22F /* RomConfigViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1DBA152BB8CF0500AAB22F /* RomConfigViewController.swift */; };
 		DC1DBA252BB9A4C900AAB22F /* BreakoutBoxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1DBA142BB8CF0500AAB22F /* BreakoutBoxViewController.swift */; };
+		DC2C9D032BF9788700F2E613 /* RomConfigFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC2C9D002BF9788700F2E613 /* RomConfigFile.cpp */; };
+		DC2C9D042BF9788700F2E613 /* Rtc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC2C9D022BF9788700F2E613 /* Rtc.cpp */; };
+		DC2C9D072BF978AF00F2E613 /* UserPortRTC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC2C9D052BF978AE00F2E613 /* UserPortRTC.cpp */; };
 		DC33555F2BDF84C00014DC3A /* RomConfigDialog-mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC33555D2BDF84C00014DC3A /* RomConfigDialog-mac.cpp */; };
 		DC3355602BDF8D720014DC3A /* BeebEm-RomConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC907EB72BB5BB9A00523116 /* BeebEm-RomConfig.swift */; };
 		DC3FB54C2BE8E02300CF36A0 /* KeyMap-mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC3FB5492BE8DEDB00CF36A0 /* KeyMap-mac.cpp */; };
@@ -324,6 +327,12 @@
 		DC1DBA152BB8CF0500AAB22F /* RomConfigViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RomConfigViewController.swift; sourceTree = "<group>"; };
 		DC1DBA162BB8CF0500AAB22F /* TapeControlViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TapeControlViewController.swift; sourceTree = "<group>"; };
 		DC2C9CFE2BF9444F00F2E613 /* process.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = process.h; sourceTree = "<group>"; };
+		DC2C9CFF2BF9788700F2E613 /* Rtc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Rtc.h; path = ../../../Src/Rtc.h; sourceTree = "<group>"; };
+		DC2C9D002BF9788700F2E613 /* RomConfigFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RomConfigFile.cpp; path = ../../../Src/RomConfigFile.cpp; sourceTree = "<group>"; };
+		DC2C9D012BF9788700F2E613 /* RomConfigFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RomConfigFile.h; path = ../../../Src/RomConfigFile.h; sourceTree = "<group>"; };
+		DC2C9D022BF9788700F2E613 /* Rtc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Rtc.cpp; path = ../../../Src/Rtc.cpp; sourceTree = "<group>"; };
+		DC2C9D052BF978AE00F2E613 /* UserPortRTC.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = UserPortRTC.cpp; path = ../../../Src/UserPortRTC.cpp; sourceTree = "<group>"; };
+		DC2C9D062BF978AF00F2E613 /* UserPortRTC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UserPortRTC.h; path = ../../../Src/UserPortRTC.h; sourceTree = "<group>"; };
 		DC33555D2BDF84C00014DC3A /* RomConfigDialog-mac.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "RomConfigDialog-mac.cpp"; sourceTree = "<group>"; };
 		DC33555E2BDF84C00014DC3A /* RomConfigDialog-mac.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "RomConfigDialog-mac.hpp"; sourceTree = "<group>"; };
 		DC3FB5492BE8DEDB00CF36A0 /* KeyMap-mac.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "KeyMap-mac.cpp"; sourceTree = "<group>"; };
@@ -451,6 +460,9 @@
 		DC0996DB2BBA0C5000A109A5 /* windows_code */ = {
 			isa = PBXGroup;
 			children = (
+				DC2C9D052BF978AE00F2E613 /* UserPortRTC.cpp */,
+				DC2C9D002BF9788700F2E613 /* RomConfigFile.cpp */,
+				DC2C9D022BF9788700F2E613 /* Rtc.cpp */,
 				DC90FFD02BEB5B820007EB37 /* Model.cpp */,
 				DC90FFCD2BEB5B4D0007EB37 /* TeletextDialog.cpp */,
 				DC0996E72BBA0C9B00A109A5 /* 6502core.cpp */,
@@ -533,6 +545,9 @@
 		DC0996DC2BBA0C6400A109A5 /* windows_headers */ = {
 			isa = PBXGroup;
 			children = (
+				DC2C9D062BF978AF00F2E613 /* UserPortRTC.h */,
+				DC2C9D012BF9788700F2E613 /* RomConfigFile.h */,
+				DC2C9CFF2BF9788700F2E613 /* Rtc.h */,
 				DC90FFCE2BEB5B4D0007EB37 /* TeletextDialog.h */,
 				DC0997582BBA0E2500A109A5 /* 6502core.h */,
 				DC09975D2BBA0E2600A109A5 /* AboutDialog.h */,
@@ -1041,6 +1056,7 @@
 				DCD283FF2BE8D17400ABD9F8 /* BeebEm-Debug.swift in Sources */,
 				DCDC73462BC0B5B500D83402 /* SysVia.cpp in Sources */,
 				DC3355602BDF8D720014DC3A /* BeebEm-RomConfig.swift in Sources */,
+				DC2C9D072BF978AF00F2E613 /* UserPortRTC.cpp in Sources */,
 				DCB4EBCD2BD5BD22002AEA8A /* BeebEm-Bridging-UserKeyboard.cpp in Sources */,
 				DCDC73342BBFE87C00D83402 /* Disc8271.cpp in Sources */,
 				DC9427B82BF0FBE90012C4E4 /* SerialPortDialog-mac.cpp in Sources */,
@@ -1080,6 +1096,7 @@
 				DCE94C1B2BD311D800A5C12A /* BeebEm-Bundle.swift in Sources */,
 				DC7E1E682BCF229600494CBE /* ExportFileDialog-mac.cpp in Sources */,
 				DCDC73162BBE1AC600D83402 /* RingBuffer.cpp in Sources */,
+				DC2C9D042BF9788700F2E613 /* Rtc.cpp in Sources */,
 				DC907EC62BB6D48600523116 /* Renderer.swift in Sources */,
 				DCDC73102BBE188400D83402 /* Uef.cpp in Sources */,
 				DC90FFD12BEB5B820007EB37 /* Model.cpp in Sources */,
@@ -1092,6 +1109,7 @@
 				DC84500B2BE45931002015D9 /* BeebEm-BreakoutBox.swift in Sources */,
 				DC8450062BE2DA04002015D9 /* BeebEm-KeyboardMapping.swift in Sources */,
 				DCDC730B2BBE118B00D83402 /* Preferences.cpp in Sources */,
+				DC2C9D032BF9788700F2E613 /* RomConfigFile.cpp in Sources */,
 				DCD283FA2BE8427900ABD9F8 /* BeebWinSpeech-mac.cpp in Sources */,
 				DC1DBA232BB9A2BB00AAB22F /* RomConfigViewController.swift in Sources */,
 				DC9427AC2BF038090012C4E4 /* BeebEm-SerialPort.swift in Sources */,

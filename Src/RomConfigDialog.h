@@ -23,9 +23,9 @@ Boston, MA  02110-1301, USA.
 #define ROM_CONFIG_DIALOG_HEADER
 #ifndef __APPLE__
 
-#include "BeebMem.h"
 #include "Dialog.h"
 #include "Model.h"
+#include "RomConfigFile.h"
 
 class RomConfigDialog : public Dialog
 {
@@ -33,11 +33,11 @@ class RomConfigDialog : public Dialog
 		RomConfigDialog(
 			HINSTANCE hInstance,
 			HWND hwndParent,
-			ROMConfigFile Config
+			const RomConfigFile& Config
 		);
 
 	public:
-		const ROMConfigFile* GetRomConfig() const;
+		const RomConfigFile& GetRomConfig() const;
 
 	private:
 		virtual INT_PTR DlgProc(
@@ -56,7 +56,7 @@ class RomConfigDialog : public Dialog
 	private:
 		HWND m_hWndROMList;
 		HWND m_hWndModel;
-		ROMConfigFile m_RomConfig;
+		RomConfigFile m_RomConfig;
 		Model m_Model;
 };
 #else

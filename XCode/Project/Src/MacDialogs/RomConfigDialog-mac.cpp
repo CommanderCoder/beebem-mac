@@ -8,37 +8,9 @@
 #include "RomConfigDialog-mac.hpp"
 
 
-// BeebEm ROM Configuration Dialog
-
-#include <windows.h>
-#include <commctrl.h>
-
-#include <stdio.h>
-
-#include "RomConfigDialog.h"
-#include "BeebMem.h"
-#include "BeebWin.h"
-#include "FileDialog.h"
-#include "ListView.h"
-#include "Main.h"
-#include "Resource.h"
-#include "SysVia.h"
-
-
-#ifndef __APPLE__
-static const char* szModel[] = { "BBC B", "Integra-B", "B Plus", "Master 128" };
-#endif
-static char szDefaultROMPath[MAX_PATH] = {0};
-static char szDefaultROMConfigPath[MAX_PATH] = {0};
-
-static bool WriteROMConfigFile(const char *filename, ROMConfigFile RomConfig);
-
 
 
 RCItem beeb_RCTable[16][2];
-
-
-
 
 static int LVInsertItem(
 	HWND hWnd, UINT uRow, UINT uCol, const LPTSTR pszText, LPARAM lParam)
@@ -60,63 +32,6 @@ static void LVSetFocus(HWND hWnd)
 	swift_SetFocus((Modals)*hWnd);
 }
 
-#undef IDD_ROMCONFIG
-#define IDD_ROMCONFIG			Modals::romConfig
-
-/****************************************************************************/
-
-RomConfigDialog::RomConfigDialog(HINSTANCE hInstance,
-								 HWND hwndParent,
-								 ROMConfigFile Config) :
-	Dialog(hInstance, hwndParent, IDD_ROMCONFIG),
-	m_hWndROMList(nullptr),
-	m_hWndModel(nullptr),
-	m_Model(MachineType)
-{
-	memcpy(m_RomConfig, Config, sizeof(ROMConfigFile));
-
-}
-
-/****************************************************************************/
-
-const ROMConfigFile* RomConfigDialog::GetRomConfig() const
-{
-	return &m_RomConfig;
-}
-
-/****************************************************************************/
-
-void RomConfigDialog::UpdateROMField(int Row)
-{
-	char szROMFile[_MAX_PATH];
-	bool Unplugged = false;
-	int Bank;
-
-	if (m_Model == Model::Master128)
-	{
-		Bank = 16 - Row;
-
-		if (Bank >= 0 && Bank <= 7)
-		{
-			Unplugged = (CMOSRAM[20] & (1 << Bank)) == 0;
-		}
-		else if (Bank >= 8 && Bank <= 15)
-		{
-			Unplugged = (CMOSRAM[21] & (1 << (Bank - 8))) == 0;
-		}
-	}
-
-	strncpy(szROMFile, m_RomConfig[static_cast<int>(m_Model)][Row], _MAX_PATH);
-
-	if (Unplugged)
-	{
-		strncat(szROMFile, " (unplugged)", _MAX_PATH);
-	}
-
-	LVSetItemText(m_hWndROMList, Row, 1, szROMFile);
-}
-
-/****************************************************************************/
 
 void ListView_DeleteAllItems(HWND wnd)
 {
@@ -135,12 +50,129 @@ static void ComboBox_AddString(UINT* nIDDlgItem,
 //	swift_AddString(m_DialogID, nIDDlgItem, b);
 }
 
-
 static void ComboBox_SetCurSel(UINT* nIDDlgItem,
 							   INT b)
 {
 	swift_SetCurSel((Modals)*nIDDlgItem, b);
 }
+
+
+int ListView_GetSelectionMark(HWND hwnd)
+{
+	return swift_GetSelectionMark((Modals)*hwnd);
+}
+
+void ListView_SetSelectionMark(HWND hwnd, int sel)
+{
+//	swift_SetSelectionMark((Modals)*hwnd, sel);
+}
+
+/****************************************************************************/
+static void EndDialog(HWND h, WPARAM p)
+{
+	swift_EndModal(p);
+}
+
+static int ListView_GetItemCount(HWND a)
+{
+	return 0; // number of items in the listview
+}
+
+//static void ListView_SetItemState(HWND a, int c, int x, int y)
+//{
+	// set state of item in the listview
+//}
+
+extern RomConfigDialog* runningRCDialog;
+
+bool RomConfigDialog::DoModal() {
+	runningRCDialog = this;
+	WM_INITDIALOG();
+	bool ret = swift_DoModal((Modals)m_DialogID, this);
+	runningRCDialog = NULL;
+	return ret;
+}
+
+
+
+// BeebEm ROM Configuration Dialog
+
+#include <windows.h>
+#include <windowsx.h>
+#include <commctrl.h>
+
+#include <algorithm>
+#include <stdio.h>
+
+#include "RomConfigDialog.h"
+#include "BeebMem.h"
+#include "BeebWin.h"
+#include "FileDialog.h"
+#include "ListView.h"
+#include "Main.h"
+#include "Model.h"
+#include "Resource.h"
+#include "StringUtils.h"
+#include "Rtc.h"
+
+
+#undef IDD_ROMCONFIG
+#define IDD_ROMCONFIG			Modals::romConfig
+
+static char szDefaultROMPath[MAX_PATH] = {0};
+static char szDefaultROMConfigPath[MAX_PATH] = {0};
+
+/****************************************************************************/
+
+RomConfigDialog::RomConfigDialog(HINSTANCE hInstance,
+								 HWND hwndParent,
+								 const RomConfigFile& Config) :
+	Dialog(hInstance, hwndParent, IDD_ROMCONFIG),
+	m_hWndROMList(nullptr),
+	m_hWndModel(nullptr),
+	m_Model(MachineType),
+	m_RomConfig(Config)
+{
+}
+
+/****************************************************************************/
+
+const RomConfigFile& RomConfigDialog::GetRomConfig() const
+{
+	return m_RomConfig;
+}
+
+/****************************************************************************/
+
+void RomConfigDialog::UpdateROMField(int Row)
+{
+	bool Unplugged = false;
+	int Bank;
+
+	if (m_Model == Model::Master128 || m_Model == Model::MasterET)
+	{
+		Bank = 16 - Row;
+
+		if (Bank >= 0 && Bank <= 7)
+		{
+			Unplugged = (RTCGetData(m_Model, 20) & (1 << Bank)) == 0;
+		}
+		else if (Bank >= 8 && Bank <= 15)
+		{
+			Unplugged = (RTCGetData(m_Model, 21) & (1 << (Bank - 8))) == 0;
+		}
+	}
+
+	std::string RomFileName = m_RomConfig.GetFileName(m_Model, Row);
+
+	if (Unplugged)
+	{
+		RomFileName += " (unplugged)";
+	}
+
+	LVSetItemText(m_hWndROMList, Row, 1, (LPTSTR)RomFileName.c_str());
+}
+
 /****************************************************************************/
 
 void RomConfigDialog::FillModelList()
@@ -148,8 +180,7 @@ void RomConfigDialog::FillModelList()
 	HWND hWndModel = GetDlgItem(m_hwnd, IDC_MODEL);
 	hWndModel = (uint*)&m_DialogID;
 
-
-	for (int i = 0; i < static_cast<int>(Model::Last); i++)
+	for (int i = 0; i < MODEL_COUNT; i++)
 	{
 		ComboBox_AddString(hWndModel, GetModelName(static_cast<Model>(i)));
 	}
@@ -157,6 +188,7 @@ void RomConfigDialog::FillModelList()
 	ComboBox_SetCurSel(hWndModel, static_cast<int>(m_Model));
 }
 
+/****************************************************************************/
 
 void RomConfigDialog::FillROMList()
 {
@@ -164,7 +196,7 @@ void RomConfigDialog::FillROMList()
 
 	int Row = 0;
 	LVInsertItem(m_hWndROMList, Row, 0, "OS", 16);
-	LVSetItemText(m_hWndROMList, Row, 1, m_RomConfig[static_cast<int>(m_Model)][0]);
+	LVSetItemText(m_hWndROMList, Row, 1, (LPTSTR)m_RomConfig.GetFileName(m_Model, 0).c_str());
 
 	for (Row = 1; Row <= 16; ++Row)
 	{
@@ -176,154 +208,194 @@ void RomConfigDialog::FillROMList()
 		LVInsertItem(m_hWndROMList, Row, 0, str, Bank);
 		UpdateROMField(Row);
 	}
-	
 }
 
 /****************************************************************************/
 
-extern RomConfigDialog* runningRCDialog;
-
-
-bool RomConfigDialog::DoModal() {
-	runningRCDialog = this;
-	WM_INITDIALOG();
-	bool ret = swift_DoModal((Modals)m_DialogID, this);
-	runningRCDialog = NULL;
-	return ret;
-}
-
-
+//INT_PTR RomConfigDialog::DlgProc(UINT   nMessage,
+//								 WPARAM wParam,
+//								 LPARAM /* lParam */)
+//{
+//	switch (nMessage)
+//	{
+//		case WM_INITDIALOG:
 bool RomConfigDialog::WM_INITDIALOG()
 {
 	m_hWndROMList = (uint*)&m_DialogID;
-	
+
 	FillModelList();
 	FillROMList();
 	return TRUE;
 }
 
-
-int ListView_GetSelectionMark(HWND hwnd)
-{
-	return swift_GetSelectionMark((Modals)*hwnd);
-}
-
-/****************************************************************************/
-static void EndDialog(HWND h, WPARAM p)
-{
-	swift_EndModal(p);
-}
-
 bool RomConfigDialog::WM_COMMAND(WPARAM wParam)
 {
-	switch (LOWORD(wParam))
-	{
-	case IDC_MODEL:{
-		// model is the currently selected Model
-		// from the model combo box
-		int model = HIWORD(wParam);
-		m_Model = static_cast<Model>(model);
-		FillROMList();
-			return TRUE;
-	}
-	case IDC_SELECTROM: {
-		int Row = ListView_GetSelectionMark(m_hWndROMList);
+//		case WM_COMMAND: {
+			int nDlgItemID = GET_WM_COMMAND_ID(wParam, lParam);
+//			int Notification = GET_WM_COMMAND_CMD(wParam, lParam);
 
-		if (Row >= 0 && Row <= 16)
-		{
-			char szROMFile[MAX_PATH];
-			szROMFile[0] = '\0';
-
-			if (GetROMFile(szROMFile))
+			switch (nDlgItemID)
 			{
-				// Strip user data path
-				char szROMPath[MAX_PATH];
-				strcpy(szROMPath, "BeebFile");
-				mainWin->GetDataPath(mainWin->GetUserDataPath(), szROMPath);
-
-				int nROMPathLen = (int)strlen(szROMPath);
-
-				if (strncmp(szROMFile, szROMPath, nROMPathLen) == 0)
+			case IDC_MODEL:
+//				if (Notification == CBN_SELCHANGE)
 				{
-					strcpy(szROMFile, szROMFile + nROMPathLen + 1);
+//					HWND hWndModelCombo = GetDlgItem(m_hwnd, IDC_MODEL);
+//					m_Model = static_cast<Model>(ComboBox_GetCurSel(hWndModelCombo));
+					int model = HIWORD(wParam);	// model is the currently selected Model from the model combo box
+
+					m_Model = static_cast<Model>(model);
+					FillROMList();
+				}
+				break;
+
+			case IDC_SELECTROM: {
+				int Row = ListView_GetSelectionMark(m_hWndROMList);
+
+				if (Row >= 0 && Row <= 16)
+				{
+					char szROMFile[MAX_PATH];
+					szROMFile[0] = '\0';
+
+					if (GetROMFile(szROMFile))
+					{
+						// Strip user data path
+						char szROMPath[MAX_PATH];
+						strcpy(szROMPath, "BeebFile");
+						mainWin->GetDataPath(mainWin->GetUserDataPath(), szROMPath);
+
+						int nROMPathLen = (int)strlen(szROMPath);
+
+						if (strncmp(szROMFile, szROMPath, nROMPathLen) == 0)
+						{
+							strcpy(szROMFile, szROMFile + nROMPathLen + 1);
+						}
+
+						m_RomConfig.SetFileName(m_Model, Row, szROMFile);
+						UpdateROMField(Row);
+					}
 				}
 
-				strcpy(m_RomConfig[static_cast<int>(m_Model)][Row], szROMFile);
-				UpdateROMField(Row);
+				LVSetFocus(m_hWndROMList);
+				break;
 			}
-		}
 
-		LVSetFocus(m_hWndROMList);
-		break;
-	}
+			case IDC_MARKWRITABLE: {
+				int Row = ListView_GetSelectionMark(m_hWndROMList);
 
-	case IDC_MARKWRITABLE: {
-		int Row = ListView_GetSelectionMark(m_hWndROMList);
+				if (Row >= 1 && Row <= 16)
+				{
+					std::string RomFileName = m_RomConfig.GetFileName(m_Model, Row);
 
-		if (Row >= 1 && Row <= 16)
-		{
-			char *cfg = m_RomConfig[static_cast<int>(m_Model)][Row];
+					if (RomFileName != BANK_EMPTY && RomFileName != BANK_RAM)
+					{
+						if (StringEndsWith(RomFileName, ROM_WRITABLE))
+						{
+							RomFileName = RomFileName.substr(0, RomFileName.size() - strlen(ROM_WRITABLE));
+						}
+						else
+						{
+							RomFileName += ROM_WRITABLE;
+						}
 
-			if (strcmp(cfg, BANK_EMPTY) != 0 && strcmp(cfg, BANK_RAM) != 0)
-			{
-				if (strlen(cfg) > 4 && strcmp(cfg + strlen(cfg) - 4, ROM_WRITABLE) == 0)
-					cfg[strlen(cfg) - 4] = 0;
-				else
-					strcat(cfg, ROM_WRITABLE);
+						m_RomConfig.SetFileName(m_Model, Row, RomFileName);
 
-				UpdateROMField(Row);
+						UpdateROMField(Row);
+					}
+				}
+
+				LVSetFocus(m_hWndROMList);
+				break;
 			}
-		}
 
-		LVSetFocus(m_hWndROMList);
-		break;
-	}
+			case IDC_RAM: {
+				int Row = ListView_GetSelectionMark(m_hWndROMList);
 
-	case IDC_RAM: {
-		int Row = ListView_GetSelectionMark(m_hWndROMList);
+				if (Row >= 1 && Row <= 16)
+				{
+					m_RomConfig.SetFileName(m_Model, Row, BANK_RAM);
+					UpdateROMField(Row);
+				}
 
-		if (Row >= 1 && Row <= 16)
-		{
-			strcpy(m_RomConfig[static_cast<int>(m_Model)][Row], BANK_RAM);
-			UpdateROMField(Row);
-		}
+				LVSetFocus(m_hWndROMList);
+				break;
+			}
 
-		LVSetFocus(m_hWndROMList);
-		break;
-	}
+			case IDC_EMPTY: {
+				int Row = ListView_GetSelectionMark(m_hWndROMList);
 
-	case IDC_EMPTY: {
-		int Row = ListView_GetSelectionMark(m_hWndROMList);
+				if (Row >= 1 && Row <= 16)
+				{
+					m_RomConfig.SetFileName(m_Model, Row, BANK_EMPTY);
+					UpdateROMField(Row);
+				}
 
-		if (Row >= 1 && Row <= 16)
-		{
-			strcpy(m_RomConfig[static_cast<int>(m_Model)][Row], BANK_EMPTY);
-			UpdateROMField(Row);
-		}
+				LVSetFocus(m_hWndROMList);
+				break;
+			}
 
-		LVSetFocus(m_hWndROMList);
-		break;
-	}
+			case IDC_UP: {
+				int Row = ListView_GetSelectionMark(m_hWndROMList);
 
-	case IDC_SAVE:
-		SaveROMConfigFile();
-		LVSetFocus(m_hWndROMList);
-		break;
+				if (Row >= 2)
+				{
+					int PreviousRow = Row - 1;
 
-	case IDC_LOAD:
-		LoadROMConfigFile();
-		LVSetFocus(m_hWndROMList);
-		break;
+					m_RomConfig.Swap(m_Model, PreviousRow, Row);
 
-	case IDOK:
-		EndDialog(m_hwnd, TRUE);
-		return TRUE;
+					UpdateROMField(PreviousRow);
+					UpdateROMField(Row);
 
-	case IDCANCEL:
-		EndDialog(m_hwnd, FALSE);
-		return TRUE;
-	}
-	
+					ListView_SetSelectionMark(m_hWndROMList, PreviousRow);
+				}
+
+				LVSetFocus(m_hWndROMList);
+				break;
+			}
+
+			case IDC_DOWN: {
+				int Row = ListView_GetSelectionMark(m_hWndROMList);
+
+				if (Row > 0)
+				{
+					const int NextRow = Row + 1;
+					const int Count = ListView_GetItemCount(m_hWndROMList);
+
+					if (NextRow < Count)
+					{
+						m_RomConfig.Swap(m_Model, Row, NextRow);
+
+						UpdateROMField(Row);
+						UpdateROMField(NextRow);
+
+						ListView_SetSelectionMark(m_hWndROMList, NextRow);
+					}
+
+					LVSetFocus(m_hWndROMList);
+				}
+				break;
+			}
+
+			case IDC_SAVE:
+				SaveROMConfigFile();
+				LVSetFocus(m_hWndROMList);
+				break;
+
+			case IDC_LOAD:
+				LoadROMConfigFile();
+				LVSetFocus(m_hWndROMList);
+				break;
+
+			case IDOK:
+				EndDialog(m_hwnd, TRUE);
+				return TRUE;
+
+			case IDCANCEL:
+				EndDialog(m_hwnd, FALSE);
+				return TRUE;
+			}
+//			break;
+//		}
+//	}
 
 	return FALSE;
 }
@@ -347,9 +419,9 @@ bool RomConfigDialog::LoadROMConfigFile()
 		strcpy(DefaultPath, mainWin->GetUserDataPath());
 	}
 
-	FileDialog fileDialog(m_hwnd, szROMConfigPath, MAX_PATH, DefaultPath, filter);
+	FileDialog Dialog(m_hwnd, szROMConfigPath, MAX_PATH, DefaultPath, filter);
 
-	if (fileDialog.Open())
+	if (Dialog.Open())
 	{
 		// Save directory as default for next time
 		unsigned int PathLength = (unsigned int)(strrchr(szROMConfigPath, '\\') - szROMConfigPath);
@@ -357,11 +429,11 @@ bool RomConfigDialog::LoadROMConfigFile()
 		szDefaultROMConfigPath[PathLength] = 0;
 
 		// Read the file
-		ROMConfigFile LoadedROMCfg;
-		if (ReadROMConfigFile(szROMConfigPath, LoadedROMCfg))
+		RomConfigFile LoadedRomConfig;
+		if (LoadedRomConfig.Load(szROMConfigPath))
 		{
 			// Copy in loaded config
-			memcpy(&m_RomConfig, &LoadedROMCfg, sizeof(ROMConfigFile));
+			m_RomConfig = LoadedRomConfig;
 			FillROMList();
 			success = true;
 		}
@@ -389,9 +461,9 @@ bool RomConfigDialog::SaveROMConfigFile()
 		strcpy(DefaultPath, mainWin->GetUserDataPath());
 	}
 
-	FileDialog fileDialog(m_hwnd, szROMConfigPath, MAX_PATH, DefaultPath, filter);
+	FileDialog Dialog(m_hwnd, szROMConfigPath, MAX_PATH, DefaultPath, filter);
 
-	if (fileDialog.Save())
+	if (Dialog.Save())
 	{
 		// Save directory as default for next time
 		unsigned int PathLength = (unsigned int)(strrchr(szROMConfigPath, '\\') - szROMConfigPath);
@@ -405,39 +477,13 @@ bool RomConfigDialog::SaveROMConfigFile()
 		}
 
 		// Save the file
-		if (WriteROMConfigFile(szROMConfigPath, m_RomConfig))
+		if (m_RomConfig.Save(szROMConfigPath))
 		{
 			success = true;
 		}
 	}
 
 	return success;
-}
-
-/****************************************************************************/
-
-static bool WriteROMConfigFile(const char *filename, ROMConfigFile ROMConfig)
-{
-	FILE *fd = fopen(filename, "w");
-	if (!fd)
-	{
-		mainWin->Report(MessageType::Error,
-						"Failed to write ROM configuration file:\n  %s", filename);
-
-		return false;
-	}
-
-	for (int Model = 0; Model < 4; ++Model)
-	{
-		for (int Bank = 0; Bank < 17; ++Bank)
-		{
-			fprintf(fd, "%s\n", ROMConfig[Model][Bank]);
-		}
-	}
-
-	fclose(fd);
-
-	return true;
 }
 
 /****************************************************************************/
@@ -457,13 +503,12 @@ bool RomConfigDialog::GetROMFile(char *pszFileName)
 	else
 		strcpy(DefaultPath, szROMPath);
 
-	FileDialog fileDialog(m_hwnd, pszFileName, MAX_PATH, DefaultPath, filter);
+	FileDialog Dialog(m_hwnd, pszFileName, MAX_PATH, DefaultPath, filter);
 
-	if (fileDialog.Open())
+	if (Dialog.Open())
 	{
 		// Save directory as default for next time
-//		unsigned int PathLength = (unsigned int)(strrchr(pszFileName, '\\') - pszFileName);
-		unsigned int PathLength = (unsigned int)(strrchr(pszFileName, '/') - pszFileName);
+		unsigned int PathLength = (unsigned int)(strrchr(pszFileName, '\\') - pszFileName);
 		strncpy(szDefaultROMPath, pszFileName, PathLength);
 		szDefaultROMPath[PathLength] = 0;
 
@@ -472,3 +517,7 @@ bool RomConfigDialog::GetROMFile(char *pszFileName)
 
 	return success;
 }
+
+
+
+

@@ -229,7 +229,7 @@ bool BeebWin::ReadDisc(int Drive, bool bCheckForPrefs)
 		}
 
 		// Another Master 128 Update, brought to you by Richard Gellman
-		if (MachineType != Model::Master128)
+		if (MachineType != Model::Master128 && MachineType != Model::MasterET)
 		{
 			if (ssd)
 			{
@@ -532,7 +532,7 @@ void BeebWin::NewDiscImage(int Drive)
 	DWORD filterIndex = 1;
 	m_Preferences.GetDWORDValue("DiscsFilter", filterIndex);
 
-	if (MachineType != Model::Master128 && NativeFDC && filterIndex >= 5)
+	if ((MachineType != Model::Master128 && MachineType != Model::MasterET) && NativeFDC && filterIndex >= 5)
 		filterIndex = 1;
 
 	FileDialog fileDialog(m_hWnd, FileName, sizeof(FileName), DefaultPath, filter);
@@ -730,7 +730,7 @@ void BeebWin::SetDiscWriteProtect(int Drive, bool WriteProtect)
 
 void BeebWin::SetDiscWriteProtects()
 {
-	if (MachineType != Model::Master128 && NativeFDC)
+	if ((MachineType != Model::Master128 && MachineType != Model::MasterET) && NativeFDC)
 	{
 		m_WriteProtectDisc[0] = !IsDiscWritable(0);
 		m_WriteProtectDisc[1] = !IsDiscWritable(1);

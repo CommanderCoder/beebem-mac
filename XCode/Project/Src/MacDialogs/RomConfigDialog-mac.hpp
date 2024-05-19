@@ -13,22 +13,11 @@
 
 #include "apples.h"
 
-#include "BeebMem.h"
 #include "Dialog.h"
 #include "Model.h"
-
-
 #include <string>
 
-// 16 rows and 2 columns (only column 0 needs the bank value)
-struct RCItem {
-	int bank;
-	std::string name;
-};
-
-extern RCItem beeb_RCTable[16][2];
-
-
+#include "RomConfigFile.h"
 
 class RomConfigDialog : public Dialog
 {
@@ -36,17 +25,15 @@ class RomConfigDialog : public Dialog
 		RomConfigDialog(
 			HINSTANCE hInstance,
 			HWND hwndParent,
-			ROMConfigFile Config
+			const RomConfigFile& Config
 		);
 
 	public:
-		const ROMConfigFile* GetRomConfig() const;
-
-	
-	virtual bool WM_INITDIALOG();
-	virtual bool WM_COMMAND(WPARAM wParam);
-	virtual void WM_NOTIFY(){}
-	bool DoModal();
+		virtual bool WM_INITDIALOG();
+		virtual bool WM_COMMAND(WPARAM wParam);
+		virtual void WM_NOTIFY(){}
+		bool DoModal();
+		const RomConfigFile& GetRomConfig() const;
 
 	private:
 //		virtual INT_PTR DlgProc(
@@ -65,8 +52,18 @@ class RomConfigDialog : public Dialog
 	private:
 		HWND m_hWndROMList;
 		HWND m_hWndModel;
-		ROMConfigFile m_RomConfig;
+		RomConfigFile m_RomConfig;
 		Model m_Model;
 };
+
+
+
+// 16 rows and 2 columns (only column 0 needs the bank value)
+struct RCItem {
+	int bank;
+	std::string name;
+};
+
+extern RCItem beeb_RCTable[16][2];
 
 #endif /* RomConfigDialog_mac_hpp */

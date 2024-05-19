@@ -144,11 +144,7 @@ static bool TeletextConnect(int ch)
             {
                 DebugDisplayTraceF(DebugType::Teletext, true,
                                    "Teletext: Socket %d unable to connect to server %s:%d %d",
-#ifndef __APPLE__
-								   ch, TeletextIP[ch], TeletextPort[ch],
-#else
-								   ch, (TeletextIP[ch]).c_str(), TeletextPort[ch],
-#endif
+                                   ch, TeletextIP[ch].c_str(), TeletextPort[ch],
                                    WSAGetLastError());
             }
 

@@ -9,6 +9,12 @@
 
 
 
+//
+// BeebEm debugger
+//
+// Mike Wyatt - Nov 2004
+// Econet added Rob O'Donnell 2004-12-28.
+
 #include <windows.h>
 
 #include <ctype.h>
@@ -968,7 +974,7 @@ static const InstInfo optable_65sc12[256] =
 static const InstInfo* GetOpcodeTable(bool host)
 {
 	if (host) {
-		if (MachineType == Model::Master128) {
+		if (MachineType == Model::Master128 || MachineType == Model::MasterET) {
 			return optable_65sc12;
 		}
 		else {
@@ -1994,7 +2000,7 @@ static bool DebugLookupAddress(int addr, AddrInfo* addrInfo)
 			return true;
 		}
 	}
-	else if (MachineType == Model::Master128)
+	else if (MachineType == Model::Master128 || MachineType == Model::MasterET)
 	{
 		// Master cartridge (not implemented in BeebEm yet)
 		if ((ACCCON & 0x20) && addr >= 0xfc00 && addr <= 0xfdff)
@@ -2064,7 +2070,7 @@ void DebugInitMemoryMaps()
 	}
 }
 
-bool DebugLoadMemoryMap(char* filename, int bank)
+bool DebugLoadMemoryMap(const char* filename, int bank)
 {
 	if (bank < 0 || bank > 16)
 		return false;
@@ -3262,6 +3268,7 @@ static bool DebugCmdToggleBreak(char *args)
 				{
 					sprintf(info, "%04X %s", bp.start, bp.name.c_str());
 				}
+
 				SendMessage(hwndBP, LB_ADDSTRING, 0, (LPARAM)info);
 			}
 

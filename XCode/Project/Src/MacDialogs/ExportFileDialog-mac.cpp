@@ -47,6 +47,16 @@ FileExportEntry* LVGetItemDataEF(HWND a, UINT b)
 #undef IDD_DISCEXPORT
 #define IDD_DISCEXPORT			Modals::exportFiles
 
+static int ListView_GetItemCount(HWND a)
+{
+	return 0; // number of items in the listview
+}
+
+static void ListView_SetItemState(HWND a, int c, int x, int y)
+{
+	// set state of item in the listview
+}
+
 
 /****************************************************************************/
 
@@ -304,15 +314,6 @@ int ListView_GetNextItem(HWND a, int b, int c)
 	return filesSelected[itemIndex];
 }
 
-int ListView_GetItemCount(HWND a)
-{
-	return 0; // number of items in the listview
-}
-
-void ListView_SetItemState(HWND a, int c, int x, int y)
-{
-	// set state of item in the listview
-}
 
 
 void ExportFileDialog::ExportSelectedFiles()

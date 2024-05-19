@@ -113,6 +113,19 @@ typedef struct RECT                     RECT;
 #define CHAR char
 #define WM_APP 0
 
+#define ZeroMemory(Destination,Length) RtlZeroMemory((Destination),(Length))
+#define RtlZeroMemory(Destination,Length) memset((Destination),0,(Length))
+
+#define SYSTEMTIME struct tm
+void GetLocalTime(SYSTEMTIME* _t);
+#define wYear tm_year
+#define wMonth tm_mon
+#define wDay tm_mday
+#define wHour tm_hour
+#define wMinute tm_min
+#define wSecond tm_sec
+#define wMilliseconds tm_sec // no milliseconds
+#define wDayOfWeek tm_wday
 
 // ECONET
 #include <netdb.h>

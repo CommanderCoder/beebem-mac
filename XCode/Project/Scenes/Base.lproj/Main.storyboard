@@ -1070,6 +1070,12 @@
                                                             <action selector="HandleCommand:" target="Voe-Tx-rLC" id="tRW-8J-HMW"/>
                                                         </connections>
                                                     </menuItem>
+                                                    <menuItem title="BBC Master ET" tag="4" identifier="bbce" id="rce-jS-Kpz">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="HandleCommand:" target="Voe-Tx-rLC" id="B4f-OO-7tv"/>
+                                                        </connections>
+                                                    </menuItem>
                                                 </items>
                                             </menu>
                                         </menuItem>
@@ -3270,6 +3276,7 @@ DQ
                                         <string>BBC B Plus</string>
                                         <string>Integra B</string>
                                         <string>Master 128</string>
+                                        <string>Master ET</string>
                                     </objectValues>
                                 </comboBoxCell>
                             </comboBox>

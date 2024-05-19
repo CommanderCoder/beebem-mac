@@ -22,6 +22,8 @@ Boston, MA  02110-1301, USA.
 
 #include "FileUtils.h"
 
+/****************************************************************************/
+
 bool FileExists(const char* PathName)
 {
 #ifdef __APPLE__
@@ -37,6 +39,8 @@ bool FileExists(const char* PathName)
 #endif
 }
 
+/****************************************************************************/
+
 bool FolderExists(const char* PathName)
 {
 #ifdef __APPLE__
@@ -50,6 +54,8 @@ bool FolderExists(const char* PathName)
 	       (dwAttrib & FILE_ATTRIBUTE_DIRECTORY) != 0;
 #endif
 }
+
+/****************************************************************************/
 
 std::string AppendPath(const std::string& BasePath, const std::string& Path)
 {
@@ -75,6 +81,8 @@ std::string AppendPath(const std::string& BasePath, const std::string& Path)
 	return PathName;
 }
 
+/****************************************************************************/
+
 bool HasFileExt(const char* FileName, const char* Ext)
 {
 	const size_t ExtLen = strlen(Ext);
@@ -83,3 +91,23 @@ bool HasFileExt(const char* FileName, const char* Ext)
 	return FileNameLen >= ExtLen &&
 	       _stricmp(FileName + FileNameLen - ExtLen, Ext) == 0;
 }
+
+/****************************************************************************/
+
+std::string ReplaceFileExt(const std::string& FileName, const char* Ext)
+{
+	size_t index = FileName.find_last_of(".");
+
+	if (index == std::string::npos)
+	{
+		return FileName;
+	}
+
+	std::string NewFileName(FileName, 0, index);
+
+	NewFileName += Ext;
+
+	return NewFileName;
+}
+
+/****************************************************************************/

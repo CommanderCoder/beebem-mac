@@ -23,6 +23,7 @@ std::map<int,int> ID2RC =
 {'bbci', ID_MODELBINT},
 {'bbcp', ID_MODELBPLUS},
 {'bbcm', ID_MASTER128},
+{'bbce', ID_MASTER_ET},
 {'tnil', IDM_TUBE_NONE},
 {'tube', IDM_TUBE_ACORN65C02},
 //    {'t186', whatever happend to tube 186? },
