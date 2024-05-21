@@ -156,7 +156,7 @@ unsigned char in(unsigned int addr)
 
 	if (TubeType == Tube::AcornZ80)
 	{
-		value = ReadTubeFromParasiteSide((unsigned char)addr);
+		value = ReadTubeFromParasiteSide(addr);
 	}
 	else
 	{
@@ -176,7 +176,7 @@ unsigned char in(unsigned int addr)
 
 		inROM = (addr & 4) == 0;
 	}
-	
+
 	return value;
 }
 
@@ -218,13 +218,13 @@ void z80_execute()
 	{
 		if (TubeintStatus & (1 << R1))
 			set_Z80_irq_line(true);
-		
+
 		if (TubeintStatus & (1 << R4))
 			set_Z80_irq_line(true);
-		
+
 		if (TubeintStatus == 0)
 			set_Z80_irq_line(false);
-		
+
 		if (TubeNMIStatus)
 			set_Z80_nmi_line(true);
 		else
@@ -242,7 +242,7 @@ void init_z80()
 	{
 		strcpy(path, RomPath);
 		strcat(path, "BeebFile/Z80.rom");
-		
+
 		FILE *f = fopen(path, "rb");
 		if (f != nullptr)
 		{
@@ -284,7 +284,7 @@ void init_z80()
 			fclose(f);
 		}
 	}
-	
+
 	inROM = true;
 
 	sp = 0x00;

@@ -571,11 +571,7 @@ void SoundInit() {
   if (SoundSampleRate == 44100) SoundAutoTriggerTime = 5000;
   if (SoundSampleRate == 22050) SoundAutoTriggerTime = 10000;
   if (SoundSampleRate == 11025) SoundAutoTriggerTime = 20000;
-#ifndef __APPLE__
-  SoundBufferSize = pSoundStreamer ? pSoundStreamer->BufferSize() : SoundSampleRate / 50;
-#else
-  SoundBufferSize = pSoundStreamer ? (unsigned int) pSoundStreamer->BufferSize() : SoundSampleRate / 50;
-#endif
+  SoundBufferSize = (int)(pSoundStreamer ? pSoundStreamer->BufferSize() : SoundSampleRate / 50);
   LoadSoundSamples();
   SoundTrigger = TotalCycles + SoundAutoTriggerTime;
 }

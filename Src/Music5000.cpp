@@ -137,11 +137,7 @@ void Music5000Init()
 	else
 	{
 		pSoundStreamer->Play();
-#ifndef __APPLE__
-		SampleBufSize = pSoundStreamer->BufferSize();
-#else
 		SampleBufSize = (UINT32)pSoundStreamer->BufferSize();
-#endif
 		if (SampleBuf)
 			free(SampleBuf);
 		SampleBuf = (INT16*)malloc(SampleBufSize * 4);
