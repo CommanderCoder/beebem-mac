@@ -22,7 +22,6 @@ Boston, MA  02110-1301, USA.
 #define LIST_VIEW_HEADER
 
 #ifndef __APPLE__
-
 #include <string>
 
 int LVInsertColumn(HWND hWnd, UINT uCol, const char* pszText, int iAlignment, UINT uWidth);

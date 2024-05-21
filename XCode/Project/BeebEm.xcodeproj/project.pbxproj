@@ -337,6 +337,7 @@
 		DC33555E2BDF84C00014DC3A /* RomConfigDialog-mac.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "RomConfigDialog-mac.hpp"; sourceTree = "<group>"; };
 		DC3FB5492BE8DEDB00CF36A0 /* KeyMap-mac.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "KeyMap-mac.cpp"; sourceTree = "<group>"; };
 		DC3FB54A2BE8DEDB00CF36A0 /* KeyMap-mac.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "KeyMap-mac.hpp"; sourceTree = "<group>"; };
+		DC423BFE2BFC7F99009736E1 /* vfw.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vfw.h; sourceTree = "<group>"; };
 		DC527BC42BC75107000D7CCF /* Teletext.fnt */ = {isa = PBXFileReference; lastKnownFileType = file; name = Teletext.fnt; path = ../../Teletext.fnt; sourceTree = "<group>"; };
 		DC527BC52BC75107000D7CCF /* RelayOn.snd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = RelayOn.snd; path = ../../RelayOn.snd; sourceTree = "<group>"; };
 		DC527BC62BC75107000D7CCF /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../../README.md; sourceTree = "<group>"; };
@@ -674,6 +675,7 @@
 				DCD283F72BE6E6A600ABD9F8 /* gdiplus.h */,
 				DCD283F82BE8415000ABD9F8 /* sphelper.h */,
 				DC2C9CFE2BF9444F00F2E613 /* process.h */,
+				DC423BFE2BFC7F99009736E1 /* vfw.h */,
 			);
 			path = windows_stubs;
 			sourceTree = "<group>";

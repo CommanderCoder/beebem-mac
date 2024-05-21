@@ -62,4 +62,5 @@ class RomConfigDialog : public Dialog
 #else
 #import "RomConfigDialog-mac.hpp"
 #endif //__APPLE__
+
 #endif

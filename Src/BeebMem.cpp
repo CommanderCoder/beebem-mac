@@ -339,7 +339,7 @@ unsigned char BeebReadMem(int Address) {
 			// CDP6818E Clock for Computech Integra-B
 			SYSTEMTIME Time;
 			GetLocalTime(&Time);
-			
+
 			switch (HidAdd)
 			{
 				case 0:
@@ -685,8 +685,7 @@ void DebugMemoryState()
 				(ACCCON & 0x02) != 0 ? "on" : "off",
 				(ACCCON & 0x01) != 0 ? "on" : "off");
 			break;
-#ifndef __APPLE__
-#else
+#ifdef __APPLE__
 		default: // display nothing
 			break;
 #endif
@@ -1188,7 +1187,7 @@ static std::string GetRomFileName(const std::string& RomName)
 {
 	
 #ifndef __APPLE__
-	if ((RomName[0]!='\\') && (RomName[1]!=':'))
+	if (RomName[0] != '\\' && RomName[1] != ':')
 	{
 		std::string RomFileName = RomPath;
 		RomFileName += "BeebFile\\";
@@ -1423,8 +1422,7 @@ void SaveMemUEF(FILE *SUEF)
 		fputc(PagedRomReg | (static_cast<int>(MemSel) << 7), SUEF);
 		fputc((static_cast<int>(Sh_Display) << 7), SUEF);
 		break;
-#ifndef __APPLE__
-#else
+#ifdef __APPLE__
 	default:
 		break;
 #endif
@@ -1469,8 +1467,7 @@ void SaveMemUEF(FILE *SUEF)
 		fput32(8192,SUEF);
 		fwrite(FSRam,1,8192,SUEF);
 		break;
-#ifndef __APPLE__
-#else
+#ifdef __APPLE__
 	default:
 		break;
 #endif
@@ -1512,8 +1509,7 @@ void SaveMemUEF(FILE *SUEF)
 			fputc(bank,SUEF);
 			fputc(static_cast<int>(BankType::Empty),SUEF);
 			break;
-#ifndef __APPLE__
-#else
+#ifdef __APPLE__
 		default:// RAM
 			break;
 #endif
@@ -1551,8 +1547,7 @@ void LoadRomRegsUEF(FILE *SUEF) {
 		Sh_CPUE = (ACCCON & 2) != 0;
 		FSRAMSelect = (ACCCON & 8) != 0;
 		break;
-#ifndef __APPLE__
-#else
+#ifdef __APPLE__
 	default:
 		break;
 #endif
@@ -1577,8 +1572,7 @@ void LoadShadMemUEF(FILE *SUEF) {
 		SAddr=fget16(SUEF);
 		fread(ShadowRAM+SAddr,1,32768,SUEF);
 		break;
-#ifndef __APPLE__
-#else
+#ifdef __APPLE__
 	default:
 		break;
 #endif
@@ -1597,8 +1591,7 @@ void LoadPrivMemUEF(FILE *SUEF) {
 	case Model::MasterET:
 		fread(PrivateRAM,1,4096,SUEF);
 		break;
-#ifndef __APPLE__
-#else
+#ifdef __APPLE__
 	default:
 		break;
 #endif
@@ -1633,8 +1626,7 @@ void LoadSWRomMemUEF(FILE *SUEF) {
 	case BankType::Empty:
 		memset(Roms[Rom], 0, MAX_ROM_SIZE);
 		break;
-#ifndef __APPLE__
-#else
+#ifdef __APPLE__
 	default: // RAM
 		break;
 #endif
@@ -1666,8 +1658,7 @@ bool LoadPALRomEUF(FILE *SUEF, unsigned int ChunkLength)
 				PALRom[Bank].Type = PALRomType::none;
 				PALRom[Bank].Bank = 0;
 				break;
-#ifndef __APPLE__
-#else
+#ifdef __APPLE__
 			default:// RAM
 				break;
 #endif

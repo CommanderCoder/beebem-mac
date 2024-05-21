@@ -30,9 +30,7 @@ Boston, MA  02110-1301, USA.
 
 #include <windows.h>
 
-#ifndef __APPLE__
 #include <process.h>
-#endif
 #include <stdio.h>
 
 #include <algorithm>
@@ -235,7 +233,8 @@ Win32SerialPort::Win32SerialPort() :
 	memset(&olSerialWrite, 0, sizeof(olSerialWrite));
 	memset(&olStatus, 0, sizeof(olStatus));
 }
-	/*--------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------*/
 
 bool Win32SerialPort::Init(const char* PortName)
 {
@@ -294,6 +293,7 @@ bool Win32SerialPort::Init(const char* PortName)
 }
 
 /*--------------------------------------------------------------------------*/
+
 void Win32SerialPort::Close()
 {
 	if (hSerialPort != INVALID_HANDLE_VALUE)
@@ -465,6 +465,7 @@ void SerialACIAWriteTxData(unsigned char Data)
 				WriteFile(SerialPort.hSerialPort, &SerialPort.SerialWriteBuffer, 1, &SerialPort.BytesOut, &SerialPort.olSerialWrite);
 			}
 #endif
+
 			SerialACIA.Status |= MC6850_STATUS_TDRE;
 		}
 	}
@@ -863,8 +864,7 @@ void SerialPoll(int Cycles)
 									TapeAudio.ByteCount  = 3;
 								}
 								break;
-#ifndef __APPLE__
-#else
+#ifdef __APPLE__
 							case CSWState::Undefined:
 								break;
 #endif
@@ -1179,7 +1179,6 @@ void SerialInit()
 
 	SerialReadThread.Start();
 	SerialStatusThread.Start();
-	
 }
 
 /*--------------------------------------------------------------------------*/

@@ -63,5 +63,4 @@ class FolderSelectDialog
 #else
 #import "FolderSelectDialog-mac.hpp"
 #endif //__APPLE__
-
 #endif

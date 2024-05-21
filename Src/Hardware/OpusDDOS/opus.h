@@ -21,9 +21,7 @@ Boston, MA  02110-1301, USA.
 // Opus DDFS Board Drive Controller Chip DLL
 // (C) September 2001 - Richard Gellman
 
-#ifdef __APPLE__
-#undef EXPORT
-#endif
+#ifndef __APPLE__
 
 #ifdef __cplusplus
 #define EXPORT extern "C" __declspec (dllexport)
@@ -33,9 +31,7 @@ Boston, MA  02110-1301, USA.
 
 #define WIN_LEAN_AND_MEAN
 
-#ifdef __APPLE__
-#undef EXPORT
-#define EXPORT ;
+#else
 
 namespace OpusFDC {
 

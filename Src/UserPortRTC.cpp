@@ -86,7 +86,7 @@ void UserPortRTCWrite(unsigned char Value)
 
 				SYSTEMTIME Time;
 				GetLocalTime(&Time);
-				
+
 				switch ((RTC_cmd & 0x0f) >> 1)
 				{
 					case 0: // Month counter (1-12)

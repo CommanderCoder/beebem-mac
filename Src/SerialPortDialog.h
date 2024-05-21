@@ -70,4 +70,5 @@ class SerialPortDialog : public Dialog
 #else
 #include "SerialPortDialog-mac.hpp"
 #endif
+
 #endif

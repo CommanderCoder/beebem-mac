@@ -223,8 +223,7 @@ UEFStateResult SaveUEFState(const char *FileName)
 
 		switch (TubeType)
 		{
-#ifndef __APPLE__
-#else
+#ifdef __APPLE__
 			case Tube::None:
 				break;
 #endif

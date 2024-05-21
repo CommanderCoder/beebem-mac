@@ -1128,9 +1128,9 @@ void VideoDoScanLine(void) {
     if (!FrameNum) {
       if (VScreenAdjust>0 && VideoState.PixmapLine==0)
 #ifndef __APPLE__
-		  for (l=-VScreenAdjust; l<0; ++l)
+        for (l=-VScreenAdjust; l<0; ++l)
 #else
-		  for (l=(int)-VScreenAdjust; l<0; ++l)
+		for (l=(int)-VScreenAdjust; l<0; ++l)
 #endif
           mainWin->doHorizLine(0, l, -36, 800);
       for (l=0; l<20 && VideoState.PixmapLine+l<512; ++l)

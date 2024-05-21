@@ -80,5 +80,4 @@ extern SelectKeyDialog* selectKeyDialog;
 #else
 #include "SelectKeyDialog-mac.hpp"
 #endif
-
 #endif

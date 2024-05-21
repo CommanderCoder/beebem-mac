@@ -41,16 +41,18 @@ typedef ULONG_PTR DWORD_PTR;
 
 #define BOOL bool
 
-#define LPCSTR std::string
-#define LPTSTR char *
 
 typedef uint32_t UINT_PTR; //
 typedef uint32_t* HWND; //  typedef uint32_t*
 typedef uint32_t* HINSTANCE; //
+typedef uint32_t* HMODULE; //
 typedef uint32_t* HDC; //
 typedef uint32_t* HACCEL; //
 typedef uint32_t HRESULT; //
 typedef uint32_t LRESULT; //
+typedef uint32_t MMRESULT; //
+typedef uint32_t HMONITOR; //
+
 typedef uint32_t* WNDPROC; //
 typedef uint32_t* TIMERPROC; //
 typedef uint32_t* HANDLE; //
@@ -60,13 +62,48 @@ typedef uint32_t* HGDIOBJ; //
 typedef uint32_t* HMENU; //
 typedef uint32_t* HBITMAP; //
 
-typedef uint32_t* JOYCAPS; //
 typedef uint32_t* POINT; //
 
 typedef uint32_t* ISpVoice;//
 typedef uint32_t ISpObjectToken;//
-typedef uint32_t WCHAR;//
+typedef wchar_t WCHAR;//
 typedef uint32_t TCHAR;//
+
+
+typedef struct joycaps_tag {
+  WORD wMid;
+  WORD wPid;
+//  char szPname[MAXPNAMELEN];
+  UINT wXmin;
+  UINT wXmax;
+  UINT wYmin;
+  UINT wYmax;
+  UINT wZmin;
+  UINT wZmax;
+  UINT wNumButtons;
+  UINT wPeriodMin;
+  UINT wPeriodMax;
+  UINT wRmin;
+  UINT wRmax;
+  UINT wUmin;
+  UINT wUmax;
+  UINT wVmin;
+  UINT wVmax;
+  UINT wCaps;
+  UINT wMaxAxes;
+  UINT wNumAxes;
+  UINT wMaxButtons;
+//  char szRegKey[MAXPNAMELEN];
+//  char szOEMVxD[MAX_JOYSTICKOEMVXDNAME];
+} JOYCAPS, *PJOYCAPS, *NPJOYCAPS, *LPJOYCAPS;
+
+#define JOYERR_NOERROR -1
+#define JOYERR_UNPLUGGED 2
+#define JOYSTICKID1 1
+MMRESULT joySetCapture(HWND Wnd, int jid, int v, bool f);
+MMRESULT joyGetDevCaps(int jid, JOYCAPS* jc, int l);
+
+
 
 
 typedef struct tagBITMAPINFOHEADER {
@@ -101,6 +138,17 @@ struct RECT {
 typedef struct RECT                     RECT;
 
 
+#define GWL_STYLE -1
+#define MONITOR_DEFAULTTONEAREST -1
+HMONITOR MonitorFromWindow(HWND wnd, int s);
+typedef struct tagMONITORINFO {
+  DWORD cbSize;
+  RECT  rcMonitor;
+  RECT  rcWork;
+  DWORD dwFlags;
+} MONITORINFO, *LPMONITORINFO;
+
+void GetMonitorInfo(HMONITOR monitor, MONITORINFO* info);
 
 #define _MAX_PATH PATH_MAX
 #define MAX_PATH PATH_MAX
@@ -112,6 +160,8 @@ typedef struct RECT                     RECT;
 
 #define CHAR char
 #define WM_APP 0
+
+#define EXPORT ;
 
 #define ZeroMemory(Destination,Length) RtlZeroMemory((Destination),(Length))
 #define RtlZeroMemory(Destination,Length) memset((Destination),0,(Length))
@@ -171,7 +221,9 @@ int WSAGetLastError();
 int connect(int a, SOCKADDR *b, int c);
 
 #define LPSTR std::string
-#define LPCSTR std::string //const
+#define LPCSTR const char *
+#define LPTSTR char *
+
 #define BYTE __uint8_t
 #define WORD __uint16_t
 #define LOBYTE(w) ((BYTE)(w))
@@ -297,7 +349,11 @@ extern "C" enum KB_LEDS { CASS, CAPS, SHIFT, HD0, HD1, HD2, HD3, FD0, FD1 };
 extern "C" int swift_SetLED(KB_LEDS led, bool on);
 extern "C" int swift_SetMachineType(Model machinetype);
 
+#define SIZE_RESTORED -1
+#define SIZE_MINIMIZED -1
 void GetWindowRect(HWND h, RECT* r);
+void GetClientRect(HWND h, RECT* r);
+void InvalidateRect(HWND h, RECT* r, bool b);
 
 
 
@@ -335,15 +391,33 @@ void beebwin_CheckMenuRadioItem(UINT first, UINT last, UINT cmd);
 
 int beebwin_KeyUpDown(long, long,long);
 
-
-
-void SetWindowText(HWND m_hWnd, const char* m_szTitle);
+#define WS_POPUP -1
+#define WIN_STYLE -1
+#define WM_CLOSE -1
+#define SW_MAXIMIZE -1
+#define SW_RESTORE -1
+#define SW_SHOWNORMAL -1
+long GetWindowLong(HWND wnd, long s);
+void SetWindowLong(HWND m_hWnd, int f, long s);
+BOOL SetWindowText(HWND    hWnd, LPCSTR lpString);
+BOOL SetWindowText(HWND    hWnd, LPTSTR lpString);
 typedef  enum
 {
   DIB_RGB_COLORS = 0x00,
   DIB_PAL_COLORS = 0x01,
   DIB_PAL_INDICES = 0x02
 } DIBColors;
+void MoveWindow(HWND m_hWnd, int x, int y, int w, int h, bool b);
+void ShowWindow(HWND m_hWnd, int x);
+
+
+void PostMessage(HWND wnd, int s, int t, long l);
+void ShellExecute(HWND m_hWnd, void* a, char* p, void* b, void* c, int f);
+
+
+int SHCreateDirectoryEx(void* a, const char* f, void *b);
+#define ERROR_SUCCESS 1
+
 
 extern "C" void swift_sleepCPU(unsigned long microseconds);
 #define Sleep swift_sleepCPU
@@ -401,16 +475,18 @@ HGDIOBJ CreateDIBSection(HDC hdc, const BITMAPINFO *pbmi,
 
 
 void SetMenu(HWND w, bool s);
-
+void RemoveMenu(HWND w, int a, int b);
 #define MF_CHECKED 1
 #define MF_UNCHECKED 0
 #define MF_GRAYED 0
 #define MF_ENABLED 1
 
+#define MF_BYCOMMAND -1
 
 DWORD CheckMenuItem(  HMENU hMenu,  UINT  uIDCheckItem,UINT  uCheck);
 DWORD EnableMenuItem(  HMENU hMenu,  UINT  uIDCheckItem,UINT  uEnable);
 
+void _itoa(int i, CHAR* c, int l);
 
 int GetSystemMetrics(int);
 #define SM_CXSCREEN 0
@@ -451,12 +527,16 @@ BOOL SetWindowPos( HWND hWnd, HWND hWndInsertAfter,
 		int  cx,int  cy,
 		UINT uFlags
 );
-BOOL SetWindowText(HWND    hWnd, LPCSTR lpString);
 
 HWND SetFocus(HWND focus);
 
 
-void ModifyMenu(HMENU m_hMenu, UINT pf, UINT flags, UINT_PTR newID, LPCSTR str);
+void ModifyMenu(HMENU m_hMenu, UINT pf, UINT flags, UINT_PTR newID, CHAR* str);
+void CheckMenuRadioItem(HMENU m_hMenu,
+						UINT first,
+						UINT last,
+						UINT cmdSelectedMenuItem,
+						UINT cmd);
 
 
 #define BM_GETCHECK 0
@@ -502,5 +582,30 @@ HWND GetFocus();
 int WSACleanup();
 
 void SetEvent(HANDLE);
+
+void FreeLibrary(HMODULE);
+
+
+bool GetFullPathName(const char* c, int l, const char* p, char** f);
+void PathCanonicalize(const char* c, const char* p);
+
+typedef char* PCZZSTR;//
+typedef uint32_t LPVOID;//
+typedef uint32_t PCSTR;//
+typedef uint32_t FILEOP_FLAGS;//
+#define FO_COPY -1
+
+typedef struct _SHFILEOPSTRUCTA {
+  HWND         hwnd;
+  UINT         wFunc;
+  PCZZSTR      pFrom;
+  PCZZSTR      pTo;
+  FILEOP_FLAGS fFlags;
+  BOOL         fAnyOperationsAborted;
+  LPVOID       hNameMappings;
+  PCSTR        lpszProgressTitle;
+} SHFILEOPSTRUCTA, *LPSHFILEOPSTRUCTA, SHFILEOPSTRUCT ;
+
+bool SHFileOperation(SHFILEOPSTRUCT* a);
 
 #endif /* apples_h */

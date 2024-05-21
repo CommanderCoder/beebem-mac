@@ -30,4 +30,5 @@ bool UserKeyboardDialog(HWND hwndParent);
 #else
 #include "UserKeyboardDialog-mac.hpp"
 #endif
+
 #endif

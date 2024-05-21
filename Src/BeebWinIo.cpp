@@ -70,10 +70,7 @@ using std::max;
 #include "UserVia.h"
 #include "Version.h"
 
-//#ifndef __APPLE__
-
 using namespace Gdiplus;
-//#endif
 
 /****************************************************************************/
 
@@ -105,7 +102,6 @@ void BeebWin::SetImageName(const char *DiscName, int Drive, DiscType Type)
 	mii.dwTypeData = menuStr;
 	SetMenuItemInfo(m_hMenu, Drive == 0 ? IDM_EJECTDISC0 : IDM_EJECTDISC1, FALSE, &mii);
 #endif
-	
 }
 
 /****************************************************************************/
@@ -768,7 +764,6 @@ bool BeebWin::PrinterFile()
 		_splitpath(m_PrinterFileName, drive, dir, fname, ext);
 		_makepath(StartPath, drive, dir, NULL, NULL);
 		_makepath(FileName, NULL, NULL, fname, ext);
-		
 	}
 
 	FileDialog fileDialog(m_hWnd, FileName, sizeof(FileName), StartPath, filter);
@@ -973,7 +968,6 @@ void BeebWin::CaptureVideo()
 void BeebWin::EndVideo()
 {
 #ifndef __APPLE__
-
 	if (aviWriter != nullptr)
 	{
 		delete aviWriter;
@@ -1035,7 +1029,7 @@ void BeebWin::QuickSave()
 	strcpy(DirName, m_UserDataPath);
 	strcat(DirName, "BeebState");
 #endif
-	
+
 	// Bump old quicksave files down
 	for (int i = 1; i <= 9; ++i)
 	{
@@ -1064,8 +1058,7 @@ void BeebWin::QuickSave()
 			_makepath(FileName2, NULL,DirName,FileName2,"uefstate");
 		}
 #endif
-		
-		MoveFileEx(FileName2, FileName1, MOVEFILE_REPLACE_EXISTING);		
+		MoveFileEx(FileName2, FileName1, MOVEFILE_REPLACE_EXISTING);
 	}
 
 	SaveUEFState(FileName2);
@@ -1087,10 +1080,8 @@ void BeebWin::LoadUEFState(const char *FileName)
 			Report(MessageType::Error, "Cannot open state file:\n  %s",
 			       FileName);
 			break;
-#ifndef __APPLE__
-#else
-		case UEFStateResult::WriteFailed:
-			
+#ifdef __APPLE__
+		case UEFStateResult::WriteFailed:		
 			break;
 #endif
 		case UEFStateResult::InvalidUEFFile:
@@ -1116,23 +1107,18 @@ void BeebWin::SaveUEFState(const char *FileName)
 		case UEFStateResult::Success:
 			break;
 
-#ifndef __APPLE__
-#else
+#ifdef __APPLE__
 		case UEFStateResult::OpenFailed:
-			
 			break;
 #endif
 		case UEFStateResult::WriteFailed:
 			Report(MessageType::Error, "Failed to write state file:\n  %s",
 				   FileName);
 			break;
-#ifndef __APPLE__
-#else
+#ifdef __APPLE__
 		case UEFStateResult::InvalidUEFFile:
-			
 			break;
 		case UEFStateResult::InvalidUEFVersion:
-			
 			break;
 #endif
 	}
@@ -1482,7 +1468,6 @@ void BeebWin::doPaste()
 		m_ClipboardIndex = 0;
 		m_ClipboardLength = (int)strlen(m_ClipboardBuffer);
 	}
-
 #endif
 }
 
@@ -1677,7 +1662,6 @@ void BeebWin::ImportDiscFiles(int menuId)
 #else
 		fileName = strrchr(fileSelection, '/');
 #endif
-
 		if (fileName != NULL)
 			*fileName = 0;
 		fileName++;
@@ -1781,7 +1765,7 @@ void BeebWin::SelectHardDriveFolder()
 	GetDataPath(m_UserDataPath, DefaultPath);
 
 	FileDialog fileDialog(m_hWnd, FileName, sizeof(FileName), DefaultPath, filter);
-	
+
 	if (fileDialog.Open())
 	{
 #ifndef __APPLE__
@@ -1813,10 +1797,10 @@ void BeebWin::CaptureBitmapPending(bool autoFilename)
 	m_CaptureBitmapAutoFilename = autoFilename;
 }
 
-#ifndef __APPLE__
 bool BeebWin::GetImageEncoderClsid(const WCHAR *mimeType, CLSID *encoderClsid)
 {
 	bool Success = false;
+#ifndef __APPLE__
 	UINT num;
 	UINT size;
 	UINT i;
@@ -1861,11 +1845,12 @@ Exit:
 	{
 		free(pImageCodecInfo);
 	}
-
+#else
+	Success = true;
+#endif
 	return Success;
 }
-#endif
-	
+
 static const char* GetCaptureFormatFileExt(UINT MenuID)
 {
 	switch (MenuID)
@@ -1885,7 +1870,6 @@ static const char* GetCaptureFormatFileExt(UINT MenuID)
 	}
 }
 
-#ifndef __APPLE__
 static const WCHAR* GetCaptureFormatMimeType(UINT MenuID)
 {
 	switch (MenuID)
@@ -1904,8 +1888,7 @@ static const WCHAR* GetCaptureFormatMimeType(UINT MenuID)
 			return L"image/png";
 	}
 }
-#endif
-	
+
 bool BeebWin::GetImageFile(char *FileName, int Size)
 {
 	bool success = false;
@@ -1952,8 +1935,6 @@ void BeebWin::CaptureBitmap(int SourceX,
                             int SourceHeight,
                             bool Teletext)
 {
-#ifndef __APPLE__
-
 	const WCHAR *mimeType = GetCaptureFormatMimeType(m_MenuIDCaptureFormat);
 	const char *fileExt = GetCaptureFormatFileExt(m_MenuIDCaptureFormat);
 
@@ -1982,6 +1963,7 @@ void BeebWin::CaptureBitmap(int SourceX,
 		strcat(m_CaptureFileName, AutoName);
 	}
 
+#ifndef __APPLE__
 	int BitmapWidth, BitmapHeight;
 	int DestX, DestY;
 	int DestWidth, DestHeight;
@@ -2112,6 +2094,12 @@ void BeebWin::CaptureBitmap(int SourceX,
 	if (CaptureDC != nullptr)
 	{
 		DeleteDC(CaptureDC);
+	}
+#else
+	if (strlen(m_CaptureFileName)>0)
+	{
+		// save to PICTURES folder
+		swift_saveScreen(m_CaptureFileName);
 	}
 #endif
 }

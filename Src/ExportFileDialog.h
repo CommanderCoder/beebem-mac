@@ -28,7 +28,6 @@ Boston, MA  02110-1301, USA.
 #include "DiscEdit.h"
 
 #ifndef __APPLE__
-
 struct FileExportEntry
 {
 	DFS_FILE_ATTR DfsAttrs;
@@ -77,5 +76,4 @@ class ExportFileDialog : public Dialog
 #else
 #import "ExportFileDialog-mac.hpp"
 #endif //__APPLE__
-
 #endif

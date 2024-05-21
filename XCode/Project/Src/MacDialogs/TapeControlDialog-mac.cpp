@@ -104,11 +104,6 @@ void TapeControlUpdateCounter(int tape_time)
 
 }
 
-static void SetDlgItemText(HWND hDlg, int nID, const char* str)
-{
-	printf("tapecontrol text %d %s", nID, str);
-}
-
 static void EnableDlgItem(HWND hDlg, UINT nIDDlgItem, bool Enable)
 {
 #ifndef __APPLE__

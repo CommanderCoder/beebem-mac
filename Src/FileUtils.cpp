@@ -30,7 +30,6 @@ bool FileExists(const char* PathName)
 	struct stat info;
 
 	return stat( PathName, &info ) == 0 && (info.st_mode & S_IFMT);
-
 #else
 	DWORD dwAttrib = GetFileAttributes(PathName);
 
@@ -72,7 +71,6 @@ std::string AppendPath(const std::string& BasePath, const std::string& Path)
 #else
 			PathName.append(1, '/');
 #endif
-			
 		}
 	}
 

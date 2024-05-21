@@ -348,8 +348,7 @@ static void WriteData(unsigned char data)
 			}
 			return;
 
-#ifndef __APPLE__
-#else
+#ifdef __APPLE__
 		case execute:
 			break;
 		case read:
@@ -360,10 +359,10 @@ static void WriteData(unsigned char data)
 			scsi.offset++;
 			scsi.length--;
 			scsi.req = false;
-			
+
 			if (scsi.length > 0)
 				return;
-			
+
 			switch (scsi.cmd[0]) {
 				case 0x0a:
 				case 0x15:
@@ -374,7 +373,7 @@ static void WriteData(unsigned char data)
 					Status();
 					return;
 			}
-			
+
 			switch (scsi.cmd[0]) {
 				case 0x0a:
 					if (!WriteSector(scsi.buffer, scsi.next - 1)) {
@@ -384,7 +383,7 @@ static void WriteData(unsigned char data)
 						return;
 					}
 					break;
-					
+
 				case 0x15:
 					if (!WriteGeometory(scsi.buffer)) {
 						scsi.status = (scsi.lun << 5) | 0x02;
@@ -394,9 +393,9 @@ static void WriteData(unsigned char data)
 					}
 					break;
 			}
-			
+
 			scsi.blocks--;
-			
+
 			if (scsi.blocks == 0) {
 				Status();
 				return;
@@ -405,8 +404,7 @@ static void WriteData(unsigned char data)
 			scsi.next++;
 			scsi.offset = 0;
 			return;
-#ifndef __APPLE__
-#else
+#ifdef __APPLE__
 		case status:
 			break;
 		case message:

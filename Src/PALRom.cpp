@@ -224,9 +224,9 @@ PALRomType GuessRomType(uint8_t *Rom, uint32_t Size)
     memcpy(RomName, &Rom[9], 10);
     RomName[10] = '\0';
 #ifndef __APPLE__
-	int Crc = crc32(0, Rom, Size);
+    int Crc = crc32(0, Rom, Size);
 #else
-	int Crc = (int)crc32(0, Rom, Size);
+    int Crc = (int)crc32(0, Rom, Size);
 #endif
 
     if (strstr(RomName, "ViewSpell") && Size == PALROM_64K && Crc == 0xE56B0E01)

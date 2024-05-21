@@ -173,7 +173,7 @@ void BeebWin::LoadPreferences()
 
 	if (!m_Preferences.GetBoolValue("DXSmoothMode7Only", m_DXSmoothMode7Only))
 		m_DXSmoothMode7Only = false;
-	
+
 	if (m_Preferences.GetDWORDValue("DDFullScreenMode", dword))
 		m_DDFullScreenMode = dword;
 	else
@@ -253,7 +253,7 @@ void BeebWin::LoadPreferences()
 
 	if (!m_Preferences.GetBoolValue("TextViewEnabled", m_TextViewEnabled))
 		m_TextViewEnabled = false;
-	
+
 	if (m_Preferences.GetDWORDValue(CFG_SPEED_TIMING, dword))
 		m_MenuIDTiming = dword;
 	else
@@ -378,7 +378,7 @@ void BeebWin::LoadPreferences()
 		for (int key=0; key<8; ++key)
 			BitKeys[key] = keyData[key];
 	}
-	
+
 	if (!m_Preferences.GetBoolValue(CFG_AMX_ENABLED, AMXMouseEnabled))
 		AMXMouseEnabled = false;
 
@@ -724,7 +724,6 @@ void BeebWin::LoadPreferences()
 		if (m_YWinPos > scrrect.bottom - 80)
 			m_YWinPos = 0;
 #endif
-		
 	}
 	else
 	{
@@ -782,7 +781,7 @@ void BeebWin::LoadPreferences()
 	else
 		m_DisableKeysWindows = false;
 #endif
-	
+
 	if (!m_Preferences.GetBoolValue("WriteInstructionCounts", m_WriteInstructionCounts))
 		m_WriteInstructionCounts = false;
 }
@@ -819,7 +818,7 @@ void BeebWin::SavePreferences(bool saveAll)
 		m_Preferences.SetDWORDValue("MotionBlur", m_MenuIDMotionBlur);
 		m_Preferences.SetBinaryValue("MotionBlurIntensities", m_BlurIntensities, 8);
 		m_Preferences.SetBoolValue("TextViewEnabled", m_TextViewEnabled);
-		
+
 		m_Preferences.SetDWORDValue(CFG_SPEED_TIMING, m_MenuIDTiming);
 
 		m_Preferences.SetDWORDValue("SoundConfig::Selection", SoundConfig::Selection);
@@ -855,7 +854,7 @@ void BeebWin::SavePreferences(bool saveAll)
 		{
 			keyData[key] = static_cast<char>(BitKeys[key]);
 		}
-		
+
 		m_Preferences.SetBinaryValue("BitKeys", keyData, 8);
 
 		m_Preferences.SetStringValue(CFG_OPTIONS_USER_KEY_MAP_FILE, m_UserKeyMapPath);

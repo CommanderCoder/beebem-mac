@@ -81,7 +81,6 @@ static bool TeletextEnable = false;
 static int TeletextChannel = 0;
 #ifndef __APPLE__
 static int rowPtrOffset = 0x00;
-#else
 #endif
 static int rowPtr = 0x00;
 static int colPtr = 0x00;
@@ -128,7 +127,7 @@ static bool TeletextConnect(int ch)
                            "Teletext: socket %d created, connecting to server", ch);
     }
 
-	u_long iMode = 1;
+    u_long iMode = 1;
     ioctlsocket(TeletextSocket[ch], FIONBIO, &iMode); // non blocking
 
     struct sockaddr_in teletext_serv_addr;

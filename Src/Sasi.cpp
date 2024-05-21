@@ -310,8 +310,7 @@ static void SASIWriteData(unsigned char data)
 			}
 			return;
 
-#ifndef __APPLE__
-#else
+#ifdef __APPLE__
 		case execute:
 			break;
 		case read:
@@ -322,10 +321,10 @@ static void SASIWriteData(unsigned char data)
 			sasi.offset++;
 			sasi.length--;
 			sasi.req = false;
-			
+
 			if (sasi.length > 0)
 				return;
-			
+
 			switch (sasi.cmd[0]) {
 				case 0x0a:
 				case 0x0c:
@@ -334,7 +333,7 @@ static void SASIWriteData(unsigned char data)
 					SASIStatus();
 					return;
 			}
-			
+
 			switch (sasi.cmd[0]) {
 				case 0x0a:
 					if (!SASIWriteSector(sasi.buffer, sasi.next - 1)) {
@@ -353,9 +352,9 @@ static void SASIWriteData(unsigned char data)
 					}
 					break;
 			}
-			
+
 			sasi.blocks--;
-			
+
 			if (sasi.blocks == 0) {
 				SASIStatus();
 				return;
@@ -364,8 +363,7 @@ static void SASIWriteData(unsigned char data)
 			sasi.next++;
 			sasi.offset = 0;
 			return;
-#ifndef __APPLE__
-#else
+#ifdef __APPLE__
 		case status:
 			break;
 		case message:

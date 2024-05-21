@@ -57,5 +57,4 @@ class RenameFileDialog : public Dialog
 #else
 #import "RenameFileDialog-mac.hpp"
 #endif //__APPLE__
-
 #endif

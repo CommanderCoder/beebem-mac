@@ -40,4 +40,5 @@ class AboutDialog : public Dialog
 		);
 };
 #endif
+
 #endif

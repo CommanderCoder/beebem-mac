@@ -113,7 +113,6 @@ using namespace Gdiplus;
 
 #ifndef __APPLE__
 constexpr UINT WIN_STYLE = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_SIZEBOX;
-#else
 #endif
 
 // Some LED based constants
@@ -125,7 +124,6 @@ static const char *CFG_REG_KEY = "Software\\BeebEm";
 static const unsigned char CFG_DISABLE_WINDOWS_KEYS[24] = {
 	00,00,00,00,00,00,00,00,03,00,00,00,00,00,0x5B,0xE0,00,00,0x5C,0xE0,00,00,00,00
 };
-#else
 #endif
 
 CArm *arm = nullptr;
@@ -321,7 +319,7 @@ bool BeebWin::Initialise()
 		strcpy(m_DiscPath, DefaultPath);
 	}
 #endif
-	
+
 	// Override full screen?
 	if (m_startFullScreen)
 	{
@@ -334,7 +332,7 @@ bool BeebWin::Initialise()
 		Report(MessageType::Error, "Failed to initialise COM");
 		return false;
 	}
-	
+
 	// Init Windows controls
 	INITCOMMONCONTROLSEX cc;
 	cc.dwSize = sizeof(cc);
@@ -547,7 +545,6 @@ BeebWin::~BeebWin()
 
 	CoUninitialize();
 #endif
-	
 }
 
 /****************************************************************************/
@@ -936,28 +933,24 @@ void BeebWin::CreateBitmap()
 
 			switch (m_PaletteType)
 			{
-#ifndef __APPLE__
-#else
-				case PaletteType::RGB:
-					
-					break;
-				case PaletteType::BW:
-					
-					break;
-				case PaletteType::Last:
-					
-					break;
+#ifdef __APPLE__
+			case PaletteType::RGB:
+				break;
+			case PaletteType::BW:
+				break;
+			case PaletteType::Last:
+				break;
 #endif
-				case PaletteType::Amber:
-					r *= (float) 1.0;
-					g *= (float) 0.8;
-					b *= (float) 0.1;
-					break;
-				case PaletteType::Green:
-					r *= (float) 0.2;
-					g *= (float) 0.9;
-					b *= (float) 0.1;
-					break;
+			case PaletteType::Amber:
+				r *= (float) 1.0;
+				g *= (float) 0.8;
+				b *= (float) 0.1;
+				break;
+			case PaletteType::Green:
+				r *= (float) 0.2;
+				g *= (float) 0.9;
+				b *= (float) 0.1;
+				break;
 			}
 		}
 
@@ -1231,7 +1224,7 @@ void BeebWin::InitMenu(void)
 #else
 	beebwin_ModifyMenu(IDM_PRINTER_FILE, IDM_PRINTER_FILE, menu_string);
 #endif
-	
+
 	// Comms -> RS423
 	UpdateSerialMenu();
 
@@ -1246,7 +1239,7 @@ void BeebWin::InitMenu(void)
 	CheckMenuItem(IDM_DXSMOOTHING, m_DXSmoothing);
 	CheckMenuItem(IDM_DXSMOOTHMODE7ONLY, m_DXSmoothMode7Only);
 #endif
-	
+
 	CheckMenuItem(IDM_SPEEDANDFPS, m_ShowSpeedAndFPS);
 	CheckMenuItem(IDM_FULLSCREEN, m_isFullScreen);
 	CheckMenuItem(IDM_MAINTAINASPECTRATIO, m_MaintainAspectRatio);
@@ -1321,9 +1314,7 @@ void BeebWin::InitMenu(void)
 	#if ENABLE_SPEECH
 	CheckMenuItem(IDM_SPEECH, SpeechDefault);
 	#else
-#ifndef __APPLE__
 	RemoveMenu(m_hMenu, IDM_SPEECH, MF_BYCOMMAND);
-#endif
 	#endif
 
 	CheckMenuItem(IDM_SOUNDCHIP, SoundChipEnabled);
@@ -1341,18 +1332,14 @@ void BeebWin::InitMenu(void)
 	CheckMenuItem(ID_PSAMPLES, PartSamples);
 	CheckMenuItem(IDM_EXPVOLUME, SoundExponentialVolume);
 	CheckMenuItem(IDM_TEXTTOSPEECH_ENABLE, m_TextToSpeechEnabled);
-#ifndef __APPLE__
 	CheckMenuItem(IDM_TEXTTOSPEECH_AUTO_SPEAK, m_SpeechWriteChar);
 	CheckMenuItem(IDM_TEXTTOSPEECH_SPEAK_PUNCTUATION, m_SpeechSpeakPunctuation);
 	EnableMenuItem(IDM_TEXTTOSPEECH_INCREASE_RATE, m_SpeechRate < 10);
 	EnableMenuItem(IDM_TEXTTOSPEECH_DECREASE_RATE, m_SpeechRate > -10);
-#endif
-	
+
 	// AMX
 	CheckMenuItem(IDM_AMXONOFF, AMXMouseEnabled);
-#ifndef __APPLE__
 	CheckMenuItem(IDM_CAPTUREMOUSE, m_CaptureMouse);
-#endif
 	EnableMenuItem(IDM_CAPTUREMOUSE, AMXMouseEnabled);
 	CheckMenuItem(IDM_AMX_LRFORMIDDLE, AMXLRForMiddle);
 	CheckMenuItem(IDM_AMX_320X256, false);
@@ -1437,7 +1424,6 @@ void BeebWin::UpdateModelMenu()
 
 	UINT SelectedMenuItem = ModelMenuItems.find(MachineType)->second;
 
-#ifndef __APPLE__
 	CheckMenuRadioItem(
 		m_hMenu,
 		ID_MODELB,
@@ -1445,15 +1431,7 @@ void BeebWin::UpdateModelMenu()
 		SelectedMenuItem,
 		MF_BYCOMMAND
 	);
-#else
-	// switch between the items - assumes first and last are consecutive and
-	// that 'SelectedMenuItem' is within that range
-	beebwin_CheckMenuRadioItem(
-		  ID_MODELB,
-		  ID_MASTER128,
-		  SelectedMenuItem);
-#endif
-	
+
 	if (MachineType == Model::Master128) {
 		EnableMenuItem(ID_FDC_DLL, false);
 	}
@@ -1578,8 +1556,7 @@ void BeebWin::UpdateTubeMenu()
 	};
 
 	UINT SelectedMenuItem = TubeMenuItems.find(TubeType)->second;
-	
-#ifndef __APPLE__
+
 	CheckMenuRadioItem(
 		m_hMenu,
 		IDM_TUBE_NONE,
@@ -1587,16 +1564,10 @@ void BeebWin::UpdateTubeMenu()
 		SelectedMenuItem,
 		MF_BYCOMMAND
 	);
-#else
-	beebwin_CheckMenuRadioItem(
-		   IDM_TUBE_NONE,
-		   IDM_TUBE_SPROWARM,
-		  SelectedMenuItem);
-#endif
-	
 }
 
 /****************************************************************************/
+
 
 void BeebWin::SetRomMenu()
 {
@@ -1606,14 +1577,10 @@ void BeebWin::SetRomMenu()
 	{
 		CHAR Title[19];
 
-#ifndef __APPLE__
 		Title[0] = '&';
 		_itoa(i, &Title[1], 16);
 		Title[2] = ' ';
 
-#else
-		sprintf(Title,"&%X ",i);
-#endif
 		// Get the Rom Title.
 		ReadRomTitle(i, &Title[3], sizeof(Title) - 4);
 
@@ -1629,18 +1596,12 @@ void BeebWin::SetRomMenu()
 			}
 		}
 
-#ifndef __APPLE__
 		ModifyMenu(m_hMenu,                  // handle of menu
 		           IDM_ALLOWWRITES_ROM0 + i, // menu item to modify
 		           MF_BYCOMMAND,
 		           IDM_ALLOWWRITES_ROM0 + i, // menu item identifier or pop-up menu handle
 		           Title);                   // menu item content
 
-#else
-		beebwin_ModifyMenu(IDM_ALLOWWRITES_ROM0 + i,
-						   IDM_ALLOWWRITES_ROM0 + i,
-						   Title);
-#endif
 		// Disable ROM and uncheck the ROM/RAM which are NOT writable
 		EnableMenuItem(IDM_ALLOWWRITES_ROM0 + i, RomBankType[i] == BankType::Ram);
 		CheckMenuItem(IDM_ALLOWWRITES_ROM0 + i, RomBankType[i] == BankType::Ram && RomWritable[i]);
@@ -1651,7 +1612,6 @@ void BeebWin::SetRomMenu()
 
 void BeebWin::InitJoystick(void)
 {
-#ifndef __APPLE__
 	MMRESULT mmresult = JOYERR_NOERROR;
 
 	if (!m_JoystickCaptured)
@@ -1676,13 +1636,11 @@ void BeebWin::InitJoystick(void)
 	{
 		Report(MessageType::Error, "Failed to initialise the joystick");
 	}
-#endif
 }
 
 /****************************************************************************/
 void BeebWin::ScaleJoystick(unsigned int x, unsigned int y)
 {
-#ifndef __APPLE__
 	if (m_MenuIDSticks == IDM_JOYSTICK)
 	{
 		/* Scale and reverse the readings */
@@ -1691,7 +1649,6 @@ void BeebWin::ScaleJoystick(unsigned int x, unsigned int y)
 		JoystickY = (int)((double)(m_JoystickCaps.wYmax - y) * 65535.0 /
 		                  (double)(m_JoystickCaps.wYmax - m_JoystickCaps.wYmin));
 	}
-#endif
 }
 
 /****************************************************************************/
@@ -2323,7 +2280,6 @@ int BeebWin::StartOfFrame(void)
 	if (UpdateTiming())
 		FrameNum = 0;
 
-#ifndef __APPLE__
 	// Force video frame rate to match AVI capture rate to avoid
 	// video and sound getting out of sync
 	if (aviWriter != nullptr)
@@ -2348,7 +2304,6 @@ int BeebWin::StartOfFrame(void)
 		}
 	}
 
-#endif
 	return FrameNum;
 }
 
@@ -2535,12 +2490,10 @@ void BeebWin::TranslateDDSize(void)
 		m_YDXSize = 2160;
 		break;
 	case ID_VIEW_DD_SCREENRES:
-#ifndef __APPLE__
 		// Pixel size of default monitor
 		m_XDXSize = GetSystemMetrics(SM_CXSCREEN);
 		m_YDXSize = GetSystemMetrics(SM_CYSCREEN);
-#endif
-			break;
+		break;
 	}
 }
 
@@ -2884,7 +2837,6 @@ void BeebWin::CalcAspectRatioAdjustment(int DisplayWidth, int DisplayHeight)
 /****************************************************************************/
 void BeebWin::SetWindowAttributes(bool wasFullScreen)
 {
-#ifndef __APPLE__
 	RECT wndrect;
 	long style;
 
@@ -2942,11 +2894,9 @@ void BeebWin::SetWindowAttributes(bool wasFullScreen)
 		HideMenu(true);
 	}
 	else
-#endif
 	{
 		CalcAspectRatioAdjustment(0, 0);
 
-#ifndef __APPLE__
 		if (wasFullScreen)
 			ShowWindow(m_hWnd, SW_RESTORE);
 
@@ -2975,21 +2925,16 @@ void BeebWin::SetWindowAttributes(bool wasFullScreen)
 		             m_YWinSize + m_YWinBorder,
 		             !wasFullScreen ? SWP_NOMOVE : 0);
 
-#endif
 		// Experiment: hide menu in full screen
 		HideMenu(false);
 	}
 
-#ifndef __APPLE__
 	// Clear unused areas of screen
 	RECT rc;
 	GetClientRect(m_hWnd, &rc);
 	InvalidateRect(m_hWnd, &rc, TRUE);
-#endif
-	
 }
 
-#ifndef __APPLE__
 /*****************************************************************************/
 void BeebWin::WinSizeChange(WPARAM size, int width, int height)
 {
@@ -3028,7 +2973,6 @@ void BeebWin::WinPosChange(int /* x */, int /* y */)
 {
 	// DebugTrace("WM_MOVE %d, %d (%d, %d)\n", x, y, m_XWinPos, m_YWinPos);
 }
-#endif
 
 /****************************************************************************/
 void BeebWin::TranslateAMX(void)
@@ -3245,14 +3189,10 @@ void BeebWin::HandleCommand(UINT MenuID)
 			char menu_string[256];
 			strcpy(menu_string, "File: ");
 			strcat(menu_string, m_PrinterFileName);
-#ifndef __APPLE__
 			ModifyMenu(m_hMenu, IDM_PRINTER_FILE,
 				MF_BYCOMMAND, IDM_PRINTER_FILE,
 				menu_string);
 
-#else
-			beebwin_ModifyMenu(IDM_PRINTER_FILE, IDM_PRINTER_FILE, menu_string);
-#endif
 			if (MenuID != m_MenuIDPrinterPort)
 			{
 				CheckMenuItem(m_MenuIDPrinterPort, false);
@@ -3394,7 +3334,6 @@ void BeebWin::HandleCommand(UINT MenuID)
 		UpdateEconetMenu();
 		break;
 
-#ifndef __APPLE__
 	case IDM_DISPGDI:
 	case IDM_DISPDDRAW:
 	case IDM_DISPDX9:
@@ -3434,8 +3373,7 @@ void BeebWin::HandleCommand(UINT MenuID)
 			UpdateSmoothing();
 		}
 		break;
-#endif
-			
+
 	case IDM_320X256:
 	case IDM_640X512:
 	case IDM_800X600:
@@ -3488,16 +3426,13 @@ void BeebWin::HandleCommand(UINT MenuID)
 		m_isFullScreen = !m_isFullScreen;
 		CheckMenuItem(IDM_FULLSCREEN, m_isFullScreen);
 		SetWindowAttributes(!m_isFullScreen);
-#ifndef __APPLE__
 		if (m_MouseCaptured)
 			ReleaseMouse();
-#endif
-			break;
+		break;
 
 	case IDM_MAINTAINASPECTRATIO:
 		m_MaintainAspectRatio = !m_MaintainAspectRatio;
 		CheckMenuItem(IDM_MAINTAINASPECTRATIO, m_MaintainAspectRatio);
-#ifndef __APPLE__
 		if (m_isFullScreen)
 		{
 			// Clear unused areas of screen
@@ -3505,16 +3440,13 @@ void BeebWin::HandleCommand(UINT MenuID)
 			GetClientRect(m_hWnd, &rc);
 			InvalidateRect(m_hWnd, &rc, TRUE);
 		}
-#endif
-			break;
+		break;
 
 	case IDM_SPEEDANDFPS:
 		if (m_ShowSpeedAndFPS)
 		{
 			m_ShowSpeedAndFPS = false;
-#ifndef __APPLE__
 			SetWindowText(m_hWnd, WindowTitle);
-#endif
 		}
 		else
 		{
@@ -3703,7 +3635,6 @@ void BeebWin::HandleCommand(UINT MenuID)
 	case IDM_JOYSTICK:
 	case IDM_ANALOGUE_MOUSESTICK:
 	case IDM_DIGITAL_MOUSESTICK:
-#ifndef __APPLE__
 		/* Disable current selection */
 		if (m_MenuIDSticks != 0)
 		{
@@ -3743,8 +3674,7 @@ void BeebWin::HandleCommand(UINT MenuID)
 			else
 				m_MenuIDSticks = 0;
 		}
-#endif
-			break;
+		break;
 
 	case IDM_FREEZEINACTIVE:
 		SetFreezeWhenInactive(!m_FreezeWhenInactive);
@@ -3801,15 +3731,11 @@ void BeebWin::HandleCommand(UINT MenuID)
 	case IDM_VIEWREADME:
 		strcpy(TmpPath, m_AppPath);
 		strcat(TmpPath, "Help\\index.html");
-#ifndef __APPLE__
 		ShellExecute(m_hWnd, NULL, TmpPath, NULL, NULL, SW_SHOWNORMAL);
-#endif
 		break;
 
 	case IDM_EXIT:
-#ifndef __APPLE__
 		PostMessage(m_hWnd, WM_CLOSE, 0, 0L);
-#endif
 		break;
 
 	case IDM_SAVE_PREFS:
@@ -3846,9 +3772,7 @@ void BeebWin::HandleCommand(UINT MenuID)
 
 	case IDM_CAPTUREMOUSE:
 		m_CaptureMouse = !m_CaptureMouse;
-#ifndef __APPLE__
 		CheckMenuItem(IDM_CAPTUREMOUSE, m_CaptureMouse);
-#endif
 		break;
 
 	case IDM_AMX_LRFORMIDDLE:
@@ -4192,21 +4116,10 @@ void BeebWin::HandleCommand(UINT MenuID)
 	case IDM_CAPTURESCREEN:
 		// Prompt for file name.  Need to do this in WndProc otherwise
 		// dialog does not show in full screen mode.
-#ifndef __APPLE__
 		if (GetImageFile(m_CaptureFileName, sizeof(m_CaptureFileName)))
 		{
 			CaptureBitmapPending(false);
 		}
-#else
-			m_CaptureFileName[0] = 0;
-			// prompt for filename
-			strcpy(m_CaptureFileName, "BeebEm.png");
-			if (strlen(m_CaptureFileName)>0)
-			{
-				// save to PICTURES folder
-				swift_saveScreen("BeebEm.png");
-			}
-#endif
 		break;
 
 	case IDM_VIDEORES1:
@@ -5066,8 +4979,6 @@ void BeebWin::FindCommandLineFile(char *CmdLineFile)
 		}
 	}
 
-#ifndef __APPLE__
-
 	if (cont)
 	{
 		PathCanonicalize(CmdLineFile, TmpPath);
@@ -5076,8 +4987,6 @@ void BeebWin::FindCommandLineFile(char *CmdLineFile)
 	{
 		CmdLineFile[0] = '\0';
 	}
-#endif
-	
 }
 
 /*****************************************************************************/
@@ -5325,7 +5234,7 @@ bool BeebWin::CheckUserDataPath(bool Persist)
 		if (m_UserDataPath[i] == '/')
 			m_UserDataPath[i] = '\\';
 #endif
-	
+
 	// Check that the folder exists
 	if (!FolderExists(m_UserDataPath))
 	{
@@ -5345,7 +5254,6 @@ bool BeebWin::CheckUserDataPath(bool Persist)
 		}
 		else
 		{
-#ifndef __APPLE__
 			// Create the folder
 			int result = SHCreateDirectoryEx(nullptr, m_UserDataPath, nullptr);
 
@@ -5359,13 +5267,6 @@ bool BeebWin::CheckUserDataPath(bool Persist)
 				       m_UserDataPath);
 				success = false;
 			}
-#else
-			// checked if Application Support/BeebEm/UserData exists
-			// it doesn't so create it and copy the files
-			mode_t mode = 0755;
-			mkdir(m_UserDataPath, mode);
-			copy_user_files=true;
-#endif
 		}
 	}
 	else
@@ -5433,25 +5334,26 @@ bool BeebWin::CheckUserDataPath(bool Persist)
 
 	if (success)
 	{
-#ifndef __APPLE__
 		// Get fully qualified user data path
 		char *f;
 		if (GetFullPathName(m_UserDataPath, _MAX_PATH, path, &f) != 0)
 			strcpy(m_UserDataPath, path);
-#endif
-		
 	}
 
 	if (success && copy_user_files)
 	{
-#ifndef __APPLE__
 		SHFILEOPSTRUCT fileOp = {0};
 		fileOp.hwnd = m_hWnd;
 		fileOp.wFunc = FO_COPY;
 		fileOp.fFlags = 0;
 
+#ifndef __APPLE__
 		strcpy(path, m_AppPath);
 		strcat(path, "UserData\\*.*");
+#else
+		// using SWIFT Foundation to get UserData path
+		swift_GetResourcePath(path, _MAX_PATH, "UserData");
+#endif
 		path[strlen(path)+1] = 0; // need double 0
 		fileOp.pFrom = path;
 
@@ -5470,19 +5372,6 @@ bool BeebWin::CheckUserDataPath(bool Persist)
 			// Wait for copy dialogs to disappear
 			Sleep(2000);
 		}
-#else
-		swift_GetResourcePath(path, _MAX_PATH, "UserData");
-		
-		// using SWIFT Foundation to copy all the files in UserData/*.*
-		// if this copy fails: success = false
-		success = swift_CopyDirectoryRecursively(path, m_UserDataPath);
-		if (!success)
-		{
-			Report(MessageType::Error, "Copy failed.  Manually copy files from:\n  %s"
-									   "\n\nTo BeebEm data folder:\n  %s",
-				   path, m_UserDataPath);
-		}
-#endif
 	}
 
 	if (success)
@@ -5546,8 +5435,7 @@ void BeebWin::SelectUserDataPath()
 	FolderSelectDialog::Result result = Dialog.DoModal();
 
 	switch (result) {
-#ifndef __APPLE__
-#else
+#ifdef __APPLE__
 		case FolderSelectDialog::Result::Cancel:
 			break;
 #endif

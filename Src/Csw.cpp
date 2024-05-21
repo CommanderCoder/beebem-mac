@@ -113,6 +113,7 @@ CSWResult CSWOpen(const char *FileName)
 		return CSWResult::InvalidHeaderExtension;
 	}
 #ifndef __APPLE__
+
 	int end = ftell(csw_file);
 	fseek(csw_file, 0, SEEK_END);
 	int sourcesize = ftell(csw_file) - end + 1;
@@ -545,8 +546,7 @@ int CSWPoll()
 					break;
 			}
 			break;
-#ifndef __APPLE__
-#else
+#ifdef __APPLE__
 		default: // Undefined
 			break;
 #endif

@@ -2529,7 +2529,6 @@ Disc8271Result LoadFSDDiscImage(const char *FileName, int DriveNum)
 		const int CreatorID = Info[2] >> 4;
 		const int Release = ((Info[4] >> 6) << 8) | Info[3];
 #endif
-		
 		std::string DiscTitle;
 		char TitleChar = 1;
 

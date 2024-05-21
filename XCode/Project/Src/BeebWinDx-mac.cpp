@@ -19,11 +19,11 @@
 #include "Messages.h"
 #include "Resource.h"
 
-
+AVIWriter *aviWriter;
 
 void BeebWin::InitDX(){}
 void BeebWin::ExitDX(){}
-
+void BeebWin::ResetDX(){}
 
 
 

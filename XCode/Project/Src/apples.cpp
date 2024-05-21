@@ -50,7 +50,12 @@ void beebwin_ModifyMenu(
 		swift_ModifyMenu(id, beebwin_RC2ID(newitem), newtext);
 }
 
-
+void ModifyMenu(HMENU m_hMenu, UINT pf, UINT flags, UINT_PTR newID, CHAR* str)
+{
+	beebwin_ModifyMenu(pf,
+					   newID,
+					   str);
+}
 
 // set the tick on the menu with a 4 character identifier
 void beebwin_SetMenuCheck(UINT cmd, bool check)
@@ -74,6 +79,20 @@ void beebwin_CheckMenuRadioItem(UINT first, UINT last, UINT cmd)
 	}
 	// check the selected item
 	beebwin_SetMenuCheck(cmd, true);
+}
+
+void CheckMenuRadioItem(HMENU m_hMenu,
+						UINT first,
+						UINT last,
+						UINT cmdSelectedMenuItem,
+						UINT cmd)
+{
+	// switch between the items - assumes first and last are consecutive and
+	// that 'SelectedMenuItem' is within that range
+	beebwin_CheckMenuRadioItem(
+							   first,
+							   last,
+							   cmdSelectedMenuItem);
 }
 
 
@@ -203,11 +222,15 @@ int MessageBox(HWND m_hWnd, const char* buffer, const char* WindowTitle, int Typ
 }
 
 
-
-void SetWindowText(HWND m_hWnd, const char* m_szTitle)
+BOOL SetWindowText(HWND    hWnd, LPTSTR lpString)
+{
+	return SetWindowText(hWnd, (LPCSTR) lpString);
+}
+BOOL SetWindowText(HWND    hWnd, LPCSTR lpString)
 {
 	// set the window title via swift
-	swift_SetWindowTitleWithCString(m_szTitle);
+	swift_SetWindowTitleWithCString(lpString);
+	return true;
 }
 
 bool PathIsRelative(const char * winPathString)
@@ -265,6 +288,10 @@ DWORD EnableMenuItem(  HMENU hMenu,  UINT  uIDCheckItem,UINT  uEnable)
 }
 
 
+void _itoa(int i, CHAR* c, int l)
+{
+	snprintf(c, l, "%X ",i);
+}
 
 int GetSystemMetrics(int  x)
 {
@@ -311,15 +338,10 @@ BOOL SetWindowPos( HWND hWnd, HWND hWndInsertAfter,
 		int  cx,int  cy,
 		UINT uFlags
 				  ) {return false;}
-BOOL SetWindowText(HWND    hWnd, LPCSTR lpString) {return false;}
 
 HWND SetFocus(HWND focus) {return 0;}
 
 
-void ModifyMenu(HMENU m_hMenu, UINT pf, UINT flags, UINT_PTR newID, LPCSTR str)
-{
-
-}
 
 LRESULT SendDlgItemMessage(
    HWND   hDlg,
@@ -382,3 +404,59 @@ void SetEvent(HANDLE)
 {
 	
 }
+
+
+void FreeLibrary(HMODULE)
+{
+	
+}
+
+bool GetFullPathName(const char* c, int l, const char* p, char** f)
+{
+	return 0;
+}
+
+void PathCanonicalize(const char* c, const char* p)
+{
+	
+}
+
+void GetClientRect(HWND h, RECT* r){}
+void InvalidateRect(HWND h, RECT* r, bool b){}
+long GetWindowLong(HWND wnd, long s){return 0L;}
+void SetWindowLong(HWND m_hWnd, int f, long s){}
+
+
+
+void MoveWindow(HWND m_hWnd, int x, int y, int w, int h, bool b){}
+void ShowWindow(HWND m_hWnd, int x){}
+void RemoveMenu(HWND w, int a, int b){}
+
+
+void PostMessage(HWND wnd, int s, int t, long l){}
+void ShellExecute(HWND m_hWnd, void* a, char* p, void* b, void* c, int f){}
+
+
+int SHCreateDirectoryEx(void* a, const char* f, void *b)
+{
+	// checked if Application Support/BeebEm/UserData exists
+	// it doesn't so create it and copy the files
+	mode_t mode = 0755;
+	mkdir(f, mode);
+	return true;
+}
+
+bool SHFileOperation(SHFILEOPSTRUCT* a)
+{
+	if (a->wFunc == FO_COPY)
+	{
+		// using SWIFT Foundation to copy all the files in pFrom
+		a->fAnyOperationsAborted = false;
+		return !swift_CopyDirectoryRecursively(a->pFrom, a->pTo);
+	}
+	return true;
+}
+void GetMonitorInfo(HMONITOR monitor, MONITORINFO* info){}
+HMONITOR MonitorFromWindow(HWND wnd, int s){return 0L;}
+MMRESULT joySetCapture(HWND Wnd, int jid, int v, bool f){return 0;}
+MMRESULT joyGetDevCaps(int jid, JOYCAPS* jc, int l){return 0;}

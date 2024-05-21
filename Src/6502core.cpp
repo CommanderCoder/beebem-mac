@@ -3102,8 +3102,7 @@ void Exec6502Instruction()
 			case Tube::Master512CoPro: // 8MHz
 				master512CoPro.Execute(4 * Cycles);
 				break;
-#ifndef __APPLE__
-#else
+#ifdef __APPLE__
 			default: // None
 				break;
 #endif

@@ -44,9 +44,7 @@ struct DriveControlBlock
 // FDC Board extension DLL variables
 char FDCDLL[256] = { 0 };
 
-#ifndef __APPLE__
 static HMODULE hFDCBoard = nullptr;
-#endif
 static DriveControlBlock ExtBoard = { 0, 0, nullptr };
 
 typedef void (*GetBoardPropertiesFunc)(struct DriveControlBlock *);
@@ -61,14 +59,12 @@ GetDriveControlFunc PGetDriveControl;
 
 void Ext1770Reset()
 {
-#ifndef __APPLE__
 	if (hFDCBoard != nullptr)
 	{
 		FreeLibrary(hFDCBoard);
 		hFDCBoard = nullptr;
 	}
-#endif
-	
+
 	PGetBoardProperties = nullptr;
 	PSetDriveControl = nullptr;
 	PGetDriveControl = nullptr;
@@ -132,11 +128,7 @@ Ext1770Result Ext1770Init(const char *FileName)
 
 bool HasFDCBoard()
 {
-#ifndef __APPLE__
 	return hFDCBoard != nullptr;
-#else
-	return false;
-#endif
 }
 
 /*--------------------------------------------------------------------------*/

@@ -54,7 +54,7 @@ class TeletextDialog : public Dialog
 		);
 
 		INT_PTR OnCommand(int Notification, int nCommandID);
-	
+
 		void SelectFile(int Channel);
 
 		BOOL GetChannelIPControls(int Channel);

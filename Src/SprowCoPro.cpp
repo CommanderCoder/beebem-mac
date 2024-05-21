@@ -691,9 +691,9 @@ ARMul_StoreHalfWord (ARMul_State * state, ARMword address, ARMword data)
     ARMword offset = (((ARMword) state->bigendSig * 2) ^ (address & 2)) << 3;	/* bit offset into the word */
     PutWord (state, address,
 #ifndef __APPLE__
-			 (temp & ~(0xffffL << offset)) | ((data & 0xffffL) << offset),
+        (temp & ~(0xffffL << offset)) | ((data & 0xffffL) << offset),
 #else
-			 (ARMword)((temp & ~(0xffffL << offset)) | ((data & 0xffffL) << offset)),
+        (ARMword)((temp & ~(0xffffL << offset)) | ((data & 0xffffL) << offset)),
 #endif
         TRUE);
     //temp = ARMul_ReadWord (state, address);
@@ -729,9 +729,9 @@ ARMul_WriteByte (ARMul_State * state, ARMword address, ARMword data)
 
     PutWord (state, address,
 #ifndef __APPLE__
-			 (temp & ~(0xffL << offset)) | ((data & 0xffL) << offset),
+        (temp & ~(0xffL << offset)) | ((data & 0xffL) << offset),
 #else
-			 (ARMword)((temp & ~(0xffL << offset)) | ((data & 0xffL) << offset)),
+        (ARMword)((temp & ~(0xffL << offset)) | ((data & 0xffL) << offset)),
 #endif
         TRUE);
     //temp = temp & 0xFFFFFF00;
@@ -833,9 +833,9 @@ ARMul_SafeWriteByte (ARMul_State * state, ARMword address, ARMword data)
 
     PutWord (state, address,
 #ifndef __APPLE__
-			 (temp & ~(0xffL << offset)) | ((data & 0xffL) << offset),
+        (temp & ~(0xffL << offset)) | ((data & 0xffL) << offset),
 #else
-			 (ARMword)((temp & ~(0xffL << offset)) | ((data & 0xffL) << offset)),
+        (ARMword)((temp & ~(0xffL << offset)) | ((data & 0xffL) << offset)),
 #endif
         FALSE);
 }

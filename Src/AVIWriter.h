@@ -27,7 +27,6 @@ Boston, MA  02110-1301, USA.
 #ifndef AVI_WRITER_HEADER
 #define AVI_WRITER_HEADER
 
-#ifndef __APPLE__
 #include <vfw.h>
 
 #include "BeebWin.h"
@@ -37,7 +36,7 @@ class AVIWriter
 public:
 	AVIWriter();
 	virtual ~AVIWriter();
-
+#ifndef __APPLE__
 	// Open file
 	HRESULT Initialise(const CHAR *psFileName,
 	                   const WAVEFORMATEX *WaveFormat,
@@ -64,9 +63,9 @@ private:
 	LPVOID m_lastVideoFrame;
 	int m_videoBufferSize;
 	LONG m_nFrame;
+#endif
 };
 
 extern AVIWriter *aviWriter;
-#endif
 
 #endif

@@ -25,8 +25,7 @@ Boston, MA  02110-1301, USA.
 
 #include "Thread.h"
 
-Thread::Thread()
-	:
+Thread::Thread() :
 	m_hThread(nullptr),
 	m_hStartEvent(nullptr)
 {

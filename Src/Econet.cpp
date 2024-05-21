@@ -47,7 +47,6 @@ Boston, MA  02110-1301, USA.
 #include "StringUtils.h"
 
 #ifdef __APPLE__
-
 void memcpy_localaddr(struct in_addr_econet* localaddr, char* addr, size_t l)
 {
 	struct in_addr apples_localaddr;
@@ -55,7 +54,6 @@ void memcpy_localaddr(struct in_addr_econet* localaddr, char* addr, size_t l)
 	localaddr->S_un.S_addr = apples_localaddr.s_addr;
 }
 #endif
-
 // Emulated 6854 ADLC control registers.
 // control1_b0 is AC
 // this splits register address 0x01 as control2 and control3
@@ -1798,7 +1796,7 @@ bool EconetPoll_real() // return NMI status
 #else
 									std::string str = "EconetPoll: Packet data:" + BytesToString(AUNMode ? EconetRx.raw : BeebRx.buff, (int)RetVal);
 #endif
-									
+
 									DebugDisplayTrace(DebugType::Econet, true, str.c_str());
 								}
 
@@ -2008,91 +2006,81 @@ bool EconetPoll_real() // return NMI status
 					if (AUNMode && EconetSCACKtrigger > TotalCycles)
 					{
 						switch (fourwaystage) {
-#ifndef __APPLE__
-#else
-							case FourWayStage::Idle:
-								
-								break;
-#endif
-							case FourWayStage::ScoutSent:
-								// just got a scout from the beeb, fake an acknowledgement.
-								BeebRx.eh.deststn = EconetStationID;
-								BeebRx.eh.destnet = 0;
-								BeebRx.eh.srcstn = (unsigned char)EconetTx.deststn; // use scout's dest as source of ack.
-								BeebRx.eh.srcnet = (unsigned char)EconetTx.destnet; // & inmask; //30jun
-								
-								BeebRx.BytesInBuffer = 4;
-								BeebRx.Pointer = 0;
-								fourwaystage = FourWayStage::ScoutAckReceived;
-								//if (DebugEnabled)
-								DebugDisplayTrace(DebugType::Econet, true, "Econet: Set FWS_SCACKRCVD");
+#ifdef __APPLE__
+						case FourWayStage::Idle:
 							break;
-#ifndef __APPLE__
-#else
-							case FourWayStage::ScoutAckReceived:
-								
-								break;
-							case FourWayStage::DataSent:
-								
-								break;
-							case FourWayStage::WaitForIdle:
-								
-								break;
-							case FourWayStage::ScoutReceived:
-								
-								break;
 #endif
-							case FourWayStage::ScoutAckSent:
-								// beeb acked the scout we gave it, so give it the data AUN sent us earlier.
-								BeebRx.eh.deststn = EconetStationID; // as it is data it must be for us
-								BeebRx.eh.destnet = 0;
-								// BeebRx.eh.deststn = EconetRx.eh.deststn ; // 30jun
-								// BeebRx.eh.destnet = EconetRx.eh.destnet & inmask ; // 30jun was 0
-								
-								BeebRx.eh.srcstn = (unsigned char)EconetTx.deststn;  //30jun dont think this is right..
-								BeebRx.eh.srcnet = (unsigned char)(EconetTx.destnet & inmask);
-								
-								j = 4;
-								
-								if (EconetRx.ah.port == 0 && EconetRx.ah.cb == (0x82 & 0x7f))
+						case FourWayStage::ScoutSent:
+							// just got a scout from the beeb, fake an acknowledgement.
+							BeebRx.eh.deststn = EconetStationID;
+							BeebRx.eh.destnet = 0;
+							BeebRx.eh.srcstn = (unsigned char)EconetTx.deststn; // use scout's dest as source of ack.
+							BeebRx.eh.srcnet = (unsigned char)EconetTx.destnet; // & inmask; //30jun
+							
+							BeebRx.BytesInBuffer = 4;
+							BeebRx.Pointer = 0;
+							fourwaystage = FourWayStage::ScoutAckReceived;
+							//if (DebugEnabled)
+							DebugDisplayTrace(DebugType::Econet, true, "Econet: Set FWS_SCACKRCVD");
+							break;
+
+#ifdef __APPLE__
+						case FourWayStage::ScoutAckReceived:
+							break;
+						case FourWayStage::DataSent:
+							break;
+						case FourWayStage::WaitForIdle:
+							break;
+						case FourWayStage::ScoutReceived:
+							break;
+#endif
+						case FourWayStage::ScoutAckSent:
+							// beeb acked the scout we gave it, so give it the data AUN sent us earlier.
+							BeebRx.eh.deststn = EconetStationID; // as it is data it must be for us
+							BeebRx.eh.destnet = 0;
+							// BeebRx.eh.deststn = EconetRx.eh.deststn ; // 30jun
+							// BeebRx.eh.destnet = EconetRx.eh.destnet & inmask ; // 30jun was 0
+
+							BeebRx.eh.srcstn = (unsigned char)EconetTx.deststn;  //30jun dont think this is right..
+							BeebRx.eh.srcnet = (unsigned char)(EconetTx.destnet & inmask);
+
+							j = 4;
+
+							if (EconetRx.ah.port == 0 && EconetRx.ah.cb == (0x82 & 0x7f))
+							{
+								for (unsigned int i = 8; i < EconetRx.BytesInBuffer - sizeof(EconetRx.ah); i++, j++)
 								{
-									for (unsigned int i = 8; i < EconetRx.BytesInBuffer - sizeof(EconetRx.ah); i++, j++)
-									{
-										BeebRx.buff[j] = EconetRx.buff[i];
-									}
+									BeebRx.buff[j] = EconetRx.buff[i];
 								}
-								else if (EconetRx.ah.port == 0 && EconetRx.ah.cb >= (0x83 & 0x7f) && EconetRx.ah.cb <= (0x85 & 0x7f))
+							}
+							else if (EconetRx.ah.port == 0 && EconetRx.ah.cb >= (0x83 & 0x7f) && EconetRx.ah.cb <= (0x85 & 0x7f))
+							{
+								for (unsigned int i = 4; i < EconetRx.BytesInBuffer - sizeof(EconetRx.ah); i++, j++)
 								{
-									for (unsigned int i = 4; i < EconetRx.BytesInBuffer - sizeof(EconetRx.ah); i++, j++)
-									{
-										BeebRx.buff[j] = EconetRx.buff[i];
-									}
+									BeebRx.buff[j] = EconetRx.buff[i];
 								}
-								else
+							}
+							else
+							{
+								for (unsigned int i = 0; i < EconetRx.BytesInBuffer - sizeof(EconetRx.ah); i++, j++)
 								{
-									for (unsigned int i = 0; i < EconetRx.BytesInBuffer - sizeof(EconetRx.ah); i++, j++)
-									{
-										BeebRx.buff[j] = EconetRx.buff[i];
-									}
+									BeebRx.buff[j] = EconetRx.buff[i];
 								}
-								
-								BeebRx.BytesInBuffer = j;
-								BeebRx.Pointer =0;
-								fourwaystage = FourWayStage::DataReceived;
-								//if (DebugEnabled)
+							}
+
+							BeebRx.BytesInBuffer = j;
+							BeebRx.Pointer =0;
+							fourwaystage = FourWayStage::DataReceived;
+							//if (DebugEnabled)
 								DebugDisplayTrace(DebugType::Econet, true, "Econet: Set FWS_DATARCVD");
 							break;
-#ifndef __APPLE__
-#else
-							case FourWayStage::DataReceived:
-								
-								break;
-							case FourWayStage::ImmediateSent:
-								
-								break;
-							case FourWayStage::ImmediateReceived:
-								
-								break;
+#ifdef __APPLE__
+						case FourWayStage::DataReceived:
+							break;
+						case FourWayStage::ImmediateSent:
+							break;
+						case FourWayStage::ImmediateReceived:
+							break;
 #endif
 						}
 					}
@@ -2218,6 +2206,7 @@ bool EconetPoll_real() // return NMI status
 	// and then set the status bit if the line is high! (status bit stays
 	// up until cpu tries to clear it) (& still stays up if cts line still high)
 #ifndef __APPLE__
+
 	if (!(ADLC.control1 && CONTROL_REG1_TX_RESET) && ADLC.cts) // TODO: is && right here?
 #else
 	if (!(ADLC.control1 & CONTROL_REG1_TX_RESET) && ADLC.cts)
