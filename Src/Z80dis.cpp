@@ -25,11 +25,7 @@ Boston, MA  02110-1301, USA.
 #include "Tube.h"
 
 typedef unsigned char UBYTE;
-#ifndef __APPLE__
-typedef char * STR;
-#else
 typedef const char * STR;
-#endif
 typedef char CHAR;
 
 int Z80_Disassemble(int adr, char *s)

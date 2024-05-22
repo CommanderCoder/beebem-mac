@@ -794,13 +794,8 @@ ARMul_Emulate26 (ARMul_State * state)
 
                 if (cp14r0 & ARMul_CP14_R0_CCD)
                 {
-#ifndef __APPLE__
-					if (state->CP14R0_CCD == -1)
-						state->CP14R0_CCD = newcycles;
-#else
 					if (state->CP14R0_CCD == -1)
 						state->CP14R0_CCD = (ARMword)newcycles;
-#endif
 					else
                         state->CP14R0_CCD += newcycles;
 
@@ -809,11 +804,7 @@ ARMul_Emulate26 (ARMul_State * state)
                         newcycles = 0;
 
                         while (state->CP14R0_CCD >= 64)
-#ifndef __APPLE__
-							state->CP14R0_CCD -= 64, newcycles++;
-#else
 							static_cast<void>(state->CP14R0_CCD -= 64), newcycles++; // cast to <void> to silence a warning
-#endif
 
                         goto check_PMUintr;
                     }

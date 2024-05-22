@@ -154,7 +154,7 @@ unsigned char IDERead(int Address)
 			// If in data read cycle, read data byte from file
 			if (IDEData > 0)
 			{
-				data = fgetc(IDEDisc[IDEDrive]);
+				data = (unsigned char)fgetc(IDEDisc[IDEDrive]);
 				IDEData--;
 
 				// If read all data, reset Data Ready

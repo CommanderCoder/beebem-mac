@@ -424,11 +424,7 @@ static SectorType *GetSectorPtr(TrackType *Track, unsigned char LogicalSectorID,
 	}
 
 	// As above, but from sector 0 to the current position
-#ifndef __APPLE__
-	if (FDCState.PositionInTrack > 0)
-#else
 	if (FDCState.PositionInTrack[Drive] > 0)
-#endif
 	{
 		for (unsigned char CurrentSector = 0; CurrentSector < FDCState.PositionInTrack[Drive]; CurrentSector++)
 		{
@@ -2267,11 +2263,11 @@ static bool DriveHeadMotorUpdate()
 
 		if (FDCState.DriveHeadPosition[Drive] < FDCState.FSDPhysicalTrack[Drive])
 		{
-			FDCState.DriveHeadPosition[Drive] += Tracks;
+			FDCState.DriveHeadPosition[Drive] += (unsigned char)Tracks;
 		}
 		else
 		{
-			FDCState.DriveHeadPosition[Drive] -= Tracks;
+			FDCState.DriveHeadPosition[Drive] -= (unsigned char)Tracks;
 		}
 
 		return true;
@@ -2521,14 +2517,14 @@ Disc8271Result LoadFSDDiscImage(const char *FileName, int DriveNum)
 		unsigned char Info[5];
 		Input.read((char *)Info, sizeof(Info));
 
-#ifndef __APPLE__
-		const int Day = Info[0] >> 3;
-		const int Month = Info[2] & 0x0F;
-		const int Year = ((Info[0] & 0x07) << 8) | Info[1];
+		// not used
+		//const int Day = Info[0] >> 3;
+		//const int Month = Info[2] & 0x0F;
+		//const int Year = ((Info[0] & 0x07) << 8) | Info[1];
 
-		const int CreatorID = Info[2] >> 4;
-		const int Release = ((Info[4] >> 6) << 8) | Info[3];
-#endif
+		//const int CreatorID = Info[2] >> 4;
+		//const int Release = ((Info[4] >> 6) << 8) | Info[3];
+
 		std::string DiscTitle;
 		char TitleChar = 1;
 
@@ -2548,11 +2544,7 @@ Disc8271Result LoadFSDDiscImage(const char *FileName, int DriveNum)
 
 		for (int Track = 0; Track < DiscStatus[DriveNum].TotalTracks; Track++)
 		{
-#ifndef __APPLE__
-			/* unsigned char TrackNumber = */(unsigned char)Input.get(); // Read current track details
-#else
 			/* unsigned char TrackNumber = (unsigned char)*/Input.get(); // Read current track details
-#endif
 			unsigned char SectorsPerTrack = (unsigned char)Input.get(); // Read number of sectors on track
 			DiscStatus[DriveNum].Tracks[Head][Track].LogicalSectors = SectorsPerTrack;
 

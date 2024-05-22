@@ -192,19 +192,6 @@ extern ARMword isize;
     }										\
   while (0)
      
-#ifndef __APPLE__
-#define SETABORT(i, m, d)						\
-  do									\
-    { 									\
-      int SETABORT_mode = (m);						\
-									\
-      ARMul_SetSPSR (state, SETABORT_mode, ARMul_GetCPSR (state));	\
-      ARMul_SetCPSR (state, ((ARMul_GetCPSR (state) & ~(EMODE | TBIT))	\
-			     | (i) | SETABORT_mode));			\
-      state->Reg[14] = temp - (d);					\
-    }									\
-  while (0)
-#else
 #define SETABORT(i, m, d)						\
   do									\
 	{ 									\
@@ -216,7 +203,6 @@ extern ARMword isize;
 	  state->Reg[14] = temp - (d);					\
 	}									\
   while (0)
-#endif
 
 #ifndef MODE32
 #define VECTORS 0x20

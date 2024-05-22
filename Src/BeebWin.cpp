@@ -933,14 +933,12 @@ void BeebWin::CreateBitmap()
 
 			switch (m_PaletteType)
 			{
-#ifdef __APPLE__
 			case PaletteType::RGB:
 				break;
 			case PaletteType::BW:
 				break;
 			case PaletteType::Last:
 				break;
-#endif
 			case PaletteType::Amber:
 				r *= (float) 1.0;
 				g *= (float) 0.8;
@@ -5435,10 +5433,8 @@ void BeebWin::SelectUserDataPath()
 	FolderSelectDialog::Result result = Dialog.DoModal();
 
 	switch (result) {
-#ifdef __APPLE__
 		case FolderSelectDialog::Result::Cancel:
 			break;
-#endif
 		case FolderSelectDialog::Result::OK:
 			PathBackup = m_UserDataPath;
 			strcpy(m_UserDataPath, Dialog.GetFolder().c_str());

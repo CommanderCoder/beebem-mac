@@ -205,11 +205,7 @@ void TeletextInit()
                 if (TeletextFile[i] != nullptr)
                 {
                     fseek(TeletextFile[i], 0L, SEEK_END);
-#ifndef __APPLE__
-                    TeletextFrameCount[i] = ftell(TeletextFile[i]) / TELETEXT_FRAME_SIZE;
-#else
 					TeletextFrameCount[i] = (int) ftell(TeletextFile[i]) / TELETEXT_FRAME_SIZE;
-#endif
                     fseek(TeletextFile[i], 0L, SEEK_SET);
                 }
                 else

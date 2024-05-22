@@ -348,12 +348,11 @@ static void WriteData(unsigned char data)
 			}
 			return;
 
-#ifdef __APPLE__
 		case execute:
 			break;
 		case read:
 			break;
-#endif
+
 		case write:
 			scsi.buffer[scsi.offset] = data;
 			scsi.offset++;
@@ -404,12 +403,11 @@ static void WriteData(unsigned char data)
 			scsi.next++;
 			scsi.offset = 0;
 			return;
-#ifdef __APPLE__
+
 		case status:
 			break;
 		case message:
 			break;
-#endif
 	}
 
 	BusFree();

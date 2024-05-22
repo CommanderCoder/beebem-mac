@@ -431,11 +431,7 @@ unsigned
 ARMul_MemoryInit (ARMul_State * state, unsigned long initmemsize)
 {
     if (initmemsize)
-#ifndef __APPLE__
-		state->MemSize = initmemsize;
-#else
         state->MemSize = (ARMword)initmemsize;
-#endif
 
     unsigned char *memory = (unsigned char *)malloc(initmemsize);
 
@@ -690,11 +686,7 @@ ARMul_StoreHalfWord (ARMul_State * state, ARMword address, ARMword data)
     temp = ARMul_ReadWord (state, address);
     ARMword offset = (((ARMword) state->bigendSig * 2) ^ (address & 2)) << 3;	/* bit offset into the word */
     PutWord (state, address,
-#ifndef __APPLE__
-        (temp & ~(0xffffL << offset)) | ((data & 0xffffL) << offset),
-#else
         (ARMword)((temp & ~(0xffffL << offset)) | ((data & 0xffffL) << offset)),
-#endif
         TRUE);
     //temp = ARMul_ReadWord (state, address);
     //temp = temp & 0xFFFF0000;
@@ -728,11 +720,7 @@ ARMul_WriteByte (ARMul_State * state, ARMword address, ARMword data)
     ARMword offset = (((ARMword) state->bigendSig * 3) ^ (address & 3)) << 3;	/* bit offset into the word */
 
     PutWord (state, address,
-#ifndef __APPLE__
-        (temp & ~(0xffL << offset)) | ((data & 0xffL) << offset),
-#else
         (ARMword)((temp & ~(0xffL << offset)) | ((data & 0xffL) << offset)),
-#endif
         TRUE);
     //temp = temp & 0xFFFFFF00;
     //temp = temp | (data & 0xFF);
@@ -832,11 +820,7 @@ ARMul_SafeWriteByte (ARMul_State * state, ARMword address, ARMword data)
     ARMword offset = (((ARMword) state->bigendSig * 3) ^ (address & 3)) << 3;
 
     PutWord (state, address,
-#ifndef __APPLE__
-        (temp & ~(0xffL << offset)) | ((data & 0xffL) << offset),
-#else
         (ARMword)((temp & ~(0xffL << offset)) | ((data & 0xffL) << offset)),
-#endif
         FALSE);
 }
 
@@ -881,33 +865,19 @@ void CSprowCoPro::SaveState(FILE* SUEF)
 	fput32(m_State->temp, SUEF);
 	fput32(m_State->loaded, SUEF);
 	fput32(m_State->decoded, SUEF);
-#ifndef __APPLE__
-	fput32(m_State->NumScycles, SUEF);
-	fput32(m_State->NumNcycles, SUEF);
-	fput32(m_State->NumIcycles, SUEF);
-	fput32(m_State->NumCcycles, SUEF);
-	fput32(m_State->NumFcycles, SUEF);
-#else
 	fput32((unsigned int)m_State->NumScycles, SUEF);
 	fput32((unsigned int)m_State->NumNcycles, SUEF);
 	fput32((unsigned int)m_State->NumIcycles, SUEF);
 	fput32((unsigned int)m_State->NumCcycles, SUEF);
 	fput32((unsigned int)m_State->NumFcycles, SUEF);
-#endif
 	fput32(m_State->NextInstr, SUEF);
 
 	fwrite(m_State->MemDataPtr, 1, 0x4000000, SUEF);
 	fput32(m_State->remapControlRegister, SUEF);
 	fput32(m_State->romSelectRegister, SUEF);
-#ifndef __APPLE__
-	fput32(m_State->LastTime, SUEF);
-	fput32(m_State->CP14R0_CCD, SUEF);
-	fput32(m_State->Now, SUEF);
-#else
 	fput32((unsigned int)m_State->LastTime, SUEF);
 	fput32(m_State->CP14R0_CCD, SUEF);
 	fput32((unsigned int)m_State->Now, SUEF);
-#endif
 	fputc(m_State->Exception, SUEF);
 	fputc(m_State->NresetSig, SUEF);
 	fputc(m_State->NfiqSig, SUEF);

@@ -417,13 +417,8 @@ bool dfs_import_file(const char *szDiscFile,
 		{
 			char c = static_cast<char>(toupper(szFile[j]));
 
-#ifndef __APPLE__
-			if (c >= 'A' && c <= 'Z' ||
-			    c >= '0' && c <= '9' ||
-#else
 			if ((c >= 'A' && c <= 'Z') ||
 				(c >= '0' && c <= '9') ||
-#endif
 			    c == '!' || c == '$' || c == '%' || c == '^' || c == '&' || c == '(' || c == ')' ||
 			    c == '_' || c == '-' || c == '=' || c == '+' || c == '[' || c == ']' || c == '{' ||
 			    c == '}' || c == '@' || c == '#' || c == '~' || c == ',')
@@ -455,11 +450,7 @@ bool dfs_import_file(const char *szDiscFile,
 			else
 			{
 				fseek(filefd, 0, SEEK_END);
-#ifndef __APPLE__
-				fileLen = ftell(filefd);
-#else
 				fileLen = (int)ftell(filefd);
-#endif
 				fclose(filefd);
 			}
 		}
@@ -491,13 +482,8 @@ bool dfs_import_file(const char *szDiscFile,
 	if (success)
 	{
 		// Check for space in the catalogue
-#ifndef __APPLE__
-		if (dfsCat->watford62 && dfsCat->numFiles >= 62 ||
-			!dfsCat->watford62 && dfsCat->numFiles >= 31)
-#else
 		if ((dfsCat->watford62 && dfsCat->numFiles >= 62) ||
 			(!dfsCat->watford62 && dfsCat->numFiles >= 31))
-#endif
 		{
 			sprintf(szErrStr, "Catalogue full, cannot import %s", szFile);
 			success = false;
@@ -636,13 +622,13 @@ bool dfs_import_file(const char *szDiscFile,
 
 				// Update catalogue sectors
 				n = (dfsCat->numFiles > 31) ? 31 : dfsCat->numFiles;
-				buffer[DFS_SECTOR_SIZE + 5] = n * 8;
+				buffer[DFS_SECTOR_SIZE + 5] = (unsigned char)(n * 8);
 				dfs_write_files_to_cat(buffer, buffer + DFS_SECTOR_SIZE, n, attrs);
 
 				if (dfsCat->watford62)
 				{
 					n = (dfsCat->numFiles > 31) ? dfsCat->numFiles - 31 : 0;
-					buffer[DFS_SECTOR_SIZE * 3 + 5] = n * 8;
+					buffer[DFS_SECTOR_SIZE * 3 + 5] = (unsigned char)(n * 8);
 					dfs_write_files_to_cat(buffer + DFS_SECTOR_SIZE * 2, buffer + DFS_SECTOR_SIZE * 3,
 					                       n, &attrs[31]);
 				}

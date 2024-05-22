@@ -685,10 +685,8 @@ void DebugMemoryState()
 				(ACCCON & 0x02) != 0 ? "on" : "off",
 				(ACCCON & 0x01) != 0 ? "on" : "off");
 			break;
-#ifdef __APPLE__
 		default: // display nothing
 			break;
-#endif
 	}
 }
 
@@ -1233,11 +1231,7 @@ static bool ReadRom(const std::string& RomFileName, int Bank)
 			fread(PALRom[Bank].Rom, 1, Size, File);
 			fclose(File);
 
-#ifndef __APPLE__
-			PALRom[Bank].Type = GuessRomType(PALRom[Bank].Rom, Size);
-#else
 			PALRom[Bank].Type = GuessRomType(PALRom[Bank].Rom, (uint32_t)Size);
-#endif
 
 			if (PALRom[Bank].Type != PALRomType::none)
 			{
@@ -1422,10 +1416,8 @@ void SaveMemUEF(FILE *SUEF)
 		fputc(PagedRomReg | (static_cast<int>(MemSel) << 7), SUEF);
 		fputc((static_cast<int>(Sh_Display) << 7), SUEF);
 		break;
-#ifdef __APPLE__
 	default:
 		break;
-#endif
 	}
 
 	fput16(0x0462,SUEF); // Main Memory
@@ -1467,10 +1459,8 @@ void SaveMemUEF(FILE *SUEF)
 		fput32(8192,SUEF);
 		fwrite(FSRam,1,8192,SUEF);
 		break;
-#ifdef __APPLE__
 	default:
 		break;
-#endif
 	}
 
 	for (int bank = 0; bank < ROM_BANK_COUNT; bank++)
@@ -1509,10 +1499,8 @@ void SaveMemUEF(FILE *SUEF)
 			fputc(bank,SUEF);
 			fputc(static_cast<int>(BankType::Empty),SUEF);
 			break;
-#ifdef __APPLE__
 		default:// RAM
 			break;
-#endif
 		}
 	}
 }
@@ -1547,10 +1535,8 @@ void LoadRomRegsUEF(FILE *SUEF) {
 		Sh_CPUE = (ACCCON & 2) != 0;
 		FSRAMSelect = (ACCCON & 8) != 0;
 		break;
-#ifdef __APPLE__
 	default:
 		break;
-#endif
 	}
 }
 
@@ -1572,10 +1558,8 @@ void LoadShadMemUEF(FILE *SUEF) {
 		SAddr=fget16(SUEF);
 		fread(ShadowRAM+SAddr,1,32768,SUEF);
 		break;
-#ifdef __APPLE__
 	default:
 		break;
-#endif
 	}
 }
 
@@ -1591,10 +1575,8 @@ void LoadPrivMemUEF(FILE *SUEF) {
 	case Model::MasterET:
 		fread(PrivateRAM,1,4096,SUEF);
 		break;
-#ifdef __APPLE__
 	default:
 		break;
-#endif
 	}
 }
 
@@ -1626,10 +1608,8 @@ void LoadSWRomMemUEF(FILE *SUEF) {
 	case BankType::Empty:
 		memset(Roms[Rom], 0, MAX_ROM_SIZE);
 		break;
-#ifdef __APPLE__
 	default: // RAM
 		break;
-#endif
 	}
 }
 
@@ -1658,10 +1638,8 @@ bool LoadPALRomEUF(FILE *SUEF, unsigned int ChunkLength)
 				PALRom[Bank].Type = PALRomType::none;
 				PALRom[Bank].Bank = 0;
 				break;
-#ifdef __APPLE__
 			default:// RAM
 				break;
-#endif
 		}
 
 		return true;

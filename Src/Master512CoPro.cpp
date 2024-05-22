@@ -66,13 +66,6 @@ Master512CoPro master512CoPro;
 extern unsigned char TubeintStatus;
 extern unsigned char TubeNMIStatus;
 
-// All pre-i286 CPUs have a 1MB address space
-#ifndef __APPLE__
-const uint32_t AMASK = 0xfffff;
-#else
-/*const uint32_t AMASK = 0xfffff;*/
-#endif
-
 #define CF      (m_CarryVal!=0)
 #define SF      (m_SignVal<0)
 #define ZF      (m_ZeroVal==0)
@@ -230,7 +223,6 @@ static const uint8_t Timing[] =
 	18, 9,17,           // MOVS 8-bit
 	18, 9,17,           // MOVS 16-bit
 
-#ifdef __APPLE__
 	// placeholders to remove warnings
 	18, 9,17,           // (80186) INS 8-bit
 	18, 9,17,           // (80186) INS 16-bit
@@ -241,8 +233,6 @@ static const uint8_t Timing[] =
 	18, 9,17,           // (80186) IMUL 16-bit
 	18, 9,17, 18, 9,	// (80186) enter/leave
 	17,           		// (80186) BOUND
-#endif
-
 };
 
 // DMA control register

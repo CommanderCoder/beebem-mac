@@ -1127,11 +1127,7 @@ void VideoDoScanLine(void) {
     /* Clear the next 20 scan lines */
     if (!FrameNum) {
       if (VScreenAdjust>0 && VideoState.PixmapLine==0)
-#ifndef __APPLE__
-        for (l=-VScreenAdjust; l<0; ++l)
-#else
 		for (l=(int)-VScreenAdjust; l<0; ++l)
-#endif
           mainWin->doHorizLine(0, l, -36, 800);
       for (l=0; l<20 && VideoState.PixmapLine+l<512; ++l)
         mainWin->doHorizLine(0, VideoState.PixmapLine+l, -36, 800);
@@ -1637,11 +1633,7 @@ void SaveVideoUEF(FILE *SUEF)
 		fputc(VideoULA_Palette[col] ^ 7,SUEF); // Use real ULA values
 	}
 	fput16(ActualScreenWidth, SUEF);
-#ifndef __APPLE__
-	fput32(ScreenAdjust, SUEF);
-#else
 	fput32((unsigned int)ScreenAdjust, SUEF);
-#endif
 	fputc(CRTCControlReg, SUEF);
 	fputc(TeletextStyle, SUEF);
 

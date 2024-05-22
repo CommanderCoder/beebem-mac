@@ -2845,7 +2845,7 @@ static bool DebugCmdBreakContinue(char* /* args */)
 	return true;
 }
 
-static bool DebugCmdHelp(char* args)
+static bool DebugCmdHelp(char* args) // made const char*
 {
 	int addr;
 	int li = 0;
@@ -2925,7 +2925,7 @@ static bool DebugCmdHelp(char* args)
 				{
 					// This is an alias:
 					DebugDisplayInfoF("%s - alias of %s",DebugCmdTable[i].name,DebugCmdTable[li].name);
-					DebugCmdHelp(DebugCmdTable[li].name);
+					DebugCmdHelp((char*)DebugCmdTable[li].name);  // had to cast out the 'const'
 				}
 				else
 				{

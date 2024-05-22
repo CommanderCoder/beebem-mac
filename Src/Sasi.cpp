@@ -309,13 +309,12 @@ static void SASIWriteData(unsigned char data)
 				return;
 			}
 			return;
-
-#ifdef __APPLE__
+		
 		case execute:
 			break;
 		case read:
 			break;
-#endif
+
 		case write:
 			sasi.buffer[sasi.offset] = data;
 			sasi.offset++;
@@ -363,12 +362,12 @@ static void SASIWriteData(unsigned char data)
 			sasi.next++;
 			sasi.offset = 0;
 			return;
-#ifdef __APPLE__
+
 		case status:
 			break;
 		case message:
 			break;
-#endif
+
 	}
 
 	SASIBusFree();

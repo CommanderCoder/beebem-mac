@@ -1080,10 +1080,8 @@ void BeebWin::LoadUEFState(const char *FileName)
 			Report(MessageType::Error, "Cannot open state file:\n  %s",
 			       FileName);
 			break;
-#ifdef __APPLE__
 		case UEFStateResult::WriteFailed:		
 			break;
-#endif
 		case UEFStateResult::InvalidUEFFile:
 			Report(MessageType::Error, "The file selected is not a UEF file:\n  %s",
 			       FileName);
@@ -1106,21 +1104,16 @@ void BeebWin::SaveUEFState(const char *FileName)
 	switch (Result) {
 		case UEFStateResult::Success:
 			break;
-
-#ifdef __APPLE__
 		case UEFStateResult::OpenFailed:
 			break;
-#endif
 		case UEFStateResult::WriteFailed:
 			Report(MessageType::Error, "Failed to write state file:\n  %s",
 				   FileName);
 			break;
-#ifdef __APPLE__
 		case UEFStateResult::InvalidUEFFile:
 			break;
 		case UEFStateResult::InvalidUEFVersion:
 			break;
-#endif
 	}
 }
 
