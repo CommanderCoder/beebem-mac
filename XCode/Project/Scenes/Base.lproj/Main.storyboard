@@ -166,90 +166,90 @@
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="udJ-bw-Kt8"/>
-                                        <menuItem title="Screen Capture Options" id="LYt-r0-CQV">
+                                        <menuItem title="Screen Capture Options" hidden="YES" id="LYt-r0-CQV">
                                             <modifierMask key="keyEquivalentModifierMask"/>
-                                            <menu key="submenu" id="5p3-fi-kxT">
+                                            <menu key="submenu" showsStateColumn="NO" autoenablesItems="NO" id="5p3-fi-kxT">
                                                 <items>
-                                                    <menuItem title="Capture @ Display Resolution" id="nCu-Yp-dI2">
+                                                    <menuItem title="Capture @ Display Resolution" hidden="YES" id="nCu-Yp-dI2">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                     </menuItem>
-                                                    <menuItem title="Capture @ 1280x1024" id="Trs-R3-g95">
+                                                    <menuItem title="Capture @ 1280x1024" hidden="YES" id="Trs-R3-g95">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                     </menuItem>
-                                                    <menuItem title="Capture @ 640x512" state="on" id="GKg-rB-Tdu">
+                                                    <menuItem title="Capture @ 640x512" state="on" hidden="YES" id="GKg-rB-Tdu">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                     </menuItem>
-                                                    <menuItem title="Capture @ 320x256" id="Zuf-rG-s83" userLabel="Capture @ 320x256">
+                                                    <menuItem title="Capture @ 320x256" hidden="YES" id="Zuf-rG-s83" userLabel="Capture @ 320x256">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                     </menuItem>
-                                                    <menuItem isSeparatorItem="YES" id="Zsu-6Y-H15"/>
-                                                    <menuItem title="BMP Format" state="on" id="ofU-Bb-k8w" userLabel="BMP Format">
+                                                    <menuItem isSeparatorItem="YES" hidden="YES" id="Zsu-6Y-H15"/>
+                                                    <menuItem title="BMP Format" state="on" hidden="YES" id="ofU-Bb-k8w" userLabel="BMP Format">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                     </menuItem>
-                                                    <menuItem title="JPG Format" id="hDX-yj-u3c" userLabel="JPG Format">
+                                                    <menuItem title="JPG Format" hidden="YES" id="hDX-yj-u3c" userLabel="JPG Format">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                     </menuItem>
-                                                    <menuItem title="GIF Format" id="ML9-CA-D8g" userLabel="GIF Format">
+                                                    <menuItem title="GIF Format" hidden="YES" id="ML9-CA-D8g" userLabel="GIF Format">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                     </menuItem>
-                                                    <menuItem title="BPM Format" id="FWD-Vx-9Ij" userLabel="BMP Format">
+                                                    <menuItem title="BPM Format" hidden="YES" id="FWD-Vx-9Ij" userLabel="BMP Format">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                     </menuItem>
                                                 </items>
                                             </menu>
                                         </menuItem>
-                                        <menuItem title="Capture Screen..." keyEquivalent="s" identifier="swtd" id="Mlw-Z4-Y2w">
+                                        <menuItem title="Capture Screen..." hidden="YES" keyEquivalent="s" identifier="swtd" id="Mlw-Z4-Y2w">
                                             <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
                                             <connections>
                                                 <action selector="HandleCommand:" target="Voe-Tx-rLC" id="xgR-UC-k59"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="2Ne-hl-zyj"/>
-                                        <menuItem title="Video Options" id="zTk-Kj-0f0">
+                                        <menuItem title="Video Options" hidden="YES" id="zTk-Kj-0f0">
                                             <modifierMask key="keyEquivalentModifierMask"/>
-                                            <menu key="submenu" title="Video Options" id="xot-Ez-ZB7">
+                                            <menu key="submenu" title="Video Options" showsStateColumn="NO" autoenablesItems="NO" id="xot-Ez-ZB7">
                                                 <items>
-                                                    <menuItem title="Record @ Display Resolution" identifier="rec1" id="mBI-pd-vQP">
+                                                    <menuItem title="Record @ Display Resolution" hidden="YES" identifier="rec1" id="mBI-pd-vQP">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                     </menuItem>
-                                                    <menuItem title="Record @ 640x512" state="on" identifier="rec2" id="SwS-FD-LoC">
+                                                    <menuItem title="Record @ 640x512" state="on" hidden="YES" identifier="rec2" id="SwS-FD-LoC">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                     </menuItem>
-                                                    <menuItem title="Record @ 320x256" identifier="rec3" id="XVu-Z3-wfa">
+                                                    <menuItem title="Record @ 320x256" hidden="YES" identifier="rec3" id="XVu-Z3-wfa">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                     </menuItem>
-                                                    <menuItem isSeparatorItem="YES" id="Ek5-O9-tp4"/>
-                                                    <menuItem title="Skip 0 Frames" identifier="skp0" id="2DT-jb-oIs">
+                                                    <menuItem isSeparatorItem="YES" hidden="YES" id="Ek5-O9-tp4"/>
+                                                    <menuItem title="Skip 0 Frames" hidden="YES" identifier="skp0" id="2DT-jb-oIs">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
                                                             <action selector="HandleCommand:" target="Voe-Tx-rLC" id="qfN-aB-wNr"/>
                                                         </connections>
                                                     </menuItem>
-                                                    <menuItem title="Skip 1 Frame" state="on" identifier="skp1" id="UOz-ZI-Mav">
+                                                    <menuItem title="Skip 1 Frame" state="on" hidden="YES" identifier="skp1" id="UOz-ZI-Mav">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
                                                             <action selector="HandleCommand:" target="Voe-Tx-rLC" id="cSu-2M-1Yf"/>
                                                         </connections>
                                                     </menuItem>
-                                                    <menuItem title="Skip 2 Frames" identifier="skp2" id="S59-DR-M8p">
+                                                    <menuItem title="Skip 2 Frames" hidden="YES" identifier="skp2" id="S59-DR-M8p">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
                                                             <action selector="HandleCommand:" target="Voe-Tx-rLC" id="CXY-iL-dSY"/>
                                                         </connections>
                                                     </menuItem>
-                                                    <menuItem title="Skip 3 Frames" identifier="skp3" id="HP7-LH-VHh">
+                                                    <menuItem title="Skip 3 Frames" hidden="YES" identifier="skp3" id="HP7-LH-VHh">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
                                                             <action selector="HandleCommand:" target="Voe-Tx-rLC" id="63c-0m-gV6"/>
                                                         </connections>
                                                     </menuItem>
-                                                    <menuItem title="Skip 4 Frames" identifier="skp4" id="hah-SB-kPx">
+                                                    <menuItem title="Skip 4 Frames" hidden="YES" identifier="skp4" id="hah-SB-kPx">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
                                                             <action selector="HandleCommand:" target="Voe-Tx-rLC" id="mo7-oy-3cU"/>
                                                         </connections>
                                                     </menuItem>
-                                                    <menuItem title="Skip 5 Frames" identifier="skp5" id="J8A-ge-s3d">
+                                                    <menuItem title="Skip 5 Frames" hidden="YES" identifier="skp5" id="J8A-ge-s3d">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
                                                             <action selector="HandleCommand:" target="Voe-Tx-rLC" id="s1R-Nk-6T4"/>
@@ -258,10 +258,10 @@
                                                 </items>
                                             </menu>
                                         </menuItem>
-                                        <menuItem title="Capture Video" identifier="vidc" id="ac9-43-tfN">
+                                        <menuItem title="Capture Video" hidden="YES" identifier="vidc" id="ac9-43-tfN">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                         </menuItem>
-                                        <menuItem title="End Video" identifier="vide" id="VdD-fL-jl2">
+                                        <menuItem title="End Video" hidden="YES" identifier="vide" id="VdD-fL-jl2">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="fFF-n8-q7J"/>
@@ -516,7 +516,7 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Sound" autoenablesItems="NO" id="cC9-d7-m6V">
                                     <items>
-                                        <menuItem title="Sound Streamer" enabled="NO" id="JU1-8K-0go">
+                                        <menuItem title="Sound Streamer" hidden="YES" enabled="NO" id="JU1-8K-0go">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <menu key="submenu" title="Sound Streamer" id="rNj-Yc-ubR">
                                                 <items>
@@ -629,8 +629,8 @@
                                                 <action selector="HandleCommand:" target="Voe-Tx-rLC" id="4PQ-Ie-q9K"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="9cb-Zp-aJP"/>
-                                        <menuItem title="Text To Speech" identifier="ttsp" id="X3W-NZ-fnk">
+                                        <menuItem isSeparatorItem="YES" hidden="YES" id="9cb-Zp-aJP"/>
+                                        <menuItem title="Text To Speech" hidden="YES" identifier="ttsp" id="X3W-NZ-fnk">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="HandleCommand:" target="Voe-Tx-rLC" id="ZKf-OO-egl"/>
@@ -650,13 +650,13 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="View" autoenablesItems="NO" id="pj0-tT-0No">
                                     <items>
-                                        <menuItem title="Maintain Aspect Ratio In Full Screen" state="on" enabled="NO" identifier="vmar" id="9xK-he-g9R">
+                                        <menuItem title="Maintain Aspect Ratio In Full Screen" state="on" hidden="YES" enabled="NO" identifier="vmar" id="9xK-he-g9R">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="HandleCommand:" target="Voe-Tx-rLC" id="mE9-V6-moN"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Window Sizes" enabled="NO" id="kvr-Z3-g3X">
+                                        <menuItem title="Window Sizes" hidden="YES" enabled="NO" id="kvr-Z3-g3X">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <menu key="submenu" title="Window Sizes" id="grF-Pp-KKV">
                                                 <items>
@@ -1408,13 +1408,13 @@
                                                 <action selector="HandleCommand:" target="Voe-Tx-rLC" id="J5l-U6-MMb"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Freeze when inactive" state="on" identifier="ofwm" id="LRQ-wF-ox3">
+                                        <menuItem title="Freeze when inactive" state="on" hidden="YES" identifier="ofwm" id="LRQ-wF-ox3">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="HandleCommand:" target="Voe-Tx-rLC" id="c0k-00-3Tt"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Hide Cursor" identifier="hcur" id="uII-rB-Mg7">
+                                        <menuItem title="Hide Cursor" hidden="YES" identifier="hcur" id="uII-rB-Mg7">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="HandleCommand:" target="Voe-Tx-rLC" id="f5w-KA-wWN"/>
@@ -1544,7 +1544,7 @@
                                                 </items>
                                             </menu>
                                         </menuItem>
-                                        <menuItem title="Old Preference Options" identifier="prop" id="WTM-Vp-8q0">
+                                        <menuItem title="Old Preference Options" hidden="YES" identifier="prop" id="WTM-Vp-8q0">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="HandleCommand:" target="Voe-Tx-rLC" id="cKa-3N-tk9"/>
