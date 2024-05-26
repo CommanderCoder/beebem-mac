@@ -50,39 +50,15 @@ FolderSelectDialog::FolderSelectDialog(
 	m_Title(Title),
 	m_InitialFolder(InitialFolder)
 {
-//	m_BrowseInfo.hwndOwner      = hwndOwner;
-//	m_BrowseInfo.pidlRoot       = NULL;
-//	m_BrowseInfo.pszDisplayName = m_Buffer;
-//	m_BrowseInfo.lpszTitle      = m_Title.empty() ? NULL : m_Title.c_str();
-//	m_BrowseInfo.ulFlags        = BIF_EDITBOX | BIF_NEWDIALOGSTYLE |
-//								  BIF_RETURNONLYFSDIRS | BIF_RETURNFSANCESTORS;
-//	m_BrowseInfo.lpfn           = BrowseCallbackProc;
-//	m_BrowseInfo.lParam         = reinterpret_cast<LPARAM>(this);
-
 	m_Buffer[0] = 0;
 }
 
 FolderSelectDialog::Result FolderSelectDialog::DoModal()
 {
 	Result result = Result::Cancel;
-#ifndef __APPLE__
 
-	LPITEMIDLIST pidl = SHBrowseForFolder(&m_BrowseInfo);
-
-	if (pidl != nullptr) {
-		if (SHGetPathFromIDList(pidl, m_Buffer)) {
-			result = Result::OK;
-		}
-		else {
-			m_Buffer[0] = 0;
-			result = Result::InvalidFolder;
-		}
-
-		CoTaskMemFree(pidl);
-	}
-#else
 	char exportPath[MAX_PATH];
-	bool error = swift_SelectFolder(exportPath, MAX_PATH);
+	bool error = swift_SelectFolder(exportPath, MAX_PATH, m_Title.c_str());
 	
 	result = Result::InvalidFolder;
 	if (error)
@@ -95,7 +71,6 @@ FolderSelectDialog::Result FolderSelectDialog::DoModal()
 		strcpy(m_Buffer, exportPath);
 		result = Result::OK;
 	}
-#endif
 	
 	return result;
 }

@@ -118,11 +118,12 @@ func swift_GetFilesWithPreview(filepath : UnsafeMutablePointer<CChar>, bytes: In
 }
 
 @_cdecl("swift_SelectFolder")
-func swift_SelectFolder(filepath : UnsafeMutablePointer<CChar>, bytes: Int) -> Int
+func swift_SelectFolder(filepath : UnsafeMutablePointer<CChar>, bytes: Int, title : UnsafePointer<CChar> ) -> Int
 {
     let dialog = NSOpenPanel();
-    dialog.title                   = "Choose a folder | BeebEm5"
-    dialog.showsResizeIndicator    = true
+    dialog.title                   = "Select Folder | BeebEm5"
+	dialog.message                   = String(cString: title)
+	dialog.showsResizeIndicator    = true
     dialog.canChooseDirectories    = true
     dialog.canChooseFiles          = false
     

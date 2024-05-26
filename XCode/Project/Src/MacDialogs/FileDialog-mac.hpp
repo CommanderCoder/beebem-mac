@@ -82,7 +82,7 @@ public:
 		// show folder select
 //		if (strlen(m_ofn.lpstrFile) == 0)
 //		{
-//			bool err = swift_SelectFolder(m_ofn.lpstrFile, _MAX_PATH);
+//			bool err = swift_SelectFolder(m_ofn.lpstrFile, _MAX_PATH, "Choose a Folder");
 //			return !err;
 //		}
 //		else

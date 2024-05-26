@@ -1529,17 +1529,29 @@
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <menu key="submenu" title="Preference Options" id="qV7-XC-RBE">
                                                 <items>
-                                                    <menuItem title="Autosave CMOS RAM" id="PNy-RJ-pfu">
+                                                    <menuItem title="Autosave CMOS RAM" identifier="pacm" id="PNy-RJ-pfu">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="HandleCommand:" target="Voe-Tx-rLC" id="NAa-xO-7gd"/>
+                                                        </connections>
                                                     </menuItem>
-                                                    <menuItem title="Autosave All Prefs" id="ASs-2Z-i0j">
+                                                    <menuItem title="Autosave All Prefs" identifier="pall" id="ASs-2Z-i0j">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="HandleCommand:" target="Voe-Tx-rLC" id="oTg-Fm-WXK"/>
+                                                        </connections>
                                                     </menuItem>
-                                                    <menuItem title="Save Disc/Tape/State Folders" id="iKo-Sh-d3B">
+                                                    <menuItem title="Save Disc/Tape/State Folders" identifier="pfol" id="iKo-Sh-d3B">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="HandleCommand:" target="Voe-Tx-rLC" id="uNR-xH-3O5"/>
+                                                        </connections>
                                                     </menuItem>
-                                                    <menuItem title="Select User Data Folder..." id="Hyc-P5-3vZ">
+                                                    <menuItem title="Select User Data Folder..." identifier="sudf" id="Hyc-P5-3vZ">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="HandleCommand:" target="Voe-Tx-rLC" id="MGd-Va-EbF"/>
+                                                        </connections>
                                                     </menuItem>
                                                 </items>
                                             </menu>
