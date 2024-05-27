@@ -60,7 +60,10 @@ extern "C" int beeb_end()
 } /* main */
 
 
-
+extern "C" void beeb_Destroy()
+{
+	mainWin->Shutdown();
+}
 
 extern "C" void beeb_HandleCommand(unsigned int cmdID)
 {

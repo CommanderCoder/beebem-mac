@@ -7,6 +7,7 @@
 
 // Exposed to AppDelegate
 void beeb_HandleCommand(unsigned int cmdID);
+void beeb_Destroy();
 
 
 // Exposed to BeebSKView

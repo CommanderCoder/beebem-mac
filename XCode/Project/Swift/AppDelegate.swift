@@ -18,7 +18,10 @@ class AppDelegate: NSObject, NSApplicationDelegate
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
-        // Insert code here to tear down your application
+
+		// NSSupportsSuddenTermination set to NO in 'plist'
+		// so this will be called
+		beeb_Destroy()
     }
     
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
