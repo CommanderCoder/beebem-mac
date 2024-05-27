@@ -445,19 +445,11 @@ void BeebWin::ApplyPrefs()
 
 	// Load key maps
 	char KeyMapPath[_MAX_PATH];
-#ifndef __APPLE__
 	strcpy(KeyMapPath, "Logical.kmap");
-#else
-	strcpy(KeyMapPath, "Logical-mac.kmap");
-#endif
 	GetDataPath(m_UserDataPath, KeyMapPath);
 	ReadKeyMap(KeyMapPath, &LogicalKeyMap);
 
-#ifndef __APPLE__
 	strcpy(KeyMapPath, "Default.kmap");
-#else
-	strcpy(KeyMapPath, "Default-mac.kmap");
-#endif
 	GetDataPath(m_UserDataPath, KeyMapPath);
 	ReadKeyMap(KeyMapPath, &DefaultKeyMap);
 

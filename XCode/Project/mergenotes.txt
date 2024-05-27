@@ -160,3 +160,8 @@ e.g. ListView.cpp
 Even some blank lines may have been removed or replaced just so that they don't show up on a windows merge later.
 Finally go through all the __APPLE__ cases and check they look useful.
 
+---
+Keymap - use the PC keymap mostly but the LOGICAL-mac map has @ and " switched
+- and for MACBOOK keyboards COPY key is on CMD-RIGHT [END]
+
+
