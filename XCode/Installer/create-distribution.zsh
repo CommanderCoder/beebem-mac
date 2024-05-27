@@ -4,11 +4,11 @@ if [[ $# == 0 ]]; then
 	echo "Usage: "$0" <path to BeebEm.app>"
 	exit
 fi
+APP_BUNDLE="$1"
 
 # $SW_FOLDER contains all the files to go along with the APP, i.e. example disks and tapes
 # software is in UserData/DiscIms or Tapes
 #SW_FOLDER=software
-APP_BUNDLE="$1"
 OUT_FILE=BeebEm-mac
 DIST_FOLDER=$OUT_FILE-files
 

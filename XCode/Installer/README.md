@@ -13,12 +13,12 @@ _Product->Build for Profiling..._
 Find the output folder _Product->Show Build Folder In Finder_  and find the **Release** folder
 e.g.
 ```
-[...]/Library/Developer/Xcode/DerivedData/BeebEm-ghkcqnxnqzuvofeswfkjvxxuiguf/Build/Products/Release
+../Project/Build/Products/Release
 ```
 
-Lastly run the <u>create-distribution</u> script
+Lastly run the <u>create-distribution.sh</u> script
 ```
-./create-distribution.sh [...]/Library/Developer/Xcode/DerivedData/BeebEm-ghkcqnxnqzuvofeswfkjvxxuiguf/Build/Products/Release
+./create-distribution.sh ../Project/Build/Products/Release
 ```
 
 **Important:** Don't forget to [notarize your DMG](https://stackoverflow.com/a/60800864/64949).

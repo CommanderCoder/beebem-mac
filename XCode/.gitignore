@@ -2,6 +2,11 @@
 
 ## beebem-mac Settings
 
+# set the build location in Xcode->Preferences | Locations | Advanced
+# to Custom | Relative to Workspace
+# to make builds local to the project
+Project/Build
+
 ##
 
 # XCode
