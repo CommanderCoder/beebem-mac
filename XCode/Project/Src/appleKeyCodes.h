@@ -8,10 +8,6 @@
 #ifndef appleKeyCodes_h
 #define appleKeyCodes_h
 
-
-
-// https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
-
 // https://github.com/awakecoding/Win32Keyboard/blob/master/vkcodes.h
 
 /* Virtual-Key Codes */

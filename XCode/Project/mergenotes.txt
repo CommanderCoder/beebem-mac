@@ -164,4 +164,32 @@ Finally go through all the __APPLE__ cases and check they look useful.
 Keymap - use the PC keymap mostly but the LOGICAL-mac map has @ and " switched
 - and for MACBOOK keyboards COPY key is on CMD-RIGHT [END]
 
+UK PC keyboard is different to US PC keyboard - BeebEm uses the UK PC and UK APPLE keyboards. (Note the #~ key used in BeebEm default mapping which is to left of RETURN on UK PC Keyboard)
+
+Default-macbook-uk:
+-_ becomes -=
+=+ becomes ^~
+§± (`¬ on UK PC) becomes @ [top right on Apple/PC]
+\| (#~ on UK PC) becomes _£ [left of RETURN on Apple/PC]
+;: becomes ;+
+'" ('@ on UK PC) becomes :*
+`~ (\| on UK PC) becomes \| [bottom left on Apple/PC]
+
+position changes for
+ARROW KEYS, DELETE, COPY, @, \|, _£, [{, }], CTRL, CAPSLOCK*, SHIFTLOCK*, ESCAPE, F0-F9
+
+FN-RIGHT (or F11) becomes COPY
+Shift-Lock seems to be missing from the mappings
+
+Logical-macbook-uk
+@ is above 2 on UK macbook
+" is above ' on UK macbook
+# is `~ on UK macbook
+~ is SHIFT-`~ on UK macbook
+
+
+--
+
+Need to fix up the UserData folder so it appears in 'Documents'  Is that what I was going to do?
+
 
