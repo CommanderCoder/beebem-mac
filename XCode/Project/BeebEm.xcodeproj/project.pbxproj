@@ -406,6 +406,7 @@
 		DC9427B42BF0FBAA0012C4E4 /* TeletextDialog-mac.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "TeletextDialog-mac.hpp"; sourceTree = "<group>"; };
 		DC9427B62BF0FBE90012C4E4 /* SerialPortDialog-mac.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "SerialPortDialog-mac.cpp"; sourceTree = "<group>"; };
 		DC9427B72BF0FBE90012C4E4 /* SerialPortDialog-mac.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "SerialPortDialog-mac.hpp"; sourceTree = "<group>"; };
+		DC9697DB2C08632F00B8913F /* todo.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = todo.md; sourceTree = "<group>"; };
 		DCACDAC02BC5DD2E00CEF154 /* apples.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = apples.cpp; sourceTree = "<group>"; };
 		DCACDAC22BC669B600CEF154 /* BeebWinDx-mac.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "BeebWinDx-mac.cpp"; sourceTree = "<group>"; };
 		DCACDAC52BC66F5600CEF154 /* BeebEm-Bridging-Video.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "BeebEm-Bridging-Video.cpp"; sourceTree = "<group>"; };
@@ -818,6 +819,7 @@
 		DC907E8C2BB4DBCD00523116 = {
 			isa = PBXGroup;
 			children = (
+				DC9697DB2C08632F00B8913F /* todo.md */,
 				DC907ED32BB7191300523116 /* mergenotes.txt */,
 				DC907EBB2BB5BE0B00523116 /* Src */,
 				DC907EAE2BB5BA2500523116 /* Swift */,
