@@ -50,6 +50,19 @@
         <img src="keyboard.jpg" alt="Beeb Keyboard" width="640" height="237">
       </figure>
 
+      <p>
+        The mappings below refer to British PC and Mac keyboard layouts. 
+        <a href ="https://en.wikipedia.org/wiki/British_and_American_keyboards">[wikipedia]</a>
+      </p>
+
+      <p>
+        The MacBook keyboard mappings are stored in custom key mapping files that 
+        are suffixed with <code>-macbook-uk.kmap</code> and require
+        loading manually as a <a href='#userkeymapping'>User Key Mapping</a>.  These 
+        use the PC key names (e.g. VK_RETURN), rather than Mac names to be compatible 
+        with the PC version.
+      </p>
+
       <h2>Logical Keyboard Mapping</h2>
 
       <p>
@@ -62,66 +75,84 @@
         class="ui">Default Keyboard Mapping</span> when playing games.
       </p>
 
-      <h2>Default Keyboard Mapping</h2>
+      <p>
+        <u><code>Logical-macbook-uk.kmap</code></u> :
+        <kbd>@</kbd> is above <kbd>2</kbd>,
+        <kbd>"</kbd> is above <kbd>'</kbd>.
+        For easy access to #, <kbd>`~</kbd> maps to <kbd>#~</kbd>.
+      </p>
 
+      <h2>Default Keyboard Mapping</h2>
       <p>
         For the <span class="ui">Default Keyboard Mapping</span>, most of the
-        keys are the same on the Beeb and PC but these are not:
+        keys are the same on the Beeb and PC, and Mac 
+        (<u><code>Default-macbook-uk.kmap</code></u>) but these are not:
       </p>
 
       <table>
         <tr>
           <th>PC Key</th>
+          <th>Mac Key</th>
           <th>Beeb Key</th>
         </tr>
 
         <tr>
+          <td><kbd>F10</kbd> and <kbd>F11</kbd></td>
           <td><kbd>F10</kbd> and <kbd>F11</kbd></td>
           <td><kbd>f0</kbd></td>
         </tr>
 
         <tr>
           <td><kbd>F1</kbd> - <kbd>F9</kbd></td>
+          <td><kbd>F1</kbd> - <kbd>F9</kbd></td>
           <td><kbd>f1</kbd> - <kbd>f9</kbd></td>
         </tr>
 
         <tr>
+          <td><kbd>F12</kbd></td>
           <td><kbd>F12</kbd></td>
           <td><kbd>Break</kbd></td>
         </tr>
 
         <tr>
           <td><kbd>-_</kbd></td>
+          <td><kbd>-_</kbd></td>
           <td><kbd>-=</kbd></td>
         </tr>
 
         <tr>
           <td><kbd>=+</kbd></td>
+          <td><kbd>=+</kbd></td>
           <td><kbd>^~</kbd></td>
         </tr>
 
         <tr>
-          <td><kbd>`</kbd></td>
+          <td><kbd>`¬</kbd></td>
+          <td><kbd>§±</kbd></td>
           <td><kbd>@</kbd></td>
         </tr>
 
         <tr>
           <td><kbd>#~</kbd></td>
-          <td><kbd>_</kbd></td>
+          <td><kbd>`~</kbd></td>
+          <td><kbd>_£</kbd></td>
         </tr>
 
         <tr>
+          <td><kbd>;:</kbd></td>
           <td><kbd>;:</kbd></td>
           <td><kbd>;+</kbd></td>
         </tr>
 
         <tr>
           <td><kbd>'@</kbd></td>
+          <td><kbd>'"</kbd></td>
           <td><kbd>:*</kbd></td>
         </tr>
 
         <tr>
           <td><kbd>End</kbd></td>
+          <td><kbd>F11</kbd> and <kbd>fn</kbd>+<kbd>→</kbd></kbd></td>
           <td><kbd>Copy</kbd></td>
         </tr>
       </table>
@@ -135,76 +166,90 @@
       <table>
         <tr>
           <th>PC Key Press</th>
+          <th>Mac Key Press</th>
           <th>Function</th>
         </tr>
 
         <tr>
           <td><kbd>Keypad +</kbd></td>
+          <td></td>
           <td>Increase emulation speed</td>
         </tr>
 
         <tr>
           <td><kbd>Alt</kbd> + <kbd>+</kbd></td>
+          <td></td>
           <td>Increase emulation speed</td>
         </tr>
 
         <tr>
           <td><kbd>Keypad -</kbd></td>
+          <td></td>
           <td>Decrease emulation speed</td>
         </tr>
 
         <tr>
           <td><kbd>Alt</kbd> + <kbd>-</kbd></td>
+          <td></td>
           <td>Decrease emulation speed
         </tr>
 
         <tr>
           <td><kbd>Keypad /</kbd></td>
+          <td></td>
           <td>Quick save state</td>
         </tr>
 
         <tr>
           <td><kbd>Alt</kbd> + <kbd>1</kbd></td>
+          <td><kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd></td>
           <td>Quick save state</td>
         </tr>
 
         <tr>
           <td><kbd>Keypad *</kbd></td>
+          <td></td>
           <td>Quick load state</td>
         </tr>
 
         <tr>
           <td><kbd>Alt</kbd> + <kbd>2</kbd></td>
+          <td><kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>L</kbd></td>
           <td>Quick load state</td>
         </tr>
 
         <tr>
           <td><kbd>Alt</kbd> + <kbd>Keypad 5</kbd></td>
+          <td></td>
           <td>Capture screen to file (with NumLock on)</td>
         </tr>
 
         <tr>
           <td><kbd>Alt 5</kbd></td>
+          <td></td>
           <td>Capture screen to file</td>
         </tr>
 
         <tr>
           <td><kbd>Alt</kbd> + <kbd>Enter</kbd></td>
+          <td><kbd>fn</kbd> + <kbd>F</kbd></td>
           <td>Toggle fullscreen mode</td>
         </tr>
 
         <tr>
           <td><kbd>Alt</kbd> + <kbd>F4</kbd></td>
+          <td><kbd>Cmd</kbd> + <kbd>Q</kbd></td>
           <td>Exit</td>
         </tr>
 
         <tr>
           <td><kbd>Alt</kbd> + <kbd>F5</kbd></td>
+          <td></td>
           <td>Pause/unpause emulation</td>
         </tr>
       </table>
 
-      <h2>Custom Key Mappings</h2>
+      <h2 id="userkeymapping">Custom Key Mappings</h2>
 
       <p>
         Key mappings are kept in <span class="file">.kmap</span> files stored in

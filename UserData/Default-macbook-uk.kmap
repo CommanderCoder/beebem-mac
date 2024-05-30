@@ -220,10 +220,10 @@
 -9 0 0 -9 0 1 # 0xD9
 -9 0 0 -9 0 1 # 0xDA
 3 8 0 3 8 1 # 0xDB VK_OEM_4
-2 8 0 2 8 1 # 0xDC VK_OEM_5
+7 8 0 7 8 1 # 0xDF VK_OEM_5
 5 8 0 5 8 1 # 0xDD VK_OEM_6
 1 7 0 1 7 1 # 0xDE VK_OEM_7
-7 8 0 7 8 1 # 0xDF VK_OEM_8
+2 8 0 2 8 1 # 0xDC VK_OEM_8
 -9 0 0 -9 0 1 # 0xE0
 -9 0 0 -9 0 1 # 0xE1
 -9 0 0 -9 0 1 # 0xE2 VK_OEM_102
