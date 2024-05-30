@@ -423,11 +423,8 @@ extern "C" void swift_sleepCPU(unsigned long microseconds);
 #define Sleep swift_sleepCPU
 
 
-// also modify swift Enum
-extern "C" enum FileFilter { DISC, UEFFILE, UEFSTATEFILE, IFD, KEYBOARD, DISCFILE, HARDDRIVE, PRINTFILE, ROMCFG, ANYFILE };
-
-extern "C" int swift_GetFilesWithPreview (const char *path, int bytes, const char* directory, FileFilter exts, bool multiFiles);
-extern "C" int swift_SaveFile (const char *path, int bytes, FileFilter exts);
+extern "C" int swift_GetFilesWithPreview (const char *path, int bytes, const char* directory, bool multiFiles, const char *filter);
+extern "C" int swift_SaveFile (const char *path, int bytes, const char *filter);
 extern "C" int swift_MoveFile (const char *src, const char *dest );
 
 extern "C" int swift_SelectFolder (const char *path, int bytes, const char* title);

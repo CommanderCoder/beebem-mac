@@ -7,18 +7,6 @@
 
 import Foundation
 
-@objc enum FileFilter :Int {
-	case DISC
-	case UEFFILE
-	case UEFSTATEFILE
-	case IFD
-	case KEYBOARD
-	case DISCFILE
-	case HARDDRIVE
-	case PRINTFILE
-	case ROMCFG
-	case ANYFILE
-}
 
 // allow access to this in C
 @_cdecl("swift_GetApplicationSupportDirectory")

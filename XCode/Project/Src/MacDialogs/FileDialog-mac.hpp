@@ -87,17 +87,43 @@ public:
 //		}
 //		else
 		{
-			bool err = swift_GetFilesWithPreview(m_ofn.lpstrFile, m_ofn.nMaxFile, m_ofn.lpstrInitialDir, fileFilter, multiSelect);
+			bool err = swift_GetFilesWithPreview(m_ofn.lpstrFile, m_ofn.nMaxFile, m_ofn.lpstrInitialDir, multiSelect, m_ofn.lpstrFilter);
 			return !err;
 		}
+	}
+	
+	int SelectFilterFromExt(const char* filename)
+	{
+		const char *Ext = strrchr(filename, '.');
+		if (Ext != nullptr)
+		{
+			if (_stricmp(Ext + 1, "ssd") == 0)
+			{
+				return 1;
+			}
+			else if (_stricmp(Ext + 1, "dsd") == 0)
+			{
+				return 2;
+			}
+			else if (_stricmp(Ext + 1, "adf") == 0)
+			{
+				return 5;
+			}
+			else if (_stricmp(Ext + 1, "adl") == 0)
+			{
+				return 6;
+			}
+		}
+		return 0;
 	}
 
 	bool Save()
 	{
-		bool Result = swift_SaveFile(m_ofn.lpstrFile, 256, fileFilter);
+		bool Result = swift_SaveFile(m_ofn.lpstrFile, 256, m_ofn.lpstrFilter);
 
 		// lpstrFile will have changed value
-	
+		m_ofn.nFilterIndex = SelectFilterFromExt(m_ofn.lpstrFile);
+
 		return Result;
 	}
 
@@ -112,7 +138,6 @@ private:
 	
 	bool ShowDialog(bool open);
 
-	FileFilter fileFilter;
 	bool multiSelect;
 };
 

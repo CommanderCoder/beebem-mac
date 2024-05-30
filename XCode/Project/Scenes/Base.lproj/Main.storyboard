@@ -1804,7 +1804,7 @@
                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                     <prototypeCellViews>
                                                         <tableCellView id="eE8-AA-waO">
-                                                            <rect key="frame" x="129" y="1" width="127" height="17"/>
+                                                            <rect key="frame" x="128.5" y="1" width="127" height="17"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="5fe-H1-wPI">
@@ -3370,6 +3370,14 @@ DQ
                         <rect key="frame" x="0.0" y="0.0" width="640" height="532"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <subviews>
+                            <box boxType="custom" borderType="none" title="Box" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="X6i-vC-XjT">
+                                <rect key="frame" x="0.0" y="0.0" width="640" height="532"/>
+                                <view key="contentView" id="e1e-kk-1Ge">
+                                    <rect key="frame" x="0.0" y="0.0" width="640" height="532"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                </view>
+                                <color key="fillColor" red="0.92212468385696411" green="0.81016635894775391" blue="0.61102539300918579" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </box>
                             <stackView distribution="fill" orientation="horizontal" alignment="centerY" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qAc-0X-wdO" userLabel="LEDS">
                                 <rect key="frame" x="103" y="2" width="434" height="49"/>
                                 <subviews>
@@ -3681,8 +3689,12 @@ DQ
                             </customView>
                         </subviews>
                         <constraints>
+                            <constraint firstItem="X6i-vC-XjT" firstAttribute="leading" secondItem="ERx-hH-rdd" secondAttribute="leading" id="3d7-Dw-urR"/>
                             <constraint firstItem="DU3-gu-y6b" firstAttribute="centerX" secondItem="ERx-hH-rdd" secondAttribute="centerX" id="JQt-o2-Aqf"/>
                             <constraint firstItem="DU3-gu-y6b" firstAttribute="top" secondItem="ERx-hH-rdd" secondAttribute="top" constant="2" id="Utv-gg-uSs"/>
+                            <constraint firstAttribute="bottom" secondItem="X6i-vC-XjT" secondAttribute="bottom" id="WZT-IE-cJJ"/>
+                            <constraint firstAttribute="trailing" secondItem="X6i-vC-XjT" secondAttribute="trailing" id="c2Y-g9-ydR"/>
+                            <constraint firstItem="X6i-vC-XjT" firstAttribute="top" secondItem="ERx-hH-rdd" secondAttribute="top" id="ccp-Pl-ZAD"/>
                             <constraint firstItem="qAc-0X-wdO" firstAttribute="top" secondItem="DU3-gu-y6b" secondAttribute="bottom" constant="2" id="eri-Vs-9ZP"/>
                             <constraint firstAttribute="bottom" secondItem="DU3-gu-y6b" secondAttribute="bottom" constant="53" id="jru-FS-TRw"/>
                             <constraint firstAttribute="bottom" secondItem="qAc-0X-wdO" secondAttribute="bottom" constant="2" id="tH8-hd-uma"/>

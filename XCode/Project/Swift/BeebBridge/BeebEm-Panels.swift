@@ -9,30 +9,117 @@
 import Foundation
 import Cocoa
 import AVFoundation
-
+import AppKit
 
 
 
 
 //https://developer.apple.com/documentation/uniformtypeidentifiers/uttype
 //https://useyourloaf.com/blog/swiftui-importing-and-exporting-files/
+
+// probably use imported type rather than exported as we aren't the 'canonical' source of
+// these types.  That's someone else
 extension UTType {
+	public static let romcfg = UTType(filenameExtension: "cfg")!
 	public static let ssd = UTType(importedAs: "com.commandercoder.BeebEm.ssd")
 	public static let hdd = UTType(importedAs: "com.commandercoder.BeebEm.dat")
 	public static let tape = UTType(importedAs: "com.commandercoder.BeebEm.uef")
 	public static let rom = UTType(importedAs: "com.commandercoder.BeebEm.rom")
 
+	//do these really need to be exportedAs?
+		
 	public static let keymap = UTType(exportedAs: "com.commandercoder.BeebEm.kmap")
-	public static let state = UTType(exportedAs: "com.commandercoder.BeebEm.uefstate")
+	public static let uefstate = UTType(exportedAs: "com.commandercoder.BeebEm.uefstate")
+//	public static let ssdout = UTType(exportedAs: "com.commandercoder.BeebEm.ssdout")
+}
+
+func GetContentDictionary(filterString f : String?) -> ([String: String],[String])
+{
+	/*
+	 The first string in each pair is a display string that describes the filter (for example, "Text Files"), and the second string specifies the filter pattern (for example, ".TXT"). To specify multiple filter patterns for a single display string, use a semicolon to separate the patterns (for example, ".TXT;.DOC;.BAK"). A pattern string can be a combination of valid file name characters and the asterisk (*) wildcard character. Do not include spaces in the pattern string.
+	 */
+	
+	// using a 'names' array so that the order of the options doesn't keep changing as it would if the Array(dictionary.keys) were used.
+	var names: [String] = []
+	
+	var dictionary = [String: String]()
+	if let s = f
+	{
+		if let l = s.range(of: "\0\0")?.lowerBound
+		{
+			let t = String(s[..<l])
+			let pairs = t.components(separatedBy: "\0")
+			for i in stride(from: 0, to: pairs.count, by:2) {
+				names.append(pairs[i])
+				dictionary[pairs[i]] = pairs[i+1]
+			}
+		}
+	}
+	
+	return (dictionary,names)
 }
 
 
+func GetContentType(_ dictionary : [String:String]) -> [UTType]?
+{
+	var ct : [UTType]? = [] // .ANYFILE
+	
+	if dictionary.values.contains("*.ssd") // DISC
+	{
+		ct = [.ssd] // ["ssd", "dsd", "wdd", "dos", "adl", "adf", "img"]
+	}
+	else if dictionary.values.contains("*.uefstate") //UEFSTATEFILE
+	{
+		Swift.print("found uefstate.")
+		ct = [.uefstate] // ["uefstate", "csw"]
+	}
+	else if dictionary.values.contains("*.uef") //UEFFILE
+	{
+		Swift.print("found uef.")
+		ct = [.tape] // ["uef", "csw"]
+	}
+	else if dictionary.values.contains("*.uef") //IFD
+	{
+		Swift.print("found uefstate.")
+		ct = [.tape] // ["uef", "csw"]
+	}
+	else if dictionary.values.contains("*.kmap") //KEYBOARD
+	{
+		Swift.print("found Key Map File.")
+		ct = [.keymap] // ["kmap"]
+	}
+	else if dictionary.values.contains("*.dat") //HARDDRIVE
+	{
+		Swift.print("found hdd.")
+		ct = [.hdd] //nil  // ["dat"]
+	}
+	else if dictionary.values.contains("*.inf") //DISCFILE
+	{
+		Swift.print("found inf.")
+		ct = [.data] //nil  // ["inf"]
+	}
+	else if dictionary.values.contains("*.cfg") //ROMCFG
+	{
+		Swift.print("found rom config file.")
+		ct = [.romcfg ] // ["cfg"]
+	}
+	else if dictionary.values.contains("*.*") //PRINTFILE
+	{
+		Swift.print("found *.*")
+		ct = [.plainText]
+	}
+
+	return ct
+}
+	
+
 // allow access to this in C
 @_cdecl("swift_GetFilesWithPreview")
-func swift_GetFilesWithPreview(filepath : UnsafeMutablePointer<CChar>, bytes: Int, directory : UnsafeMutablePointer<CChar>, fileexts : FileFilter, multiFiles : Bool = false) -> Int
+func swift_GetFilesWithPreview(filepath : UnsafeMutablePointer<CChar>, bytes: Int, directory : UnsafeMutablePointer<CChar>, multiFiles : Bool = false, filefilter : UnsafePointer<CUnsignedChar>) -> Int
 {
     let dialog = NSOpenPanel()
-    
+	let s = UnsafeBufferPointer(start: filefilter, count: 1000) // 1000 should be large enough!s
+
     dialog.title                   = "Choose a file | BeebEm5"
     dialog.showsResizeIndicator    = true
     dialog.showsHiddenFiles        = false
@@ -47,39 +134,12 @@ func swift_GetFilesWithPreview(filepath : UnsafeMutablePointer<CChar>, bytes: In
     let launcherLogPath = String( cString: directory)
     dialog.directoryURL = NSURL.fileURL(withPath: launcherLogPath, isDirectory: true)
     dialog.canCreateDirectories = true
-    
-    switch fileexts {
-    case .DISC:
-		dialog.allowedContentTypes        = [.ssd] // ["ssd", "dsd", "wdd", "dos", "adl", "adf", "img"]
-		break
-	case .UEFSTATEFILE:
-		dialog.allowedContentTypes        = [.state]
-		break
-	case .UEFFILE:
-        dialog.allowedContentTypes        = [.tape] // ["uef", "csw"]
-		break
-    case .IFD:
-        dialog.allowedContentTypes        = [] // ["ssd", "dsd", "inf"]
-		break
-    case .KEYBOARD:
-        dialog.allowedContentTypes        = [.keymap] // ["kmap"]
-		break
-	case .HARDDRIVE:
-		dialog.allowedContentTypes        = [.hdd] //nil  // ["inf"]
-		break
-    case .DISCFILE:
-		dialog.allowedContentTypes        = [.data] //nil  // ["inf"]
-		break
-    case .ROMCFG:
-        dialog.allowedContentTypes        = [.rom] // ["rom"]
-		break
-    case .PRINTFILE:
-        break
-	case .ANYFILE:
-		dialog.allowedContentTypes        = []
-		break
-	}
-    
+	
+	
+	let (dictionary, _) = GetContentDictionary(filterString: String(bytes:s, encoding: .ascii))
+	
+	dialog.allowedContentTypes = GetContentType(dictionary) ?? []
+
     if (dialog.runModal() ==  NSApplication.ModalResponse.OK) {
         let result = dialog.urls // Pathnames of the files
 
@@ -146,68 +206,118 @@ func swift_SelectFolder(filepath : UnsafeMutablePointer<CChar>, bytes: Int, titl
 
 
 
-@_cdecl("swift_SaveFile")
-func swift_SaveFile(filepath : UnsafeMutablePointer<CChar>, bytes: Int, fileexts: FileFilter) -> Bool
-{
-	// test that PRINTDIALOG with no filename works
-	let dialog = NSSavePanel()
-    
-    dialog.title                   = "Choose a file | BeebEm5"
-    dialog.showsResizeIndicator    = true
-    dialog.showsHiddenFiles        = false
-    dialog.allowsOtherFileTypes    = true
-	dialog.isExtensionHidden	= false
+
+
+
+//https://christiantietze.de/posts/2020/05/create-nssavepanel-accessoryview-in-swift/
+class SaveDelegate: NSObject, NSOpenSavePanelDelegate {
 	
-    switch fileexts {
-    case .DISC:
-        dialog.allowedContentTypes        = [.ssd] // ["ssd", "dsd", "wdd", "dos", "adl", "adf", "img"]
-		break
-	case .UEFSTATEFILE:
-		dialog.allowedContentTypes        = [.state]
-		break
-    case .UEFFILE:
-        dialog.allowedContentTypes        = [.tape] // ["uef", "csw"]
-		break
-	case .ANYFILE:
-		dialog.allowedContentTypes        = []
-		break
-    case .IFD:
-        dialog.allowedContentTypes        = [] // ["ssd", "dsd", "inf"]
-		break
-    case .KEYBOARD:
-        dialog.allowedContentTypes        = [.keymap] // ["kmap"]
-		break
-	case .HARDDRIVE:
-		dialog.allowedContentTypes        = [.data] //nil  // ["inf"]
-		break
-    case .DISCFILE:
-		dialog.allowedContentTypes        = [.data] //nil // ["inf"]
-		break
-    case .ROMCFG:
-        dialog.allowedContentTypes        = [.rom] // ["rom"]
-		break
-    case .PRINTFILE:
-		dialog.allowedContentTypes        = [.plainText] //nil  // ["inf"]
-		break
-    }
+	func panelSelectionDidChange(_ sender: Any?)
+	{
+		Swift.print("panelSelectionDidChange \(String(describing: sender))")
+	}
 
-    if (dialog.runModal() ==  NSApplication.ModalResponse.OK) {
-        guard let result = dialog.url else { return false} // Pathname of the file
+	func panel(_ sender: Any, userEnteredFilename filename: String, confirmed okFlag: Bool) -> String? {
+		Swift.print("panel \(String(describing: sender))")
+		Swift.print("panel \(filename)")
+		return filename
+	}
+	
+	func panel(_ sender: Any, shouldEnable url: URL) -> Bool
+	{
+		return true;
+	}
+	
+//	func panel(_ sender: Any, validate url: URL) throws
+//	{
+//
+//	}
+	func panel(_ sender: Any, didChangeToDirectoryURL url: URL?)
+	{
+		
+	}
+}
 
-        let path: String = result.path
-        
-        // path contains the file path e.g
-        // /Users/ourcodeworld/Desktop/file.txt
-        
-        // set the filepath back in the C code.. fill with zeros first
-        filepath.assign(repeating: 0, count: bytes)
-        filepath.assign(from: path, count: path.count)
-            
-        print("Picked \(String(cString:filepath))")
-        return true
-    
-    }
-    return false
+class SaveDocument: NSDocument {
+	
+	internal init(filterString f : String?)
+	{
+		(dictionary,names) = GetContentDictionary(filterString:f)
+		contentTypes = GetContentType(dictionary) ?? []
+	}
+	
+	internal var fileurl : URL?
+	override func save(
+		to url: URL,
+		ofType typeName: String,
+		for saveOperation: NSDocument.SaveOperationType,
+		completionHandler: @escaping ((any Error)?) -> Void
+	)
+	{
+		Swift.print(url, typeName)
+		fileurl = url
+	}
+
+	override func fileNameExtension(forType typeName: String, saveOperation: NSDocument.SaveOperationType) -> String? {
+		Swift.print("file name extension \(typeName)")
+		return String((dictionary[typeName]?.dropFirst() )!)
+		
+	}
+
+	override func writableTypes(for saveOperation: NSDocument.SaveOperationType) -> [String]
+	{
+		return names
+	}
+	
+	var names = [String]()
+	var dictionary = [ String: String]()
+
+	var contentTypes : [UTType] = []
+	
+	override func prepareSavePanel(_ savePanel: NSSavePanel) -> Bool {
+
+		let dialog=savePanel
+		let delegate = SaveDelegate()
+
+		dialog.delegate = delegate
+		dialog.title                   = "Choose a file | BeebEm5"
+		dialog.allowsOtherFileTypes    = true
+		dialog.isExtensionHidden	= false
+		dialog.showsTagField = false
+		dialog.nameFieldStringValue = "somefile.txt"
+		//	dialog.showsResizeIndicator    = true
+		//	dialog.showsHiddenFiles        = false
+		//	dialog.canSelectHiddenExtension	= true
+		dialog.allowedContentTypes = contentTypes
+		
+		return true
+	}
+}
+
+
+@_cdecl("swift_SaveFile")
+func swift_SaveFile(filepath : UnsafeMutablePointer<CChar>, bytes: Int, filefilter : UnsafePointer<CUnsignedChar>) -> Bool
+{
+	let s = UnsafeBufferPointer(start: filefilter, count: 1000) // 1000 should be large enough!!
+	let sav = SaveDocument(filterString: String(bytes:s, encoding: .ascii))
+	
+	sav.runModalSavePanel(for:.saveOperation, delegate: nil , didSave:
+								nil, contextInfo: nil)
+	// fileurl in SaveDocument will contain the file IF
+	// it SAVE was pressed
+	guard let result = sav.fileurl else { return false} // Pathname of the file
+
+	let path: String = result.path
+	
+	// path contains the file path e.g
+	// /Users/ourcodeworld/Desktop/file.txt
+	
+	// set the filepath back in the C code.. fill with zeros first
+	filepath.assign(repeating: 0, count: bytes)
+	filepath.assign(from: path, count: path.count)
+		
+	print("Picked \(String(cString:filepath))")
+	return true
 }
 
 @_cdecl("swift_Alert")

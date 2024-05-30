@@ -31,11 +31,11 @@
 // NOTE: ExportFileDialog::m_FileSelected is not used even though it exists in the windows version
 // values are grabbed directly from the ListView ItemData
 static int filesSelected[DFS_MAX_CAT_SIZE];
-
-// populate the menu with disc files
-char szDiscFile[MAX_PATH];
-int heads;
-int side;
+static int itemCount = 0;
+static int itemIndex = 0;
+// 6 columns
+static int dfsNamesCount = 0;
+static char* dfsNames[DFS_MAX_CAT_SIZE][6];
 
 
 FileExportEntry* LVGetItemDataEF(HWND a, UINT b)
@@ -49,12 +49,15 @@ FileExportEntry* LVGetItemDataEF(HWND a, UINT b)
 
 static int ListView_GetItemCount(HWND a)
 {
-	return 0; // number of items in the listview
+	return dfsNamesCount;// number of items in the listview
 }
 
 static void ListView_SetItemState(HWND a, int c, int x, int y)
 {
 	// set state of item in the listview
+	// set this row as a selected row
+	filesSelected[c] = c;
+	itemCount++;
 }
 
 
@@ -97,12 +100,6 @@ ExportFileDialog::ExportFileDialog(HINSTANCE hInstance,
 //};
 
 
-
-
-
-// 6 columns
-char* dfsNames[DFS_MAX_CAT_SIZE][6];
- 
 int LVInsertItemEF(HWND hWnd, UINT uRow, UINT uCol, const char* pszText, LPARAM lParam)
 {
 	for (int c=0;c<6;c++)
@@ -162,45 +159,12 @@ bool ExportFileDialog::WM_INITDIALOG()
   
    // this sets the rows in the ExportDiscViewController.beeblistdata
    // to be displayed in the list
+	dfsNamesCount = Row;
    swift_InitExportDialog(dfsNames, Row, 6);
 
    return TRUE;
 }
 
-#ifndef __APPLE__
-	case WM_NOTIFY: {
-		LPNMHDR nmhdr = (LPNMHDR)lParam;
-
-		if (nmhdr->hwndFrom == m_hwndListView && nmhdr->code == NM_DBLCLK)
-		{
-			LPNMITEMACTIVATE pItemActivate = (LPNMITEMACTIVATE)lParam;
-
-			LVHITTESTINFO HitTestInfo = { 0 };
-			HitTestInfo.pt = pItemActivate->ptAction;
-			ListView_SubItemHitTest(m_hwndListView, &HitTestInfo);
-
-			FileExportEntry* Entry = reinterpret_cast<FileExportEntry*>(
-				LVGetItemData(m_hwndListView, HitTestInfo.iItem)
-			);
-
-			if (Entry)
-			{
-				RenameFileDialog Dialog(hInst,
-										m_hwnd,
-										Entry->BeebFileName.c_str(),
-										Entry->HostFileName.c_str());
-
-				if (Dialog.DoModal())
-				{
-					Entry->HostFileName = Dialog.GetHostFileName();
-
-					LVSetItemText(m_hwndListView, HitTestInfo.iItem, 4, const_cast<LPTSTR>(Entry->HostFileName.c_str()));
-				}
-			}
-		}
-		break;
-	}
-#else
 void ExportFileDialog::WM_NOTIFY()
 {
 	// double click a filename will allow it to be changed before exporting
@@ -227,26 +191,7 @@ void ExportFileDialog::WM_NOTIFY()
 	}
 	
 }
-#endif
-			
-#ifndef __APPLE__
 
-	case WM_COMMAND:
-		switch (LOWORD(wParam))
-		{
-		case IDOK:
-			ExportSelectedFiles();
-			return TRUE;
-
-		case IDCANCEL:
-			EndDialog(m_hwnd, wParam);
-			return TRUE;
-		}
-	}
-
-	return FALSE;
-}
-#else
 bool ExportFileDialog::WM_COMMAND(WPARAM param)
 {
 	switch (param)
@@ -261,9 +206,6 @@ bool ExportFileDialog::WM_COMMAND(WPARAM param)
 	}
 	return false;
 }
-#endif
-
-
 
 
 
@@ -289,26 +231,25 @@ std::string ExportFileDialog::GetPath() const
 
 
 
-int itemCount = 0;
-int ListView_GetSelectedCount(HWND a)
+static int ListView_GetSelectedCount(HWND a)
 {
 	itemCount = swift_SelectedFiles(filesSelected, sizeof(filesSelected));
 	return itemCount;
 }
 
-int itemIndex = 0;
-int ListView_GetNextItem(HWND a, int b, int c)
+static int ListView_GetNextItem(HWND a, int b, int c)
 {
-	itemIndex++;
-	if (itemIndex>=itemCount)
-	{
-		return -1;
-	}
-	
 	if (b<0)
 	{
 		itemIndex = 0;
 		return filesSelected[itemIndex];
+	}
+
+	itemIndex++;
+
+	if (itemIndex>=itemCount)
+	{
+		return -1;
 	}
 
 	return filesSelected[itemIndex];
