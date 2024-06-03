@@ -255,7 +255,10 @@ BeebWin::BeebWin()
 #ifndef __APPLE__
 			strcat(m_UserDataPath, "\\BeebEm\\");
 #else
-			// m_UserDataPath is 'BeebEm-mac' sub-directory in Application Support Directory
+			// m_UserDataPath is either
+			// 'BeebEm-mac' sub-directory in Application Support Directory
+			// or
+			// 'BeebEm' sub-directory in Documents Directory
 #endif
 		}
 	}

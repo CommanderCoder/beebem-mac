@@ -175,12 +175,21 @@ int SHGetFolderPath(HWND   hwnd,
 	if (csidl != CSIDL_PERSONAL)
 		return 1; //error
 	
-	// grab the application support folder
 	char userDataPath[PATH_MAX];
+#if 0
+	// grab the application support folder
 	swift_GetApplicationSupportDirectory(userDataPath, _MAX_PATH);
+	// ../library/application support/beebem-mac
 	strcat(userDataPath, "UserData/");
-
-#ifdef DEBUG
+	// ../library/application support/beebem-mac/UserData
+#else
+	swift_GetDocumentsDirectory(userDataPath, _MAX_PATH);
+	// ../Documents/
+	strcat(userDataPath, "BeebEm/");
+	// ../Documents/BeebEm/
+#endif
+	
+#if 0 //def DEBUG
 	// look for path
 	bool folderFound = FolderExists(userDataPath);
 	if (folderFound)

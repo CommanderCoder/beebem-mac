@@ -73,6 +73,27 @@ public func swift_GetApplicationSupportDirectory( _ resourcePath: UnsafeMutableP
 	}
 }
 
+@_cdecl("swift_GetDocumentsDirectory")
+public func swift_GetDocumentsDirectory( _ resourcePath: UnsafeMutablePointer<CChar>, _ length:Int)
+{
+	do
+	{
+		//  Find Document directory
+		let fileManager = FileManager.default
+		let documentURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!
+		
+		let dpath = documentURL.path+"/"
+		// set the filepath back in the C code - fill with zeros first
+		resourcePath.assign(repeating: 0, count: length)
+		resourcePath.assign(from: dpath, count: dpath.count)
+
+
+	}
+	catch
+	{
+		print("Couldn't find the DocumentsDirectory")
+	}
+}
 
 // allow access to this in C
 @_cdecl("swift_MoveFile")
