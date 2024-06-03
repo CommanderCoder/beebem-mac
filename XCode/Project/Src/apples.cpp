@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <windows.h>
 #include "beebemrcids.h"
-
+#include <string>
 #include <filesystem> // C++17 (or Microsoft-specific implementation in C++14)
 
 int __argc;
@@ -165,20 +165,105 @@ void _makepath(char *path,
 		sprintf(path, "%s/", dir);
 }
 
-bool SHGetFolderPath(const char* path)
+//SHFOLDERAPI
+int SHGetFolderPath(HWND   hwnd,
+					   int    csidl,
+					   HANDLE hToken,
+					   DWORD  dwFlags,
+					   LPSTR  pszPath)
 {
-	// look for path
-	bool folderFound = FolderExists(path);
+	if (csidl != CSIDL_PERSONAL)
+		return 1; //error
 	
-	if (!folderFound)
-	{
-		// replace the path with the path to the users DOCUMENTS
-		// folder and return 'true'
-	}
+	// grab the application support folder
+	char userDataPath[PATH_MAX];
+	swift_GetApplicationSupportDirectory(userDataPath, _MAX_PATH);
+	strcat(userDataPath, "UserData/");
 
-	return false;
+#ifdef DEBUG
+	// look for path
+	bool folderFound = FolderExists(userDataPath);
+	if (folderFound)
+	{
+		// during debugging need to always copy the userdata from the Bundle
+		fprintf(stdout,"*** REMOVING %s SO IT WILL GET A CLEAN COPY ***", userDataPath);
+		int ret = swift_Remove(userDataPath);
+		fprintf(stdout,"*** %d ***", ret);
+	}
+#endif
+
+	strcpy(pszPath, userDataPath);
+
+	return S_OK;
 }
 
+LSTATUS RegSetValueEx(
+HKEY       hKey,
+LPCSTR     lpValueName,
+				 DWORD      Reserved,
+		  DWORD      dwType,
+		  const BYTE *lpData,
+		   DWORD      cbData
+)
+{
+	return ERROR_SUCCESS;
+}
+LSTATUS RegQueryValueEx(
+		HKEY    hKey,
+		LPCSTR  lpValueName,
+		LPDWORD lpReserved,
+		LPDWORD lpType,
+		LPBYTE  lpData,
+		LPDWORD lpcbData
+	  )
+{
+	std::string val(lpValueName);
+	if (val.compare("UserDataFolder"))
+	{
+		return 1; //error
+	}
+	return ERROR_SUCCESS;
+}
+LSTATUS RegCreateKeyEx(
+   HKEY                        hKey,
+   LPCSTR                      lpSubKey,
+   DWORD                       Reserved,
+   LPSTR                       lpClass,
+   DWORD                       dwOptions,
+   REGSAM                      samDesired,
+   const LPSECURITY_ATTRIBUTES lpSecurityAttributes,
+   PHKEY                       phkResult,
+   LPDWORD                     lpdwDisposition
+)
+{
+	return ERROR_SUCCESS;
+}
+LSTATUS RegOpenKeyEx(
+   HKEY   hKey,
+   LPCSTR lpSubKey,
+   DWORD  ulOptions,
+   REGSAM samDesired,
+   PHKEY  phkResult
+)
+{
+	// cannot open keys so
+	return !ERROR_SUCCESS;
+}
+LSTATUS RegCloseKey( HKEY hKey)
+{
+	return ERROR_SUCCESS;
+}
+
+DWORD GetModuleFileNameA(
+   HMODULE hModule,
+   LPSTR   lpFilename,
+   DWORD   nSize
+)
+{
+	// get the path of the executable file of the current process.
+	// return the length of the string
+	return 0;
+}
 int connect(int a, SOCKADDR *b, int c)
 {
 	return 0;
@@ -443,7 +528,7 @@ int SHCreateDirectoryEx(void* a, const char* f, void *b)
 	// it doesn't so create it and copy the files
 	mode_t mode = 0755;
 	mkdir(f, mode);
-	return true;
+	return ERROR_SUCCESS;
 }
 
 bool SHFileOperation(SHFILEOPSTRUCT* a)
@@ -452,9 +537,13 @@ bool SHFileOperation(SHFILEOPSTRUCT* a)
 	{
 		// using SWIFT Foundation to copy all the files in pFrom
 		a->fAnyOperationsAborted = false;
-		return !swift_CopyDirectoryRecursively(a->pFrom, a->pTo);
+		bool res = swift_CopyDirectoryRecursively(a->pFrom, a->pTo);
+		if (!res)
+		{
+			return 1; //error
+		}
 	}
-	return true;
+	return ERROR_SUCCESS;
 }
 void GetMonitorInfo(HMONITOR monitor, MONITORINFO* info){}
 HMONITOR MonitorFromWindow(HWND wnd, int s){return 0L;}

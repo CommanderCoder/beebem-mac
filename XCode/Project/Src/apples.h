@@ -56,6 +56,7 @@ typedef uint32_t HMONITOR; //
 typedef uint32_t* WNDPROC; //
 typedef uint32_t* TIMERPROC; //
 typedef uint32_t* HANDLE; //
+typedef HANDLE HKEY;
 typedef long LPARAM;
 typedef long WPARAM; //
 typedef uint32_t* HGDIOBJ; //
@@ -64,11 +65,76 @@ typedef uint32_t* HBITMAP; //
 
 typedef uint32_t* POINT; //
 
+#define CSIDL_PERSONAL -1
+#define SHGFP_TYPE_CURRENT -1
+
+#define HKEY_CURRENT_USER NULL
+#define CFG_REG_KEY NULL
+#define NOERROR 0
+#define S_OK 0
+#define ERROR_SUCCESS 0
+#define KEY_ALL_ACCESS -1
+#define REG_SZ 4
+#define REG_BINARY 3
+typedef unsigned char BYTE;
+typedef BYTE *LPBYTE;
+//typedef CHAR *LPSTR;
+typedef char *LPSTR;
+//typedef __nullterminated CONST CHAR *LPCSTR;
+typedef const char *LPCSTR;
+#define LPTSTR char *
+
+typedef char REGSAM;
+typedef char LPSECURITY_ATTRIBUTES;
+typedef HKEY *PHKEY;
+typedef DWORD *LPDWORD;
+
+typedef uint32_t LSTATUS; //
+LSTATUS RegSetValueEx(
+HKEY       hKey,
+LPCSTR     lpValueName,
+				 DWORD      Reserved,
+          DWORD      dwType,
+          const BYTE *lpData,
+           DWORD      cbData
+);
+LSTATUS RegQueryValueEx(
+		HKEY    hKey,
+		LPCSTR  lpValueName,
+		LPDWORD lpReserved,
+		LPDWORD lpType,
+		LPBYTE  lpData,
+		LPDWORD lpcbData
+	  );
+LSTATUS RegCloseKey( HKEY hKey);
+LSTATUS RegCreateKeyEx(
+   HKEY                        hKey,
+   LPCSTR                      lpSubKey,
+   DWORD                       Reserved,
+   LPSTR                       lpClass,
+   DWORD                       dwOptions,
+   REGSAM                      samDesired,
+   const LPSECURITY_ATTRIBUTES lpSecurityAttributes,
+   PHKEY                       phkResult,
+   LPDWORD                     lpdwDisposition);
+LSTATUS RegOpenKeyEx(
+   HKEY   hKey,
+   LPCSTR lpSubKey,
+   DWORD  ulOptions,
+   REGSAM samDesired,
+   PHKEY  phkResult
+);
+
 typedef uint32_t* ISpVoice;//
 typedef uint32_t ISpObjectToken;//
 typedef wchar_t WCHAR;//
 typedef uint32_t TCHAR;//
 
+DWORD GetModuleFileName(
+   HMODULE hModule,
+   LPSTR   lpFilename,
+   DWORD   nSize
+);
 
 typedef struct joycaps_tag {
   WORD wMid;
@@ -220,10 +286,6 @@ int WSAGetLastError();
 
 int connect(int a, SOCKADDR *b, int c);
 
-#define LPSTR std::string
-#define LPCSTR const char *
-#define LPTSTR char *
-
 #define BYTE __uint8_t
 #define WORD __uint16_t
 #define LOBYTE(w) ((BYTE)(w))
@@ -284,9 +346,11 @@ extern void MoveFileEx(const char* dest, const char* orig, DWORD flags);
 
 bool PathIsRelative(const char* path);
 
-bool SHGetFolderPath(const char* path);
-
-
+int SHGetFolderPath(HWND   hwnd,
+					 int    csidl,
+					 HANDLE hToken,
+					 DWORD  dwFlags,
+					 LPSTR  pszPath);
 
 template < typename T, int N >
 int _countof( T ( & arr )[ N ] )
@@ -370,6 +434,7 @@ extern "C" int swift_SetCurSel(Modals mod, int m);
 
 
 extern "C" int swift_OpenDialog(Dialogs dlg, void* dialogClass);
+extern "C" int swift_CloseDialog(Dialogs dlg);
 extern "C" int swift_DoModal(Modals mod, void* dialogClass);
 extern "C" int swift_EndModal(bool ok);
 
@@ -407,6 +472,7 @@ typedef  enum
   DIB_PAL_COLORS = 0x01,
   DIB_PAL_INDICES = 0x02
 } DIBColors;
+#define BI_RGB 255
 void MoveWindow(HWND m_hWnd, int x, int y, int w, int h, bool b);
 void ShowWindow(HWND m_hWnd, int x);
 
@@ -416,7 +482,6 @@ void ShellExecute(HWND m_hWnd, void* a, char* p, void* b, void* c, int f);
 
 
 int SHCreateDirectoryEx(void* a, const char* f, void *b);
-#define ERROR_SUCCESS 1
 
 
 extern "C" void swift_sleepCPU(unsigned long microseconds);

@@ -139,6 +139,14 @@ public func swift_OpenDialog(_ dlg: Dialogs, caller : UnsafeMutableRawPointer)
 	dlgWindowCtrl.showWindow(nil)
 }
 
+@_cdecl("swift_CloseDialog")
+public func swift_CloseDialog(_ dlg: Dialogs)
+{
+	guard let dlgView = allViews[dlg] else {return}
+	guard let dlgWindowCtrl = dlgView.view.window?.windowController else {return}
+	dlgWindowCtrl.close()
+}
+
 
 // allow access to this in C
 @_cdecl("swift_DoModal")

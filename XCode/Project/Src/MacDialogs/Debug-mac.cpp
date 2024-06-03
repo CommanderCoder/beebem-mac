@@ -1049,6 +1049,7 @@ void DebugOpenDialog(HINSTANCE hinst, HWND /* hwndMain */)
 
 void DebugCloseDialog()
 {
+	swift_CloseDialog(Dialogs::debugWindow);
 	DestroyWindow(hwndDebug);
 	hwndDebug = nullptr;
 	hwndInfo = nullptr;
@@ -1126,93 +1127,6 @@ void DebugDisplayInfo(const char *info)
 }
 
 
-#ifndef __APPLE__
-INT_PTR CALLBACK DebugDlgProc(HWND hwndDlg, UINT message, WPARAM wParam, LPARAM /* lParam */)
-{
-	switch (message)
-	{
-		case WM_INITDIALOG:
-			SendDlgItemMessage(hwndDlg, IDC_DEBUGCOMMAND, EM_SETLIMITTEXT, MAX_COMMAND_LEN, 0);
-			return TRUE;
-
-		case WM_ACTIVATE:
-			if (LOWORD(wParam) == WA_INACTIVE)
-			{
-				hCurrentDialog = NULL;
-				hCurrentAccelTable = NULL;
-			}
-			else
-			{
-				hCurrentDialog = hwndDebug;
-				hCurrentAccelTable = haccelDebug;
-			}
-
-			return FALSE;
-
-		case WM_COMMAND:
-			switch (LOWORD(wParam))
-			{
-				case ID_ACCELUP:
-					if(GetFocus() == GetDlgItem(hwndDebug, IDC_DEBUGCOMMAND))
-						DebugHistoryMove(-1);
-					return TRUE;
-
-				case ID_ACCELDOWN:
-					if(GetFocus() == GetDlgItem(hwndDebug, IDC_DEBUGCOMMAND))
-						DebugHistoryMove(1);
-					return TRUE;
-
-				case IDC_DEBUGBREAK:
-					DebugToggleRun();
-					return TRUE;
-
-				case IDC_DEBUGEXECUTE:
-					DebugExecuteCommand();
-					SetFocus(GetDlgItem(hwndDebug, IDC_DEBUGCOMMAND));
-					return TRUE;
-
-				case IDC_DEBUGBPS:
-					BPSOn = IsDlgItemChecked(hwndDebug, IDC_DEBUGBPS);
-					break;
-
-				case IDC_DEBUGBRK:
-					BRKOn = IsDlgItemChecked(hwndDebug, IDC_DEBUGBRK);
-					break;
-
-				case IDC_DEBUGOS:
-					DebugOS = IsDlgItemChecked(hwndDebug, IDC_DEBUGOS);
-					break;
-
-				case IDC_DEBUGROM:
-					DebugROM = IsDlgItemChecked(hwndDebug, IDC_DEBUGROM);
-					break;
-
-				case IDC_DEBUGHOST:
-					DebugHost = IsDlgItemChecked(hwndDebug, IDC_DEBUGHOST);
-					break;
-
-				case IDC_DEBUGPARASITE:
-					DebugParasite = IsDlgItemChecked(hwndDebug, IDC_DEBUGPARASITE);
-					break;
-
-				case IDC_WATCHDECIMAL:
-				case IDC_WATCHENDIAN:
-					WatchDecimal = IsDlgItemChecked(hwndDebug, IDC_WATCHDECIMAL);
-					WatchBigEndian = IsDlgItemChecked(hwndDebug, IDC_WATCHENDIAN);
-					DebugUpdateWatches(true);
-					break;
-
-				case IDCANCEL:
-					DebugCloseDialog();
-					return TRUE;
-			}
-	}
-
-	return FALSE;
-}
-
-#else
-
 //WM_COMMAND
 long DbgWindowCommandHandler(UINT32 cmdID)
 {
@@ -1277,8 +1191,6 @@ long DbgWindowCommandHandler(UINT32 cmdID)
 
 	return FALSE;
 }
-#endif
-
 
 //*******************************************************************
 
@@ -1537,8 +1449,7 @@ void DebugDisplayTrace(DebugType type, bool host, const char *info)
 			if (IsDlgItemChecked(hwndDebug, IDC_DEBUG_CMOS_BRK))
 				DebugBreakExecution(type);
 			break;
-#ifndef __APPLE__
-#else
+#ifdef __APPLE__
 			case DebugType::None:
 				
 				break;

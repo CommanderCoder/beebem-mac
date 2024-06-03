@@ -57,11 +57,7 @@ using std::max;
 #include "AboutDialog.h"
 #include "Arm.h"
 #include "AtoDConv.h"
-#ifndef __APPLE__
-#include "AviWriter.h"
-#else
 #include "AVIWriter.h"
-#endif
 #include "BeebMem.h"
 #include "Debug.h"
 #include "DebugTrace.h"
@@ -232,8 +228,8 @@ BeebWin::BeebWin()
 
 	InitKeyMap();
 
-#ifndef __APPLE__
 	/* Get the applications path - used for non-user files */
+#ifndef __APPLE__
 	char app_path[_MAX_PATH];
 	char app_drive[_MAX_DRIVE];
 	char app_dir[_MAX_DIR];
@@ -241,23 +237,14 @@ BeebWin::BeebWin()
 	_splitpath(app_path, app_drive, app_dir, NULL, NULL);
 	_makepath(m_AppPath, app_drive, app_dir, NULL, NULL);
 #else
+	/* On Apple Mac, these are copied from the Bundle to
+	 * the Support Directory the first time the application
+	 * is executed */
+
 	// Resources for the APP are in the bundle directory
 	swift_GetBundleDirectory(m_AppPath, _MAX_PATH);
-
-	// fix up the userdatapath
-	char userDataPath[PATH_MAX];
-	swift_GetApplicationSupportDirectory(userDataPath, _MAX_PATH);
-	strcat(userDataPath, "UserData/");
-	strcpy(m_UserDataPath, userDataPath);
-#ifdef DEBUG
-	// during debugging need to always copy the userdata from the Bundle
-	fprintf(stdout,"*** REMOVING %s SO IT WILL GET A CLEAN COPY ***", m_UserDataPath);
-	int ret = swift_Remove(m_UserDataPath);
-	fprintf(stdout,"*** %d ***", ret);
 #endif
-#endif
-
-#ifndef __APPLE__
+	
 	// Read user data path from registry
 	if (!RegGetStringValue(HKEY_CURRENT_USER, CFG_REG_KEY, "UserDataFolder",
 	                       m_UserDataPath, _MAX_PATH))
@@ -265,26 +252,16 @@ BeebWin::BeebWin()
 		// Default user data path to a sub-directory in My Docs
 		if (SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, m_UserDataPath) == NOERROR)
 		{
+#ifndef __APPLE__
 			strcat(m_UserDataPath, "\\BeebEm\\");
-		}
-	}
 #else
-	{
-		// Default user data path to a sub-directory in My Docs
-		if (SHGetFolderPath(m_UserDataPath))
-		{
-			strcat(m_UserDataPath, "/BeebEm/");
+			// m_UserDataPath is 'BeebEm-mac' sub-directory in Application Support Directory
+#endif
 		}
 	}
-#endif
-
+	
 	m_CustomData = false;
-
-#ifdef __APPLE__
-//    swift_GetApplicationSupportDirectory(m_PrefsFile, _MAX_PATH);
-//    swift_GetResourcePath(m_PrefsFile, _MAX_PATH, "UserData/Preferences.cfg");
-//    swift_GetResourcePath(RomFile, _MAX_PATH, "UserData/Roms.cfg");
-#endif
+	
 	// Set default files, may be overridden by command line parameters.
 	strcpy(m_PrefsFile, "Preferences.cfg");
 	strcpy(RomFile, "Roms.cfg");
@@ -305,7 +282,6 @@ bool BeebWin::Initialise()
 
 	LoadPreferences();
 
-#ifndef __APPLE__
 	// Read disc images path from registry
 	if (!RegGetStringValue(HKEY_CURRENT_USER, CFG_REG_KEY, "DiscsPath",
 	                       m_DiscPath, _MAX_PATH))
@@ -318,7 +294,6 @@ bool BeebWin::Initialise()
 		GetDataPath(m_DiscPath, DefaultPath);
 		strcpy(m_DiscPath, DefaultPath);
 	}
-#endif
 
 	// Override full screen?
 	if (m_startFullScreen)
@@ -520,7 +495,6 @@ void BeebWin::ApplyPrefs()
 /****************************************************************************/
 BeebWin::~BeebWin()
 {
-#ifndef __APPLE__
 	if (m_DisplayRenderer != IDM_DISPGDI)
 		ExitDX();
 
@@ -533,6 +507,7 @@ BeebWin::~BeebWin()
 	if (m_hDCBitmap != NULL)
 		DeleteDC(m_hDCBitmap);
 
+#ifndef __APPLE__
 	GdiplusShutdown(m_gdiplusToken);
 
 	CoUninitialize();
@@ -877,12 +852,11 @@ void BeebWin::DestroySprowCoPro()
 /****************************************************************************/
 void BeebWin::CreateBitmap()
 {
-#ifndef __APPLE__
 	if (m_hBitmap != NULL)
 		DeleteObject(m_hBitmap);
 	if (m_hDCBitmap != NULL)
 		DeleteDC(m_hDCBitmap);
-#endif
+
 	if (m_screen_blur != NULL)
 		free(m_screen_blur);
 
@@ -897,9 +871,7 @@ void BeebWin::CreateBitmap()
 	m_bmi.bmiHeader.biBitCount = 8;
 	m_bmi.bmiHeader.biXPelsPerMeter = 0;
 	m_bmi.bmiHeader.biYPelsPerMeter = 0;
-#ifndef __APPLE__
 	m_bmi.bmiHeader.biCompression = BI_RGB;
-#endif
 	m_bmi.bmiHeader.biSizeImage = 800*512;
 	m_bmi.bmiHeader.biClrUsed = 68;
 	m_bmi.bmiHeader.biClrImportant = 68;
@@ -5387,12 +5359,11 @@ bool BeebWin::CheckUserDataPath(bool Persist)
 		fileOp.wFunc = FO_COPY;
 		fileOp.fFlags = 0;
 
-#ifndef __APPLE__
 		strcpy(path, m_AppPath);
+#ifndef __APPLE__
 		strcat(path, "UserData\\*.*");
 #else
-		// using SWIFT Foundation to get UserData path
-		swift_GetResourcePath(path, _MAX_PATH, "UserData");
+		strcat(path, "UserData");
 #endif
 		path[strlen(path)+1] = 0; // need double 0
 		fileOp.pFrom = path;
@@ -5450,12 +5421,10 @@ bool BeebWin::CheckUserDataPath(bool Persist)
 
 void BeebWin::StoreUserDataPath()
 {
-#ifndef __APPLE__
 	// Store user data path in registry
 	RegCreateKey(HKEY_CURRENT_USER, CFG_REG_KEY);
 	RegSetStringValue(HKEY_CURRENT_USER, CFG_REG_KEY,
 	                  "UserDataFolder", m_UserDataPath);
-#endif
 }
 
 /****************************************************************************/
@@ -5694,7 +5663,6 @@ MessageResult BeebWin::ReportV(MessageType type, const char *format, va_list arg
 
 	return Result;
 }
-#ifndef __APPLE__
 
 /****************************************************************************/
 bool BeebWin::RegCreateKey(HKEY hKeyRoot, LPCSTR lpSubKey)
@@ -5796,4 +5764,3 @@ bool BeebWin::RegSetStringValue(HKEY hKeyRoot, LPCSTR lpSubKey, LPCSTR lpValue,
 
 	return rc;
 }
-#endif

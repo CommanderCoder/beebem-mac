@@ -70,7 +70,7 @@ class BeebViewController: NSViewController {
     var skimage: SKSpriteNode = SKSpriteNode()
     
     var displayLink : CVDisplayLink?
-    
+	let d = DispatchQueue(label:"CPU")
 	
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -128,8 +128,12 @@ class BeebViewController: NSViewController {
         
         BeebReady = setupBeeb()
         
+		// if not BeebReady
+		//{
+			// close the app
+		//}
         // two options NSTimer or CVDisplayLink
-//        timer = Timer.scheduledTimer(withTimeInterval: 1.0/100000, repeats: true) { timer in
+//        let timer = Timer.scheduledTimer(withTimeInterval: 1.0/100000, repeats: true) { timer in
 //            // update the CPU
 //            self.update_cpu()
 //        }
@@ -141,7 +145,13 @@ class BeebViewController: NSViewController {
         // it will be put to sleep internally.
 		if (BeebReady)
 		{
-			update_cpu()
+//			GAME UPDATE is called from the DisplayLinkOutputCallback
+//			and it is called on the main thread
+			d.async {
+				while true {
+					self.update_cpu()
+				}
+			}
 		}
     }
 
@@ -249,23 +259,16 @@ extension BeebViewController{
     
     func update_cpu()  // game update
     {
-        let d = DispatchQueue(label:"CPU")
-        // GAME UPDATE is called from the DisplayLinkOutputCallback
-        // and it is called on the main thread
-        d.async {
-            while true {
-                // update the CPU - not now - but after the delay requested by the previous cpu cycle
-                Thread.sleep(forTimeInterval: Double(CBridge.nextCPU)/1000.0);
-                while handlingCommand
-                {
-                    // wait until command has been handled
-                }
-                CBridge.nextCPU = 0
-                beeb_MainCpuLoop()
+		// update the CPU - not now - but after the delay requested by the previous cpu cycle
+		Thread.sleep(forTimeInterval: Double(CBridge.nextCPU)/1000.0);
+		while handlingCommand
+		{
+			// wait until command has been handled
+		}
+		CBridge.nextCPU = 0
+		beeb_MainCpuLoop()
 
-//                print("> "+String(Date.timeIntervalSinceReferenceDate))
-            }
-        }
+//      print("> "+String(Date.timeIntervalSinceReferenceDate))
     }
 
     

@@ -9,7 +9,7 @@ import Foundation
 
 
 
-// allow access to this in C
+// Get the path to a resource in the bundle
 @_cdecl("swift_GetResourcePath")
 public func swift_GetResourcePath( _ resourcePath: UnsafeMutablePointer<CChar>, _ length:Int, _ filename: UnsafePointer<CChar>)
 {
@@ -28,7 +28,7 @@ public func swift_GetResourcePath( _ resourcePath: UnsafeMutablePointer<CChar>, 
 }
 
 
-// allow access to this in C
+// Get the bundle directory
 @_cdecl("swift_GetBundleDirectory")
 public func swift_GetBundleDirectory( _ bundlePath: UnsafeMutablePointer<CChar>, _ length:Int)
 {
