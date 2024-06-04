@@ -1401,10 +1401,20 @@ void BeebWin::UpdateModelMenu()
 
 	if (MachineType == Model::Master128) {
 		EnableMenuItem(ID_FDC_DLL, false);
+#ifdef __APPLE__
+		EnableMenuItem(ID_FDC_ACORN, false);
+		EnableMenuItem(ID_FDC_OPUS, false);
+		EnableMenuItem(ID_FDC_WATFORD, false);
+#endif
 	}
 	else if (MachineType != Model::MasterET)
 	{
 		EnableMenuItem(ID_FDC_DLL, true);
+#ifdef __APPLE__
+		EnableMenuItem(ID_FDC_ACORN, true);
+		EnableMenuItem(ID_FDC_OPUS, true);
+		EnableMenuItem(ID_FDC_WATFORD, true);
+#endif
 	}
 
 	const bool IsMasterET = MachineType == Model::MasterET;
@@ -1478,6 +1488,11 @@ void BeebWin::UpdateModelMenu()
 	// Model B Floppy Controller sub-menu
 	EnableMenuItem(ID_8271, IsModelB);
 	EnableMenuItem(ID_FDC_DLL, IsModelB);
+#ifdef __APPLE__
+	EnableMenuItem(ID_FDC_ACORN, IsModelB);
+	EnableMenuItem(ID_FDC_OPUS, IsModelB);
+	EnableMenuItem(ID_FDC_WATFORD, IsModelB);
+#endif
 
 	EnableMenuItem(ID_BASIC_HARDWARE_ONLY, !IsMasterET);
 	EnableMenuItem(ID_TELETEXT, !IsMasterET);
@@ -3995,6 +4010,15 @@ void BeebWin::HandleCommand(UINT MenuID)
 			SelectFDC();
 		break;
 
+#ifdef __APPLE__
+	case ID_FDC_WATFORD:
+	case ID_FDC_ACORN:
+	case ID_FDC_OPUS:
+		if (MachineType != Model::Master128 && MachineType != Model::MasterET)
+			SelectFDC(MenuID);
+		break;
+#endif
+			
 	case ID_8271:
 		KillDLLs();
 		NativeFDC = true;
@@ -4002,6 +4026,13 @@ void BeebWin::HandleCommand(UINT MenuID)
 		CheckMenuItem(ID_8271, true);
 		CheckMenuItem(ID_FDC_DLL, false);
 
+#ifdef __APPLE__
+		// uncheck all ID_FDC_DLL items
+		CheckMenuItem(ID_FDC_ACORN, false);
+		CheckMenuItem(ID_FDC_OPUS, false);
+		CheckMenuItem(ID_FDC_WATFORD, false);
+#endif
+			
 		if (MachineType != Model::Master128 && MachineType != Model::MasterET)
 		{
 			char CfgName[20];

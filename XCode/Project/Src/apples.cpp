@@ -353,13 +353,6 @@ void SetMenu(HWND w, bool s)
 
 DWORD CheckMenuItem( HMENU hMenu,  UINT  uIDCheckItem,UINT  uCheck)
 {
-	if (uIDCheckItem == ID_FDC_DLL)
-	{
-		swift_SetMenuCheck(beebwin_RC2ID(ID_FDC_ACORN), uCheck);
-		swift_SetMenuCheck(beebwin_RC2ID(ID_FDC_OPUS), uCheck);
-		swift_SetMenuCheck(beebwin_RC2ID(ID_FDC_WATFORD), uCheck);
-	}
-
 	swift_SetMenuCheck(beebwin_RC2ID(uIDCheckItem), uCheck);
 	return uCheck;   // should be the previous value of this item
 }
@@ -367,18 +360,8 @@ DWORD CheckMenuItem( HMENU hMenu,  UINT  uIDCheckItem,UINT  uCheck)
 
 DWORD EnableMenuItem(  HMENU hMenu,  UINT  uIDCheckItem,UINT  uEnable)
 {
-	
-	if (uIDCheckItem == ID_FDC_DLL)
-	{
-		swift_SetMenuEnable(beebwin_RC2ID(ID_FDC_ACORN), uEnable);
-		swift_SetMenuEnable(beebwin_RC2ID(ID_FDC_OPUS), uEnable);
-		swift_SetMenuEnable(beebwin_RC2ID(ID_FDC_WATFORD), uEnable);
-	}
-
 	swift_SetMenuEnable(beebwin_RC2ID(uIDCheckItem), uEnable);
-	
 	return uEnable;  // should be the previous value of this item
-
 }
 
 

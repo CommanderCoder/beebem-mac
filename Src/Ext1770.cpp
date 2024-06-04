@@ -86,19 +86,19 @@ Ext1770Result Ext1770Init(const char *FileName)
 	PSetDriveControl = (SetDriveControlFunc)GetProcAddress(hFDCBoard, "SetDriveControl");
 	PGetDriveControl = (GetDriveControlFunc)GetProcAddress(hFDCBoard, "GetDriveControl");
 #else
-	if (strstr(FileName,"Acorn") == 0)
+	if (strstr(FileName,"Acorn"))
 	{
 		PGetBoardProperties=(GetBoardPropertiesFunc) AcornFDC::GetBoardProperties;
 		PSetDriveControl=(SetDriveControlFunc) AcornFDC::SetDriveControl;
 		PGetDriveControl=(GetDriveControlFunc) AcornFDC::GetDriveControl;
 	}
-	else if (strstr(FileName,"Opus") == 0)
+	else if (strstr(FileName,"Opus"))
 	{
 		PGetBoardProperties=(GetBoardPropertiesFunc) OpusFDC::GetBoardProperties;
 		PSetDriveControl=(SetDriveControlFunc) OpusFDC::SetDriveControl;
 		PGetDriveControl=(GetDriveControlFunc) OpusFDC::GetDriveControl;
 	}
-	else if (strstr(FileName,"Watford") == 0)
+	else if (strstr(FileName,"Watford"))
 	{
 		PGetBoardProperties=(GetBoardPropertiesFunc) WatfordFDC::GetBoardProperties;
 		PSetDriveControl=(SetDriveControlFunc) WatfordFDC::SetDriveControl;

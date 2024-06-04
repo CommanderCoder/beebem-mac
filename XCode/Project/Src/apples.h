@@ -77,6 +77,7 @@ typedef uint32_t* POINT; //
 #define REG_SZ 4
 #define REG_BINARY 3
 typedef unsigned char BYTE;
+typedef BYTE *PBYTE;
 typedef BYTE *LPBYTE;
 //typedef CHAR *LPSTR;
 typedef char *LPSTR;
@@ -527,6 +528,11 @@ extern void beebwin_ModifyMenu(
 #define IDCANCEL 0x40
 #endif
 
+#define ID_FDC_ACORN                      39901
+#define ID_FDC_OPUS                       39902
+#define ID_FDC_WATFORD                    39903
+
+
 int MessageBox(HWND m_hWnd, const char* buffer, const char* WindowTitle, int Type);
 
 
@@ -671,5 +677,11 @@ typedef struct _SHFILEOPSTRUCTA {
 } SHFILEOPSTRUCTA, *LPSHFILEOPSTRUCTA, SHFILEOPSTRUCT ;
 
 bool SHFileOperation(SHFILEOPSTRUCT* a);
+
+
+
+extern "C" int swift_GetSoundBufferLength(int outputType);
+extern "C" void swift_SoundStream(PBYTE buffer, int outputType);
+extern "C" void swift_SoundInit();
 
 #endif /* apples_h */

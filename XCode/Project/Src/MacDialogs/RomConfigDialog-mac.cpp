@@ -508,7 +508,11 @@ bool RomConfigDialog::GetROMFile(char *pszFileName)
 	if (Dialog.Open())
 	{
 		// Save directory as default for next time
+#ifndef __APPLE__
 		unsigned int PathLength = (unsigned int)(strrchr(pszFileName, '\\') - pszFileName);
+#else
+		unsigned int PathLength = (unsigned int)(strrchr(pszFileName, '/') - pszFileName);
+#endif
 		strncpy(szDefaultROMPath, pszFileName, PathLength);
 		szDefaultROMPath[PathLength] = 0;
 

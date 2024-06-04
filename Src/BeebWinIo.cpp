@@ -507,6 +507,33 @@ void BeebWin::SelectFDC()
 #endif
 }
 
+#ifdef __APPLE__
+std::map<int,std::string> nameMap {
+	{ID_FDC_WATFORD,"Watford"},
+	{ID_FDC_ACORN,"Acorn"},
+	{ID_FDC_OPUS,"Opus"}
+};
+
+void BeebWin::SelectFDC(int FDC = 0)
+{
+	if (MachineType == Model::Master128)
+		return;
+	if (nameMap.count(FDC) > 0)
+	{
+		// uncheck all ID_FDC_DLL items
+		CheckMenuItem(ID_FDC_ACORN, false);
+		CheckMenuItem(ID_FDC_OPUS, false);
+		CheckMenuItem(ID_FDC_WATFORD, false);
+
+		LoadFDC((char*)nameMap[FDC].c_str(), true);
+
+		// assume FDC has changed as LoadFDC will always work on APPLE
+		CheckMenuItem(FDC, true);
+	}
+
+}
+#endif
+
 /****************************************************************************/
 void BeebWin::NewDiscImage(int Drive)
 {
@@ -1227,6 +1254,7 @@ void BeebWin::LoadFDC(char *DLLName, bool save)
 	// Set menu options
 	CheckMenuItem(ID_8271, NativeFDC);
 	CheckMenuItem(ID_FDC_DLL, !NativeFDC);
+	// CheckMenuItem for __APPLE__ is completed in SelectFDC(int FDC)
 
 	DisplayCycles = 7000000;
 

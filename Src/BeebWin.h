@@ -165,6 +165,7 @@ public:
 	LRESULT WndProc(UINT nMessage, WPARAM wParam, LPARAM lParam);
 #endif
 
+
 	void UpdateModelMenu();
 	void SetSoundMenu(void);
 	void SetImageName(const char *DiscName, int Drive, DiscType Type);
@@ -173,6 +174,9 @@ public:
 	void SetRomMenu(); // LRW  Added for individual ROM/RAM
 	void UpdateTubeMenu();
 	void SelectFDC();
+#ifdef __APPLE__
+	void SelectFDC(int FDC);
+#endif
 	void LoadFDC(char *DLLName, bool save);
 	void KillDLLs(void);
 	void UpdateLEDMenu();
