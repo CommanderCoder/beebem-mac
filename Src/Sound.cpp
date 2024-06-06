@@ -160,7 +160,10 @@ static void WriteToSoundBuffer(BYTE *pSoundData)
 		}
 	}
 #else
-	swift_SoundStream(pSoundData, 1); // outputtype 1 = 8 bit, 1 pSoundData
+	if (pSoundStreamer != nullptr)
+	{
+		pSoundStreamer->Stream(pSoundData);
+	}
 #endif
 }
 
@@ -445,7 +448,6 @@ static double CyclesToSamples(int BeebCycles) {
 
 static void InitAudioDev()
 {
-#ifndef __APPLE__
 	if (pSoundStreamer != nullptr)
 	{
 		delete pSoundStreamer;
@@ -454,9 +456,6 @@ static void InitAudioDev()
 	pSoundStreamer = CreateSoundStreamer(SoundSampleRate, 8, 1);
 
 	SoundEnabled = pSoundStreamer != nullptr;
-#else
-	swift_SoundInit();
-#endif
 }
 
 void LoadSoundSamples()

@@ -375,8 +375,6 @@ enum Modals {
    , keyboardMapping
 };
 
-extern "C" void swift_SoundStream(BYTE* buffer, int outputType);// outputtype 1 = 8 bit, 1 channel, 2 = 16 bit, 2 channel
-extern "C" void swift_SoundInit();
 
 extern "C" bool swift_IsMiniaturized();
 
@@ -679,9 +677,14 @@ typedef struct _SHFILEOPSTRUCTA {
 bool SHFileOperation(SHFILEOPSTRUCT* a);
 
 
+extern "C" int swift_ReleaseSoundBuffer(int);
+extern "C" int swift_CreateSoundBuffer(WORD, DWORD, DWORD, WORD, WORD);
+extern "C" void swift_StopStream(int);
+extern "C" void swift_PlayStream(int);
+extern "C" int  swift_BufferedStreams(int);
 
-extern "C" int swift_GetSoundBufferLength(int outputType);
-extern "C" void swift_SoundStream(PBYTE buffer, int outputType);
 extern "C" void swift_SoundInit();
+extern "C" void swift_SubmitStream(int outputType, BYTE* buffer, int size);
+// index: outputtype 1 = 8 bit, 1 channel, 2 = 16 bit, 2 channel
 
 #endif /* apples_h */

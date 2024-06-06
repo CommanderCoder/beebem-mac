@@ -90,7 +90,7 @@ public func swift_SetMenuCheck(_ cmd: UInt32, _ check: Bool) -> Bool
 	}
 	else
 	{
-		print("\(#function): \(cmd) not found: \(cmdSTR)")
+//		print("\(#function): \(cmd) not found: \(cmdSTR)")
 	}
 	
 	return false
