@@ -70,7 +70,7 @@ class BeebViewController: NSViewController {
     var skimage: SKSpriteNode = SKSpriteNode()
     
     var displayLink : CVDisplayLink?
-	let d = DispatchQueue(label:"CPU")
+	let dqueue = DispatchQueue(label:"CPU")
 	
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -147,7 +147,7 @@ class BeebViewController: NSViewController {
 		{
 //			GAME UPDATE is called from the DisplayLinkOutputCallback
 //			and it is called on the main thread
-			d.async {
+			dqueue.async {
 				while true {
 					self.update_cpu()
 				}

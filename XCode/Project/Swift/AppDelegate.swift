@@ -33,7 +33,10 @@ class AppDelegate: NSObject, NSApplicationDelegate
         handlingCommand = true
         let cmd: String = sender.identifier?.rawValue ?? "none"
 //        print(cmd)
-        beeb_HandleCommand(conv(cmd))
+		let dq = DispatchQueue(label: "CPU")
+		dq.suspend()
+		beeb_HandleCommand(conv(cmd))
+		dq.resume()
         handlingCommand = false
     }
     
