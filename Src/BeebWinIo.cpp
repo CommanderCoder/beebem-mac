@@ -42,6 +42,7 @@ using std::max;
 #include "6502core.h"
 #include "AviWriter.h"
 #include "BeebMem.h"
+#include "BeebWinPrefs.h"
 #include "Disc1770.h"
 #include "Disc8271.h"
 #include "DiscEdit.h"
@@ -140,7 +141,7 @@ bool BeebWin::ReadDisc(int Drive, bool bCheckForPrefs)
 		"Single Sided Disc (*.*)\0*.*\0"
 		"Double Sided Disc (*.*)\0*.*\0";
 
-	m_Preferences.GetStringValue("DiscsPath", DefaultPath);
+	m_Preferences.GetStringValue(CFG_DISCS_PATH, DefaultPath);
 	GetDataPath(m_UserDataPath, DefaultPath);
 
 	FileDialog fileDialog(m_hWnd, FileName, sizeof(FileName), DefaultPath, filter);
@@ -160,7 +161,7 @@ bool BeebWin::ReadDisc(int Drive, bool bCheckForPrefs)
 			unsigned int PathLength = (unsigned int)(strrchr(FileName, '\\') - FileName);
 			strncpy(DefaultPath, FileName, PathLength);
 			DefaultPath[PathLength] = 0;
-			m_Preferences.SetStringValue("DiscsPath", DefaultPath);
+			m_Preferences.SetStringValue(CFG_DISCS_PATH, DefaultPath);
 		}
 
 		bool ssd = false;
@@ -380,7 +381,7 @@ void BeebWin::LoadTape(void)
 		"UEF Tape File (*.uef)\0*.uef\0"
 		"CSW Tape File (*.csw)\0*.csw\0";
 
-	m_Preferences.GetStringValue("TapesPath", DefaultPath);
+	m_Preferences.GetStringValue(CFG_TAPES_PATH, DefaultPath);
 	GetDataPath(m_UserDataPath, DefaultPath);
 
 	FileDialog fileDialog(m_hWnd, FileName, sizeof(FileName), DefaultPath, filter);
@@ -391,7 +392,7 @@ void BeebWin::LoadTape(void)
 			unsigned int PathLength = (unsigned int)(strrchr(FileName, '\\') - FileName);
 			strncpy(DefaultPath, FileName, PathLength);
 			DefaultPath[PathLength] = 0;
-			m_Preferences.SetStringValue("TapesPath", DefaultPath);
+			m_Preferences.SetStringValue(CFG_TAPES_PATH, DefaultPath);
 		}
 
 		LoadTape(FileName);
@@ -432,7 +433,7 @@ bool BeebWin::NewTapeImage(char *FileName, int Size)
 	char DefaultPath[_MAX_PATH];
 	const char* filter = "UEF Tape File (*.uef)\0*.uef\0";
 
-	m_Preferences.GetStringValue("TapesPath", DefaultPath);
+	m_Preferences.GetStringValue(CFG_TAPES_PATH, DefaultPath);
 	GetDataPath(m_UserDataPath, DefaultPath);
 
 	FileDialog fileDialog(m_hWnd, FileName, Size, DefaultPath, filter);
@@ -500,53 +501,58 @@ void BeebWin::NewDiscImage(int Drive)
 		"ADFS M (80 Track) Disc (*.adf)\0*.adf\0"
 		"ADFS L (160 Track) Disc (*.adl)\0*.adl\0";
 
-	m_Preferences.GetStringValue("DiscsPath", DefaultPath);
+	m_Preferences.GetStringValue(CFG_DISCS_PATH, DefaultPath);
 	GetDataPath(m_UserDataPath, DefaultPath);
 
-	DWORD filterIndex = 1;
-	m_Preferences.GetDWORDValue("DiscsFilter", filterIndex);
+	int FilterIndex;
+	m_Preferences.GetDecimalValue(CFG_DISCS_FILTER, FilterIndex, 1);
 
-	if ((MachineType != Model::Master128 && MachineType != Model::MasterET) && NativeFDC && filterIndex >= 5)
-		filterIndex = 1;
+	if ((MachineType != Model::Master128 && MachineType != Model::MasterET) && NativeFDC && FilterIndex >= 5)
+		FilterIndex = 1;
 
-	FileDialog fileDialog(m_hWnd, FileName, sizeof(FileName), DefaultPath, filter);
-	fileDialog.SetFilterIndex(filterIndex);
-	if (fileDialog.Save())
+	FileDialog Dialog(m_hWnd, FileName, sizeof(FileName), DefaultPath, filter);
+	Dialog.SetFilterIndex(FilterIndex);
+
+	if (Dialog.Save())
 	{
-		filterIndex = fileDialog.GetFilterIndex();
+		FilterIndex = Dialog.GetFilterIndex();
 
 		if (m_AutoSavePrefsFolders)
 		{
 			unsigned int PathLength = (unsigned int)(strrchr(FileName, '\\') - FileName);
 			strncpy(DefaultPath, FileName, PathLength);
 			DefaultPath[PathLength] = 0;
-			m_Preferences.SetStringValue("DiscsPath", DefaultPath);
-			m_Preferences.SetDWORDValue("DiscsFilter", filterIndex);
+			m_Preferences.SetStringValue(CFG_DISCS_PATH, DefaultPath);
+			m_Preferences.SetDecimalValue(CFG_DISCS_FILTER, FilterIndex);
 		}
 
 		/* Add a file extension if the user did not specify one */
 		if (strchr(FileName, '.') == NULL)
 		{
-			if (filterIndex == 1 || filterIndex == 3)
+			if (FilterIndex == 1 || FilterIndex == 3)
 				strcat(FileName, ".ssd");
-			else if (filterIndex == 2 || filterIndex == 4)
+			else if (FilterIndex == 2 || FilterIndex == 4)
 				strcat(FileName, ".dsd");
-			else if (filterIndex == 5)
+			else if (FilterIndex == 5)
 				strcat(FileName, ".adf");
-			else if (filterIndex == 6)
+			else if (FilterIndex == 6)
 				strcat(FileName, ".adl");
 		}
 
-		if (filterIndex == 1 || filterIndex == 3) {
+		if (FilterIndex == 1 || FilterIndex == 3)
+		{
 			CreateDFSDiscImage(FileName, Drive, 1, 80);
 		}
-		else if (filterIndex == 2 || filterIndex == 4) {
+		else if (FilterIndex == 2 || FilterIndex == 4)
+		{
 			CreateDFSDiscImage(FileName, Drive, 2, 80);
 		}
-		else if (filterIndex == 5 || filterIndex == 6) {
-			const int Tracks = filterIndex == 5 ? 80 : 160;
+		else if (FilterIndex == 5 || FilterIndex == 6)
+		{
+			const int Tracks = FilterIndex == 5 ? 80 : 160;
 			bool Success = CreateADFSImage(FileName, Tracks);
-			if (Success) {
+			if (Success)
+			{
 				Load1770DiscImage(FileName, Drive, DiscType::ADFS);
 			}
 		}
@@ -625,7 +631,7 @@ void BeebWin::SaveState()
 
 	const char* filter = "UEF State File (*.uefstate)\0*.uefstate\0";
 
-	m_Preferences.GetStringValue("StatesPath", DefaultPath);
+	m_Preferences.GetStringValue(CFG_STATES_PATH, DefaultPath);
 	GetDataPath(m_UserDataPath, DefaultPath);
 
 	FileDialog fileDialog(m_hWnd, FileName, sizeof(FileName), DefaultPath, filter);
@@ -636,7 +642,7 @@ void BeebWin::SaveState()
 			unsigned int PathLength = (unsigned int)(strrchr(FileName, '\\') - FileName);
 			strncpy(DefaultPath, FileName, PathLength);
 			DefaultPath[PathLength] = 0;
-			m_Preferences.SetStringValue("StatesPath", DefaultPath);
+			m_Preferences.SetStringValue(CFG_STATES_PATH, DefaultPath);
 		}
 
 		// Add UEF extension if not already set and is UEF
@@ -658,7 +664,7 @@ void BeebWin::RestoreState()
 
 	const char* filter = "UEF State File (*.uefstate; *.uef)\0*.uefstate;*.uef\0";
 
-	m_Preferences.GetStringValue("StatesPath", DefaultPath);
+	m_Preferences.GetStringValue(CFG_STATES_PATH, DefaultPath);
 	GetDataPath(m_UserDataPath, DefaultPath);
 
 	FileDialog fileDialog(m_hWnd, FileName, sizeof(FileName), DefaultPath, filter);
@@ -672,7 +678,7 @@ void BeebWin::RestoreState()
 			unsigned int PathLength = (unsigned int)(strrchr(FileName, '\\') - FileName);
 			strncpy(DefaultPath, FileName, PathLength);
 			DefaultPath[PathLength] = 0;
-			m_Preferences.SetStringValue("StatesPath", DefaultPath);
+			m_Preferences.SetStringValue(CFG_STATES_PATH, DefaultPath);
 		}
 
 		LoadUEFState(FileName);
@@ -720,7 +726,96 @@ void BeebWin::SetDiscWriteProtects()
 }
 
 /****************************************************************************/
-bool BeebWin::PrinterFile()
+
+void BeebWin::SetPrinterPort(PrinterPortType PrinterPort)
+{
+	if (PrinterPort == PrinterPortType::File)
+	{
+		if (GetPrinterFileName())
+		{
+			// If printer is enabled then need to
+			// disable it before changing file
+			if (PrinterEnabled)
+				TogglePrinter();
+
+			// Add file name to menu
+			std::string MenuString = "File: ";
+			MenuString += m_PrinterFileName;
+
+			ModifyMenu(m_hMenu, IDM_PRINTER_FILE,
+			           MF_BYCOMMAND, IDM_PRINTER_FILE,
+			           MenuString.c_str());
+
+			m_PrinterPort = PrinterPort;
+
+			TranslatePrinterPort();
+		}
+	}
+	else if (PrinterPort == PrinterPortType::Clipboard)
+	{
+		if (PrinterEnabled)
+			TogglePrinter();
+
+		m_PrinterPort = PrinterPort;
+
+		TranslatePrinterPort();
+	}
+	else
+	{
+		if (PrinterPort != m_PrinterPort)
+		{
+			// If printer is enabled then need to
+			// disable it before changing file
+			if (PrinterEnabled)
+				TogglePrinter();
+
+			m_PrinterPort = PrinterPort;
+
+			TranslatePrinterPort();
+		}
+	}
+
+	UpdatePrinterPortMenu();
+}
+
+void BeebWin::UpdatePrinterPortMenu()
+{
+	static struct { UINT ID; PrinterPortType PrinterPort; } MenuItems[] =
+	{
+		{ IDM_PRINTER_FILE,      PrinterPortType::File },
+		{ IDM_PRINTER_CLIPBOARD, PrinterPortType::Clipboard },
+		{ IDM_PRINTER_LPT1,      PrinterPortType::Lpt1 },
+		{ IDM_PRINTER_LPT2,      PrinterPortType::Lpt2 },
+		{ IDM_PRINTER_LPT3,      PrinterPortType::Lpt3 },
+		{ IDM_PRINTER_LPT4,      PrinterPortType::Lpt4 },
+	};
+
+	UINT SelectedMenuItemID = 0;
+
+	for (int i = 0; i < _countof(MenuItems); i++)
+	{
+		if (m_PrinterPort == MenuItems[i].PrinterPort)
+		{
+			SelectedMenuItemID = MenuItems[i].ID;
+			break;
+		}
+	}
+
+	CheckMenuRadioItem(
+		IDM_PRINTER_FILE,
+		IDM_PRINTER_LPT4,
+		SelectedMenuItemID
+	);
+
+	EnableMenuItem(IDM_PRINTER_FILE, !PrinterEnabled);
+	EnableMenuItem(IDM_PRINTER_CLIPBOARD, !PrinterEnabled);
+	EnableMenuItem(IDM_PRINTER_LPT1, !PrinterEnabled);
+	EnableMenuItem(IDM_PRINTER_LPT2, !PrinterEnabled);
+	EnableMenuItem(IDM_PRINTER_LPT3, !PrinterEnabled);
+	EnableMenuItem(IDM_PRINTER_LPT4, !PrinterEnabled);
+}
+
+bool BeebWin::GetPrinterFileName()
 {
 	char StartPath[_MAX_PATH];
 	char FileName[_MAX_PATH];
@@ -757,9 +852,12 @@ bool BeebWin::PrinterFile()
 }
 
 /****************************************************************************/
-void BeebWin::TogglePrinter()
+
+bool BeebWin::TogglePrinter()
 {
-	m_printerbufferlen = 0;
+	bool Success = true;
+
+	m_PrinterBufferLen = 0;
 
 	if (PrinterEnabled)
 	{
@@ -767,56 +865,145 @@ void BeebWin::TogglePrinter()
 	}
 	else
 	{
-		if (m_MenuIDPrinterPort == IDM_PRINTER_FILE)
+		if (m_PrinterPort == PrinterPortType::File)
 		{
 			if (strlen(m_PrinterFileName) == 0)
 			{
-				PrinterFile();
+				GetPrinterFileName();
 			}
 
 			if (strlen(m_PrinterFileName) != 0)
 			{
-				PrinterEnable(m_PrinterFileName);
+				Success = PrinterEnable(m_PrinterFileName);
 			}
 		}
-		else if (m_MenuIDPrinterPort == IDM_PRINTER_CLIPBOARD)
+		else if (m_PrinterPort == PrinterPortType::Clipboard)
 		{
-			PrinterEnable(NULL);
+			Success = PrinterEnable(nullptr);
 		}
 		else
 		{
-			PrinterEnable(m_PrinterDevice);
+			Success = PrinterEnable(m_PrinterDevice);
 		}
 	}
 
-	CheckMenuItem(IDM_PRINTERONOFF, PrinterEnabled);
+	if (Success)
+	{
+		CheckMenuItem(IDM_PRINTERONOFF, PrinterEnabled);
+	}
+
+	UpdatePrinterPortMenu();
+
+	return Success;
 }
 
 /****************************************************************************/
+
 void BeebWin::TranslatePrinterPort()
 {
-	switch (m_MenuIDPrinterPort)
+	switch (m_PrinterPort)
 	{
-	case IDM_PRINTER_FILE:
-		strcpy(m_PrinterDevice, m_PrinterFileName);
-		break;
-	case IDM_PRINTER_CLIPBOARD:
-		strcpy(m_PrinterDevice, "CLIPBOARD");
-		break;
-	default:
-	case IDM_PRINTER_LPT1:
-		strcpy(m_PrinterDevice, "LPT1");
-		break;
-	case IDM_PRINTER_LPT2:
-		strcpy(m_PrinterDevice, "LPT2");
-		break;
-	case IDM_PRINTER_LPT3:
-		strcpy(m_PrinterDevice, "LPT3");
-		break;
-	case IDM_PRINTER_LPT4:
-		strcpy(m_PrinterDevice, "LPT4");
-		break;
+		case PrinterPortType::File:
+			strcpy(m_PrinterDevice, m_PrinterFileName);
+			break;
+
+		case PrinterPortType::Clipboard:
+			strcpy(m_PrinterDevice, "CLIPBOARD");
+			break;
+
+		case PrinterPortType::Lpt1:
+		default:
+			strcpy(m_PrinterDevice, "LPT1");
+			break;
+
+		case PrinterPortType::Lpt2:
+			strcpy(m_PrinterDevice, "LPT2");
+			break;
+
+		case PrinterPortType::Lpt3:
+			strcpy(m_PrinterDevice, "LPT3");
+			break;
+
+		case PrinterPortType::Lpt4:
+			strcpy(m_PrinterDevice, "LPT4");
+			break;
 	}
+}
+
+/****************************************************************************/
+
+void BeebWin::SetVideoCaptureResolution(VideoCaptureResolution Resolution)
+{
+	m_VideoCaptureResolution = Resolution;
+
+	UpdateVideoCaptureResolutionMenu();
+}
+
+void BeebWin::SetVideoCaptureFrameSkip(int FrameSkip)
+{
+	m_AviFrameSkip = FrameSkip;
+
+	UpdateVideoCaptureFrameSkipMenu();
+}
+
+void BeebWin::UpdateVideoCaptureMenu()
+{
+	UpdateVideoCaptureResolutionMenu();
+	UpdateVideoCaptureFrameSkipMenu();
+
+	EnableMenuItem(IDM_CAPTUREVIDEO, !IsCapturing());
+	EnableMenuItem(IDM_ENDVIDEO, IsCapturing());
+}
+
+void BeebWin::UpdateVideoCaptureResolutionMenu()
+{
+	static const struct { UINT ID; VideoCaptureResolution Resolution; } MenuItems[] =
+	{
+		{ IDM_VIDEORES1, VideoCaptureResolution::Display },
+		{ IDM_VIDEORES2, VideoCaptureResolution::_640x512 },
+		{ IDM_VIDEORES3, VideoCaptureResolution::_320x256 }
+	};
+
+	UINT SelectedMenuItemID = 0;
+
+	for (int i = 0; i < _countof(MenuItems); i++)
+	{
+		if (m_VideoCaptureResolution == MenuItems[i].Resolution)
+		{
+			SelectedMenuItemID = MenuItems[i].ID;
+		}
+
+		EnableMenuItem(MenuItems[i].ID, !IsCapturing());
+	}
+
+	CheckMenuRadioItem(IDM_VIDEORES1, IDM_VIDEORES3, SelectedMenuItemID);
+}
+
+void BeebWin::UpdateVideoCaptureFrameSkipMenu()
+{
+	static const struct { UINT ID; int FrameSkip; } MenuItems[] =
+	{
+		{ IDM_VIDEOSKIP0, 0 },
+		{ IDM_VIDEOSKIP1, 1 },
+		{ IDM_VIDEOSKIP2, 2 },
+		{ IDM_VIDEOSKIP3, 3 },
+		{ IDM_VIDEOSKIP4, 4 },
+		{ IDM_VIDEOSKIP5, 5 }
+	};
+
+	UINT SelectedMenuItemID = 0;
+
+	for (int i = 0; i < _countof(MenuItems); i++)
+	{
+		if (m_AviFrameSkip == MenuItems[i].FrameSkip)
+		{
+			SelectedMenuItemID = MenuItems[i].ID;
+		}
+
+		EnableMenuItem(MenuItems[i].ID, !IsCapturing());
+	}
+
+	CheckMenuRadioItem(IDM_VIDEOSKIP0, IDM_VIDEOSKIP5, SelectedMenuItemID);
 }
 
 /****************************************************************************/
@@ -829,7 +1016,7 @@ void BeebWin::CaptureVideo()
 
 	const char* filter = "AVI File (*.avi)\0*.avi\0";
 
-	m_Preferences.GetStringValue("AVIPath", DefaultPath);
+	m_Preferences.GetStringValue(CFG_AVI_PATH, DefaultPath);
 	GetDataPath(m_UserDataPath, DefaultPath);
 
 	FileDialog fileDialog(m_hWnd, FileName, sizeof(FileName), DefaultPath, filter);
@@ -847,7 +1034,7 @@ void BeebWin::CaptureVideo()
 			unsigned int PathLength = (unsigned int)(strrchr(FileName, '\\') - FileName);
 			strncpy(DefaultPath, FileName, PathLength);
 			DefaultPath[PathLength] = 0;
-			m_Preferences.SetStringValue("AVIPath", DefaultPath);
+			m_Preferences.SetStringValue(CFG_AVI_PATH, DefaultPath);
 		}
 
 		// Close AVI file if currently capturing
@@ -874,13 +1061,13 @@ void BeebWin::CaptureVideo()
 		// Create DIB for AVI frames
 		m_Avibmi = m_bmi;
 
-		if (m_MenuIDAviResolution == IDM_VIDEORES1)
+		if (m_VideoCaptureResolution == VideoCaptureResolution::Display)
 		{
 			// Must be multiple of 4
 			m_Avibmi.bmiHeader.biWidth = m_XWinSize & (~3);
 			m_Avibmi.bmiHeader.biHeight = m_YWinSize;
 		}
-		else if (m_MenuIDAviResolution == IDM_VIDEORES2)
+		else if (m_VideoCaptureResolution == VideoCaptureResolution::_640x512)
 		{
 			m_Avibmi.bmiHeader.biWidth = 640;
 			m_Avibmi.bmiHeader.biHeight = 512;
@@ -909,18 +1096,6 @@ void BeebWin::CaptureVideo()
 		}
 		else
 		{
-			// Calc frame rate based on users frame skip selection
-			switch (m_MenuIDAviSkip)
-			{
-			case IDM_VIDEOSKIP0: m_AviFrameSkip = 0; break;
-			case IDM_VIDEOSKIP1: m_AviFrameSkip = 1; break;
-			case IDM_VIDEOSKIP2: m_AviFrameSkip = 2; break;
-			case IDM_VIDEOSKIP3: m_AviFrameSkip = 3; break;
-			case IDM_VIDEOSKIP4: m_AviFrameSkip = 4; break;
-			case IDM_VIDEOSKIP5: m_AviFrameSkip = 5; break;
-			default: m_AviFrameSkip = 1; break;
-			}
-
 			m_AviFrameSkipCount = 0;
 			m_AviFrameCount = 0;
 
@@ -960,6 +1135,11 @@ void BeebWin::EndVideo()
 		DeleteDC(m_AviDC);
 		m_AviDC = nullptr;
 	}
+}
+
+bool BeebWin::IsCapturing() const
+{
+	return aviWriter != nullptr;
 }
 
 /****************************************************************************/
@@ -1155,8 +1335,8 @@ void BeebWin::LoadFDC(char *DLLName, bool save)
 	}
 
 	// Set menu options
-	CheckMenuItem(ID_8271, NativeFDC);
-	CheckMenuItem(ID_FDC_DLL, !NativeFDC);
+	CheckMenuItem(IDM_8271, NativeFDC);
+	CheckMenuItem(IDM_FDC_DLL, !NativeFDC);
 
 	DisplayCycles = 7000000;
 
@@ -1206,8 +1386,8 @@ void BeebWin::SaveEmuUEF(FILE *SUEF)
 	fputc(static_cast<unsigned char>(MachineType), SUEF);
 	fputc(NativeFDC ? 0 : 1, SUEF);
 	fputc(static_cast<unsigned char>(TubeType), SUEF);
-	fput16(m_MenuIDKeyMapping, SUEF);
-	if (m_MenuIDKeyMapping == IDM_USERKYBDMAPPING)
+	fput16((int)m_KeyboardMapping, SUEF);
+	if (m_KeyboardMapping == KeyboardMappingType::User)
 	{
 		fputstring(m_UserKeyMapPath, SUEF);
 	}
@@ -1240,11 +1420,11 @@ void BeebWin::LoadEmuUEF(FILE *SUEF, int Version)
 
 	if (Version >= 11)
 	{
-		const int UEF_KEYBOARD_MAPPING = 40060; // UEF Chunk ID
+		int KeyboardMapping = fget16(SUEF);
 
-		UINT id = fget16(SUEF);
+		const int UEF_USER_KEYBOARD_MAPPING = 40060; // Was a menu item ID in BeebEm <= 4.19
 
-		if (id == UEF_KEYBOARD_MAPPING)
+		if (KeyboardMapping == (int)KeyboardMappingType::User || KeyboardMapping == UEF_USER_KEYBOARD_MAPPING)
 		{
 			char FileName[256];
 			memset(FileName, 0, sizeof(FileName));
@@ -1266,13 +1446,11 @@ void BeebWin::LoadEmuUEF(FILE *SUEF, int Version)
 			}
 			else
 			{
-				id = m_MenuIDKeyMapping;
+				KeyboardMapping = (int)m_KeyboardMapping;
 			}
 		}
-		CheckMenuItem(m_MenuIDKeyMapping, false);
-		m_MenuIDKeyMapping = id;
-		CheckMenuItem(m_MenuIDKeyMapping, true);
-		TranslateKeyMapping();
+
+		SetKeyboardMapping(static_cast<KeyboardMappingType>(KeyboardMapping));
 	}
 
 	ResetBeebSystem(MachineType, true);
@@ -1348,16 +1526,13 @@ void BeebWin::doCopy()
 	if (PrinterEnabled)
 		TogglePrinter();
 
-	if (IDM_PRINTER_CLIPBOARD != m_MenuIDPrinterPort)
-	{
-		CheckMenuItem(m_MenuIDPrinterPort, false);
-		m_MenuIDPrinterPort = IDM_PRINTER_CLIPBOARD;
-		CheckMenuItem(m_MenuIDPrinterPort, true);
-	}
+	m_PrinterPort = PrinterPortType::Clipboard;
+
 	TranslatePrinterPort();
 	TogglePrinter(); // Turn printer back on
+	UpdatePrinterPortMenu();
 
-	m_printerbufferlen = 0;
+	m_PrinterBufferLen = 0;
 
 	m_ClipboardBuffer[0] = 2;
 	m_ClipboardBuffer[1] = 'L';
@@ -1366,7 +1541,6 @@ void BeebWin::doCopy()
 	m_ClipboardBuffer[4] = 3;
 	m_ClipboardLength = 5;
 	m_ClipboardIndex = 0;
-	m_printerbufferlen = 0;
 }
 
 void BeebWin::doPaste()
@@ -1377,16 +1551,23 @@ void BeebWin::doPaste()
 	if (!OpenClipboard(m_hWnd))
 		return;
 
-	HGLOBAL hglb = GetClipboardData(CF_TEXT);
-	if (hglb != NULL)
+	HGLOBAL hClipboardData = GetClipboardData(CF_TEXT);
+
+	if (hClipboardData != nullptr)
 	{
-		LPTSTR lptstr = (LPTSTR)GlobalLock(hglb);
-		if (lptstr != NULL)
+		size_t Size = GlobalSize(hClipboardData); // Includes NUL-terminator
+
+		LPTSTR pData = (LPTSTR)GlobalLock(hClipboardData);
+
+		if (pData != nullptr)
 		{
-			strncpy(m_ClipboardBuffer, lptstr, ClipboardBufferSize - 1);
-			GlobalUnlock(hglb);
+			m_ClipboardBuffer.resize(Size);
+			memcpy(&m_ClipboardBuffer[0], pData, Size);
+
+			GlobalUnlock(hClipboardData);
+
 			m_ClipboardIndex = 0;
-			m_ClipboardLength = (int)strlen(m_ClipboardBuffer);
+			m_ClipboardLength = Size - 1;
 		}
 	}
 
@@ -1395,26 +1576,26 @@ void BeebWin::doPaste()
 
 void BeebWin::ClearClipboardBuffer()
 {
-	m_ClipboardBuffer[0] = '\0';
+	m_ClipboardBuffer.clear();
 	m_ClipboardIndex = 0;
 	m_ClipboardLength = 0;
 }
 
 void BeebWin::CopyKey(unsigned char Value)
 {
-	if (m_printerbufferlen >= 1024 * 1024)
+	if (m_PrinterBufferLen >= PrinterBufferSize)
 		return;
 
-	m_printerbuffer[m_printerbufferlen++] = static_cast<char>(Value);
-	if (m_translateCRLF && Value == 0xD)
-		m_printerbuffer[m_printerbufferlen++] = 0xA;
+	m_PrinterBuffer[m_PrinterBufferLen++] = static_cast<char>(Value);
+	if (m_TranslateCRLF && Value == 0xD)
+		m_PrinterBuffer[m_PrinterBufferLen++] = 0xA;
 
 	if (!OpenClipboard(m_hWnd))
 		return;
 
 	EmptyClipboard();
 
-	HGLOBAL hglbCopy = GlobalAlloc(GMEM_MOVEABLE, m_printerbufferlen + 1);
+	HGLOBAL hglbCopy = GlobalAlloc(GMEM_MOVEABLE, m_PrinterBufferLen + 1);
 	if (hglbCopy == NULL)
 	{
 		CloseClipboard();
@@ -1422,8 +1603,8 @@ void BeebWin::CopyKey(unsigned char Value)
 	}
 
 	LPTSTR lptstrCopy = (LPTSTR)GlobalLock(hglbCopy);
-	memcpy(lptstrCopy, m_printerbuffer, m_printerbufferlen);
-	lptstrCopy[m_printerbufferlen] = 0;
+	memcpy(lptstrCopy, m_PrinterBuffer, m_PrinterBufferLen);
+	lptstrCopy[m_PrinterBufferLen] = 0;
 	GlobalUnlock(hglbCopy);
 
 	SetClipboardData(CF_TEXT, hglbCopy);
@@ -1483,7 +1664,7 @@ void BeebWin::ExportDiscFiles(int menuId)
 	char szExportPath[MAX_PATH];
 	szExportPath[0] = '\0';
 
-	m_Preferences.GetStringValue("ExportPath", szExportPath);
+	m_Preferences.GetStringValue(CFG_EXPORT_PATH, szExportPath);
 	GetDataPath(m_UserDataPath, szExportPath);
 
 	// Show export dialog
@@ -1498,7 +1679,7 @@ void BeebWin::ExportDiscFiles(int menuId)
 
 	if (m_AutoSavePrefsFolders)
 	{
-		m_Preferences.SetStringValue("ExportPath", ExportPath.c_str());
+		m_Preferences.SetStringValue(CFG_EXPORT_PATH, ExportPath.c_str());
 	}
 }
 
@@ -1556,7 +1737,7 @@ void BeebWin::ImportDiscFiles(int menuId)
 	char szExportPath[MAX_PATH];
 	szExportPath[0] = '\0';
 
-	m_Preferences.GetStringValue("ExportPath", szExportPath);
+	m_Preferences.GetStringValue(CFG_EXPORT_PATH, szExportPath);
 	GetDataPath(m_UserDataPath, szExportPath);
 
 	const char* filter = "INF files (*.inf)\0*.inf\0" "All files (*.*)\0*.*\0";
@@ -1584,7 +1765,7 @@ void BeebWin::ImportDiscFiles(int menuId)
 
 	if (m_AutoSavePrefsFolders)
 	{
-		m_Preferences.SetStringValue("ExportPath", szExportPath);
+		m_Preferences.SetStringValue(CFG_EXPORT_PATH, szExportPath);
 	}
 
 	int numFiles = 0;
@@ -1675,7 +1856,7 @@ void BeebWin::SelectHardDriveFolder()
 		"Hard Drive Images (*.dat)\0*.dat\0"
 		"All files (*.*)\0*.*\0";
 
-	m_Preferences.GetStringValue("HardDrivePath", DefaultPath);
+	m_Preferences.GetStringValue(CFG_HARD_DRIVE_PATH, DefaultPath);
 	GetDataPath(m_UserDataPath, DefaultPath);
 
 	FileDialog fileDialog(m_hWnd, FileName, sizeof(FileName), DefaultPath, filter);
@@ -1687,7 +1868,7 @@ void BeebWin::SelectHardDriveFolder()
 		DefaultPath[PathLength] = 0;
 
 		strcpy(HardDrivePath, DefaultPath);
-		m_Preferences.SetStringValue("HardDrivePath", DefaultPath);
+		m_Preferences.SetStringValue(CFG_HARD_DRIVE_PATH, DefaultPath);
 
 		MessageResult Result = Report(MessageType::Question,
 		                              "The emulator must be reset for the change to take effect.\n\nDo you want to reset now?");
@@ -1700,7 +1881,71 @@ void BeebWin::SelectHardDriveFolder()
 }
 
 /****************************************************************************/
-/* Bitmap capture support */
+
+// Bitmap capture support
+
+void BeebWin::SetBitmapCaptureFormat(BitmapCaptureFormat Format)
+{
+	m_BitmapCaptureFormat = Format;
+
+	UpdateBitmapCaptureFormatMenu();
+}
+
+void BeebWin::UpdateBitmapCaptureFormatMenu()
+{
+	static const struct { UINT ID; BitmapCaptureFormat Format; } MenuItems[] =
+	{
+		{ IDM_CAPTUREBMP,  BitmapCaptureFormat::Bmp },
+		{ IDM_CAPTUREJPEG, BitmapCaptureFormat::Jpeg },
+		{ IDM_CAPTUREGIF,  BitmapCaptureFormat::Gif },
+		{ IDM_CAPTUREPNG,  BitmapCaptureFormat::Png }
+	};
+
+	UINT SelectedMenuItemID = 0;
+
+	for (int i = 0; i < _countof(MenuItems); i++)
+	{
+		if (m_BitmapCaptureFormat == MenuItems[i].Format)
+		{
+			SelectedMenuItemID = MenuItems[i].ID;
+			break;
+		}
+	}
+
+	CheckMenuRadioItem(IDM_CAPTUREBMP, IDM_CAPTUREPNG, SelectedMenuItemID);
+}
+
+void BeebWin::SetBitmapCaptureResolution(BitmapCaptureResolution Resolution)
+{
+	m_BitmapCaptureResolution = Resolution;
+
+	UpdateBitmapCaptureResolutionMenu();
+}
+
+void BeebWin::UpdateBitmapCaptureResolutionMenu()
+{
+	static const struct { UINT ID; BitmapCaptureResolution Resolution; } MenuItems[] =
+	{
+		{ IDM_CAPTURERES_DISPLAY, BitmapCaptureResolution::Display },
+		{ IDM_CAPTURERES_1280,    BitmapCaptureResolution::_1280x1024 },
+		{ IDM_CAPTURERES_640,     BitmapCaptureResolution::_640x512 },
+		{ IDM_CAPTURERES_320,     BitmapCaptureResolution::_320x256 }
+	};
+
+	UINT SelectedMenuItemID = 0;
+
+	for (int i = 0; i < _countof(MenuItems); i++)
+	{
+		if (m_BitmapCaptureResolution == MenuItems[i].Resolution)
+		{
+			SelectedMenuItemID = MenuItems[i].ID;
+			break;
+		}
+	}
+
+	CheckMenuRadioItem(IDM_CAPTURERES_DISPLAY, IDM_CAPTURERES_320, SelectedMenuItemID);
+}
+
 void BeebWin::CaptureBitmapPending(bool autoFilename)
 {
 	m_CaptureBitmapPending = true;
@@ -1758,40 +2003,40 @@ Exit:
 	return Success;
 }
 
-static const char* GetCaptureFormatFileExt(UINT MenuID)
+static const char* GetCaptureFormatFileExt(BitmapCaptureFormat Format)
 {
-	switch (MenuID)
+	switch (Format)
 	{
-		case IDM_CAPTUREBMP:
+		case BitmapCaptureFormat::Bmp:
 		default:
 			return ".bmp";
 
-		case IDM_CAPTUREJPEG:
+		case BitmapCaptureFormat::Jpeg:
 			return ".jpg";
 
-		case IDM_CAPTUREGIF:
+		case BitmapCaptureFormat::Gif:
 			return ".gif";
 
-		case IDM_CAPTUREPNG:
+		case BitmapCaptureFormat::Png:
 			return ".png";
 	}
 }
 
-static const WCHAR* GetCaptureFormatMimeType(UINT MenuID)
+static const WCHAR* GetCaptureFormatMimeType(BitmapCaptureFormat Format)
 {
-	switch (MenuID)
+	switch (Format)
 	{
-		case IDM_CAPTUREBMP:
+		case BitmapCaptureFormat::Bmp:
 		default:
 			return L"image/bmp";
 
-		case IDM_CAPTUREJPEG:
+		case BitmapCaptureFormat::Jpeg:
 			return L"image/jpeg";
 
-		case IDM_CAPTUREGIF:
+		case BitmapCaptureFormat::Gif:
 			return L"image/gif";
 
-		case IDM_CAPTUREPNG:
+		case BitmapCaptureFormat::Png:
 			return L"image/png";
 	}
 }
@@ -1803,10 +2048,10 @@ bool BeebWin::GetImageFile(char *FileName, int Size)
 	FileName[0] = '\0';
 
 	char DefaultPath[_MAX_PATH];
-	m_Preferences.GetStringValue("ImagePath", DefaultPath);
+	m_Preferences.GetStringValue(CFG_IMAGE_PATH, DefaultPath);
 	GetDataPath(m_UserDataPath, DefaultPath);
 
-	const char *fileExt = GetCaptureFormatFileExt(m_MenuIDCaptureFormat);
+	const char *fileExt = GetCaptureFormatFileExt(m_BitmapCaptureFormat);
 
 	// A literal \0 in the format string terminates the string so use %c
 	char filter[200];
@@ -1827,7 +2072,7 @@ bool BeebWin::GetImageFile(char *FileName, int Size)
 			unsigned int PathLength = (unsigned int)(strrchr(FileName, '\\') - FileName);
 			strncpy(DefaultPath, FileName, PathLength);
 			DefaultPath[PathLength] = 0;
-			m_Preferences.SetStringValue("ImagePath", DefaultPath);
+			m_Preferences.SetStringValue(CFG_IMAGE_PATH, DefaultPath);
 		}
 
 		success = true;
@@ -1842,8 +2087,8 @@ void BeebWin::CaptureBitmap(int SourceX,
                             int SourceHeight,
                             bool Teletext)
 {
-	const WCHAR *mimeType = GetCaptureFormatMimeType(m_MenuIDCaptureFormat);
-	const char *fileExt = GetCaptureFormatFileExt(m_MenuIDCaptureFormat);
+	const WCHAR *mimeType = GetCaptureFormatMimeType(m_BitmapCaptureFormat);
+	const char *fileExt = GetCaptureFormatFileExt(m_BitmapCaptureFormat);
 
 	CLSID encoderClsid;
 
@@ -1853,7 +2098,7 @@ void BeebWin::CaptureBitmap(int SourceX,
 	// Auto generate filename?
 	if (m_CaptureBitmapAutoFilename)
 	{
-		m_Preferences.GetStringValue("ImagePath", m_CaptureFileName);
+		m_Preferences.GetStringValue(CFG_IMAGE_PATH, m_CaptureFileName);
 		GetDataPath(m_UserDataPath, m_CaptureFileName);
 
 		SYSTEMTIME systemTime;
@@ -1874,9 +2119,9 @@ void BeebWin::CaptureBitmap(int SourceX,
 	int DestX, DestY;
 	int DestWidth, DestHeight;
 
-	switch (m_MenuIDCaptureResolution)
+	switch (m_BitmapCaptureResolution)
 	{
-		case IDM_CAPTURERES_DISPLAY:
+		case BitmapCaptureResolution::Display:
 			BitmapWidth  = m_XWinSize;
 			BitmapHeight = m_YWinSize;
 			DestWidth  = BitmapWidth;
@@ -1885,7 +2130,7 @@ void BeebWin::CaptureBitmap(int SourceX,
 			DestY = 0;
 			break;
 
-		case IDM_CAPTURERES_1280:
+		case BitmapCaptureResolution::_1280x1024:
 			BitmapWidth  = 1280;
 			BitmapHeight = 1024;
 
@@ -1905,7 +2150,7 @@ void BeebWin::CaptureBitmap(int SourceX,
 			}
 			break;
 
-		case IDM_CAPTURERES_640:
+		case BitmapCaptureResolution::_640x512:
 		default:
 			BitmapWidth  = 640;
 			BitmapHeight = 512;
@@ -1926,7 +2171,7 @@ void BeebWin::CaptureBitmap(int SourceX,
 			}
 			break;
 
-		case IDM_CAPTURERES_320:
+		case BitmapCaptureResolution::_320x256:
 			BitmapWidth  = 320;
 			BitmapHeight = 256;
 			DestWidth  = BitmapWidth;
