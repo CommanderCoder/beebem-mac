@@ -99,8 +99,16 @@ static INT SampleRight;
 
 static SoundStreamer *pSoundStreamer = NULL;
 
+#ifdef __APPLE__
+static bool alreadyCreated = false;
+#endif
+
 void Music5000Init()
 {
+#ifdef __APPLE__
+	if (!alreadyCreated)
+	{
+#endif
 	static_assert(sizeof(WAVERAM) == RAM_SIZE, "WAVERAM size");
 
 	memset(WaveRam, 0, sizeof(WaveRam));
@@ -146,12 +154,23 @@ void Music5000Init()
 			Music5000Enabled = false;
 		}
 	}
+#ifdef __APPLE__
+	alreadyCreated = true;
+	}
+#endif
 }
 
 void Music5000Reset()
 {
+#ifdef __APPLE__
+	if (!alreadyCreated)
+	{
+#endif
 	delete pSoundStreamer;
 	pSoundStreamer = NULL;
+#ifdef __APPLE__
+	}
+#endif
 	JimPageSelectRegister = 0;
 }
 

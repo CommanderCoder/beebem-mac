@@ -8,6 +8,42 @@
 import Foundation
 import AVFoundation
 
+// have to put a barrier around the freelist read/write otherwise
+// it will crash as this async write could occur at the same time
+// as a read.
+
+// should be using actor rather than class
+// as the 'freelist' is update in async code
+class FreeList : CustomStringConvertible
+{
+	private var n:Int
+	init(_ v:Int)
+	{
+		items = Array(0..<v)
+		n = v
+	}
+	
+	var available: Int {
+		get { return items.count }
+	  }
+	var used: Int {
+		get { return self.n - items.count }
+	  }
+
+	private var items : [Int] = []
+	
+	func give(_ n: Int)
+	{
+		items.append(n)
+	}
+	func take() -> Int
+	{
+		return items.popLast() ?? -1
+	}
+	var description: String {
+	  return "\(self.items)"
+	}
+}
 
 class AudioFormat
 {
@@ -16,8 +52,8 @@ class AudioFormat
 	var audioformat : AVAudioFormat
 	var playernode : AVAudioPlayerNode
 	var audiobuffers : [AVAudioPCMBuffer] = []
-	var freelist : [Int] = []
 	var bytesPerSample : Int = 0
+	var freelist: FreeList
 	var channels : Int = 0
 
 	init(soundrate: Int,
@@ -25,7 +61,7 @@ class AudioFormat
 		 audioformat : AVAudioFormat,
 		 playernode : AVAudioPlayerNode,
 		 audiobuffers : [AVAudioPCMBuffer],
-		 freelist : [Int],
+		 freelist : FreeList,
 		 bytesPerSample : Int,
 		 channels : Int
 	){
@@ -41,7 +77,8 @@ class AudioFormat
 	
 }
 
-var AudioStreams : [AudioFormat] = []
+var StreamKey = 0
+var AudioStreams : [Int:AudioFormat] = [:]
 
 let kbufs = 10 // internal buffers per stream but there are also external ones
 
@@ -66,13 +103,13 @@ var mainMixer = audioEngine.mainMixerNode
 var successfullystarted = false
 
 
+
 @_cdecl("swift_ReleaseSoundBuffer")
 public func swift_ReleaseSoundBuffer(_ index : Int)
 {
-	
+	AudioStreams.removeValue(forKey: index)
+//	print("release: ",index, AudioStreams.keys)
 }
-
-
 
 @_cdecl("swift_CreateSoundBuffer")
 public func swift_CreateSoundBuffer(
@@ -97,19 +134,33 @@ public func swift_CreateSoundBuffer(
 		audioformat: beebAudioFormat,
 		playernode: AVAudioPlayerNode(), // the player used for scheduling from buffer
 		audiobuffers: (0 ..< kbufs).map { _ in AVAudioPCMBuffer(pcmFormat: beebAudioFormat, frameCapacity: UInt32(size))! }, //create a pool of buffers with the correct format - give it enough room to hold onto as much data as needed
-		freelist : Array(0..<kbufs), // buffers not currently in use
+		freelist : FreeList(kbufs), // buffers not currently in use
 		bytesPerSample: Int(wBytesPerSample),
 		channels: Int(nChannels)
 	)
 	
-	audioEngine.stop()
+	let playing = AudioStreams.filter{ a in a.value.playernode.isPlaying }
+	// go through the attached AVAudioPlayerNodes and make an
+	// array of those that are playing
+
+	// stop the engine before attaching and connecting nodes
+//	audioEngine.stop()
+//	print ("stop:")
+
 	audioEngine.attach(dat.playernode) // attach the player - which can play PCM or from files.
 	// schedule playing from the buffer, now, and looping, so doesn't complete
 	audioEngine.connect(dat.playernode, to: mainMixer, format: nil)  // connect player to the mixer using the player format
 
 	// don't remove streams  - or the IDs that are being returned will not match up
-	AudioStreams.append(dat)
-	return AudioStreams.count - 1
+	let index = StreamKey
+	StreamKey += 1
+	AudioStreams[index] = dat
+//	print("create: ", index, AudioStreams.keys)
+	
+	// replay those nodes that were playing
+	for p in playing { swift_PlayStream(p.key) }
+	
+	return index
 	
 	// probably shoudn't use BUS 0 by default
 //        print (dat.playernode.outputFormat(forBus: 0))
@@ -129,16 +180,20 @@ public func swift_SoundInit()
 {
 
 	if successfullystarted {
-		swift_CloseAudio()
+//		swift_CloseAudio()
+		return
 	}
 
 	do {
 		// start the engine
 		try audioEngine.start()
-		
+//		print ("start:")
+
 		successfullystarted = true
-		for dat in AudioStreams
+		for stream in AudioStreams
 		{
+//			print("init ", stream.key)
+			let dat = stream.value
 			dat.playernode.play()
 			successfullystarted = successfullystarted && dat.playernode.isPlaying
 		}
@@ -165,6 +220,7 @@ public func swift_SoundInit()
  initia
  
  */
+let queue = DispatchQueue(label: "thread-safe-obj", attributes: .concurrent)
 
 // supply data for the soundbuffer of either normal or music 5000
 @_cdecl("swift_SubmitStream")
@@ -172,37 +228,44 @@ public func swift_SubmitStream(_ index : Int, _ soundbuffer: UnsafeMutablePointe
 {
 	// !2 = DEFAULT (8 bit 1 channel)
 	// 2  = MUSIC5000 (16 bit 2 channel)
-	guard audioEngine.isRunning else { print("early return");return}
+	guard audioEngine.isRunning else { print("early return"); return}
 
 	// this comes through as a square wave with 8 bits mono
 	// at a sample rate of 44100 Hz
 	
 	
-	let dat = AudioStreams[index]
+	guard let dat = AudioStreams[index] else { print("bad index"); return}
 	let buflen = dat.soundlength
-//	print(index, dat.freelist.count)
-	if dat.freelist.count == 0
-	{
-		// this will overwrite buffer 0 if all others are in use
-		print ("stopplay",kbufs)
-		// terminate all the existing scheduled buffers - this thread will wait while waiting for those to stop
-		dat.playernode.stop()
-		dat.playernode.play()
-		dat.freelist = Array(0..<kbufs)
-	}
 	
-	let fl = dat.freelist.popLast()!
+	// read
+	var _fl: Int!
+	queue.sync {
+
+		if dat.freelist.available == 0
+		{
+			// this will overwrite buffer 0 if all others are in use
+			print ("stopplay",kbufs)
+			// terminate all the existing scheduled buffers - this thread will wait while waiting for those to stop
+			swift_StopStream(index)
+			swift_PlayStream(index)
+			
+			// and possibly write
+			dat.freelist = FreeList(kbufs)
+		}
+		
+		// perform read and assign value
+	_fl = dat.freelist.take()
+	}
+	let fl = _fl!
 
 	let abuffer = dat.audiobuffers[fl]
-
 	let bytesPerSample = dat.bytesPerSample
 	let channels = dat.channels
 
-	// print ("start2",fl)
-
-	
 	
 	let srcLen = buflen * bytesPerSample * channels
+
+//	print("buffer: ", index, fl, length, srcLen)
 
 	var bindex = 0
 
@@ -237,21 +300,21 @@ public func swift_SubmitStream(_ index : Int, _ soundbuffer: UnsafeMutablePointe
 		
 		if bindex >= Int(abuffer.frameCapacity)
 		{
-			print("overflow2",fl, srcIndex, bindex)
+			print("overflow: ",fl, srcIndex, bindex)
 		}
 		bindex += 1
 	}
 	// set the length to the amount of data in the buffer
 	abuffer.frameLength = AVAudioFrameCount(bindex)
 
-//	print ("schedule2", fl)
-	dat.playernode.scheduleBuffer(abuffer)
-	{
-		// once the buffer has played it will decrement the count
-		dat.freelist.append(fl)
-//      print ("done2", fl)
+//	print ("schedule: ", index, fl, dat.freelist)
+	dat.playernode.scheduleBuffer(abuffer){
+		queue.async(flags: .barrier) {
+			dat.freelist.give(fl)
+//			print ("done: ", index, fl, dat.freelist)
+		}
 	}
-	
+
 	// NOTES:
 	
 	// THIS EMULATOR IS RUNNING QUICKLY
@@ -259,37 +322,34 @@ public func swift_SubmitStream(_ index : Int, _ soundbuffer: UnsafeMutablePointe
 	
 	// BBC BASIC TEST
 	// SOUND 1,-15,400,20
-
-
 }
+
+
+
 @_cdecl("swift_BufferedStreams")
 public func swift_BufferedStreams(_ index: Int) -> Int
 {
-	return AudioStreams[index].freelist.count
+	guard let dat = AudioStreams[index] else {print("bad bufferedstreams index");return 0}
+	return dat.freelist.used
 }
 
 @_cdecl("swift_PlayStream")
 public func swift_PlayStream(_ index: Int)
 {
-	do {
-	// start the engine
-	try audioEngine.start()
-	
-	AudioStreams[index].playernode.play()
-	}
-	catch
+	guard let dat = AudioStreams[index] else {print("bad play index");return}
+	if (audioEngine.isRunning)
 	{
-		print ("")
-		print (error)
-		print ("")
+		dat.playernode.play()
+//		print ("streamplay: ",index)
 	}
-
 }
 
 @_cdecl("swift_StopStream")
 public func swift_StopStream(_ index: Int)
 {
-	AudioStreams[index].playernode.stop()
+	guard let dat = AudioStreams[index] else {print("bad stop index");return}
+	dat.playernode.stop()
+	print ("stopstream: ",index)
 }
 
 
@@ -297,13 +357,16 @@ public func swift_StopStream(_ index: Int)
 @_cdecl("swift_CloseAudio")
 public func swift_CloseAudio()
 {
-	if audioEngine.isRunning { audioEngine.stop() }
-	for dat in AudioStreams
+	audioEngine.stop()
+	print ("stop:")
+	for stream in AudioStreams
 	{
-		if (dat.playernode.isPlaying) { dat.playernode.stop() }
+		swift_PlayStream(stream.key)
+
+		let dat = stream.value
 		audioEngine.disconnectNodeInput(dat.playernode)
 		audioEngine.detach(dat.playernode)
-		dat.freelist = Array(0..<kbufs)
+		dat.freelist = FreeList(kbufs)
 	}
 	successfullystarted=false
 }
