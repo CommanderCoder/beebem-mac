@@ -25,8 +25,9 @@ Boston, MA  02110-1301, USA.
 //
 
 #include <windows.h>
+#ifndef __APPLE__
 #include <mmreg.h>
-
+#endif
 #include "AviWriter.h"
 
 /*--------------------------------------------------------------------------*/
@@ -34,7 +35,7 @@ Boston, MA  02110-1301, USA.
 AVIWriter *aviWriter = nullptr;
 
 /*--------------------------------------------------------------------------*/
-
+#ifndef __APPLE__
 AVIWriter::AVIWriter() :
 	m_pAVIFile(nullptr),
 	m_pAudioStream(nullptr),
@@ -291,3 +292,4 @@ HRESULT AVIWriter::WriteVideo(BYTE *pBuffer)
 
 	return hr;
 }
+#endif

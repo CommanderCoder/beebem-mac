@@ -14,9 +14,9 @@
 
 #define ID_ IDM_FULLSCREEN
 
-#define ID_FDC_ACORN                      39901
-#define ID_FDC_OPUS                       39902
-#define ID_FDC_WATFORD                    39903
+#define IDM_FDC_ACORN                      39901
+#define IDM_FDC_OPUS                       39902
+#define IDM_FDC_WATFORD                    39903
 
 #define IDYES 0x10
 #define IDNO 0x20

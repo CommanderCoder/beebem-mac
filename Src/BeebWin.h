@@ -89,8 +89,6 @@ enum class LEDColour {
 	Green
 };
 
-extern LEDColour DiscLedColour;
-
 enum TextToSpeechSearchDirection
 {
 	TTS_FORWARDS,
@@ -142,12 +140,92 @@ enum class PaletteType : char {
 	RGB,
 	BW,
 	Amber,
-	Green,
-	Last
+	Green
 };
 
-class BeebWin {
+enum class DisplayRendererType {
+	GDI,
+	DirectDraw,
+	DirectX9
+};
 
+enum class SoundStreamerType {
+	XAudio2,
+	DirectSound
+};
+
+enum class JoystickOption {
+	Disabled,
+	Joystick,
+	AnalogueMouseStick,
+	DigitalMouseStick
+};
+
+enum class BitmapCaptureFormat {
+	Bmp,
+	Jpeg,
+	Gif,
+	Png
+};
+
+enum class BitmapCaptureResolution {
+	Display,
+	_1280x1024,
+	_640x512,
+	_320x256
+};
+
+enum class VideoCaptureResolution {
+	Display,
+	_640x512,
+	_320x256
+};
+
+enum class KeyboardMappingType {
+	User,
+	Default,
+	Logical
+};
+
+enum class AMXSizeType {
+	_160x256,
+	_320x256,
+	_640x256
+};
+
+enum class PrinterPortType {
+	File,
+	Clipboard,
+	Lpt1,
+	Lpt2,
+	Lpt3,
+	Lpt4
+};
+
+enum class TimingType {
+	FixedSpeed,
+	FixedFPS
+};
+
+enum class DirectXFullScreenMode {
+	ScreenResolution,
+	_640x480,
+	_720x576,
+	_800x600,
+	_1024x768,
+	_1280x720,
+	_1280x1024,
+	_1280x768,
+	_1280x960,
+	_1440x900,
+	_1600x1200,
+	_1920x1080,
+	_2560x1440,
+	_3840x2160
+};
+
+class BeebWin
+{
 public:
 	BeebWin();
 	~BeebWin();
@@ -271,11 +349,10 @@ public:
 	void ReleaseMouse();
 	void Activate(bool Active);
 	void Focus(bool Focus);
-	void WinSizeChange(WPARAM size, int width, int height);
-	void WinPosChange(int x, int y);
-	bool IsFrozen();
+	void OnSize(WPARAM ResizeType, int Width, int Height);
+	bool IsFrozen() const;
 	void TogglePause();
-	bool IsPaused();
+	bool IsPaused() const;
 	void SetFreezeWhenInactive(bool State);
 	void EditRomConfig();
 	void OpenUserKeyboardDialog();
@@ -283,7 +360,7 @@ public:
 	void ShowMenu(bool on);
 	void HideMenu(bool hide);
 	void TrackPopupMenu(int x, int y);
-	bool IsFullScreen() { return m_isFullScreen; }
+	bool IsFullScreen() const { return m_FullScreen; }
 	void ResetTiming(void);
 	int TranslateKey(int vkey, bool keyUp, int &row, int &col);
 	void ParseCommandLine(void);
@@ -309,7 +386,13 @@ public:
 	void doPaste(void);
 	void ClearClipboardBuffer();
 	void CopyKey(unsigned char Value);
+
+	void SetBitmapCaptureFormat(BitmapCaptureFormat Format);
+	void UpdateBitmapCaptureFormatMenu();
+	void SetBitmapCaptureResolution(BitmapCaptureResolution Resolution);
+	void UpdateBitmapCaptureResolutionMenu();
 	void CaptureBitmapPending(bool autoFilename);
+
 	void DoShiftBreak();
 	bool HasKbdCmd() const;
 	void SetKeyboardTimer();
@@ -335,11 +418,21 @@ public:
 
 	void UpdateSFXMenu();
 	void UpdateDisableKeysMenu();
+
+	void SetDisplayRenderer(DisplayRendererType DisplayRenderer);
 	void UpdateDisplayRendererMenu();
 
+	void SetSoundStreamer(SoundStreamerType StreamerType);
 	void UpdateSoundStreamerMenu();
 
+	void SetSoundSampleRate(int SampleRate);
+	void UpdateSoundSampleRateMenu();
+
+	void SetSoundVolume(int Volume);
+	void UpdateSoundVolumeMenu();
+
 	void CheckMenuItem(UINT id, bool checked);
+	void CheckMenuRadioItem(UINT FirstID, UINT LastID, UINT SelectedID);
 	void EnableMenuItem(UINT id, bool enabled);
 
 	// DirectX - calls DDraw or DX9 fn
@@ -349,31 +442,49 @@ public:
 	void ExitDX();
 	void UpdateSmoothing();
 
+	void SetMotionBlur(int MotionBlur);
+	void UpdateMotionBlurMenu();
+
 	// DirectDraw
 	HRESULT InitDirectDraw();
 	HRESULT InitSurfaces();
-	void ResetSurfaces();
+	void CloseSurfaces();
 
 	// DirectX9
-	HRESULT InitDX9();
-	void ExitDX9();
+	bool InitDX9();
+	void CloseDX9();
+	HRESULT InitD3DDevice();
+	void CloseD3DDevice();
 	void RenderDX9();
+	void OnDeviceLost();
 
-	void TranslateWindowSize(void);
-	void TranslateDDSize(void);
+	void SetWindowSize(int Width, int Height);
+	void UpdateWindowSizeMenu();
+	void SetDirectXFullScreenMode(DirectXFullScreenMode Mode);
+	void TranslateDDSize();
+	void UpdateDirectXFullScreenModeMenu();
+	void ToggleFullScreen();
 	void CalcAspectRatioAdjustment(int DisplayWidth, int DisplayHeight);
-	void TranslateSampleRate(void);
-	void TranslateVolume(void);
+
+	// Timing
+	void UpdateSpeedMenu();
 	void TranslateTiming();
 	void SetRealTimeTarget(double RealTimeTarget);
-	void TranslateKeyMapping(void);
+
+	void SetKeyboardMapping(KeyboardMappingType KeyboardMapping);
+	void UpdateKeyboardMappingMenu();
+	void TranslateKeyMapping();
 	bool ReadDisc(int Drive, bool bCheckForPrefs);
 	bool Load1770DiscImage(const char *FileName, int Drive, DiscType Type);
 	bool Load8271DiscImage(const char *FileName, int Drive, int Tracks, DiscType Type);
 	void LoadTape();
 	bool LoadTape(const char *FileName);
-	void InitJoystick(void);
-	void ResetJoystick(void);
+
+	void SetJoystickOption(JoystickOption Option);
+	void UpdateJoystickMenu();
+	void InitJoystick();
+	void ResetJoystick();
+
 	void RestoreState(void);
 	void SaveState(void);
 	void NewDiscImage(int Drive);
@@ -386,15 +497,30 @@ public:
 	void SetDiscWriteProtect(int Drive, bool WriteProtect);
 	void SetDiscWriteProtects();
 	void SetWindowAttributes(bool wasFullScreen);
-	void TranslateAMX(void);
-	bool PrinterFile();
-	void TogglePrinter(void);
-	void TranslatePrinterPort(void);
+
+	void SetAMXSize(AMXSizeType Size);
+	void UpdateAMXSizeMenu();
+	void TranslateAMX();
+	void SetAMXAdjust(int Adjust);
+	void UpdateAMXAdjustMenu();
+
+	void SetPrinterPort(PrinterPortType PrinterPort);
+	void UpdatePrinterPortMenu();
+	bool GetPrinterFileName();
+	bool TogglePrinter();
+	void TranslatePrinterPort();
 
 	// AVI recording
+	void SetVideoCaptureResolution(VideoCaptureResolution Resolution);
+	void SetVideoCaptureFrameSkip(int FrameSkip);
+	void UpdateVideoCaptureResolutionMenu();
+	void UpdateVideoCaptureFrameSkipMenu();
+	void UpdateVideoCaptureMenu();
 	void CaptureVideo();
 	void EndVideo();
+	bool IsCapturing() const;
 
+	// Bitmap capture
 	void CaptureBitmap(int SourceX,
 	                   int SourceY,
 	                   int SourceWidth,
@@ -446,21 +572,39 @@ public:
 	MessageResult Report(MessageType type, const char *format, ...);
 	MessageResult ReportV(MessageType type, const char *format, va_list args);
 
-	bool RegCreateKey(HKEY hKeyRoot, LPCSTR lpSubKey);
-	bool RegGetBinaryValue(HKEY hKeyRoot, LPCSTR lpSubKey, LPCSTR lpValue, void* pData, int* pnSize);
-	bool RegSetBinaryValue(HKEY hKeyRoot, LPCSTR lpSubKey, LPCSTR lpValue, const void* pData, int* pnSize);
-	bool RegGetStringValue(HKEY hKeyRoot, LPCSTR lpSubKey, LPCSTR lpValue, LPSTR pData, DWORD dwSize);
-	bool RegSetStringValue(HKEY hKeyRoot, LPCSTR lpSubKey, LPCSTR lpValue, LPCSTR pData);
-
 	// Preferences
 	void LoadPreferences();
+	void LoadHardwarePreferences();
+	void LoadTubePreferences();
+	void LoadWindowPosPreferences(int Version);
+	void LoadTimingPreferences(int Version);
+	void LoadDisplayPreferences(int Version);
+	void LoadSoundPreferences(int Version);
+	void LoadInputPreferences(int Version);
+	void LoadAMXMousePreferences(int Version);
+	void LoadPrinterPreferences(int Version);
+	void LoadTextToSpeechPreferences();
+	void LoadUIPreferences(int Version);
+	void LoadTapePreferences(int Version);
+	void LoadSerialPortPreferences(int Version);
+	void LoadTeletextAdapterPreferences(int Version);
+	void LoadCapturePreferences(int Version);
+	void LoadDiskPreferences();
+	void LoadUserPortRTCPreferences();
+	void LoadDebugPreferences();
+	void LoadKeyMapPreferences();
+	void LoadAutoSavePreferences();
+	void LoadCMOSPreferences();
+	void LoadSWRAMPreferences();
+	void LoadFilePathPreferences();
+	void LoadUserPortBreakoutPreferences();
 	void SavePreferences(bool saveAll);
 
 	// Main window
 	HWND m_hWnd;
 	char m_szTitle[256];
-	bool m_isFullScreen;
-	bool m_startFullScreen;
+	bool m_FullScreen;
+	bool m_StartFullScreen;
 
 	// Menu
 	HMENU m_hMenu;
@@ -470,7 +614,8 @@ public:
 
 	// Timing
 	bool m_ShowSpeedAndFPS;
-	UINT m_MenuIDTiming;
+	TimingType m_TimingType;
+	int m_TimingSpeed;
 	double m_RealTimeTarget;
 	int m_CyclesPerSec;
 	DWORD m_LastTickCount;
@@ -490,12 +635,10 @@ public:
 	bool m_StartPaused;
 	bool m_EmuPaused;
 	bool m_WasPaused;
-
 	bool m_FreezeWhenInactive;
 	bool m_Frozen;
 
 	// Window size
-	UINT m_MenuIDWinSize;
 	int m_XWinSize;
 	int m_YWinSize;
 	int m_XLastWinSize;
@@ -504,10 +647,6 @@ public:
 	int m_YWinPos;
 	int m_XDXSize;
 	int m_YDXSize;
-	int m_XScrSize;
-	int m_YScrSize;
-	int m_XWinBorder;
-	int m_YWinBorder;
 	float m_XRatioAdj;
 	float m_YRatioAdj;
 	float m_XRatioCrop;
@@ -524,16 +663,18 @@ public:
 	char* m_screen_blur;
 	int m_LastStartY;
 	int m_LastNLines;
-	UINT m_MenuIDMotionBlur;
+	int m_MotionBlur;
 	char m_BlurIntensities[8];
 	bool m_MaintainAspectRatio;
-	int m_DisplayRenderer;
-	int m_CurrentDisplayRenderer;
-	int m_DDFullScreenMode;
+	DisplayRendererType m_DisplayRenderer;
+	DisplayRendererType m_CurrentDisplayRenderer;
+	DirectXFullScreenMode m_DDFullScreenMode;
+	LEDColour m_DiscLedColour;
 
 	// DirectX stuff
 	bool m_DXInit;
 	bool m_DXResetPending;
+	bool m_DXDeviceLost;
 
 	// DirectDraw stuff
 	HINSTANCE m_hInstDDraw;
@@ -559,13 +700,13 @@ public:
 #endif
 
 	// Audio
-	UINT m_MenuIDSampleRate;
-	UINT m_MenuIDVolume;
+	int m_SampleRate;
+	int m_SoundVolume;
 
 	// Joystick input
 	bool m_JoystickCaptured;
 	JOYCAPS m_JoystickCaps;
-	UINT m_MenuIDSticks;
+	JoystickOption m_JoystickOption;
 
 	// Mouse capture
 	bool m_HideCursor;
@@ -574,7 +715,7 @@ public:
 	POINT m_RelMousePos;
 
 	// Keyboard input
-	UINT m_MenuIDKeyMapping;
+	KeyboardMappingType m_KeyboardMapping;
 	bool m_KeyMapAS;
 	bool m_KeyMapFunc;
 	char m_UserKeyMapPath[_MAX_PATH];
@@ -595,8 +736,7 @@ public:
 	bool m_WriteProtectOnLoad;
 
 	// AMX mouse
-	UINT m_MenuIDAMXSize;
-	UINT m_MenuIDAMXAdjust;
+	AMXSizeType m_AMXSize;
 	int m_AMXXSize;
 	int m_AMXYSize;
 	int m_AMXAdjust;
@@ -610,17 +750,16 @@ public:
 	bool m_AutoSavePrefsChanged;
 
 	// Clipboard
-	static const int ClipboardBufferSize = 32768;
-	char m_ClipboardBuffer[ClipboardBufferSize];
-	int m_ClipboardLength;
-	int m_ClipboardIndex;
+	std::vector<char> m_ClipboardBuffer;
+	size_t m_ClipboardLength;
+	size_t m_ClipboardIndex;
 
 	// Printer
-	char m_printerbuffer[1024 * 1024];
-	int m_printerbufferlen;
-	bool m_translateCRLF;
-
-	UINT m_MenuIDPrinterPort;
+	static const int PrinterBufferSize = 1024 * 1024;
+	char m_PrinterBuffer[PrinterBufferSize];
+	int m_PrinterBufferLen;
+	bool m_TranslateCRLF;
+	PrinterPortType m_PrinterPort;
 	char m_PrinterFileName[_MAX_PATH];
 	char m_PrinterDevice[_MAX_PATH];
 
@@ -648,17 +787,15 @@ public:
 	// ROMs
 	bool RomWritePrefs[16];
 
-#ifndef __APPLE__
 	// Bitmap capture
 	ULONG_PTR m_gdiplusToken;
-#endif
 	bool m_CaptureBitmapPending;
 	bool m_CaptureBitmapAutoFilename;
 	char m_CaptureFileName[MAX_PATH];
-	UINT m_MenuIDCaptureResolution;
-	UINT m_MenuIDCaptureFormat;
+	BitmapCaptureResolution m_BitmapCaptureResolution;
+	BitmapCaptureFormat m_BitmapCaptureFormat;
 
-	// AVI vars
+	// Video capture
 	bmiData m_Avibmi;
 	HBITMAP m_AviDIB;
 	HDC m_AviDC;
@@ -666,10 +803,9 @@ public:
 	int m_AviFrameSkip;
 	int m_AviFrameSkipCount;
 	int m_AviFrameCount;
-	UINT m_MenuIDAviResolution;
-	UINT m_MenuIDAviSkip;
+	VideoCaptureResolution m_VideoCaptureResolution;
 
-	// Text to speech variables
+	// Text to speech
 	bool m_TextToSpeechEnabled;
 	std::vector<TextToSpeechVoice> m_TextToSpeechVoices;
 	HMENU m_hVoiceMenu;
@@ -687,7 +823,7 @@ public:
 	int m_SpeechBufPos;
 	int m_SpeechRate;
 
-	// Text view variables
+	// Text view
 	HWND m_hTextView;
 	bool m_TextViewEnabled;
 	WNDPROC m_TextViewPrevWndProc;
@@ -703,5 +839,7 @@ class CSprowCoPro;
 
 extern CArm *arm;
 extern CSprowCoPro *sprow;
+
+extern const char DefaultBlurIntensities[8];
 
 #endif

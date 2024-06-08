@@ -14,6 +14,9 @@
 		DC1DBA222BB998B000AAB22F /* KeyboardMappingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1DBA132BB8CF0400AAB22F /* KeyboardMappingViewController.swift */; };
 		DC1DBA232BB9A2BB00AAB22F /* RomConfigViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1DBA152BB8CF0500AAB22F /* RomConfigViewController.swift */; };
 		DC1DBA252BB9A4C900AAB22F /* BreakoutBoxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1DBA142BB8CF0500AAB22F /* BreakoutBoxViewController.swift */; };
+		DC215BE62C13B4DD003E50A3 /* BeebWinDx-mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCACDAC22BC669B600CEF154 /* BeebWinDx-mac.cpp */; };
+		DC215BE92C13C282003E50A3 /* Registry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC215BE82C13C27E003E50A3 /* Registry.cpp */; };
+		DC215BEA2C13C359003E50A3 /* AVIWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996F62BBA0C9C00A109A5 /* AVIWriter.cpp */; };
 		DC2C9D032BF9788700F2E613 /* RomConfigFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC2C9D002BF9788700F2E613 /* RomConfigFile.cpp */; };
 		DC2C9D042BF9788700F2E613 /* Rtc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC2C9D022BF9788700F2E613 /* Rtc.cpp */; };
 		DC2C9D072BF978AF00F2E613 /* UserPortRTC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC2C9D052BF978AE00F2E613 /* UserPortRTC.cpp */; };
@@ -80,7 +83,6 @@
 		DC9B41372BC22AE700C3D9D8 /* BeebWinIo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC09971D2BBA0C9C00A109A5 /* BeebWinIo.cpp */; };
 		DC9B413A2BC22FE200C3D9D8 /* BeebWinPrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC09970B2BBA0C9C00A109A5 /* BeebWinPrefs.cpp */; };
 		DCACDAC12BC5DD2E00CEF154 /* apples.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCACDAC02BC5DD2E00CEF154 /* apples.cpp */; };
-		DCACDAC42BC669B600CEF154 /* BeebWinDx-mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCACDAC22BC669B600CEF154 /* BeebWinDx-mac.cpp */; };
 		DCB3B2592BBB865E00F507F4 /* opus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0997BC2BBAA91E00A109A5 /* opus.cpp */; };
 		DCB4EBC72BD5BCD7002AEA8A /* BeebEm-Bridging-Roms.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCB4EBC52BD5BCD7002AEA8A /* BeebEm-Bridging-Roms.cpp */; };
 		DCB4EBCA2BD5BD02002AEA8A /* BeebEm-Bridging-BreakoutBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCB4EBC82BD5BD02002AEA8A /* BeebEm-Bridging-BreakoutBox.cpp */; };
@@ -327,6 +329,8 @@
 		DC1DBA142BB8CF0500AAB22F /* BreakoutBoxViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BreakoutBoxViewController.swift; sourceTree = "<group>"; };
 		DC1DBA152BB8CF0500AAB22F /* RomConfigViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RomConfigViewController.swift; sourceTree = "<group>"; };
 		DC1DBA162BB8CF0500AAB22F /* TapeControlViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TapeControlViewController.swift; sourceTree = "<group>"; };
+		DC215BE72C13C27E003E50A3 /* Registry.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Registry.h; path = ../../../Src/Registry.h; sourceTree = "<group>"; };
+		DC215BE82C13C27E003E50A3 /* Registry.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Registry.cpp; sourceTree = "<group>"; };
 		DC2C9CFE2BF9444F00F2E613 /* process.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = process.h; sourceTree = "<group>"; };
 		DC2C9CFF2BF9788700F2E613 /* Rtc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Rtc.h; path = ../../../Src/Rtc.h; sourceTree = "<group>"; };
 		DC2C9D002BF9788700F2E613 /* RomConfigFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RomConfigFile.cpp; path = ../../../Src/RomConfigFile.cpp; sourceTree = "<group>"; };
@@ -465,6 +469,7 @@
 		DC0996DB2BBA0C5000A109A5 /* windows_code */ = {
 			isa = PBXGroup;
 			children = (
+				DC215BE82C13C27E003E50A3 /* Registry.cpp */,
 				DC2C9D052BF978AE00F2E613 /* UserPortRTC.cpp */,
 				DC2C9D002BF9788700F2E613 /* RomConfigFile.cpp */,
 				DC2C9D022BF9788700F2E613 /* Rtc.cpp */,
@@ -550,6 +555,7 @@
 		DC0996DC2BBA0C6400A109A5 /* windows_headers */ = {
 			isa = PBXGroup;
 			children = (
+				DC215BE72C13C27E003E50A3 /* Registry.h */,
 				DC2C9D062BF978AF00F2E613 /* UserPortRTC.h */,
 				DC2C9D012BF9788700F2E613 /* RomConfigFile.h */,
 				DC2C9CFF2BF9788700F2E613 /* Rtc.h */,
@@ -1050,6 +1056,7 @@
 				DCDC732B2BBF5B7F00D83402 /* armemu.cpp in Sources */,
 				DCDC73412BC0B0E600D83402 /* Scsi.cpp in Sources */,
 				DCDC73422BC0B12700D83402 /* Sound.cpp in Sources */,
+				DC215BE62C13B4DD003E50A3 /* BeebWinDx-mac.cpp in Sources */,
 				DC7E1E622BCE53E000494CBE /* BeebEm-Bridging-IO.cpp in Sources */,
 				DC9427B22BF038F10012C4E4 /* SerialPortViewController.swift in Sources */,
 				DCB4EBD92BDB890F002AEA8A /* RenameFileDialog-mac.cpp in Sources */,
@@ -1079,6 +1086,7 @@
 				DCDC734E2BC0B85F00D83402 /* Via.cpp in Sources */,
 				DCDC73092BBE108600D83402 /* Bcd.cpp in Sources */,
 				DCDC73442BC0B43400D83402 /* SoundStreamer.cpp in Sources */,
+				DC215BE92C13C282003E50A3 /* Registry.cpp in Sources */,
 				DC907ECC2BB70CE000523116 /* NSImage+Bitmap.swift in Sources */,
 				DCB4EBC72BD5BCD7002AEA8A /* BeebEm-Bridging-Roms.cpp in Sources */,
 				DC9B41352BC2190500C3D9D8 /* BeebWin.cpp in Sources */,
@@ -1093,7 +1101,6 @@
 				DCE94C1D2BD312B100A5C12A /* BeebEm-Beeb.swift in Sources */,
 				DC9427AE2BF0386C0012C4E4 /* BeebEm-Teletext.swift in Sources */,
 				DCDC73482BC0B6CC00D83402 /* TouchScreen.cpp in Sources */,
-				DCACDAC42BC669B600CEF154 /* BeebWinDx-mac.cpp in Sources */,
 				DC1DBA202BB8CF8600AAB22F /* BeebEm-TapeControl.swift in Sources */,
 				DCDC73402BC0AFF100D83402 /* Sasi.cpp in Sources */,
 				DCDC73302BBF5F2200D83402 /* BeebMem.cpp in Sources */,
@@ -1116,6 +1123,7 @@
 				DCCE05BE2C11DD6300CAAD24 /* AppleSoundStreamer.cpp in Sources */,
 				DC1DBA222BB998B000AAB22F /* KeyboardMappingViewController.swift in Sources */,
 				DC527AD22BC71CBC000D7CCF /* BeebEm-Bridging-Main.cpp in Sources */,
+				DC215BEA2C13C359003E50A3 /* AVIWriter.cpp in Sources */,
 				DC84500B2BE45931002015D9 /* BeebEm-BreakoutBox.swift in Sources */,
 				DC8450062BE2DA04002015D9 /* BeebEm-KeyboardMapping.swift in Sources */,
 				DCDC730B2BBE118B00D83402 /* Preferences.cpp in Sources */,

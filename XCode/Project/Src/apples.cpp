@@ -10,6 +10,7 @@
 #include "beebemrcids.h"
 #include <string>
 #include <filesystem> // C++17 (or Microsoft-specific implementation in C++14)
+#include "BeebWin.h"
 
 int __argc;
 char** __argv;
@@ -42,7 +43,7 @@ int beebwin_RC2ID(int rc)
 void beebwin_ModifyMenu(
 						UINT position,
 						UINT newitem,
-						CHAR* newtext)
+						LPCSTR newtext)
 {
 	auto id = beebwin_RC2ID(position);
 	if (id>0)
@@ -50,7 +51,8 @@ void beebwin_ModifyMenu(
 		swift_ModifyMenu(id, beebwin_RC2ID(newitem), newtext);
 }
 
-void ModifyMenu(HMENU m_hMenu, UINT pf, UINT flags, UINT_PTR newID, CHAR* str)
+
+void ModifyMenu(HMENU m_hMenu, UINT pf, UINT flags, UINT_PTR newID, LPCSTR str)
 {
 	beebwin_ModifyMenu(pf,
 					   newID,
@@ -247,6 +249,7 @@ LSTATUS RegCreateKeyEx(
 {
 	return ERROR_SUCCESS;
 }
+
 LSTATUS RegOpenKeyEx(
    HKEY   hKey,
    LPCSTR lpSubKey,
@@ -521,6 +524,44 @@ int SHCreateDirectoryEx(void* a, const char* f, void *b)
 	mode_t mode = 0755;
 	mkdir(f, mode);
 	return ERROR_SUCCESS;
+}
+
+extern int_fast32_t m_RGB32[256];
+extern int_fast16_t m_RGB16[256];
+
+
+HGDIOBJ SelectObject(HDC hdc, HGDIOBJ ppvBits)
+{
+	return (HGDIOBJ)1;
+}
+
+
+HGDIOBJ CreateDIBSection(HDC hdc, const BITMAPINFO *pbmi,
+							   UINT usage, void **ppvBits,
+							   int hSection, DWORD offset)
+{
+
+	*ppvBits = (char *)calloc(pbmi->bmiHeader.biSizeImage,1);
+
+	fprintf(stderr, "Base Address = %08lx\n", (unsigned long) ppvBits);
+	
+	// just in case usage ever changes
+	int COLS = 64;
+	if (usage==DIB_RGB_COLORS)
+		COLS = 64;
+	
+	for (int i = 0; i < COLS + 4; ++i)
+	{
+	  m_RGB32[i] = ((( ((pbmi->bmiColors[i].rgbRed) << 8)  + (pbmi->bmiColors[i].rgbGreen )) << 8) + (pbmi->bmiColors[i].rgbBlue));
+	  m_RGB32[i] |= 0xff000000;
+
+	  m_RGB16[i] = ((( ((pbmi->bmiColors[i].rgbRed >> 3) << 5)  + (pbmi->bmiColors[i].rgbGreen >> 3)) << 5) + (pbmi->bmiColors[i].rgbBlue >> 3));
+
+	//      printf("RGB32[%d] = %08x, RGB16[%d] = %04x\n", i, m_RGB32[i], i, m_RGB16[i]);
+
+	}
+	
+	return (HGDIOBJ)1;
 }
 
 bool SHFileOperation(SHFILEOPSTRUCT* a)

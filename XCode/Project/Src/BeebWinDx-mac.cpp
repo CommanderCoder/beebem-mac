@@ -19,56 +19,60 @@
 #include "Messages.h"
 #include "Resource.h"
 
-AVIWriter *aviWriter;
+
+
+// NOTE REGARDING DIFFERENCES TO BeebWinDX.cpp
+// Only need to include differences for
+/*
+ * BeebWin::updateLines
+ * BeebWin::IsWindowMinimized
+ * pszReleaseCaptureMessage
+ * BeebWin::ShouldDisplayTiming
+ * BeebWin::DisplayTiming()
+ * BeebWin::UpdateWindowTitle()
+ * BeebWin::SetMotionBlur
+ * BeebWin::UpdateMotionBlurMenu
+ 
+ * and any of the empty methods below
+ */
 
 void BeebWin::InitDX(){}
-void BeebWin::ExitDX(){}
 void BeebWin::ResetDX(){}
+void BeebWin::ReinitDX(){}
+void BeebWin::ExitDX(){}
+void BeebWin::UpdateSmoothing(){}
+void BeebWin::CloseDX9(){}
 
 
+void VideoAddLeds_Mac()
+{
+	// Swift LEDs here
+	swift_SetMachineType(MachineType);
+	if (MachineType == Model::Master128)
+		swift_SetLED(CASS,true);
+	else
+		swift_SetLED(CASS,LEDs.Motor);
+	
+	swift_SetLED(CAPS,LEDs.CapsLock);
+	swift_SetLED(SHIFT,LEDs.ShiftLock);
 
+	swift_SetLED(HD0,LEDs.HDisc[0]);
+	swift_SetLED(HD1,LEDs.HDisc[1]);
+	swift_SetLED(HD2,LEDs.HDisc[2]);
+	swift_SetLED(HD3,LEDs.HDisc[3]);
+	swift_SetLED(FD0,LEDs.FloppyDisc[0]);
+	swift_SetLED(FD1,LEDs.FloppyDisc[1]);
+}
+
+/****************************************************************************/
+
+// the video buffer found in 'BeebEm-Bridging-Video.cpp'
 extern char bridgingVideobuffer[];
-void VideoAddLeds_Mac();
-
 
 // colour information in 32 and 16 bit RGB
 // to get from BBC RGB to MacOS RGB
 int_fast32_t m_RGB32[256];
 int_fast16_t m_RGB16[256];
-
-HGDIOBJ SelectObject(HDC hdc, HGDIOBJ ppvBits)
-{
-	return (HGDIOBJ)1;
-}
-
-HGDIOBJ CreateDIBSection(HDC hdc, const BITMAPINFO *pbmi,
-							   UINT usage, void **ppvBits,
-							   int hSection, DWORD offset)
-{
-
-	*ppvBits = (char *)calloc(pbmi->bmiHeader.biSizeImage,1);
-
-	fprintf(stderr, "Base Address = %08lx\n", (unsigned long) ppvBits);
-	
-	// just in case usage ever changes
-	int COLS = 64;
-	if (usage==DIB_RGB_COLORS)
-		COLS = 64;
-	
-	for (int i = 0; i < COLS + 4; ++i)
-	{
-	  m_RGB32[i] = ((( ((pbmi->bmiColors[i].rgbRed) << 8)  + (pbmi->bmiColors[i].rgbGreen )) << 8) + (pbmi->bmiColors[i].rgbBlue));
-	  m_RGB32[i] |= 0xff000000;
-
-	  m_RGB16[i] = ((( ((pbmi->bmiColors[i].rgbRed >> 3) << 5)  + (pbmi->bmiColors[i].rgbGreen >> 3)) << 5) + (pbmi->bmiColors[i].rgbBlue >> 3));
-
-	//      printf("RGB32[%d] = %08x, RGB16[%d] = %04x\n", i, m_RGB32[i], i, m_RGB16[i]);
-
-	}
-	
-	return (HGDIOBJ)1;
-}
-
 
 
 /****************************************************************************/
@@ -100,7 +104,7 @@ void BeebWin::updateLines(HDC hDC, int starty, int nlines)
 	// Changed to/from teletext mode?
 	if (LastTeletextEnabled != TeletextEnabled || First)
 	{
-		if (m_DisplayRenderer != IDM_DISPGDI && m_DXSmoothing && m_DXSmoothMode7Only)
+		if (m_DisplayRenderer != DisplayRendererType::GDI && m_DXSmoothing && m_DXSmoothMode7Only)
 		{
 			UpdateSmoothing();
 		}
@@ -125,11 +129,11 @@ void BeebWin::updateLines(HDC hDC, int starty, int nlines)
 	TeletextLines = 500 / TeletextStyle;
 
 	// Do motion blur
-	if (m_MenuIDMotionBlur != IDM_BLUR_OFF)
+	if (m_MotionBlur != 0)
 	{
-		if (m_MenuIDMotionBlur == IDM_BLUR_2)
+		if (m_MotionBlur == 2)
 			j = 32;
-		else if (m_MenuIDMotionBlur == IDM_BLUR_4)
+		else if (m_MotionBlur == 4)
 			j = 16;
 		else // blur 8 frames
 			j = 8;
@@ -143,6 +147,7 @@ void BeebWin::updateLines(HDC hDC, int starty, int nlines)
 			else if (m_screen_blur[i] != 0)
 			{
 				m_screen_blur[i] += j;
+				
 				if (m_screen_blur[i] > 63)
 					m_screen_blur[i] = 0;
 			}
@@ -158,7 +163,7 @@ void BeebWin::updateLines(HDC hDC, int starty, int nlines)
 	RECT destRect;
 	destRect = {0,0,512,640};  //top, left, bottom, right
 
-	if (m_isFullScreen && m_MaintainAspectRatio)
+	if (m_FullScreen && m_MaintainAspectRatio)
 	{
 		// Aspect ratio adjustment
 		int xAdj = (int)(m_XRatioCrop * (float)(destRect.right - destRect.left));
@@ -327,7 +332,7 @@ static const char* pszReleaseCaptureMessage = "(Press Ctrl+Alt to release mouse)
 
 bool BeebWin::ShouldDisplayTiming() const
 {
-	return m_ShowSpeedAndFPS && (m_DisplayRenderer == IDM_DISPGDI || !m_isFullScreen);
+	return m_ShowSpeedAndFPS && (m_DisplayRenderer == DisplayRendererType::GDI || !m_FullScreen);
 }
 
 void BeebWin::DisplayTiming()
@@ -371,27 +376,37 @@ void BeebWin::UpdateWindowTitle()
 
 
 /****************************************************************************/
-void BeebWin::UpdateSmoothing()
+
+
+void BeebWin::SetMotionBlur(int MotionBlur)
 {
+	m_MotionBlur = MotionBlur;
+
+	UpdateMotionBlurMenu();
 }
 
-
-void VideoAddLeds_Mac()
+void BeebWin::UpdateMotionBlurMenu()
 {
-	// Swift LEDs here
-	swift_SetMachineType(MachineType);
-	if (MachineType == Model::Master128)
-		swift_SetLED(CASS,true);
-	else
-		swift_SetLED(CASS,LEDs.Motor);
-	
-	swift_SetLED(CAPS,LEDs.CapsLock);
-	swift_SetLED(SHIFT,LEDs.ShiftLock);
+	static const struct { UINT ID; int MotionBlur; } MenuItems[] =
+	{
+		{ IDM_BLUR_OFF, 0 },
+		{ IDM_BLUR_2,   2 },
+		{ IDM_BLUR_4,   4 },
+		{ IDM_BLUR_8,   8 }
+	};
 
-	swift_SetLED(HD0,LEDs.HDisc[0]);
-	swift_SetLED(HD1,LEDs.HDisc[1]);
-	swift_SetLED(HD2,LEDs.HDisc[2]);
-	swift_SetLED(HD3,LEDs.HDisc[3]);
-	swift_SetLED(FD0,LEDs.FloppyDisc[0]);
-	swift_SetLED(FD1,LEDs.FloppyDisc[1]);
+	UINT SelectedMenuItemID = 0;
+
+	for (int i = 0; i < _countof(MenuItems); i++)
+	{
+		if (m_MotionBlur == MenuItems[i].MotionBlur)
+		{
+			SelectedMenuItemID = MenuItems[i].ID;
+			break;
+		}
+	}
+
+	CheckMenuRadioItem(IDM_BLUR_OFF, IDM_BLUR_8, SelectedMenuItemID);
 }
+
+/****************************************************************************/

@@ -18,12 +18,12 @@ std::map<int,int> ID2RC =
 {'opn1', IDM_LOADDISC1},
 {'new0', IDM_NEWDISC0},
 {'new1', IDM_NEWDISC1},
-{'rest', ID_FILE_RESET},
-{'bbcb', ID_MODELB},
-{'bbci', ID_MODELBINT},
-{'bbcp', ID_MODELBPLUS},
-{'bbcm', ID_MASTER128},
-{'bbce', ID_MASTER_ET},
+{'rest', IDM_FILE_RESET},
+{'bbcb', IDM_MODELB},
+{'bbci', IDM_MODELBINT},
+{'bbcp', IDM_MODELBPLUS},
+{'bbcm', IDM_MASTER128},
+{'bbce', IDM_MASTER_ET},
 {'tnil', IDM_TUBE_NONE},
 {'tube', IDM_TUBE_ACORN65C02},
 //    {'t186', whatever happend to tube 186? },
@@ -51,10 +51,10 @@ std::map<int,int> ID2RC =
 {'f10 ', IDM_FIXEDSPEED10  },
 {'f0.5', IDM_FIXEDSPEED0_5 },
 {'f0.1', IDM_FIXEDSPEED0_1 },
-{'monr', ID_MONITOR_RGB  },
-{'monb', ID_MONITOR_BW   },
-{'mona', ID_MONITOR_AMBER},
-{'mong', ID_MONITOR_GREEN},
+{'monr', IDM_MONITOR_RGB  },
+{'monb', IDM_MONITOR_BW   },
+{'mona', IDM_MONITOR_AMBER},
+{'mong', IDM_MONITOR_GREEN},
 {'wrp0', IDM_WRITE_PROTECT_DISC0},
 {'wrp1', IDM_WRITE_PROTECT_DISC1},
 {'wpol', IDM_WRITE_PROTECT_ON_LOAD},
@@ -68,7 +68,7 @@ std::map<int,int> ID2RC =
 {'siz8', ID_},
 {'siz9', ID_},
 {'siza', ID_},
-{'sizb', ID_VIEW_DD_1600X1200},//1600x1200 selected
+//{'sizb', IDM_VIEW_DD_1600X1200},//1600x1200 selected
 {'vfsc', ID_},//View full screen selected
 {'vmar', IDM_MAINTAINASPECTRATIO},//Maintain Aspect Ratio selected
 {'volh', IDM_HIGHVOLUME  },
@@ -78,9 +78,9 @@ std::map<int,int> ID2RC =
 {'sndc', IDM_SOUNDCHIP},
 {'sond', IDM_SOUNDONOFF},
 {'sped', IDM_SPEECH}, //--gone
-{'enet', ID_ECONET},
+{'enet', IDM_ECONET},
 {'igil', ID_},//Ignore Illegal Instructions - see OPCODES
-{'hard', ID_BASIC_HARDWARE_ONLY},//Basic Hardware
+{'hard', IDM_BASIC_HARDWARE_ONLY},//Basic Hardware
 {'docu', ID_},//Documented Only
 {'extr', ID_},//Common Extras
 {'full', ID_},//Full Set
@@ -108,10 +108,10 @@ std::map<int,int> ID2RC =
 {'romn', IDM_ALLOWWRITES_ROMD},
 {'romo', IDM_ALLOWWRITES_ROME},
 {'romp', IDM_ALLOWWRITES_ROMF},
-{'ledr', ID_RED_LEDS     },
-{'ledg', ID_GREEN_LEDS   },
-{'ledk', ID_SHOW_KBLEDS  },
-{'ledd', ID_SHOW_DISCLEDS},
+{'ledr', IDM_RED_LEDS     },
+{'ledg', IDM_GREEN_LEDS   },
+{'ledk', IDM_SHOW_KBLEDS  },
+{'ledd', IDM_SHOW_DISCLEDS},
 {'savp', IDM_SAVE_PREFS},
 {'qukl', IDM_QUICKLOAD},
 {'quks', IDM_QUICKSAVE},
@@ -123,10 +123,10 @@ std::map<int,int> ID2RC =
 {'pcl2', IDM_PRINTER_LPT2}, //new vv
 {'pcl3', IDM_PRINTER_LPT3},
 {'pcl4', IDM_PRINTER_LPT4},
-{'pcc1', IDM_PRINTER_COM1},
-{'pcc2', IDM_PRINTER_COM2},
-{'pcc3', IDM_PRINTER_COM3},
-{'pcc4', IDM_PRINTER_COM4}, //new ^^
+//{'pcc1', IDM_PRINTER_COM1},
+//{'pcc2', IDM_PRINTER_COM2},
+//{'pcc3', IDM_PRINTER_COM3},
+//{'pcc4', IDM_PRINTER_COM4}, //new ^^
 {'kmas', IDM_MAPAS},
 {'copy', IDM_EDIT_COPY},
 {'past', IDM_EDIT_PASTE},
@@ -145,21 +145,21 @@ std::map<int,int> ID2RC =
 {'ofwm', IDM_FREEZEINACTIVE},
 {'msea', IDM_ANALOGUE_MOUSESTICK},
 {'msed', IDM_DIGITAL_MOUSESTICK},
-{'opnt', ID_LOADTAPE},
-{'tpfa', ID_TAPE_FAST  },
-{'tpmf', ID_TAPE_MFAST },
-{'tpms', ID_TAPE_MSLOW },
-{'tpno', ID_TAPE_NORMAL},
-{'tpso', ID_TAPESOUND},
-{'tpcr', ID_SFX_RELAY},
-{'ddso', ID_SFX_DISCDRIVES},
+{'opnt', IDM_LOADTAPE},
+{'tpfa', IDM_TAPE_FAST  },
+{'tpmf', IDM_TAPE_MFAST },
+{'tpms', IDM_TAPE_MSLOW },
+{'tpno', IDM_TAPE_NORMAL},
+{'tpso', IDM_TAPESOUND},
+{'tpcr', IDM_SFX_RELAY},
+{'ddso', IDM_SFX_DISCDRIVES},
 {'sudf', IDM_SELECT_USER_DATA_FOLDER},
-{'tpre', ID_REWINDTAPE},
-{'tpul', ID_UNLOCKTAPE},
-{'tpco', ID_TAPECONTROL},
+{'tpre', IDM_REWINDTAPE},
+{'tpul', IDM_UNLOCKTAPE},
+{'tpco', IDM_TAPECONTROL},
 {'dbgr', IDM_SHOWDEBUGGER},
-{'upbo', ID_BREAKOUT},
-{'uprm', ID_USER_PORT_RTC_MODULE},
+{'upbo', IDM_BREAKOUT},
+{'uprm', IDM_USER_PORT_RTC_MODULE},
 {'abou', IDM_ABOUT},
 {'kusr', IDM_DEFINEKEYMAP},
 {'lukm', IDM_LOADKEYMAP},
@@ -189,14 +189,14 @@ std::map<int,int> ID2RC =
 {'ejd0', IDM_EJECTDISC0},
 {'ejd1', IDM_EJECTDISC1},
 {'snev', ID_},
-{'txte', ID_TELETEXT},
+{'txte', IDM_TELETEXT},
 //{'txtd', ID_TELETEXTFILES},
 //{'txts', ID_TELETEXTLOCALHOST},
 //{'txtc', ID_TELETEXTCUSTOM},
 {'txts', IDM_SELECT_TELETEXT_DATA_SOURCE},
-{'flpe', ID_FLOPPYDRIVE},
-{'hdsc', ID_HARDDRIVE},
-{'hdde', ID_IDEDRIVE},
+{'flpe', IDM_FLOPPY_DRIVE},
+{'hdsc', IDM_SCSI_HARD_DRIVE},
+{'hdde', IDM_IDE_HARD_DRIVE},
 {'hdre', IDM_SELECT_HARD_DRIVE_FOLDER},
 {'rs42', ID_},
 {'sdts', ID_},
@@ -211,10 +211,10 @@ std::map<int,int> ID2RC =
 {'ttsp', IDM_TEXTTOSPEECH_ENABLE},
 {'mus5', IDM_MUSIC5000},
     
-{'mbcn', ID_8271},
-{'mbca', ID_FDC_ACORN}, //Acorn 1770 Controller
-{'mbco', ID_FDC_OPUS}, //OPUS 1770 Controller - on DLL on windows
-{'mbcw', ID_FDC_WATFORD}, //Watford 1770 - on DLL on windows
+{'mbcn', IDM_8271},
+{'mbca', IDM_FDC_ACORN}, //Acorn 1770 Controller
+{'mbco', IDM_FDC_OPUS}, //OPUS 1770 Controller - on DLL on windows
+{'mbcw', IDM_FDC_WATFORD}, //Watford 1770 - on DLL on windows
 //    {'mrty', ID_RTCY2KADJUST},
     {'jstk', IDM_JOYSTICK},
     {'hcur', IDM_HIDECURSOR},

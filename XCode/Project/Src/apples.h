@@ -63,7 +63,10 @@ typedef uint32_t* HGDIOBJ; //
 typedef uint32_t* HMENU; //
 typedef uint32_t* HBITMAP; //
 
-typedef uint32_t* POINT; //
+typedef struct tagPOINT {
+  LONG x;
+  LONG y;
+} POINT, *PPOINT, *NPPOINT, *LPPOINT;
 
 #define CSIDL_PERSONAL -1
 #define SHGFP_TYPE_CURRENT -1
@@ -323,7 +326,7 @@ extern char** __argv;
 #define LB_ERR -1
 int SendMessage(HWND w, int a, size_t b, long c);
 void DestroyWindow(HWND w);
-
+void ModifyMenu(HMENU m_hMenu, UINT pf, UINT flags, UINT_PTR newID, LPCSTR str);
 
 // used in BeebMem.h
 extern DWORD GetTickCount();
@@ -451,13 +454,14 @@ int beebwin_RC2ID(int rc);
 void beebwin_ModifyMenu(
 						UINT position,
 						UINT newitem,
-						CHAR* newtext);
+						LPCSTR newtext);
 void beebwin_SetMenuCheck(UINT cmd, bool check);
 void beebwin_CheckMenuRadioItem(UINT first, UINT last, UINT cmd);
 
 int beebwin_KeyUpDown(long, long,long);
 
 #define WS_POPUP -1
+#define WS_OVERLAPPEDWINDOW -1
 #define WIN_STYLE -1
 #define WM_CLOSE -1
 #define SW_MAXIMIZE -1
@@ -503,12 +507,6 @@ extern "C" void swift_InitExportDialog (char* dfsNames[][6], int max, int column
 extern "C" int swift_SelectedFiles ( int fileSelected[], int max);
 
 extern "C" int swift_Report ( const char* message, const char* title, int buttonType);
-
-extern void beebwin_ModifyMenu(
-						UINT position,
-						UINT newitem,
-						CHAR* newtext);
-
 
 
 #define MB_ICONERROR 0
@@ -599,7 +597,6 @@ BOOL SetWindowPos( HWND hWnd, HWND hWndInsertAfter,
 HWND SetFocus(HWND focus);
 
 
-void ModifyMenu(HMENU m_hMenu, UINT pf, UINT flags, UINT_PTR newID, CHAR* str);
 void CheckMenuRadioItem(HMENU m_hMenu,
 						UINT first,
 						UINT last,
