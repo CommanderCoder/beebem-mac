@@ -467,8 +467,8 @@ int beebwin_KeyUpDown(long, long,long);
 #define SW_MAXIMIZE -1
 #define SW_RESTORE -1
 #define SW_SHOWNORMAL -1
-long GetWindowLong(HWND wnd, long s);
-void SetWindowLong(HWND m_hWnd, int f, long s);
+DWORD GetWindowLong(HWND wnd, long s);
+void SetWindowLong(HWND m_hWnd, int f, DWORD s);
 BOOL SetWindowText(HWND    hWnd, LPCSTR lpString);
 BOOL SetWindowText(HWND    hWnd, LPTSTR lpString);
 typedef  enum

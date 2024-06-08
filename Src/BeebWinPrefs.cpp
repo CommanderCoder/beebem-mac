@@ -1325,11 +1325,12 @@ void BeebWin::LoadKeyMapPreferences()
 	m_Preferences.GetBoolValue(CFG_DISABLE_KEYS_ESCAPE, m_DisableKeysEscape, false);
 	m_Preferences.GetBoolValue(CFG_DISABLE_KEYS_SHORTCUT, m_DisableKeysShortcut, false);
 
+
+#ifndef __APPLE__
 	// Windows key enable/disable still comes from registry
 	int Size = 24;
 	unsigned char KeyData[24];
 
-#ifndef __APPLE__
 	if (RegGetBinaryValue(HKEY_LOCAL_MACHINE, CFG_KEYBOARD_LAYOUT,
 	                      CFG_SCANCODE_MAP, KeyData, &Size) && Size == 24)
 	{

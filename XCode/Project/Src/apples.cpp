@@ -503,8 +503,8 @@ void PathCanonicalize(const char* c, const char* p)
 
 void GetClientRect(HWND h, RECT* r){}
 void InvalidateRect(HWND h, RECT* r, bool b){}
-long GetWindowLong(HWND wnd, long s){return 0L;}
-void SetWindowLong(HWND m_hWnd, int f, long s){}
+DWORD GetWindowLong(HWND wnd, long s){return 0;}
+void SetWindowLong(HWND m_hWnd, int f, DWORD s){}
 
 
 

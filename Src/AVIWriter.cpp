@@ -27,8 +27,10 @@ Boston, MA  02110-1301, USA.
 #include <windows.h>
 #ifndef __APPLE__
 #include <mmreg.h>
-#endif
 #include "AviWriter.h"
+#else
+#include "AVIWriter.h"
+#endif
 
 /*--------------------------------------------------------------------------*/
 
