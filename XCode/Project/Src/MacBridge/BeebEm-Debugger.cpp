@@ -16,11 +16,11 @@ extern "C" long beeb_DbgHandleCommand(unsigned int cmdID)
 	auto cmdRC = ID2RC.find(cmdID);
 	if (cmdRC != ID2RC.end())
 	{
-		printf("DBHANDLECMD %c%c%c%c", cmdCHR[3], cmdCHR[2], cmdCHR[1], cmdCHR[0]);
+		printf("DBHANDLECMD %c%c%c%c\n", cmdCHR[3], cmdCHR[2], cmdCHR[1], cmdCHR[0]);
 		return DbgWindowCommandHandler(cmdRC->second);
 	}
 
-	printf(" NOT FOUND %c%c%c%c", cmdCHR[3], cmdCHR[2], cmdCHR[1], cmdCHR[0]);
+	printf(" NOT FOUND %c%c%c%c\n", cmdCHR[3], cmdCHR[2], cmdCHR[1], cmdCHR[0]);
 	return 0;
 
 }

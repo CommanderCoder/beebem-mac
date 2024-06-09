@@ -25,11 +25,11 @@ extern "C" long beeb_UKHandleCommand(unsigned int cmdID)
 	auto cmdRC = ID2RC.find(cmdID);
 	if (cmdRC != ID2RC.end())
 	{
-		printf("HANDLECMD %c%c%c%c", cmdCHR[3], cmdCHR[2], cmdCHR[1], cmdCHR[0]);
+		printf("HANDLECMD %c%c%c%c\n", cmdCHR[3], cmdCHR[2], cmdCHR[1], cmdCHR[0]);
 		return UK_WM_COMMAND((WPARAM)cmdRC->second);//
 	}
 
-	printf("NOT FOUND %c%c%c%c", cmdCHR[3], cmdCHR[2], cmdCHR[1], cmdCHR[0]);
+	printf("NOT FOUND %c%c%c%c\n", cmdCHR[3], cmdCHR[2], cmdCHR[1], cmdCHR[0]);
 	return 0;
 }
 

@@ -349,7 +349,7 @@ public func swift_StopStream(_ index: Int)
 {
 	guard let dat = AudioStreams[index] else {print("bad stop index");return}
 	dat.playernode.stop()
-	print ("stopstream: ",index)
+//	print ("stopstream: ",index)
 }
 
 
