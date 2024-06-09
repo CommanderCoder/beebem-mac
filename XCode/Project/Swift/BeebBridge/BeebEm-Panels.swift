@@ -356,19 +356,19 @@ public func swift_saveScreen(_ text: UnsafePointer<CChar>)
 
 
 @_cdecl("swift_getPasteboard")
-public func swift_getPasteboard(_ text: UnsafeMutablePointer<CChar>, _ length: Int) -> Int
+public func swift_getPasteboard(_ text: UnsafeMutablePointer<CChar>, _ length: Int) -> Bool
 {
     let pasteboard = NSPasteboard.general
 
     if let string = pasteboard.string(forType: .string) {
         // text was found and placed in the "string" constant
         
-        // set the filepath back in the C code - fill with zeros first
+        // set the clipboard back in the C code - fill with zeros first
         text.assign(repeating: 0, count: length)
         text.assign(from: string, count: string.count)
-        return 1
+        return true
     }
-    return 0
+    return false
 }
 
 

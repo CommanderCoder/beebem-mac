@@ -501,7 +501,7 @@ extern "C" int swift_SelectFolder (const char *path, int bytes, const char* titl
 
 
 extern "C" int swift_setPasteboard ( const char* clipboard, int length);
-extern "C" int swift_getPasteboard ( char* clipboard, int length);
+extern "C" bool swift_getPasteboard ( char* clipboard, int length);
 
 extern "C" void swift_InitExportDialog (char* dfsNames[][6], int max, int columns);
 extern "C" int swift_SelectedFiles ( int fileSelected[], int max);

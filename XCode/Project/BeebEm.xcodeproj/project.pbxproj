@@ -92,6 +92,7 @@
 		DCB4EBD62BDB26F1002AEA8A /* FolderSelectDialog-mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCB4EBD42BDB26F1002AEA8A /* FolderSelectDialog-mac.cpp */; };
 		DCB4EBD92BDB890F002AEA8A /* RenameFileDialog-mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCB4EBD72BDB890F002AEA8A /* RenameFileDialog-mac.cpp */; };
 		DCB4EBDC2BDB89E5002AEA8A /* Dialog-mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCB4EBDA2BDB89E5002AEA8A /* Dialog-mac.cpp */; };
+		DCBACC552C1591D1005F2079 /* BeebEm.rc in Resources */ = {isa = PBXBuildFile; fileRef = DCBACC532C1591D1005F2079 /* BeebEm.rc */; };
 		DCCE05BE2C11DD6300CAAD24 /* AppleSoundStreamer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCCE05BC2C11DD6300CAAD24 /* AppleSoundStreamer.cpp */; };
 		DCD283F22BE6E17100ABD9F8 /* SelectKeyDialog-mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCD283F02BE6E17100ABD9F8 /* SelectKeyDialog-mac.cpp */; };
 		DCD283FA2BE8427900ABD9F8 /* BeebWinSpeech-mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCD283F92BE8427900ABD9F8 /* BeebWinSpeech-mac.cpp */; };
@@ -429,6 +430,8 @@
 		DCB4EBD82BDB890F002AEA8A /* RenameFileDialog-mac.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "RenameFileDialog-mac.hpp"; sourceTree = "<group>"; };
 		DCB4EBDA2BDB89E5002AEA8A /* Dialog-mac.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "Dialog-mac.cpp"; sourceTree = "<group>"; };
 		DCB4EBDB2BDB89E5002AEA8A /* Dialog-mac.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "Dialog-mac.hpp"; sourceTree = "<group>"; };
+		DCBACC532C1591D1005F2079 /* BeebEm.rc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = BeebEm.rc; path = ../../../Src/BeebEm.rc; sourceTree = "<group>"; };
+		DCBACC542C1591D1005F2079 /* BeebWinPrefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BeebWinPrefs.h; path = ../../../Src/BeebWinPrefs.h; sourceTree = "<group>"; };
 		DCCE05BC2C11DD6300CAAD24 /* AppleSoundStreamer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = AppleSoundStreamer.cpp; sourceTree = "<group>"; };
 		DCCE05BD2C11DD6300CAAD24 /* AppleSoundStreamer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = AppleSoundStreamer.hpp; sourceTree = "<group>"; };
 		DCD283F02BE6E17100ABD9F8 /* SelectKeyDialog-mac.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "SelectKeyDialog-mac.cpp"; sourceTree = "<group>"; };
@@ -555,6 +558,7 @@
 		DC0996DC2BBA0C6400A109A5 /* windows_headers */ = {
 			isa = PBXGroup;
 			children = (
+				DCBACC542C1591D1005F2079 /* BeebWinPrefs.h */,
 				DC215BE72C13C27E003E50A3 /* Registry.h */,
 				DC2C9D062BF978AF00F2E613 /* UserPortRTC.h */,
 				DC2C9D012BF9788700F2E613 /* RomConfigFile.h */,
@@ -899,6 +903,7 @@
 				DC0997A62BBAA65E00A109A5 /* windows_stubs */,
 				DC0996DC2BBA0C6400A109A5 /* windows_headers */,
 				DC0996DB2BBA0C5000A109A5 /* windows_code */,
+				DCBACC522C159055005F2079 /* windows_projectresources */,
 				DC3FB5482BE8DB4600CF36A0 /* MacDialogs */,
 				DC1DBA1F2BB8CF2B00AAB22F /* MacBridge */,
 				DCB441642BE63A2000FA2F38 /* appleKeyCodes.h */,
@@ -914,6 +919,14 @@
 				DCCE05BD2C11DD6300CAAD24 /* AppleSoundStreamer.hpp */,
 			);
 			path = Src;
+			sourceTree = "<group>";
+		};
+		DCBACC522C159055005F2079 /* windows_projectresources */ = {
+			isa = PBXGroup;
+			children = (
+				DCBACC532C1591D1005F2079 /* BeebEm.rc */,
+			);
+			name = windows_projectresources;
 			sourceTree = "<group>";
 		};
 		DCD284002BE8D1CA00ABD9F8 /* BeebControllers */ = {
@@ -1017,6 +1030,7 @@
 				DC527C202BC75175000D7CCF /* README-SPROW.txt in Resources */,
 				DC527BD52BC75114000D7CCF /* HeadLoad.snd in Resources */,
 				DC907EAD2BB5B7F300523116 /* Main.storyboard in Resources */,
+				DCBACC552C1591D1005F2079 /* BeebEm.rc in Resources */,
 				DC527BCA2BC75107000D7CCF /* README.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

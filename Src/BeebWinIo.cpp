@@ -1636,6 +1636,9 @@ void BeebWin::doCopy()
 
 	m_PrinterBufferLen = 0;
 
+#ifdef __APPLE__
+	m_ClipboardBuffer.resize(5);
+#endif
 	m_ClipboardBuffer[0] = 2;
 	m_ClipboardBuffer[1] = 'L';
 	m_ClipboardBuffer[2] = '.';
@@ -1682,11 +1685,11 @@ void BeebWin::doPaste()
 	if (swift_getPasteboard(clipboardBuffer,ClipboardBufferSize))		
 	{
 		size_t Size = strlen(clipboardBuffer);
-		m_ClipboardBuffer.resize(Size);
-		memcpy(&m_ClipboardBuffer[0], clipboardBuffer, Size);
+
+		m_ClipboardBuffer.insert(m_ClipboardBuffer.end(), &clipboardBuffer[0], &clipboardBuffer[Size]);
 
 		m_ClipboardIndex = 0;
-		m_ClipboardLength = Size - 1;
+		m_ClipboardLength = Size;
 	}
 #endif
 }
