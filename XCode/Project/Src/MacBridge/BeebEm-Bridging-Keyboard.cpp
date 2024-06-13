@@ -571,3 +571,43 @@ extern "C" void beeb_handlekeys(long message, long wParam, long lParam)
 	}
 }
 
+extern "C" void beeb_handlemouse(long message, long wParam, long lParam)
+{
+	UINT msg = WM_LBUTTONUP;
+	switch (message)
+	{
+		case kEventMouseUp:
+			fprintf(stderr, "mouseup : code = %ld\n", wParam);
+			switch (wParam)
+			{
+				case MK_RBUTTON: msg = WM_RBUTTONUP; break;
+				case MK_MBUTTON: msg = WM_MBUTTONUP; break;
+				default: msg = WM_LBUTTONUP; break;
+			}
+			mainWin->AppProc(msg, wParam, lParam);
+			break;
+		case kEventMouseDown:
+			fprintf(stderr, "mousedown : code = %ld\n", wParam);
+			switch (wParam)
+			{
+				case MK_RBUTTON: msg = WM_RBUTTONDOWN; break;
+				case MK_MBUTTON: msg = WM_MBUTTONDOWN; break;
+				default: msg = WM_LBUTTONDOWN; break;
+			}
+			mainWin->AppProc(msg, wParam, lParam);
+			break;
+		case kEventMouseMoved:
+		case kEventMouseDragged:
+			int x = mainWin->m_XWinSize*GET_X_LPARAM(lParam)/32768.0f;
+			int y = mainWin->m_YWinSize*GET_Y_LPARAM(lParam)/32768.0f;
+			
+			fprintf(stderr, "mousemove : %ld, x = %d, y = %d\n", message, x, y);
+
+			bool useMovementDelta = true;
+			if (useMovementDelta)
+				mainWin->AppProc(WM_INPUT, wParam, MAKELPARAM(x,y));
+			else
+				mainWin->AppProc(WM_MOUSEMOVE, wParam, MAKELPARAM(x,y));
+			break;
+	}
+}

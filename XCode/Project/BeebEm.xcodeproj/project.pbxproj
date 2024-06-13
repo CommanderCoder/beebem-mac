@@ -93,6 +93,7 @@
 		DCB4EBD92BDB890F002AEA8A /* RenameFileDialog-mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCB4EBD72BDB890F002AEA8A /* RenameFileDialog-mac.cpp */; };
 		DCB4EBDC2BDB89E5002AEA8A /* Dialog-mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCB4EBDA2BDB89E5002AEA8A /* Dialog-mac.cpp */; };
 		DCBACC552C1591D1005F2079 /* BeebEm.rc in Resources */ = {isa = PBXBuildFile; fileRef = DCBACC532C1591D1005F2079 /* BeebEm.rc */; };
+		DCC91DB92C1AE5D500B751D5 /* BeebWin-mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCC91DB82C1AE5D500B751D5 /* BeebWin-mac.cpp */; };
 		DCCE05BE2C11DD6300CAAD24 /* AppleSoundStreamer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCCE05BC2C11DD6300CAAD24 /* AppleSoundStreamer.cpp */; };
 		DCD283F22BE6E17100ABD9F8 /* SelectKeyDialog-mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCD283F02BE6E17100ABD9F8 /* SelectKeyDialog-mac.cpp */; };
 		DCD283FA2BE8427900ABD9F8 /* BeebWinSpeech-mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCD283F92BE8427900ABD9F8 /* BeebWinSpeech-mac.cpp */; };
@@ -432,6 +433,7 @@
 		DCB4EBDB2BDB89E5002AEA8A /* Dialog-mac.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "Dialog-mac.hpp"; sourceTree = "<group>"; };
 		DCBACC532C1591D1005F2079 /* BeebEm.rc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = BeebEm.rc; path = ../../../Src/BeebEm.rc; sourceTree = "<group>"; };
 		DCBACC542C1591D1005F2079 /* BeebWinPrefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BeebWinPrefs.h; path = ../../../Src/BeebWinPrefs.h; sourceTree = "<group>"; };
+		DCC91DB82C1AE5D500B751D5 /* BeebWin-mac.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "BeebWin-mac.cpp"; sourceTree = "<group>"; };
 		DCCE05BC2C11DD6300CAAD24 /* AppleSoundStreamer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = AppleSoundStreamer.cpp; sourceTree = "<group>"; };
 		DCCE05BD2C11DD6300CAAD24 /* AppleSoundStreamer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = AppleSoundStreamer.hpp; sourceTree = "<group>"; };
 		DCD283F02BE6E17100ABD9F8 /* SelectKeyDialog-mac.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "SelectKeyDialog-mac.cpp"; sourceTree = "<group>"; };
@@ -911,6 +913,7 @@
 				DCB3B2512BBAB97A00F507F4 /* apples.h */,
 				DCACDAC02BC5DD2E00CEF154 /* apples.cpp */,
 				DC09979D2BBAA51300A109A5 /* beebemrcids.cpp */,
+				DCC91DB82C1AE5D500B751D5 /* BeebWin-mac.cpp */,
 				DCACDAC22BC669B600CEF154 /* BeebWinDx-mac.cpp */,
 				DCD283F92BE8427900ABD9F8 /* BeebWinSpeech-mac.cpp */,
 				DC3FB5492BE8DEDB00CF36A0 /* KeyMap-mac.cpp */,
@@ -1142,6 +1145,7 @@
 				DC8450062BE2DA04002015D9 /* BeebEm-KeyboardMapping.swift in Sources */,
 				DCDC730B2BBE118B00D83402 /* Preferences.cpp in Sources */,
 				DC2C9D032BF9788700F2E613 /* RomConfigFile.cpp in Sources */,
+				DCC91DB92C1AE5D500B751D5 /* BeebWin-mac.cpp in Sources */,
 				DCD283FA2BE8427900ABD9F8 /* BeebWinSpeech-mac.cpp in Sources */,
 				DC1DBA232BB9A2BB00AAB22F /* RomConfigViewController.swift in Sources */,
 				DC9427AC2BF038090012C4E4 /* BeebEm-SerialPort.swift in Sources */,

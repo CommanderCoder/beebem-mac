@@ -241,6 +241,10 @@ public:
 	                                  LPARAM lParam);
 
 	LRESULT WndProc(UINT nMessage, WPARAM wParam, LPARAM lParam);
+	
+#else
+	LRESULT AppProc(UINT nMessage, WPARAM wParam, LPARAM lParam);
+
 #endif
 
 

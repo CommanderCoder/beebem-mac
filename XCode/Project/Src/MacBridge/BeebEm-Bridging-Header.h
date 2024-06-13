@@ -11,7 +11,8 @@ void beeb_Destroy();
 
 
 // Exposed to BeebSKView
-void beeb_handlekeys(long eventkind, unsigned long keycode, char charCode);
+void beeb_handlekeys(long message, long wParam, long lParam); // long eventkind, unsigned long keycode, char charCode
+void beeb_handlemouse(long message, long wParam, long lParam);
 
 
 
@@ -66,3 +67,7 @@ struct CColour {
 
 void beeb_video(long height, long width, struct CColour buffer[]);
 
+// expose in Swift too
+#define MK_LBUTTON 0x001L
+#define MK_RBUTTON 0x002L
+#define MK_MBUTTON 0x010L

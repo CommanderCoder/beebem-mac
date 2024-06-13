@@ -190,6 +190,10 @@ Logical-macbook-uk
 
 --
 
-Need to fix up the UserData folder so it appears in 'Documents'  Is that what I was going to do?
+Fixed up the UserData folder so it appears in 'Documents'
+
+--
+
+The AMX mouse seems to be a bit broken (or I don't understand it).  Probably best to not use any absolute positions, and just use the delta as if the mouse has been captured.
 
 

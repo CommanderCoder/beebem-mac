@@ -12,7 +12,7 @@
 #include <stdio.h>
 #include <stdint.h>
 
-#include <string>
+#include <string> // c++ std::string
 
 #include <sys/syslimits.h>
 #include <sys/types.h>
@@ -311,6 +311,7 @@ char* _strerror(const char *strErrMsg);
 
 #define LOWORD(l)           ((WORD)(((DWORD_PTR)(l)) & 0xffff))
 #define HIWORD(l)           ((WORD)((((DWORD_PTR)(l)) >> 16) & 0xffff))
+#define MAKELPARAM(wLow, wHigh) (((DWORD)wHigh << 16) | ((DWORD)wLow & 0xffff))
 
 extern int __argc;
 extern char** __argv;
@@ -380,6 +381,7 @@ enum Modals {
 
 
 extern "C" bool swift_IsMiniaturized();
+extern "C" bool swift_JoystickCapture();
 
 extern "C" void swift_SetModelText(Modals m, const char* n);
 extern "C" int swift_GetSelectionMark(Modals m);
@@ -683,5 +685,45 @@ extern "C" int  swift_BufferedStreams(int);
 extern "C" void swift_SoundInit();
 extern "C" void swift_SubmitStream(int outputType, BYTE* buffer, int size);
 // index: outputtype 1 = 8 bit, 1 channel, 2 = 16 bit, 2 channel
+
+
+#define WM_COMMAND_def 273
+
+#define WM_INPUT 255
+#define WM_MOUSEMOVE 512
+#define WM_LBUTTONDOWN 513
+#define WM_LBUTTONUP 514
+#define WM_LBUTTONDBLCLK 515
+#define WM_RBUTTONDOWN 516
+#define WM_RBUTTONUP 517
+#define WM_RBUTTONDBLCLK 518
+#define WM_MBUTTONDOWN 519
+#define WM_MBUTTONUP 520
+#define WM_MBUTTONDBLCLK 521
+
+
+#define MM_JOY1MOVE 0x3A0
+#define MM_JOY2MOVE 0x3A1
+#define MM_JOY1ZMOVE 0x3A2
+#define MM_JOY2ZMOVE 0x3A3
+#define MM_JOY1BUTTONDOWN 0x3B5
+#define MM_JOY2BUTTONDOWN 0x3B6
+#define MM_JOY1BUTTONUP 0x3B7
+#define MM_JOY2BUTTONUP 0x3B8
+
+#define JOY_BUTTON1         0x0001
+#define JOY_BUTTON2         0x0002
+#define JOY_BUTTON3         0x0004
+#define JOY_BUTTON4         0x0008
+
+
+#ifndef GET_X_LPARAM
+#define GET_X_LPARAM(lp)   ((int)(short)LOWORD(lp))
+#define GET_Y_LPARAM(lp)   ((int)(short)HIWORD(lp))
+#endif
+
+#define MK_LBUTTON 0x001
+#define MK_RBUTTON 0x002
+#define MK_MBUTTON 0x010
 
 #endif /* apples_h */

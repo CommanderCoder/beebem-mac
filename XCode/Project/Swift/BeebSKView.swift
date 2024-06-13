@@ -9,6 +9,12 @@
 import SpriteKit
 import Carbon
 
+
+let allowTrackingOutsideWindow = true
+let useFullScreen = true
+let useMovementDelta = true
+
+
 class BeebSKView: SKView {
 
     override func draw(_ dirtyRect: NSRect) {
@@ -29,22 +35,118 @@ class BeebSKView: SKView {
         let cs = event.characters?.cString(using: .ascii)?[0] ?? 64
         
 //        print("keydown \(cs)")
-        beeb_handlekeys(kEventRawKeyDown, UInt(event.keyCode), cs)
+		beeb_handlekeys(kEventRawKeyDown, Int(event.keyCode), Int(cs))
     }
     
     override func keyUp(with event: NSEvent) {
         let cs = event.characters?.cString(using: .ascii)?[0] ?? 64
 //        print("keyup \(cs)")
-        beeb_handlekeys(kEventRawKeyUp, UInt(event.keyCode), cs)
+		beeb_handlekeys(kEventRawKeyUp, Int(event.keyCode), Int(cs))
     }
     
     override func flagsChanged(with event: NSEvent) {
         //       print("\(String(event.modifierFlags.rawValue, radix: 16))")
-        beeb_handlekeys(kEventRawKeyModifiersChanged, event.modifierFlags.rawValue, 0)
+		beeb_handlekeys(kEventRawKeyModifiersChanged, Int(event.modifierFlags.rawValue), 0)
     }
-    
-    
-    
+	 
+	
+	// emulating AMX Mouse
+	// https://www.computinghistory.org.uk/det/36624/BBC-AMX-Mouse/
+	// movement is DELTA based not absolute
+	// top-left is 0,0 so +ve x,y is a movement to the bottom right
+	// three buttons (awkward with a trackpad on MacBook: maybe CMD+CLICK?),
+	
+	let buttons = [MK_LBUTTON, MK_RBUTTON, MK_MBUTTON]
+
+	func toLParam(x : CGFloat, y: CGFloat) -> Int
+	{
+		let (X,Y) = (0x8000*x, 0x8000*y)
+		return (Int(X)&0xffff) | ((Int(Y)&0xffff) << 16)
+	}
+	func toXYpair(location ms : NSPoint) -> Int?
+	{
+		// Mac origin is bottom left, so need to reverse the Y axis
+		var (x,y) = (NSScreen.main!.frame.size.width, NSScreen.main!.frame.size.height)
+		if !useFullScreen
+		{
+			(x,y) = (self.bounds.size.width,self.bounds.size.height)
+		}
+		let (X,Y) = (ms.x/x, (y-ms.y)/y)
+		if allowTrackingOutsideWindow || (X >= 0 && X < 1 && Y >= 0 && Y < 1)
+		{
+			return toLParam(x:X,y:Y)
+		}
+		
+		return nil
+	}
+	
+	func mouseLocation(with event: NSEvent, t: Int)
+	{
+		if useMovementDelta
+		{
+			// try the delta first
+			let mousePos = NSPoint(x:event.deltaX,y:event.deltaY)
+			let lparam = toLParam(x:event.deltaX/640.0,y:event.deltaY/2256.0)
+			print(mousePos)
+			print("mouseMoved",String(format:"%08X", lparam))
+			beeb_handlemouse(t, 0, lparam)
+		}
+		else
+		{
+			var mousePos = self.convert(NSEvent.mouseLocation, from: nil)
+			if !useFullScreen { mousePos = self.convert( event.locationInWindow, from: nil) }
+		
+			if let lparam = toXYpair(location: mousePos  )
+			{
+				print("mouseMoved",String(format:"%08X", lparam))
+				beeb_handlemouse(t, 0, lparam)
+			}
+		}
+	}
+	
+	override func mouseMoved(with event: NSEvent) {
+		mouseLocation(with: event, t: kEventMouseMoved)
+	}
+
+	override func mouseDragged(with event: NSEvent)
+	{
+		mouseLocation(with: event, t: kEventMouseDragged)
+
+	}
+
+	override func mouseUp(with event: NSEvent) {
+		let ms = event.buttonNumber
+		
+//        print("mouseUp \(ms)")
+		beeb_handlemouse(kEventMouseUp, buttons[ms], 0)
+	}
+	override func mouseDown(with event: NSEvent) {
+		let ms = event.buttonNumber
+//        print("mouseDown \(ms)")
+		beeb_handlemouse(kEventMouseDown, buttons[ms], 0)
+	}
+	
+	override func rightMouseUp(with event: NSEvent) {
+		let ms = event.buttonNumber
+//        print("RmouseUp \(ms)")
+		beeb_handlemouse(kEventMouseUp, buttons[ms], 0)
+	}
+	override func rightMouseDown(with event: NSEvent) {
+		let ms = event.buttonNumber
+//        print("RmouseDown \(ms)")
+		beeb_handlemouse(kEventMouseDown, buttons[ms], 0)
+	}
+	override func otherMouseUp(with event: NSEvent) {
+		let ms = event.buttonNumber
+        print("OmouseUp \(ms)")
+		beeb_handlemouse(kEventMouseDown, buttons[ms], 0)
+	}
+	override func otherMouseDown(with event: NSEvent) {
+		let ms = event.buttonNumber
+        print("OmouseDown \(ms)")
+		beeb_handlemouse(kEventMouseDown, buttons[ms], 0)
+	}
+
 }
 
 

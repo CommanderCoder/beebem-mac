@@ -2473,7 +2473,7 @@ LRESULT BeebWin::WndProc(UINT nMessage, WPARAM wParam, LPARAM lParam)
  WM_USER_PORT_BREAKOUT_DIALOG_CLOSED
  
  
- 
+ see AppProc()
  
  
  

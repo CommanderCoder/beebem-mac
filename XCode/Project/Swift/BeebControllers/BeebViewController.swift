@@ -155,6 +155,11 @@ class BeebViewController: NSViewController {
 		}
     }
 
+	
+	override func viewDidAppear()
+	{
+		view.window!.acceptsMouseMovedEvents = true
+	}
     
     func update() {
         if (!BeebReady)
