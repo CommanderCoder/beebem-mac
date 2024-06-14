@@ -35,6 +35,7 @@ Boston, MA  02110-1301, USA.
 #include <stdio.h>
 
 #include "BeebWin.h"
+#include "BeebWinPrefs.h"
 #include "DebugTrace.h"
 #include "Main.h"
 #include "Messages.h"
@@ -78,8 +79,8 @@ void BeebWin::TextToSpeechResetState()
 {
 	m_SpeechLine = 0;
 	m_SpeechCol = 0;
-	memset(m_SpeechText, 0, MAX_SPEECH_LINE_LEN+1);
-	memset(m_SpeechBuf, 0, MAX_SPEECH_BUF_LEN+1);
+	ZeroMemory(m_SpeechText, sizeof(m_SpeechText));
+	ZeroMemory(m_SpeechBuf, sizeof(m_SpeechBuf));
 	m_SpeechBufPos = 0;
 }
 
@@ -229,7 +230,7 @@ void BeebWin::InitVoiceMenu()
 	                         (UINT_PTR)m_hVoiceMenu,
 	                         "&Voice");
 
-	UINT nMenuItemID = ID_TEXT_TO_SPEECH_VOICE_BASE;
+	UINT nMenuItemID = IDM_TEXT_TO_SPEECH_VOICE_BASE;
 
 	for (size_t i = 0; i < m_TextToSpeechVoices.size(); i++)
 	{
@@ -251,7 +252,7 @@ int BeebWin::TextToSpeechGetSelectedVoice()
 
 	int Index = 0;
 
-	m_Preferences.GetStringValue("TextToSpeechVoice", TokenId);
+	m_Preferences.GetStringValue(CFG_TEXT_TO_SPEECH_VOICE, TokenId);
 
 	for (std::size_t i = 0; i < m_TextToSpeechVoices.size(); i++)
 	{
@@ -291,11 +292,11 @@ void BeebWin::TextToSpeechSetVoice(int Index)
 
 		SpGetTokenFromId(TokenId.c_str(), &pToken);
 
-		m_Preferences.SetStringValue("TextToSpeechVoice", m_TextToSpeechVoices[Index].Id.c_str());
+		m_Preferences.SetStringValue(CFG_TEXT_TO_SPEECH_VOICE, m_TextToSpeechVoices[Index].Id.c_str());
 	}
 	else
 	{
-		m_Preferences.SetStringValue("TextToSpeechVoice", ""); // Default
+		m_Preferences.SetStringValue(CFG_TEXT_TO_SPEECH_VOICE, ""); // Default
 	}
 
 	TextToSpeechSelectVoiceMenuItem(Index);
@@ -322,14 +323,14 @@ void BeebWin::TextToSpeechSetVoice(ISpObjectToken* pToken)
 void BeebWin::TextToSpeechSelectVoiceMenuItem(int Index)
 {
 	size_t LastMenuItemID = m_TextToSpeechVoices.size() > 0 ?
-	                        ID_TEXT_TO_SPEECH_VOICE_BASE + m_TextToSpeechVoices.size() - 1 :
-	                        ID_TEXT_TO_SPEECH_VOICE_BASE;
+	                        IDM_TEXT_TO_SPEECH_VOICE_BASE + m_TextToSpeechVoices.size() - 1 :
+	                        IDM_TEXT_TO_SPEECH_VOICE_BASE;
 
-	CheckMenuRadioItem(m_hVoiceMenu,
-	                   ID_TEXT_TO_SPEECH_VOICE_BASE,
-	                   static_cast<UINT>(LastMenuItemID),
-	                   ID_TEXT_TO_SPEECH_VOICE_BASE + Index,
-	                   MF_BYCOMMAND);
+	::CheckMenuRadioItem(m_hVoiceMenu,
+	                     IDM_TEXT_TO_SPEECH_VOICE_BASE,
+	                     static_cast<UINT>(LastMenuItemID),
+	                     IDM_TEXT_TO_SPEECH_VOICE_BASE + Index,
+	                     MF_BYCOMMAND);
 }
 
 void BeebWin::Speak(const char *text, DWORD flags)

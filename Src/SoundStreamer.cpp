@@ -26,6 +26,7 @@ Boston, MA  02110-1301, USA.
 #include "DirectSoundStreamer.h"
 #endif
 #include "Main.h"
+#include "Sound.h"
 #ifndef __APPLE__
 #include "XAudio2Streamer.h"
 #endif
@@ -59,7 +60,7 @@ void SoundStreamer::PauseAll()
 SoundStreamer *CreateSoundStreamer(int samplerate, int bits_per_sample, int channels)
 {
 #ifndef __APPLE__
-	if (SoundConfig::Selection == SoundConfig::XAudio2)
+	if (SelectedSoundStreamer == SoundStreamerType::XAudio2)
 	{
 		SoundStreamer *pSoundStreamer = new XAudio2Streamer();
 
@@ -72,7 +73,7 @@ SoundStreamer *CreateSoundStreamer(int samplerate, int bits_per_sample, int chan
 			delete pSoundStreamer;
 			pSoundStreamer= nullptr;
 
-			SoundConfig::Selection = SoundConfig::DirectSound;
+			SelectedSoundStreamer = SoundStreamerType::DirectSound;
 		}
 	}
 
