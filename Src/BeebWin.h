@@ -343,8 +343,8 @@ public:
 	int TranslateKey(int vkey, bool keyUp, int &row, int &col);
 	void ParseCommandLine(void);
 	void CheckForLocalPrefs(const char *path, bool bLoadPrefs);
-	void FindCommandLineFile(char *CmdLineFile);
-	void HandleCommandLineFile(int Drive, const char *CmdLineFile);
+	bool FindCommandLineFile(char *FileName);
+	void HandleCommandLineFile(int Drive, const char *FileName);
 	bool CheckUserDataPath(bool Persist);
 	void SelectUserDataPath(void);
 	void StoreUserDataPath(void);
@@ -359,11 +359,12 @@ public:
 	bool LoadUEFTape(const char *FileName);
 	bool LoadCSWTape(const char *FileName);
 
-	void HandleTimer(void);
-	void doCopy(void);
-	void doPaste(void);
+	void HandleKeyboardTimer();
+	void OnCopy();
+	void OnPaste();
 	void ClearClipboardBuffer();
-	void CopyKey(unsigned char Value);
+	void PrintChar(unsigned char Value);
+	void CopyPrinterBufferToClipboard();
 
 	void SetBitmapCaptureFormat(BitmapCaptureFormat Format);
 	void UpdateBitmapCaptureFormatMenu();
@@ -578,6 +579,11 @@ public:
 	void LoadUserPortBreakoutPreferences();
 	void SavePreferences(bool saveAll);
 
+	// Timers
+	const int TIMER_KEYBOARD       = 1;
+	const int TIMER_AUTOBOOT_DELAY = 2;
+	const int TIMER_PRINTER        = 3;
+
 	// Main window
 	HWND m_hWnd;
 	char m_szTitle[256];
@@ -716,7 +722,7 @@ public:
 	int m_AMXAdjust;
 
 	// Preferences
-	char m_PrefsFile[_MAX_PATH];
+	std::string m_PrefsFileName;
 	Preferences m_Preferences;
 	bool m_AutoSavePrefsCMOS;
 	bool m_AutoSavePrefsFolders;
@@ -729,13 +735,11 @@ public:
 	size_t m_ClipboardIndex;
 
 	// Printer
-	static const int PrinterBufferSize = 1024 * 1024;
-	char m_PrinterBuffer[PrinterBufferSize];
-	int m_PrinterBufferLen;
+	std::vector<unsigned char> m_PrinterBuffer;
 	bool m_TranslateCRLF;
 	PrinterPortType m_PrinterPort;
-	char m_PrinterFileName[_MAX_PATH];
-	char m_PrinterDevice[_MAX_PATH];
+	std::string m_PrinterFileName;
+	std::string m_PrinterDevice;
 
 	// Command line
 	char m_CommandLineFileName1[_MAX_PATH];
