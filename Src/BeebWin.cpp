@@ -68,6 +68,7 @@ using std::max;
 #include "Econet.h" // Rob O'Donnell Christmas 2004.
 #include "Ext1770.h"
 #include "FolderSelectDialog.h"
+#include "FileType.h"
 #include "FileUtils.h"
 #include "Ide.h"
 #include "IP232.h"
@@ -126,9 +127,6 @@ CSprowCoPro *sprow = nullptr;
 LEDType LEDs;
 
 const char *WindowTitle = "BeebEm - BBC Model B / Master Series Emulator";
-
-constexpr int TIMER_KEYBOARD       = 1;
-constexpr int TIMER_AUTOBOOT_DELAY = 2;
 
 const char DefaultBlurIntensities[8] = { 100, 88, 75, 62, 50, 38, 25, 12 };
 
@@ -315,7 +313,7 @@ BeebWin::BeebWin()
 	m_AMXAdjust = 30;
 
 	// Preferences
-	strcpy(m_PrefsFile, "Preferences.cfg"); // May be overridden by command line parameter.
+	m_PrefsFileName = "Preferences.cfg"; // May be overridden by command line parameter.
 	m_AutoSavePrefsCMOS = false;
 	m_AutoSavePrefsFolders = false;
 	m_AutoSavePrefsAll = false;
@@ -326,12 +324,8 @@ BeebWin::BeebWin()
 	m_ClipboardIndex = 0;
 
 	// Printer
-	ZeroMemory(m_PrinterBuffer, sizeof(m_PrinterBuffer));
-	m_PrinterBufferLen = 0;
 	m_TranslateCRLF = true;
 	m_PrinterPort = PrinterPortType::Lpt1;
-	ZeroMemory(m_PrinterFileName, sizeof(m_PrinterFileName));
-	ZeroMemory(m_PrinterDevice, sizeof(m_PrinterDevice));
 
 	// Command line
 	ZeroMemory(m_CommandLineFileName1, sizeof(m_CommandLineFileName1));
@@ -397,9 +391,13 @@ bool BeebWin::Initialise()
 {
 	// Parse command line
 	ParseCommandLine();
-	FindCommandLineFile(m_CommandLineFileName1);
+	bool bFound = FindCommandLineFile(m_CommandLineFileName1);
 	FindCommandLineFile(m_CommandLineFileName2);
-	CheckForLocalPrefs(m_CommandLineFileName1, false);
+
+	if (bFound)
+	{
+		CheckForLocalPrefs(m_CommandLineFileName1, false);
+	}
 
 	// Check that user data directory exists
 	if (!CheckUserDataPath(!m_CustomData))
@@ -570,11 +568,15 @@ void BeebWin::ApplyPrefs()
 
 	InitTextView();
 
-	/* Initialise printer */
+	// Initialise printer
 	if (PrinterEnabled)
-		PrinterEnable(m_PrinterDevice);
+	{
+		PrinterEnable(m_PrinterDevice.c_str());
+	}
 	else
+	{
 		PrinterDisable();
+	}
 
 	/* Joysticks can only be initialised after the window is created (needs hwnd) */
 	if (m_JoystickOption == JoystickOption::Joystick)
@@ -1278,7 +1280,7 @@ void BeebWin::InitMenu(void)
 	UpdateBitmapCaptureResolutionMenu();
 
 	// Edit
-	CheckMenuItem(IDM_EDIT_CRLF, m_TranslateCRLF);
+	CheckMenuItem(IDM_TRANSLATE_CRLF, m_TranslateCRLF);
 
 	// Comms -> Tape Speed
 	SetTapeSpeedMenu();
@@ -2402,12 +2404,16 @@ LRESULT BeebWin::WndProc(UINT nMessage, WPARAM wParam, LPARAM lParam)
 		case WM_TIMER:
 			if (wParam == TIMER_KEYBOARD)
 			{
-				HandleTimer();
+				HandleKeyboardTimer();
 			}
 			else if (wParam == TIMER_AUTOBOOT_DELAY) // Handle timer for automatic disc boot delay
 			{
 				KillBootDiscTimer();
 				DoShiftBreak();
+			}
+			else if (wParam == TIMER_PRINTER)
+			{
+				CopyPrinterBufferToClipboard();
 			}
 			break;
 
@@ -3545,16 +3551,16 @@ void BeebWin::HandleCommand(UINT MenuID)
 		break;
 
 	case IDM_EDIT_COPY:
-		doCopy();
+		OnCopy();
 		break;
 
 	case IDM_EDIT_PASTE:
-		doPaste();
+		OnPaste();
 		break;
 
-	case IDM_EDIT_CRLF:
+	case IDM_TRANSLATE_CRLF:
 		m_TranslateCRLF = !m_TranslateCRLF;
-		CheckMenuItem(IDM_EDIT_CRLF, m_TranslateCRLF);
+		CheckMenuItem(IDM_TRANSLATE_CRLF, m_TranslateCRLF);
 		break;
 
 	case IDM_DISC_EXPORT_0:
@@ -5140,7 +5146,7 @@ void BeebWin::ParseCommandLine()
 			}
 			else if (_stricmp(__argv[i], "-Prefs") == 0)
 			{
-				strcpy(m_PrefsFile, __argv[++i]);
+				m_PrefsFileName = __argv[++i];
 			}
 			else if (_stricmp(__argv[i], "-Roms") == 0)
 			{
@@ -5241,7 +5247,7 @@ void BeebWin::CheckForLocalPrefs(const char *path, bool bLoadPrefs)
 	if (FileExists(file))
 	{
 		// File exists, use it
-		strcpy(m_PrefsFile, file);
+		m_PrefsFileName = file;
 
 		if (bLoadPrefs)
 		{
@@ -5277,338 +5283,227 @@ void BeebWin::CheckForLocalPrefs(const char *path, bool bLoadPrefs)
 	}
 }
 
-enum FileType {
-	None,
-	SSD,
-	DSD,
-	ADFS,
-	UEF,
-	UEFState,
-	CSW,
-	IMG,
-	FSD
-};
+/*****************************************************************************/
 
-static FileType GetFileTypeFromExtension(const char* FileName)
+// File location of a file passed on command line. Depending on the file type,
+// look in the user's Tapes, BeebState or DiscIms folders
+
+bool BeebWin::FindCommandLineFile(char *FileName)
 {
-	FileType Type = FileType::None;
-
-	const char *Ext = strrchr(FileName, '.');
-
-	if (Ext != nullptr)
+	if (FileName[0] == '\0')
 	{
-		if (_stricmp(Ext + 1, "ssd") == 0)
-		{
-			Type = FileType::SSD;
-		}
-		else if (_stricmp(Ext + 1, "dsd") == 0)
-		{
-			Type = FileType::DSD;
-		}
-		else if (_stricmp(Ext + 1, "adl") == 0)
-		{
-			Type = FileType::ADFS;
-		}
-		else if (_stricmp(Ext + 1, "adf") == 0)
-		{
-			Type = FileType::ADFS;
-		}
-		else if (_stricmp(Ext + 1, "uef") == 0)
-		{
-			Type = FileType::UEF;
-		}
-		else if (_stricmp(Ext + 1, "uefstate") == 0)
-		{
-			Type = FileType::UEFState;
-		}
-		else if (_stricmp(Ext + 1, "csw") == 0)
-		{
-			Type = FileType::CSW;
-		}
-		else if (_stricmp(Ext + 1, "img") == 0)
-		{
-			Type = FileType::IMG;
-		}
-		else if (_stricmp(Ext + 1, "fsd") == 0)
-		{
-			Type = FileType::FSD;
-		}
+		return false;
 	}
 
-	return Type;
-}
+	// Work out which type of file it is
+	FileType Type = GetFileTypeFromExtension(FileName);
 
-/*****************************************************************************/
-// File location of a file passed on command line
+	if (Type == FileType::None)
+	{
+		Report(MessageType::Error, "Unrecognised file type:\n  %s",
+		       FileName);
 
-void BeebWin::FindCommandLineFile(char *CmdLineFile)
-{
-	bool cont = false;
-	char TmpPath[_MAX_PATH];
-	char *FileName = NULL;
-	FileType Type = FileType::None;
+		return false;
+	}
+
+	char TmpPath[MAX_PATH];
+	strncpy(TmpPath, FileName, MAX_PATH);
+
+	bool Found = false;
 
 	// See if file is readable
-	if (CmdLineFile[0] != '\0')
+	if (FileExists(FileName))
 	{
-		FileName = CmdLineFile;
-		strncpy(TmpPath, CmdLineFile, _MAX_PATH);
-
-		// Work out which type of file it is
-		Type = GetFileTypeFromExtension(FileName);
-
-		if (Type != FileType::None)
-		{
-			cont = true;
-		}
-		else
-		{
-			Report(MessageType::Error, "Unrecognised file type:\n  %s",
-			       FileName);
-
-			cont = false;
-		}
+		Found = true;
 	}
-
-	if (cont)
+	else if (Type == FileType::UEF || Type == FileType::CSW)
 	{
-		cont = false;
+		// Try getting it from Tapes directory
+		strcpy(TmpPath, m_UserDataPath);
+		strcat(TmpPath, "Tapes/");
+		strcat(TmpPath, FileName);
 
-		if (FileExists(FileName))
-		{
-			cont = true;
-		}
-		else if (Type == FileType::UEF)
-		{
-			// Try getting it from Tapes directory
-			strcpy(TmpPath, m_UserDataPath);
-			strcat(TmpPath, "Tapes/");
-			strcat(TmpPath, FileName);
-
-			if (FileExists(TmpPath))
-			{
-				cont = true;
-				FileName = TmpPath;
-			}
-		}
-		else if (Type == FileType::UEFState)
-		{
-			strcpy(TmpPath, m_UserDataPath);
-			strcat(TmpPath, "BeebState/");
-			strcat(TmpPath, FileName);
-
-			if (FileExists(TmpPath))
-			{
-				cont = true;
-				FileName = TmpPath;
-			}
-		}
-		else if (Type == FileType::CSW)
-		{
-			// Try getting it from Tapes directory
-			strcpy(TmpPath, m_UserDataPath);
-			strcat(TmpPath, "Tapes/");
-			strcat(TmpPath, FileName);
-
-			if (FileExists(TmpPath))
-			{
-				cont = true;
-				FileName = TmpPath;
-			}
-		}
-		else
-		{
-			// Try getting it from DiscIms directory
-			strcpy(TmpPath, m_UserDataPath);
-			strcat(TmpPath, "DiscIms/");
-			strcat(TmpPath, FileName);
-
-			if (FileExists(TmpPath))
-			{
-				cont = true;
-				FileName = TmpPath;
-			}
-		}
-
-		if (!cont)
-		{
-			Report(MessageType::Error, "Cannot find file:\n  %s", FileName);
-			cont = false;
-		}
+		Found = FileExists(TmpPath);
 	}
-
-	if (cont)
+	else if (Type == FileType::UEFState)
 	{
-		PathCanonicalize(CmdLineFile, TmpPath);
+		// Try getting it from BeebState directory
+		strcpy(TmpPath, m_UserDataPath);
+		strcat(TmpPath, "BeebState/");
+		strcat(TmpPath, FileName);
+
+		Found = FileExists(TmpPath);
 	}
 	else
 	{
-		CmdLineFile[0] = '\0';
+		// Try getting it from DiscIms directory
+		strcpy(TmpPath, m_UserDataPath);
+		strcat(TmpPath, "DiscIms/");
+		strcat(TmpPath, FileName);
+
+		Found = FileExists(TmpPath);
 	}
+
+	if (Found)
+	{
+		PathCanonicalize(FileName, TmpPath);
+	}
+	else
+	{
+		Report(MessageType::Error, "Cannot find file:\n  %s", FileName);
+	}
+
+	return Found;
 }
 
 /*****************************************************************************/
 // Handle a file name passed on command line
 
-void BeebWin::HandleCommandLineFile(int Drive, const char *CmdLineFile)
+void BeebWin::HandleCommandLineFile(int Drive, const char *FileName)
 {
-	bool cont = false;
-	const char *FileName = NULL;
-	FileType Type = FileType::None;
+	if (FileName[0] == '\0')
+	{
+		return;
+	}
 
 	m_AutoBootDisc = false;
 
-	if (CmdLineFile[0] != '\0')
+	// Work out which type of files it is
+	FileType Type = GetFileTypeFromExtension(FileName);
+
+	if (Type == FileType::None)
 	{
-		FileName = CmdLineFile;
+		Report(MessageType::Error, "Unrecognised file type:\n  %s",
+		       FileName);
 
-		// Work out which type of files it is
-		Type = GetFileTypeFromExtension(FileName);
-
-		if (Type != FileType::None)
-		{
-			cont = true;
-		}
-		else
-		{
-			Report(MessageType::Error, "Unrecognised file type:\n  %s",
-			       FileName);
-
-			cont = false;
-		}
+		return;
 	}
 
-	if (cont)
+	if (!FileExists(FileName))
 	{
-		cont = FileExists(FileName);
+		Report(MessageType::Error, "Cannot find file:\n  %s", FileName);
 
-		if (!cont)
-		{
-			Report(MessageType::Error, "Cannot find file:\n  %s", FileName);
-		}
+		return;
 	}
 
-	if (cont)
+	if (Type == FileType::UEFState)
 	{
-		if (Type == FileType::UEFState)
+		LoadUEFState(FileName);
+	}
+	else if (Type == FileType::UEF)
+	{
+		// Determine if file is a tape or a state file
+		if (IsUEFSaveState(FileName))
 		{
 			LoadUEFState(FileName);
 		}
-		else if (Type == FileType::UEF)
+		else
 		{
-			// Determine if file is a tape or a state file
-			if (IsUEFSaveState(FileName))
+			LoadUEFTape(FileName);
+		}
+
+		return;
+	}
+	else if (Type == FileType::CSW)
+	{
+		LoadCSWTape(FileName);
+		return;
+	}
+
+	// Handle disc image types
+
+	if (MachineType != Model::Master128 && MachineType != Model::MasterET)
+	{
+		if (Type == FileType::DSD)
+		{
+			if (NativeFDC)
 			{
-				LoadUEFState(FileName);
+				Load8271DiscImage(FileName, Drive, 80, DiscType::DSD);
 			}
 			else
 			{
-				LoadUEFTape(FileName);
-			}
-
-			cont = false;
-		}
-		else if (Type == FileType::CSW)
-		{
-			CSWOpen(FileName);
-			cont = false;
-		}
-	}
-
-	if (cont)
-	{
-		if (MachineType != Model::Master128 && MachineType != Model::MasterET)
-		{
-			if (Type == FileType::DSD)
-			{
-				if (NativeFDC)
-				{
-					Load8271DiscImage(FileName, Drive, 80, DiscType::DSD);
-				}
-				else
-				{
-					Load1770DiscImage(FileName, Drive, DiscType::DSD);
-				}
-			}
-			else if (Type == FileType::SSD)
-			{
-				if (NativeFDC)
-				{
-					Load8271DiscImage(FileName, Drive, 80, DiscType::SSD);
-				}
-				else
-				{
-					Load1770DiscImage(FileName, Drive, DiscType::SSD);
-				}
-			}
-			else if (Type == FileType::ADFS)
-			{
-				if (!NativeFDC)
-				{
-					Load1770DiscImage(FileName, Drive, DiscType::ADFS);
-				}
-				else
-				{
-					cont = false;  // cannot load adfs with native DFS
-				}
-			}
-			else if (Type == FileType::IMG)
-			{
-				if (NativeFDC)
-				{
-					Load8271DiscImage(FileName, Drive, 80, DiscType::SSD); // Treat like an ssd
-				}
-				else
-				{
-					Load1770DiscImage(FileName, Drive, DiscType::IMG);
-				}
-			}
-			else if (Type == FileType::FSD)
-			{
-				if (NativeFDC)
-				{
-					Load8271DiscImage(FileName, Drive, 80, DiscType::FSD);
-				}
-				else
-				{
-					Report(MessageType::Error, "FSD images are only supported with the 8271 FDC");
-					return;
-				}
-			}
-		}
-		else if (MachineType == Model::Master128)
-		{
-			if (Type == FileType::FSD)
-			{
 				Load1770DiscImage(FileName, Drive, DiscType::DSD);
 			}
-			else if (Type == FileType::SSD)
+		}
+		else if (Type == FileType::SSD)
+		{
+			if (NativeFDC)
+			{
+				Load8271DiscImage(FileName, Drive, 80, DiscType::SSD);
+			}
+			else
 			{
 				Load1770DiscImage(FileName, Drive, DiscType::SSD);
 			}
-			else if (Type == FileType::ADFS)
+		}
+		else if (Type == FileType::ADFS)
+		{
+			if (!NativeFDC)
 			{
 				Load1770DiscImage(FileName, Drive, DiscType::ADFS);
 			}
-			else if (Type == FileType::IMG)
+			else
+			{
+				Report(MessageType::Error, "ADFS disc images are only supported with the 8271 FDC");
+				return;  // cannot load adfs with native DFS
+			}
+		}
+		else if (Type == FileType::IMG)
+		{
+			if (NativeFDC)
+			{
+				Load8271DiscImage(FileName, Drive, 80, DiscType::SSD); // Treat like an ssd
+			}
+			else
 			{
 				Load1770DiscImage(FileName, Drive, DiscType::IMG);
 			}
-			else if (Type == FileType::FSD)
+		}
+		else if (Type == FileType::FSD)
+		{
+			if (NativeFDC)
 			{
-				Report(MessageType::Error, "FSD images are only supported with the 8271 FDC");
+				Load8271DiscImage(FileName, Drive, 80, DiscType::FSD);
+			}
+			else
+			{
+				Report(MessageType::Error, "FSD disc images are only supported with the 8271 FDC");
 				return;
 			}
 		}
-
-		// Write protect the disc
-		if (m_WriteProtectOnLoad)
+	}
+	else if (MachineType == Model::Master128)
+	{
+		if (Type == FileType::FSD)
 		{
-			SetDiscWriteProtect(Drive, true);
+			Load1770DiscImage(FileName, Drive, DiscType::DSD);
+		}
+		else if (Type == FileType::SSD)
+		{
+			Load1770DiscImage(FileName, Drive, DiscType::SSD);
+		}
+		else if (Type == FileType::ADFS)
+		{
+			Load1770DiscImage(FileName, Drive, DiscType::ADFS);
+		}
+		else if (Type == FileType::IMG)
+		{
+			Load1770DiscImage(FileName, Drive, DiscType::IMG);
+		}
+		else if (Type == FileType::FSD)
+		{
+			Report(MessageType::Error, "FSD disc images are only supported with the 8271 FDC");
+			return;
 		}
 	}
 
-	if (cont && !m_NoAutoBoot && Drive == 0)
+	// Write protect the disc
+	if (m_WriteProtectOnLoad)
+	{
+		SetDiscWriteProtect(Drive, true);
+	}
+
+	if (!m_NoAutoBoot && Drive == 0)
 	{
 		m_AutoBootDisc = true;
 
@@ -5850,10 +5745,10 @@ bool BeebWin::CheckUserDataPath(bool Persist)
 	if (success)
 	{
 		// Fill out full path of prefs file
-		if (PathIsRelative(m_PrefsFile))
+		if (PathIsRelative(m_PrefsFileName.c_str()))
 		{
-			sprintf(path, "%s%s", m_UserDataPath, m_PrefsFile);
-			strcpy(m_PrefsFile, path);
+			sprintf(path, "%s%s", m_UserDataPath, m_PrefsFileName.c_str());
+			m_PrefsFileName = path;
 		}
 	}
 
@@ -5910,7 +5805,7 @@ void BeebWin::SelectUserDataPath()
 				StoreUserDataPath();
 
 				// Reset prefs and roms file paths
-				strcpy(m_PrefsFile, "Preferences.cfg");
+				m_PrefsFileName = "Preferences.cfg";
 				strcpy(RomFile, "Roms.cfg");
 				CheckForLocalPrefs(m_UserDataPath, true);
 
@@ -5927,7 +5822,8 @@ void BeebWin::SelectUserDataPath()
 }
 
 /****************************************************************************/
-void BeebWin::HandleTimer()
+
+void BeebWin::HandleKeyboardTimer()
 {
 	int row,col;
 	char delay[10];

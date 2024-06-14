@@ -59,6 +59,7 @@ using std::max;
 #include "ExportFileDialog.h"
 #include "Ext1770.h"
 #include "FileDialog.h"
+#include "FileType.h"
 #include "FileUtils.h"
 #include "KeyMap.h"
 #include "Main.h"
@@ -160,9 +161,9 @@ bool BeebWin::ReadDisc(int Drive, bool bCheckForPrefs)
 	m_Preferences.GetStringValue(CFG_DISCS_PATH, DefaultPath);
 	GetDataPath(m_UserDataPath, DefaultPath);
 
-	FileDialog fileDialog(m_hWnd, FileName, sizeof(FileName), DefaultPath, filter);
+	FileDialog Dialog(m_hWnd, FileName, sizeof(FileName), DefaultPath, filter);
 
-	bool gotName = fileDialog.Open();
+	bool gotName = Dialog.Open();
 
 	if (gotName)
 	{
@@ -184,76 +185,66 @@ bool BeebWin::ReadDisc(int Drive, bool bCheckForPrefs)
 			m_Preferences.SetStringValue(CFG_DISCS_PATH, DefaultPath);
 		}
 
-		bool ssd = false;
-		bool dsd = false;
-		bool adfs = false;
-		bool img = false;
-		bool dos = false;
-		bool fsd = false;
+		FileType Type = FileType::None;
 
-		switch (fileDialog.GetFilterIndex())
+		switch (Dialog.GetFilterIndex())
 		{
-		case 1: {
-			char *ext = strrchr(FileName, '.');
-			if (ext != nullptr)
-			{
-				if (_stricmp(ext+1, "ssd") == 0)
-					ssd = true;
-				else if (_stricmp(ext+1, "dsd") == 0)
-					dsd = true;
-				else if (_stricmp(ext+1, "adl") == 0)
-					adfs = true;
-				else if (_stricmp(ext+1, "adf") == 0)
-					adfs = true;
-				else if (_stricmp(ext+1, "img") == 0)
-					img = true;
-				else if (_stricmp(ext+1, "dos") == 0)
-					dos = true;
-				else if (_stricmp(ext+1, "fsd") == 0)
-					fsd = true;
-			}
-			break;
-		}
-		case 2:
-			adfs = true;
-			break;
+			case 1:
+				Type = GetFileTypeFromExtension(FileName);
+				break;
 
-		case 3:
-		case 5:
-			ssd = true;
-			break;
+			case 2:
+				Type = FileType::ADFS;
+				break;
 
-		case 4:
-		case 6:
-			dsd = true;
-			break;
+			case 3:
+			case 5:
+				Type = FileType::SSD;
+				break;
+
+			case 4:
+			case 6:
+				Type = FileType::DSD;
+				break;
 		}
 
 		// Another Master 128 Update, brought to you by Richard Gellman
 		if (MachineType != Model::Master128 && MachineType != Model::MasterET)
 		{
-			if (ssd)
+			if (Type == FileType::SSD)
 			{
 				if (NativeFDC)
+				{
 					Load8271DiscImage(FileName, Drive, 80, DiscType::SSD);
+				}
 				else
+				{
 					Load1770DiscImage(FileName, Drive, DiscType::SSD);
+				}
 			}
-			else if (dsd)
+			else if (Type == FileType::DSD)
 			{
 				if (NativeFDC)
+				{
 					Load8271DiscImage(FileName, Drive, 80, DiscType::DSD);
+				}
 				else
+				{
 					Load1770DiscImage(FileName, Drive, DiscType::DSD);
+				}
 			}
-			else if (adfs)
+			else if (Type == FileType::ADFS)
 			{
 				if (NativeFDC)
+				{
 					Report(MessageType::Error, "The native 8271 FDC cannot read ADFS discs");
+				}
 				else
+				{
 					Load1770DiscImage(FileName, Drive, DiscType::ADFS);
+				}
 			}
-			else if (fsd)
+			else if (Type == FileType::FSD)
 			{
 				if (NativeFDC)
 				{
@@ -262,11 +253,11 @@ bool BeebWin::ReadDisc(int Drive, bool bCheckForPrefs)
 				}
 				else
 				{
-					Report(MessageType::Error, "FSD images are only supported with the 8271 FDC");
+					Report(MessageType::Error, "FSD disc images are only supported with the 8271 FDC");
 					return false;
 				}
 			}
-			else if (dos || img)
+			else if (Type == FileType::DOS || Type == FileType::IMG)
 			{
 				Report(MessageType::Error, "DOS and IMG format discs can only be opened when in Master 128 mode");
 				return false;
@@ -275,29 +266,29 @@ bool BeebWin::ReadDisc(int Drive, bool bCheckForPrefs)
 		else
 		{
 			// Master 128
-			if (ssd)
+			if (Type == FileType::SSD)
 			{
 				Load1770DiscImage(FileName, Drive, DiscType::SSD);
 			}
-			else if (dsd)
+			else if (Type == FileType::DSD)
 			{
 				Load1770DiscImage(FileName, Drive, DiscType::DSD);
 			}
-			else if (adfs)
+			else if (Type == FileType::ADFS)
 			{
 				Load1770DiscImage(FileName, Drive, DiscType::ADFS); // ADFS OO La La!
 			}
-			else if (img)
+			else if (Type == FileType::IMG)
 			{
 				Load1770DiscImage(FileName, Drive, DiscType::IMG);
 			}
-			else if (dos)
+			else if (Type == FileType::DOS)
 			{
 				Load1770DiscImage(FileName, Drive, DiscType::DOS);
 			}
-			else if (fsd)
+			else if (Type == FileType::FSD)
 			{
-				Report(MessageType::Error, "FSD images are only supported with the 8271 FDC");
+				Report(MessageType::Error, "FSD disc images are only supported with the 8271 FDC");
 				return false;
 			}
 		}
@@ -874,9 +865,9 @@ bool BeebWin::GetPrinterFileName()
 	char FileName[_MAX_PATH];
 	FileName[0] = '\0';
 
-	const char* filter = "Printer Output (*.*)\0*.*\0";
+	const char* Filter = "Printer Output (*.*)\0*.*\0";
 
-	if (strlen(m_PrinterFileName) == 0)
+	if (m_PrinterFileName.empty())
 	{
 		strcpy(StartPath, m_UserDataPath);
 		FileName[0] = '\0';
@@ -887,18 +878,18 @@ bool BeebWin::GetPrinterFileName()
 		char dir[_MAX_DIR];
 		char fname[_MAX_FNAME];
 		char ext[_MAX_EXT];
-		_splitpath(m_PrinterFileName, drive, dir, fname, ext);
+		_splitpath(m_PrinterFileName.c_str(), drive, dir, fname, ext);
 		_makepath(StartPath, drive, dir, NULL, NULL);
 		_makepath(FileName, NULL, NULL, fname, ext);
 	}
 
-	FileDialog fileDialog(m_hWnd, FileName, sizeof(FileName), StartPath, filter);
+	FileDialog Dialog(m_hWnd, FileName, sizeof(FileName), StartPath, Filter);
 
-	bool changed = fileDialog.Save();
+	bool changed = Dialog.Save();
 
 	if (changed)
 	{
-		strcpy(m_PrinterFileName, FileName);
+		m_PrinterFileName = FileName;
 	}
 
 	return changed;
@@ -910,7 +901,7 @@ bool BeebWin::TogglePrinter()
 {
 	bool Success = true;
 
-	m_PrinterBufferLen = 0;
+	m_PrinterBuffer.clear();
 
 	if (PrinterEnabled)
 	{
@@ -920,14 +911,14 @@ bool BeebWin::TogglePrinter()
 	{
 		if (m_PrinterPort == PrinterPortType::File)
 		{
-			if (strlen(m_PrinterFileName) == 0)
+			if (m_PrinterFileName.empty())
 			{
 				GetPrinterFileName();
 			}
 
-			if (strlen(m_PrinterFileName) != 0)
+			if (!m_PrinterFileName.empty())
 			{
-				Success = PrinterEnable(m_PrinterFileName);
+				Success = PrinterEnable(m_PrinterFileName.c_str());
 			}
 		}
 		else if (m_PrinterPort == PrinterPortType::Clipboard)
@@ -936,7 +927,7 @@ bool BeebWin::TogglePrinter()
 		}
 		else
 		{
-			Success = PrinterEnable(m_PrinterDevice);
+			Success = PrinterEnable(m_PrinterDevice.c_str());
 		}
 	}
 
@@ -957,28 +948,28 @@ void BeebWin::TranslatePrinterPort()
 	switch (m_PrinterPort)
 	{
 		case PrinterPortType::File:
-			strcpy(m_PrinterDevice, m_PrinterFileName);
+			m_PrinterDevice = m_PrinterFileName;
 			break;
 
 		case PrinterPortType::Clipboard:
-			strcpy(m_PrinterDevice, "CLIPBOARD");
+			m_PrinterDevice.clear();
 			break;
 
 		case PrinterPortType::Lpt1:
 		default:
-			strcpy(m_PrinterDevice, "LPT1");
+			m_PrinterDevice = "LPT1";
 			break;
 
 		case PrinterPortType::Lpt2:
-			strcpy(m_PrinterDevice, "LPT2");
+			m_PrinterDevice = "LPT2";
 			break;
 
 		case PrinterPortType::Lpt3:
-			strcpy(m_PrinterDevice, "LPT3");
+			m_PrinterDevice = "LPT3";
 			break;
 
 		case PrinterPortType::Lpt4:
-			strcpy(m_PrinterDevice, "LPT4");
+			m_PrinterDevice = "LPT4";
 			break;
 	}
 }
@@ -1281,7 +1272,8 @@ void BeebWin::LoadUEFState(const char *FileName)
 {
 	UEFStateResult Result = ::LoadUEFState(FileName);
 
-	switch (Result) {
+	switch (Result)
+	{
 		case UEFStateResult::Success:
 			SetRomMenu();
 			SetDiscWriteProtects();
@@ -1314,7 +1306,8 @@ void BeebWin::SaveUEFState(const char *FileName)
 {
 	UEFStateResult Result = ::SaveUEFState(FileName);
 
-	switch (Result) {
+	switch (Result)
+	{
 		case UEFStateResult::Success:
 			break;
 
@@ -1341,7 +1334,8 @@ bool BeebWin::LoadUEFTape(const char *FileName)
 {
 	UEFResult Result = ::LoadUEFTape(FileName);
 
-	switch (Result) {
+	switch (Result)
+	{
 		case UEFResult::Success:
 			return true;
 
@@ -1364,7 +1358,8 @@ bool BeebWin::LoadCSWTape(const char *FileName)
 {
 	CSWResult Result = ::LoadCSWTape(FileName);
 
-	switch (Result) {
+	switch (Result)
+	{
 		case CSWResult::Success:
 			return true;
 
@@ -1621,9 +1616,12 @@ void BeebWin::SaveUserKeyMap()
 }
 
 /****************************************************************************/
-/* Clipboard support */
 
-void BeebWin::doCopy()
+// Clipboard support
+
+// Handles the Edit/Copy menu command
+
+void BeebWin::OnCopy()
 {
 	if (PrinterEnabled)
 		TogglePrinter();
@@ -1634,7 +1632,7 @@ void BeebWin::doCopy()
 	TogglePrinter(); // Turn printer back on
 	UpdatePrinterPortMenu();
 
-	m_PrinterBufferLen = 0;
+	m_PrinterBuffer.resize(5);
 
 #ifdef __APPLE__
 	m_ClipboardBuffer.resize(5);
@@ -1644,11 +1642,12 @@ void BeebWin::doCopy()
 	m_ClipboardBuffer[2] = '.';
 	m_ClipboardBuffer[3] = 13;
 	m_ClipboardBuffer[4] = 3;
-	m_ClipboardLength = 5;
 	m_ClipboardIndex = 0;
 }
 
-void BeebWin::doPaste()
+// Handles the Edit/Paste menu command
+
+void BeebWin::OnPaste()
 {
 #ifndef __APPLE__
 	if (!IsClipboardFormatAvailable(CF_TEXT))
@@ -1701,34 +1700,47 @@ void BeebWin::ClearClipboardBuffer()
 	m_ClipboardLength = 0;
 }
 
-void BeebWin::CopyKey(unsigned char Value)
+/****************************************************************************/
+
+// Called when a character is written to the Beeb's printer port,
+// and adds to the data buffered to send to the clipboard
+
+void BeebWin::PrintChar(unsigned char Value)
 {
-	if (m_PrinterBufferLen >= PrinterBufferSize)
-		return;
+	m_PrinterBuffer.push_back(Value);
 
-	m_PrinterBuffer[m_PrinterBufferLen++] = static_cast<char>(Value);
 	if (m_TranslateCRLF && Value == 0xD)
-		m_PrinterBuffer[m_PrinterBufferLen++] = 0xA;
+	{
+		m_PrinterBuffer.push_back(0xA);
+	}
 
+	// To avoid unnecessary copies, wait 1 second after the last write
+	// to put the data into the clipboard.
+	SetTimer(m_hWnd, TIMER_PRINTER, 1000, nullptr);
+}
+
+void BeebWin::CopyPrinterBufferToClipboard()
+{
 #ifndef __APPLE__
 	if (!OpenClipboard(m_hWnd))
 		return;
 
 	EmptyClipboard();
 
-	HGLOBAL hglbCopy = GlobalAlloc(GMEM_MOVEABLE, m_PrinterBufferLen + 1);
-	if (hglbCopy == NULL)
+	HGLOBAL hClipboardData = GlobalAlloc(GMEM_MOVEABLE, m_PrinterBuffer.size() + 1);
+
+	if (hClipboardData == nullptr)
 	{
 		CloseClipboard();
 		return;
 	}
 
-	LPTSTR lptstrCopy = (LPTSTR)GlobalLock(hglbCopy);
-	memcpy(lptstrCopy, m_PrinterBuffer, m_PrinterBufferLen);
-	lptstrCopy[m_PrinterBufferLen] = 0;
-	GlobalUnlock(hglbCopy);
+	unsigned char* pData = (unsigned char*)GlobalLock(hClipboardData);
+	memcpy(pData, &m_PrinterBuffer[0], m_PrinterBuffer.size());
+	pData[m_PrinterBuffer.size()] = '\0';
+	GlobalUnlock(hClipboardData);
 
-	SetClipboardData(CF_TEXT, hglbCopy);
+	SetClipboardData(CF_TEXT, hClipboardData);
 
 	CloseClipboard();
 #else
