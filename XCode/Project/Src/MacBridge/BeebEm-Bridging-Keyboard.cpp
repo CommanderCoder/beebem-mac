@@ -601,7 +601,7 @@ extern "C" void beeb_handlemouse(long message, long wParam, long lParam)
 			int x = mainWin->m_XWinSize*GET_X_LPARAM(lParam)/32768.0f;
 			int y = mainWin->m_YWinSize*GET_Y_LPARAM(lParam)/32768.0f;
 			
-			fprintf(stderr, "mousemove : %ld, x = %d, y = %d\n", message, x, y);
+//			fprintf(stderr, "mousemove : %ld, x = %d, y = %d\n", message, x, y);
 
 			bool useMovementDelta = true;
 			if (useMovementDelta)
@@ -611,3 +611,27 @@ extern "C" void beeb_handlemouse(long message, long wParam, long lParam)
 			break;
 	}
 }
+
+extern "C" void beeb_handlejoystick(long message, long wParam, long lParam)
+{
+	int x = 256*GET_X_LPARAM(lParam)/32768.0f;
+	int y = 256*GET_Y_LPARAM(lParam)/32768.0f;
+	switch (message)
+	{
+		case kEventMouseMoved:
+			//	MM_JOY1MOVE
+			//	lParam x,y from wXmax to wXmin..
+			mainWin->AppProc(MM_JOY1MOVE, 0, MAKELPARAM(x,y));
+			break;
+		case kEventMouseUp:
+			//	 JOY_BUTTON1 , JOY_BUTTON2
+			mainWin->AppProc(MM_JOY1BUTTONUP, wParam, 0);
+			break;
+		case kEventMouseDown:
+			//	 JOY_BUTTON1 , JOY_BUTTON2
+			mainWin->AppProc(MM_JOY1BUTTONDOWN, wParam, 0);
+			break;
+	}
+	
+}
+

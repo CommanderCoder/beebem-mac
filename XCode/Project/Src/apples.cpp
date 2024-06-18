@@ -580,5 +580,17 @@ bool SHFileOperation(SHFILEOPSTRUCT* a)
 }
 void GetMonitorInfo(HMONITOR monitor, MONITORINFO* info){}
 HMONITOR MonitorFromWindow(HWND wnd, int s){return 0L;}
-MMRESULT joySetCapture(HWND Wnd, int jid, int v, bool f){return 0;}
-MMRESULT joyGetDevCaps(int jid, JOYCAPS* jc, int l){return 0;}
+
+MMRESULT joySetCapture(HWND Wnd, int jid, int v, bool f)
+{
+	swift_JoystickCapture();
+	return JOYERR_NOERROR;
+}
+MMRESULT joyGetDevCaps(int jid, JOYCAPS* jc, int l)
+{
+	jc->wXmin = 0;
+	jc->wYmin = 0;
+	jc->wXmax = 255;
+	jc->wYmax = 255;
+	return JOYERR_NOERROR;
+}

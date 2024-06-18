@@ -14,6 +14,8 @@ void beeb_Destroy();
 void beeb_handlekeys(long message, long wParam, long lParam); // long eventkind, unsigned long keycode, char charCode
 void beeb_handlemouse(long message, long wParam, long lParam);
 
+void beeb_handlejoystick(long message, long wParam, long lParam);
+
 
 
 

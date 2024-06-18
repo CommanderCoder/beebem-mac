@@ -91,7 +91,8 @@ class BeebViewController: NSViewController {
              displayLinkContext: UnsafeMutableRawPointer?) -> CVReturn in
 
             // need to typecast the context from pointer to self.
-            let view = unsafeBitCast(displayLinkContext, to: BeebViewController.self)
+			// unsafeBitCast is not recommended
+			let view = Unmanaged<BeebViewController>.fromOpaque(displayLinkContext!).takeUnretainedValue()
 
             // Make an asynchronous call to the cpu update
             DispatchQueue.main.async {              view.update()            }
@@ -150,6 +151,8 @@ class BeebViewController: NSViewController {
 			dqueue.async {
 				while true {
 					self.update_cpu()
+					
+					JoystickUpdate0()
 				}
 			}
 		}

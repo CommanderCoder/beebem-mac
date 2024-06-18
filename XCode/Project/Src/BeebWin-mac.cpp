@@ -17,15 +17,13 @@ LRESULT BeebWin::AppProc(UINT nMessage, WPARAM wParam, LPARAM lParam)
 {
 	switch (nMessage)
 	{
-		case WM_COMMAND_def: // message: command from application menu
+	   case WM_COMMAND_def: // message: command from application menu
 			HandleCommand(LOWORD(wParam));
 			break;
 		
-			
 		//SYSKEYUP, KEYUP, SYSKEYDOWN, KEYDOWN
 		
-		
-		case MM_JOY1MOVE:
+	   case MM_JOY1MOVE:
 			   ScaleJoystick(LOWORD(lParam), HIWORD(lParam));
 			   break;
 

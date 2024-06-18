@@ -14,6 +14,11 @@ let allowTrackingOutsideWindow = true
 let useFullScreen = true
 let useMovementDelta = true
 
+func toLParam(x : CGFloat, y: CGFloat) -> Int
+{
+	let (X,Y) = (0x8000*x, 0x8000*y)
+	return (Int(X)&0xffff) | ((Int(Y)&0xffff) << 16)
+}
 
 class BeebSKView: SKView {
 
@@ -58,11 +63,6 @@ class BeebSKView: SKView {
 	
 	let buttons = [MK_LBUTTON, MK_RBUTTON, MK_MBUTTON]
 
-	func toLParam(x : CGFloat, y: CGFloat) -> Int
-	{
-		let (X,Y) = (0x8000*x, 0x8000*y)
-		return (Int(X)&0xffff) | ((Int(Y)&0xffff) << 16)
-	}
 	func toXYpair(location ms : NSPoint) -> Int?
 	{
 		// Mac origin is bottom left, so need to reverse the Y axis
@@ -85,10 +85,10 @@ class BeebSKView: SKView {
 		if useMovementDelta
 		{
 			// try the delta first
-			let mousePos = NSPoint(x:event.deltaX,y:event.deltaY)
+//			let mousePos = NSPoint(x:event.deltaX,y:event.deltaY)
 			let lparam = toLParam(x:event.deltaX/640.0,y:event.deltaY/2256.0)
-			print(mousePos)
-			print("mouseMoved",String(format:"%08X", lparam))
+//			print(mousePos)
+//			print("mouseMoved",String(format:"%08X", lparam))
 			beeb_handlemouse(t, 0, lparam)
 		}
 		else
@@ -98,7 +98,7 @@ class BeebSKView: SKView {
 		
 			if let lparam = toXYpair(location: mousePos  )
 			{
-				print("mouseMoved",String(format:"%08X", lparam))
+//				print("mouseMoved",String(format:"%08X", lparam))
 				beeb_handlemouse(t, 0, lparam)
 			}
 		}
