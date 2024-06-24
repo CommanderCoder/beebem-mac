@@ -21,6 +21,8 @@ Boston, MA  02110-1301, USA.
 #ifndef KEYMAP_HEADER
 #define KEYMAP_HEADER
 
+#ifndef __APPLE__
+
 #include <string>
 
 #include "BeebWin.h"
@@ -51,5 +53,8 @@ extern KeyMap LogicalKeyMap;
 extern KeyMap UserKeyMap;
 
 extern const KeyMap *transTable;
+#else
+#include "KeyMap-mac.hpp"
+#endif
 
 #endif

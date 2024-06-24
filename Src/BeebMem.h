@@ -29,6 +29,9 @@ Boston, MA  02110-1301, USA.
 
 #include <stdio.h>
 #include <stdlib.h>
+#ifdef __APPLE__
+#include "apples.h"
+#endif
 
 #include "Model.h"
 #include "RomConfigFile.h"

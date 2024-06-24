@@ -46,6 +46,14 @@ Boston, MA  02110-1301, USA.
 #include "Rtc.h"
 #include "StringUtils.h"
 
+#ifdef __APPLE__
+void memcpy_localaddr(struct in_addr_econet* localaddr, char* addr, size_t l)
+{
+	struct in_addr apples_localaddr;
+	memcpy(&apples_localaddr, addr, l);
+	localaddr->S_un.S_addr = apples_localaddr.s_addr;
+}
+#endif
 // Emulated 6854 ADLC control registers.
 // control1_b0 is AC
 // this splits register address 0x01 as control2 and control3
@@ -80,22 +88,29 @@ struct MC6854 {
 const unsigned char CONTROL_REG1_ADDRESS_CONTROL               = 0x01;
 const unsigned char CONTROL_REG1_RX_INT_ENABLE                 = 0x02;
 const unsigned char CONTROL_REG1_TX_INT_ENABLE                 = 0x04;
+#ifndef __APPLE__
 const unsigned char CONTROL_REG1_RDSR_MODE                     = 0x08;
 const unsigned char CONTROL_REG1_TDSR_MODE                     = 0x10;
+#endif
 const unsigned char CONTROL_REG1_RX_FRAME_DISCONTINUE          = 0x20;
 const unsigned char CONTROL_REG1_RX_RESET                      = 0x40;
 const unsigned char CONTROL_REG1_TX_RESET                      = 0x80;
 
 const unsigned char CONTROL_REG2_PRIORITIZED_STATUS_ENABLE     = 0x01;
 const unsigned char CONTROL_REG2_2_BYTE_TRANSFER               = 0x02;
+#ifndef __APPLE__
 const unsigned char CONTROL_REG2_FLAG_MARK_IDLE                = 0x04;
+#endif
 const unsigned char CONTROL_REG2_TDRA_SELECT                   = 0x08;
+#ifndef __APPLE__
 const unsigned char CONTROL_REG2_FRAME_COMPLETE                = 0x08;
+#endif
 const unsigned char CONTROL_REG2_TX_LAST_DATA                  = 0x10;
 const unsigned char CONTROL_REG2_CLEAR_RX_STATUS               = 0x20;
 const unsigned char CONTROL_REG2_CLEAR_TX_STATUS               = 0x40;
 const unsigned char CONTROL_REG2_RTS_CONTROL                   = 0x80;
 
+#ifndef __APPLE__
 const unsigned char CONTROL_REG3_LOGICAL_CONTROL_FIELD_SELECT  = 0x01;
 const unsigned char CONTROL_REG3_EXTENDED_CONTROL_FIELD_SELECT = 0x02;
 const unsigned char CONTROL_REG3_AUTO_ADDRESS_EXTENSION_MODE   = 0x04;
@@ -110,18 +125,25 @@ const unsigned char CONTROL_REG3_LOOP_DTR                      = 0x80;
 const unsigned char CONTROL_REG4_DOUBLE_FLAG                   = 0x01;
 const unsigned char CONTROL_REG4_TX_WORD_LENGTH                = 0x06;
 const unsigned char CONTROL_REG4_RX_WORD_LENGTH                = 0x18;
+#endif
 const unsigned char CONTROL_REG4_TX_ABORT                      = 0x20;
+#ifndef __APPLE__
 const unsigned char CONTROL_REG4_ABORT_EXTEND                  = 0x40;
 const unsigned char CONTROL_REG4_NRZI                          = 0x80;
+#endif
 
 const unsigned char STATUS_REG1_RX_DATA_AVAILABLE              = 0x01;
 const unsigned char STATUS_REG1_STATUS2_READ_REQUEST           = 0x02;
+#ifndef __APPLE__
 const unsigned char STATUS_REG1_LOOP                           = 0x04;
+#endif
 const unsigned char STATUS_REG1_FLAG_DETECTED                  = 0x08;
 const unsigned char STATUS_REG1_CTS                            = 0x10;
 const unsigned char STATUS_REG1_TX_UNDERRUN                    = 0x20;
 const unsigned char STATUS_REG1_TDRA                           = 0x40;
+#ifndef __APPLE__
 const unsigned char STATUS_REG1_FRAME_COMPLETE                 = 0x40;
+#endif
 const unsigned char STATUS_REG1_IRQ                            = 0x80;
 
 const unsigned char STATUS_REG2_ADDRESS_PRESENT                = 0x01;
@@ -170,7 +192,11 @@ static unsigned int TimeBetweenBytes = 128;
 // all listed in Econet.cfg so each one knows where the other area.
 unsigned char EconetStationID = 0; // default Station ID
 static u_short EconetListenPort = 0; // default Listen port
+#ifndef __APPLE__
 static unsigned long EconetListenIP = 0x0100007f;
+#else
+static in_addr_t EconetListenIP = 0x0100007f;
+#endif
 // IP settings:
 static SOCKET ListenSocket = INVALID_SOCKET; // Listen socket
 static SOCKET SendSocket = INVALID_SOCKET;
@@ -281,8 +307,13 @@ struct EthernetPacket
 	};
 
 	unsigned int Pointer;
+#ifndef __APPLE__
 	unsigned int BytesInBuffer;
 	unsigned long inet_addr;
+#else
+	ssize_t BytesInBuffer;
+	in_addr_t inet_addr;
+#endif
 	unsigned int port;
 	unsigned int deststn;
 	unsigned int destnet;
@@ -302,7 +333,11 @@ struct EconetPacket
 	};
 
 	unsigned int Pointer;
+#ifndef __APPLE__
 	unsigned int BytesInBuffer;
+#else
+	ssize_t BytesInBuffer;
+#endif
 };
 
 static EconetPacket BeebTx;
@@ -314,12 +349,20 @@ static unsigned char BeebTxCopy[6]; // size of LongEconetPacket structure
 struct ECOLAN { // what we we need to find a beeb?
 	unsigned char station;
 	unsigned char network;
+#ifndef __APPLE__
 	unsigned long inet_addr;
+#else
+	in_addr_t inet_addr;
+#endif
 	u_short port;
 };
 
 struct AUNTAB {
+#ifndef __APPLE__
 	unsigned long inet_addr;
+#else
+	in_addr_t inet_addr;
+#endif
 	unsigned char network;
 };
 
@@ -373,8 +416,13 @@ static void EconetError(const char *Format, ...);
 
 static const char* IpAddressStr(unsigned long inet_addr)
 {
+#ifndef __APPLE__
 	in_addr in;
 	in.S_un.S_addr = inet_addr;
+#else
+	in_addr in;
+	in.s_addr = (in_addr_t)inet_addr;
+#endif
 
 	return inet_ntoa(in);
 }
@@ -584,9 +632,14 @@ void EconetReset()
 				// Check address for each network interface/card
 				for (int a = 0; host->h_addr_list[a] != nullptr && EconetStationID == 0; ++a)
 				{
+#ifndef __APPLE__
 					struct in_addr localaddr;
 					memcpy(&localaddr, host->h_addr_list[a], sizeof(struct in_addr));
 
+#else
+					struct in_addr_econet localaddr;
+					memcpy_localaddr(&localaddr, host->h_addr_list[a], sizeof(struct in_addr_econet));
+#endif
 					if (network[i].inet_addr == inet_addr("127.0.0.1") ||
 					    network[i].inet_addr == localaddr.S_un.S_addr)
 					{
@@ -616,8 +669,13 @@ void EconetReset()
 					{
 						for (int a = 0; host->h_addr_list[a] != NULL && EconetStationID == 0; ++a)
 						{
+#ifndef __APPLE__
 							struct in_addr localaddr;
 							memcpy(&localaddr, host->h_addr_list[a], sizeof(struct in_addr));
+#else
+							struct in_addr_econet localaddr;
+							memcpy_localaddr(&localaddr, host->h_addr_list[a], sizeof(struct in_addr_econet));
+#endif
 
 							if (aunnet[j].inet_addr == (localaddr.S_un.S_addr & 0x00FFFFFF))
 							{
@@ -683,7 +741,11 @@ void EconetReset()
 	}
 
 	// this call is what allows broadcast packets to be sent:
+#ifndef __APPLE__
 	const char broadcast = '1';
+#else
+	const int broadcast = 1;
+#endif
 
 	if (setsockopt(SendSocket, SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof(broadcast)) == -1)
 	{
@@ -1487,7 +1549,11 @@ bool EconetPoll_real() // return NMI status
 							EconetTx.ah.cb = (unsigned int)(BeebTx.eh.cb) & 127; // | 128;
 							EconetTx.ah.port = (unsigned int)BeebTx.eh.port;
 							EconetTx.ah.pad = 0;
+#ifndef __APPLE__
 							EconetTx.ah.handle = (ec_sequence+=4);
+#else
+							EconetTx.ah.handle = (uint32_t)(ec_sequence+=4);
+#endif
 
 							EconetTx.destnet = BeebTx.eh.destnet | outmask; //30JUN
 							EconetTx.deststn = BeebTx.eh.deststn;
@@ -1683,15 +1749,27 @@ bool EconetPoll_real() // return NMI status
 						FD_ZERO(&ReadFds);
 						FD_SET(ListenSocket, &ReadFds);
 
+#ifndef __APPLE__
 						static const timeval TimeOut = {0, 0};
+#else
+						static timeval TimeOut = {0, 0};
+#endif
 
+#ifndef __APPLE__
 						int RetVal = select((int)ListenSocket + 1, &ReadFds, NULL, NULL, &TimeOut);
+#else
+						ssize_t RetVal = select((int)ListenSocket + 1, &ReadFds, NULL, NULL, &TimeOut);
+#endif
 
 						if (RetVal > 0)
 						{
 							sockaddr_in RecvAddr;
 							// Read the packet
+#ifndef __APPLE__
 							int sizRcvAdr = sizeof(RecvAddr);
+#else
+							socklen_t sizRcvAdr = sizeof(RecvAddr);
+#endif
 
 							if (AUNMode)
 							{
@@ -1713,7 +1791,11 @@ bool EconetPoll_real() // return NMI status
 									                   IpAddressStr(RecvAddr.sin_addr.s_addr),
 									                   htons(RecvAddr.sin_port));
 
+#ifndef __APPLE__
 									std::string str = "EconetPoll: Packet data:" + BytesToString(AUNMode ? EconetRx.raw : BeebRx.buff, RetVal);
+#else
+									std::string str = "EconetPoll: Packet data:" + BytesToString(AUNMode ? EconetRx.raw : BeebRx.buff, (int)RetVal);
+#endif
 
 									DebugDisplayTrace(DebugType::Econet, true, str.c_str());
 								}
@@ -1924,20 +2006,34 @@ bool EconetPoll_real() // return NMI status
 					if (AUNMode && EconetSCACKtrigger > TotalCycles)
 					{
 						switch (fourwaystage) {
+#ifdef __APPLE__
+						case FourWayStage::Idle:
+							break;
+#endif
 						case FourWayStage::ScoutSent:
 							// just got a scout from the beeb, fake an acknowledgement.
 							BeebRx.eh.deststn = EconetStationID;
 							BeebRx.eh.destnet = 0;
 							BeebRx.eh.srcstn = (unsigned char)EconetTx.deststn; // use scout's dest as source of ack.
 							BeebRx.eh.srcnet = (unsigned char)EconetTx.destnet; // & inmask; //30jun
-
+							
 							BeebRx.BytesInBuffer = 4;
 							BeebRx.Pointer = 0;
 							fourwaystage = FourWayStage::ScoutAckReceived;
 							//if (DebugEnabled)
-								DebugDisplayTrace(DebugType::Econet, true, "Econet: Set FWS_SCACKRCVD");
+							DebugDisplayTrace(DebugType::Econet, true, "Econet: Set FWS_SCACKRCVD");
 							break;
 
+#ifdef __APPLE__
+						case FourWayStage::ScoutAckReceived:
+							break;
+						case FourWayStage::DataSent:
+							break;
+						case FourWayStage::WaitForIdle:
+							break;
+						case FourWayStage::ScoutReceived:
+							break;
+#endif
 						case FourWayStage::ScoutAckSent:
 							// beeb acked the scout we gave it, so give it the data AUN sent us earlier.
 							BeebRx.eh.deststn = EconetStationID; // as it is data it must be for us
@@ -1978,6 +2074,14 @@ bool EconetPoll_real() // return NMI status
 							//if (DebugEnabled)
 								DebugDisplayTrace(DebugType::Econet, true, "Econet: Set FWS_DATARCVD");
 							break;
+#ifdef __APPLE__
+						case FourWayStage::DataReceived:
+							break;
+						case FourWayStage::ImmediateSent:
+							break;
+						case FourWayStage::ImmediateReceived:
+							break;
+#endif
 						}
 					}
 				}
@@ -2101,8 +2205,12 @@ bool EconetPoll_real() // return NMI status
 
 	// and then set the status bit if the line is high! (status bit stays
 	// up until cpu tries to clear it) (& still stays up if cts line still high)
+#ifndef __APPLE__
 
 	if (!(ADLC.control1 && CONTROL_REG1_TX_RESET) && ADLC.cts) // TODO: is && right here?
+#else
+	if (!(ADLC.control1 & CONTROL_REG1_TX_RESET) && ADLC.cts)
+#endif
 	{
 		ADLC.status1 |= STATUS_REG1_CTS; // set CTS now
 	}

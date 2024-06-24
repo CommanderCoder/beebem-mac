@@ -21,6 +21,8 @@ Boston, MA  02110-1301, USA.
 // Acorn 1770 DFS Board Drive Controller Chip DLL
 // (C) September 2001 - Richard Gellman
 
+#ifndef __APPLE__
+
 #ifdef __cplusplus
 #define EXPORT extern "C" __declspec (dllexport)
 #else
@@ -28,6 +30,12 @@ Boston, MA  02110-1301, USA.
 #endif
 
 #define WIN_LEAN_AND_MEAN
+
+#else
+
+namespace AcornFDC {
+
+#endif
 
 struct DriveControlBlock {
 	int FDCAddress; // 1770 FDC chip address
@@ -40,5 +48,15 @@ EXPORT unsigned char SetDriveControl(unsigned char value);
 EXPORT unsigned char GetDriveControl(unsigned char value);
 EXPORT void GetBoardProperties(struct DriveControlBlock *FDBoard);
 
+#ifndef __APPLE__
+
 #define DCB struct DriveControlBlock
+	  
+#else
+
+#define ACORN_DCB struct DriveControlBlock
+
+}// AcornFDC
+
+#endif
       

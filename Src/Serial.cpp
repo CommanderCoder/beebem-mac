@@ -52,7 +52,11 @@ Boston, MA  02110-1301, USA.
 #include "Thread.h"
 #include "TouchScreen.h"
 #include "Uef.h"
+#ifndef __APPLE__
 #include "UEFState.h"
+#else
+#include "UefState.h"
+#endif
 
 // MC6850 control register bits
 constexpr unsigned char MC6850_CONTROL_COUNTER_DIVIDE   = 0x03;
@@ -136,6 +140,7 @@ SerialPortReadThread SerialReadThread;
 SerialPortStatusThread SerialStatusThread;
 volatile bool bSerialStateChanged = false;
 
+#ifndef __APPLE__
 class Win32SerialPort
 {
 	public:
@@ -166,6 +171,37 @@ static Win32SerialPort SerialPort;
 
 static void InitSerialPort();
 
+#else
+
+#define OVERLAPPED char*
+class AppleSerialPort
+{
+	public:
+	AppleSerialPort(){}
+
+	bool Init(const char* PortName){return false;}
+	void Close(){}
+	void SetBaudRate(int BaudRate){}
+	void Configure(unsigned char DataBits, unsigned char StopBits, unsigned char Parity){}
+	void SetRTS(bool RTS){}
+
+	public:
+		HANDLE hSerialPort; // Serial port handle
+		unsigned int SerialBuffer;
+		unsigned int SerialWriteBuffer;
+		DWORD BytesIn;
+		DWORD BytesOut;
+		DWORD dwCommEvent;
+	OVERLAPPED olSerialPort;
+	OVERLAPPED olSerialWrite;
+	OVERLAPPED olStatus;
+		volatile bool bWaitingForData;
+		volatile bool bWaitingForStat;
+		volatile bool bCharReady;
+};
+static AppleSerialPort SerialPort;
+#endif
+
 SerialACIAType SerialACIA;
 
 struct SerialULAType
@@ -181,6 +217,7 @@ static SerialULAType SerialULA;
 
 /*--------------------------------------------------------------------------*/
 
+#ifndef __APPLE__
 Win32SerialPort::Win32SerialPort() :
 	hSerialPort(INVALID_HANDLE_VALUE),
 	SerialBuffer(0),
@@ -302,6 +339,7 @@ void Win32SerialPort::SetRTS(bool RTS)
 {
 	EscapeCommFunction(hSerialPort, RTS ? CLRRTS : SETRTS);
 }
+#endif
 
 /*--------------------------------------------------------------------------*/
 
@@ -421,10 +459,12 @@ void SerialACIAWriteTxData(unsigned char Data)
 					if (!IP232Raw && Data == 255) IP232Write(Data);
 				// }
 			}
+#ifndef __APPLE__
 			else
 			{
 				WriteFile(SerialPort.hSerialPort, &SerialPort.SerialWriteBuffer, 1, &SerialPort.BytesOut, &SerialPort.olSerialWrite);
 			}
+#endif
 
 			SerialACIA.Status |= MC6850_STATUS_TDRE;
 		}
@@ -824,6 +864,10 @@ void SerialPoll(int Cycles)
 									TapeAudio.ByteCount  = 3;
 								}
 								break;
+#ifdef __APPLE__
+							case CSWState::Undefined:
+								break;
+#endif
 						}
 					}
 
@@ -888,6 +932,7 @@ void SerialPoll(int Cycles)
 		}
 		else // SerialType::SerialPort
 		{
+#ifndef __APPLE__
 			if (!SerialPort.bWaitingForStat && !bSerialStateChanged)
 			{
 				WaitCommEvent(SerialPort.hSerialPort, &SerialPort.dwCommEvent, &SerialPort.olStatus);
@@ -921,6 +966,7 @@ void SerialPoll(int Cycles)
 					}
 				}
 			}
+#endif
 		}
 	}
 }
@@ -938,6 +984,7 @@ static void InitThreads()
 	    SerialDestination == SerialType::SerialPort &&
 	    SerialPortName[0] != '\0')
 	{
+#ifndef __APPLE__
 		InitSerialPort(); // Set up the serial port if its enabled.
 
 		if (SerialPort.olSerialPort.hEvent)
@@ -963,6 +1010,7 @@ static void InitThreads()
 		}
 
 		SerialPort.olStatus.hEvent = CreateEvent(nullptr, TRUE, FALSE, nullptr); // Status event, for WaitCommEvent
+#endif
 	}
 
 	bSerialStateChanged = false;
@@ -972,6 +1020,7 @@ static void InitThreads()
 
 unsigned int SerialPortStatusThread::ThreadFunc()
 {
+#ifndef __APPLE__
 	DWORD dwOvRes = 0;
 
 	while (1)
@@ -1024,6 +1073,7 @@ unsigned int SerialPortStatusThread::ThreadFunc()
 
 		Sleep(0);
 	}
+#endif
 
 	return 0;
 }
@@ -1040,6 +1090,7 @@ unsigned int SerialPortReadThread::ThreadFunc()
 	{
 		if (!bSerialStateChanged && SerialPortEnabled && SerialDestination == SerialType::SerialPort && SerialPort.bWaitingForData)
 		{
+#ifndef __APPLE__
 			DWORD Result = WaitForSingleObject(SerialPort.olSerialPort.hEvent, INFINITE); // 10ms to respond
 
 			if (Result == WAIT_OBJECT_0)
@@ -1063,6 +1114,7 @@ unsigned int SerialPortReadThread::ThreadFunc()
 					SerialPort.bWaitingForData = false;
 				}
 			}
+#endif
 		}
 		else
 		{
@@ -1077,6 +1129,7 @@ unsigned int SerialPortReadThread::ThreadFunc()
 
 /*--------------------------------------------------------------------------*/
 
+#ifndef __APPLE__
 static void InitSerialPort()
 {
 	// Initialise COM port
@@ -1093,6 +1146,7 @@ static void InitSerialPort()
 		}
 	}
 }
+#endif
 
 /*--------------------------------------------------------------------------*/
 

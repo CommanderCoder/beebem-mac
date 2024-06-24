@@ -112,10 +112,16 @@ CSWResult CSWOpen(const char *FileName)
 		fclose(csw_file);
 		return CSWResult::InvalidHeaderExtension;
 	}
+#ifndef __APPLE__
 
 	int end = ftell(csw_file);
 	fseek(csw_file, 0, SEEK_END);
 	int sourcesize = ftell(csw_file) - end + 1;
+#else
+	int end = (int)ftell(csw_file);
+	fseek(csw_file, 0, SEEK_END);
+	int sourcesize = (int)ftell(csw_file) - end + 1;
+#endif
 	fseek(csw_file, end, SEEK_SET);
 
 	csw_bufflen = 8 * 1024 * 1024;
@@ -182,7 +188,11 @@ void HexDump(const char *buff, int count)
 void CSWCreateTapeMap(std::vector<TapeMapEntry>& TapeMap)
 {
 	CSWState last_state = CSWState::Undefined;
+#ifndef __APPLE__
 	char block[65535];
+#else
+	unsigned char block[65535];
+#endif
 	int block_ptr = -1;
 
 	int n;
@@ -536,6 +546,10 @@ int CSWPoll()
 					break;
 			}
 			break;
+#ifdef __APPLE__
+		default: // Undefined
+			break;
+#endif
 	}
 
 	bit_count += csw_data(); // Get next bit

@@ -23,8 +23,15 @@ Boston, MA  02110-1301, USA.
 
 #include <windows.h>
 #include "Watford.h"
+#ifdef __APPLE__
+namespace WatfordFDC {
+#endif
 
+#ifndef __APPLE__
 char *WatfordName="Watford DDFS Extension board for BBC Model B";
+#else
+char WatfordName[]="Watford DDFS Extension board for BBC Model B";
+#endif
 
 // The dll must assume the 1770 system accepts a Master 128 type control reg thus:
 // Bit 0 Drive Select 0
@@ -45,7 +52,11 @@ EXPORT unsigned char SetDriveControl(unsigned char value) {
 }
 
 EXPORT unsigned char GetDriveControl(unsigned char value) {
+#ifndef __APPLE__
 	unsigned char temp;
+#else
+	unsigned char temp=0; // default: Drive select 0
+#endif
 	// from master 128 to native
 	if (value & 1) temp=0; // Drive select 0
 	if (value & 2) temp=4; // Drive select 1
@@ -60,3 +71,7 @@ EXPORT void GetBoardProperties(struct DriveControlBlock *FDBoard) {
 	FDBoard->BoardName=WatfordName;
 	FDBoard->TR00_ActiveHigh = true;
 }
+
+#ifdef __APPLE__
+} //WatfordFDC
+#endif

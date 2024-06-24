@@ -90,7 +90,11 @@ public:
 public:
 	void dynamicProfilingCoprocessorUsage(uint32 currentInstruction);
 	void dynamicProfilingExceptionFrequencyReport();
+#ifndef __APPLE__
 	void dynamicProfilingExceptionFrequency(char *exceptionName, uint32& counter);
+#else
+	void dynamicProfilingExceptionFrequency(const char *exceptionName, uint32& counter);
+#endif
 
 	uint32 pc;
 	inline void performBranch();

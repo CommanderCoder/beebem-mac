@@ -55,7 +55,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Main.h"
 #include "Log.h"
 #include "Tube.h"
+#ifndef __APPLE__
 #include "UEFState.h"
+#else
+#include "UefState.h"
+#endif
 
 Master512CoPro master512CoPro;
 
@@ -63,7 +67,11 @@ extern unsigned char TubeintStatus;
 extern unsigned char TubeNMIStatus;
 
 // All pre-i286 CPUs have a 1MB address space
+#ifndef __APPLE__
 const uint32_t AMASK = 0xfffff;
+#else
+/*const uint32_t AMASK = 0xfffff;*/
+#endif
 
 #define CF      (m_CarryVal!=0)
 #define SF      (m_SignVal<0)
@@ -221,10 +229,25 @@ static const uint8_t Timing[] =
 	11, 9,10,           // STOS 16-bit
 	18, 9,17,           // MOVS 8-bit
 	18, 9,17,           // MOVS 16-bit
+
+#ifdef __APPLE__
+	// placeholders to remove warnings
+	18, 9,17,           // (80186) INS 8-bit
+	18, 9,17,           // (80186) INS 16-bit
+	18, 9,17,           // (80186) OUTS 8-bit
+	18, 9,17,           // (80186) OUTS 16-bit
+	18, 9,17,           // (80186) push/pop 8-bit
+	18, 9,17,           // (80186) IMUL 8-bit
+	18, 9,17,           // (80186) IMUL 16-bit
+	18, 9,17, 18, 9,	// (80186) enter/leave
+	17,           		// (80186) BOUND
+#endif
+
 };
 
 // DMA control register
 
+#ifndef __APPLE__
 const uint16_t DEST_MIO                = 0x8000;
 const uint16_t DEST_DECREMENT          = 0x4000;
 const uint16_t DEST_INCREMENT          = 0x2000;
@@ -245,6 +268,7 @@ const uint16_t TIMER_DRQ               = 0x0010;
 const uint16_t CHG_NOCHG               = 0x0004;
 
 const uint16_t ST_STOP = 0x0002;
+#endif
 
 void Master512CoPro::execute_set_input(int inptnum, int state)
 {

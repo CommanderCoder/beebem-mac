@@ -23,8 +23,15 @@ Boston, MA  02110-1301, USA.
 
 #include <windows.h>
 #include "opus.h"
+#ifdef __APPLE__
+namespace OpusFDC {
+#endif
 
+#ifndef __APPLE__
 char *OpusName="Opus DDOS Extension board for BBC Model B";
+#else
+char OpusName[]="Opus DDOS Extension board for BBC Model B";
+#endif
 
 // The dll must assume the 1770 system accepts a Master 128 type control reg thus:
 // Bit 0 Drive Select 0
@@ -59,3 +66,7 @@ EXPORT void GetBoardProperties(struct DriveControlBlock *FDBoard) {
 	FDBoard->BoardName=OpusName;
 	FDBoard->TR00_ActiveHigh = false;
 }
+
+#ifdef __APPLE__
+} //OpusFDC
+#endif

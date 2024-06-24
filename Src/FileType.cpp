@@ -21,6 +21,9 @@ Boston, MA  02110-1301, USA.
 #include <string.h>
 
 #include "FileType.h"
+#ifdef __APPLE__
+#include "apples.h"
+#endif
 
 FileType GetFileTypeFromExtension(const char* FileName)
 {

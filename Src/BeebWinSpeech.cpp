@@ -23,7 +23,13 @@ Boston, MA  02110-1301, USA.
 #include <windows.h>
 
 #define STRSAFE_NO_DEPRECATE
+
+// __VS2022__
+#pragma warning(disable:4996)
+// sphelper.h hasn't been keeping up with SDK 8.1 -> SDK 10
+// https://stackoverflow.com/questions/22303824/warning-c4996-getversionexw-was-declared-deprecated
 #include <sphelper.h>
+#pragma warning(default: 4996)
 
 #include <assert.h>
 #include <stdio.h>

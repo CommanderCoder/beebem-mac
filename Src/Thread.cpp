@@ -20,6 +20,7 @@ Boston, MA  02110-1301, USA.
 
 #include <windows.h>
 
+// use pthread instead
 #include <process.h>
 
 #include "Thread.h"
@@ -36,6 +37,7 @@ Thread::~Thread()
 
 bool Thread::Start()
 {
+#ifndef __APPLE__
 	m_hStartEvent = CreateEvent(nullptr, TRUE, FALSE, nullptr);
 
 	if (m_hStartEvent == nullptr)
@@ -63,6 +65,9 @@ bool Thread::Start()
 	m_hStartEvent = nullptr;
 
 	return bSuccess;
+#else
+	return false;
+#endif
 }
 
 bool Thread::IsStarted() const

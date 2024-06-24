@@ -22,10 +22,17 @@ Boston, MA  02110-1301, USA.
 ****************************************************************/
 
 #include "SoundStreamer.h"
+#ifndef __APPLE__
 #include "DirectSoundStreamer.h"
+#endif
 #include "Main.h"
 #include "Sound.h"
+#ifndef __APPLE__
 #include "XAudio2Streamer.h"
+#endif
+#ifdef __APPLE__
+#include "AppleSoundStreamer.hpp"
+#endif
 
 std::list<SoundStreamer*> SoundStreamer::m_streamers;
 
@@ -55,6 +62,7 @@ void SoundStreamer::PauseAll()
 
 SoundStreamer *CreateSoundStreamer(int samplerate, int bits_per_sample, int channels)
 {
+#ifndef __APPLE__
 	if (SelectedSoundStreamer == SoundStreamerType::XAudio2)
 	{
 		SoundStreamer *pSoundStreamer = new XAudio2Streamer();
@@ -87,4 +95,26 @@ SoundStreamer *CreateSoundStreamer(int samplerate, int bits_per_sample, int chan
 
 		return nullptr;
 	}
+#else
+	SoundStreamer *pSoundStreamer = new AppleSoundStreamer();
+	if (pSoundStreamer->Init(samplerate, bits_per_sample, channels))
+	{
+		// create streams in the sound systems - now init (start) the sound system
+		swift_SoundInit();
+
+		return pSoundStreamer;
+	}
+	else
+	{
+	   delete pSoundStreamer;
+	   pSoundStreamer= nullptr;
+		mainWin->Report(MessageType::Error, "Attempt to start sound system failed");
+
+		return nullptr;
+	}
+	
+
+#endif
+
+	return pSoundStreamer;
 }

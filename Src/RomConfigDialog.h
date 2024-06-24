@@ -21,6 +21,7 @@ Boston, MA  02110-1301, USA.
 
 #ifndef ROM_CONFIG_DIALOG_HEADER
 #define ROM_CONFIG_DIALOG_HEADER
+#ifndef __APPLE__
 
 #include "Dialog.h"
 #include "Model.h"
@@ -58,5 +59,8 @@ class RomConfigDialog : public Dialog
 		RomConfigFile m_RomConfig;
 		Model m_Model;
 };
+#else
+#import "RomConfigDialog-mac.hpp"
+#endif //__APPLE__
 
 #endif

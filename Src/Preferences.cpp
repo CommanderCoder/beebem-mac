@@ -251,7 +251,11 @@ bool Preferences::GetDWORDValue(const char* id, DWORD& Value) const
 
 	try
 	{
+#ifndef __APPLE__
 		Value = std::stoul(i->second, nullptr, 16);
+#else
+		Value = (DWORD)std::stoul(i->second, nullptr, 16);
+#endif
 	}
 	catch (std::exception&)
 	{

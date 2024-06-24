@@ -35,12 +35,20 @@ Boston, MA  02110-1301, USA.
 #pragma warning(disable: 4458) // declaration of 'xxx' hides class member
 using std::min;
 using std::max;
+#ifndef __APPLE__
 #include <gdiplus.h>
+#else
+#include "gdiplus.h"
+#endif
 #pragma warning(pop)
 
 #include "BeebWin.h"
 #include "6502core.h"
+#ifndef __APPLE__
 #include "AviWriter.h"
+#else
+#include "AVIWriter.h"
+#endif
 #include "BeebMem.h"
 #include "BeebWinPrefs.h"
 #include "Disc1770.h"
@@ -60,7 +68,11 @@ using std::max;
 #include "Sound.h"
 #include "TapeControlDialog.h"
 #include "Tube.h"
+#ifndef __APPLE__
 #include "UEFState.h"
+#else
+#include "UefState.h"
+#endif
 #include "UserVia.h"
 #include "Version.h"
 
@@ -88,12 +100,14 @@ void BeebWin::SetImageName(const char *DiscName, int Drive, DiscType Type)
 	strncat(menuStr, fname, maxMenuItemLen-strlen(menuStr));
 	menuStr[maxMenuItemLen] = '\0';
 
+#ifndef __APPLE__
 	MENUITEMINFO mii = {0};
 	mii.cbSize = sizeof(mii);
 	mii.fMask = MIIM_STRING;
 	mii.fType = MFT_STRING;
 	mii.dwTypeData = menuStr;
 	SetMenuItemInfo(m_hMenu, Drive == 0 ? IDM_EJECTDISC0 : IDM_EJECTDISC1, FALSE, &mii);
+#endif
 }
 
 /****************************************************************************/
@@ -107,6 +121,7 @@ void BeebWin::EjectDiscImage(int Drive)
 	DiscInfo[Drive].Type = DiscType::SSD;
 	DiscInfo[Drive].Loaded = false;
 
+#ifndef __APPLE__
 	MENUITEMINFO mii = {0};
 	mii.cbSize = sizeof(mii);
 	mii.fMask = MIIM_STRING;
@@ -123,6 +138,7 @@ void BeebWin::EjectDiscImage(int Drive)
 		SetMenuItemInfo(m_hMenu, IDM_EJECTDISC1, FALSE, &mii);
 	}
 
+#endif
 	SetDiscWriteProtects();
 }
 
@@ -159,7 +175,11 @@ bool BeebWin::ReadDisc(int Drive, bool bCheckForPrefs)
 
 		if (m_AutoSavePrefsFolders)
 		{
+#ifndef __APPLE__
 			unsigned int PathLength = (unsigned int)(strrchr(FileName, '\\') - FileName);
+#else
+			unsigned int PathLength = (unsigned int)(strrchr(FileName, '/') - FileName);
+#endif
 			strncpy(DefaultPath, FileName, PathLength);
 			DefaultPath[PathLength] = 0;
 			m_Preferences.SetStringValue(CFG_DISCS_PATH, DefaultPath);
@@ -380,7 +400,11 @@ void BeebWin::LoadTape(void)
 	{
 		if (m_AutoSavePrefsFolders)
 		{
+#ifndef __APPLE__
 			unsigned int PathLength = (unsigned int)(strrchr(FileName, '\\') - FileName);
+#else
+			unsigned int PathLength = (unsigned int)(strrchr(FileName, '/') - FileName);
+#endif
 			strncpy(DefaultPath, FileName, PathLength);
 			DefaultPath[PathLength] = 0;
 			m_Preferences.SetStringValue(CFG_TAPES_PATH, DefaultPath);
@@ -451,6 +475,7 @@ bool BeebWin::NewTapeImage(char *FileName, int Size)
 
 void BeebWin::SelectFDC()
 {
+#ifndef __APPLE__
 	char DefaultPath[_MAX_PATH];
 	char FileName[256];
 	FileName[0] = '\0';
@@ -475,7 +500,35 @@ void BeebWin::SelectFDC()
 
 		LoadFDC(FDCDLL, true);
 	}
+#endif
 }
+
+#ifdef __APPLE__
+std::map<int,std::string> nameMap {
+	{ID_FDC_WATFORD,"Watford"},
+	{ID_FDC_ACORN,"Acorn"},
+	{ID_FDC_OPUS,"Opus"}
+};
+
+void BeebWin::SelectFDC(int FDC = 0)
+{
+	if (MachineType == Model::Master128)
+		return;
+	if (nameMap.count(FDC) > 0)
+	{
+		// uncheck all ID_FDC_DLL items
+		CheckMenuItem(ID_FDC_ACORN, false);
+		CheckMenuItem(ID_FDC_OPUS, false);
+		CheckMenuItem(ID_FDC_WATFORD, false);
+
+		LoadFDC((char*)nameMap[FDC].c_str(), true);
+
+		// assume FDC has changed as LoadFDC will always work on APPLE
+		CheckMenuItem(FDC, true);
+	}
+
+}
+#endif
 
 /****************************************************************************/
 void BeebWin::NewDiscImage(int Drive)
@@ -1001,6 +1054,7 @@ void BeebWin::UpdateVideoCaptureFrameSkipMenu()
 
 void BeebWin::CaptureVideo()
 {
+#ifndef __APPLE__
 	char DefaultPath[_MAX_PATH];
 	char FileName[_MAX_PATH];
 	FileName[0] = '\0';
@@ -1103,12 +1157,14 @@ void BeebWin::CaptureVideo()
 			}
 		}
 	}
+#endif
 }
 
 /****************************************************************************/
 
 void BeebWin::EndVideo()
 {
+#ifndef __APPLE__
 	if (aviWriter != nullptr)
 	{
 		delete aviWriter;
@@ -1126,6 +1182,7 @@ void BeebWin::EndVideo()
 		DeleteDC(m_AviDC);
 		m_AviDC = nullptr;
 	}
+#endif
 }
 
 bool BeebWin::IsCapturing() const
@@ -1138,7 +1195,15 @@ void BeebWin::QuickLoad()
 {
 	char FileName[_MAX_PATH];
 	strcpy(FileName, m_UserDataPath);
+#ifndef __APPLE__
 	strcat(FileName, "BeebState\\quicksave.uefstate");
+#else
+	char DirName[_MAX_PATH];
+	strcpy(DirName, m_UserDataPath);
+	strcat(DirName, "BeebState");
+
+	_makepath(FileName, NULL,DirName,"quicksave","uefstate");
+#endif
 
 	if (FileExists(FileName))
 	{
@@ -1148,7 +1213,11 @@ void BeebWin::QuickLoad()
 	{
 		// For backwards compatiblity with existing quicksave files:
 		strcpy(FileName, m_UserDataPath);
+#ifndef __APPLE__
 		strcat(FileName, "BeebState\\quicksave.uef");
+#else
+		_makepath(FileName, NULL,FileName,"quicksave","uef");
+#endif
 		LoadUEFState(FileName);
 	}
 }
@@ -1157,10 +1226,16 @@ void BeebWin::QuickSave()
 {
 	char FileName1[_MAX_PATH];
 	char FileName2[_MAX_PATH];
+#ifdef __APPLE__
+	char DirName[_MAX_PATH];
+	strcpy(DirName, m_UserDataPath);
+	strcat(DirName, "BeebState");
+#endif
 
 	// Bump old quicksave files down
 	for (int i = 1; i <= 9; ++i)
 	{
+#ifndef __APPLE__
 		sprintf(FileName1, "%sBeebState\\quicksave%d.uefstate", m_UserDataPath, i);
 
 		if (i == 9)
@@ -1171,7 +1246,20 @@ void BeebWin::QuickSave()
 		{
 			sprintf(FileName2, "%sBeebState\\quicksave%d.uefstate", m_UserDataPath, i + 1);
 		}
+#else
+		sprintf(FileName1, "quicksave%d", i);
+		_makepath(FileName1, NULL,DirName,FileName1,"uefstate");
 
+		if (i == 9)
+		{
+			_makepath(FileName2, NULL,DirName,"quicksave","uefstate");
+		}
+		else
+		{
+			sprintf(FileName2, "quicksave%d", i + 1);
+			_makepath(FileName2, NULL,DirName,FileName2,"uefstate");
+		}
+#endif
 		MoveFileEx(FileName2, FileName1, MOVEFILE_REPLACE_EXISTING);
 	}
 
@@ -1195,7 +1283,10 @@ void BeebWin::LoadUEFState(const char *FileName)
 			Report(MessageType::Error, "Cannot open state file:\n  %s",
 			       FileName);
 			break;
-
+#ifdef __APPLE__
+		case UEFStateResult::WriteFailed:		
+			break;
+#endif
 		case UEFStateResult::InvalidUEFFile:
 			Report(MessageType::Error, "The file selected is not a UEF file:\n  %s",
 			       FileName);
@@ -1220,10 +1311,20 @@ void BeebWin::SaveUEFState(const char *FileName)
 		case UEFStateResult::Success:
 			break;
 
+#ifdef __APPLE__
+		case UEFStateResult::OpenFailed:
+			break;
+#endif
 		case UEFStateResult::WriteFailed:
 			Report(MessageType::Error, "Failed to write state file:\n  %s",
-			       FileName);
+				   FileName);
 			break;
+#ifdef __APPLE__
+		case UEFStateResult::InvalidUEFFile:
+			break;
+		case UEFStateResult::InvalidUEFVersion:
+			break;
+#endif
 	}
 }
 
@@ -1332,7 +1433,8 @@ void BeebWin::LoadFDC(char *DLLName, bool save)
 	// Set menu options
 	CheckMenuItem(IDM_8271, NativeFDC);
 	CheckMenuItem(IDM_FDC_DLL, !NativeFDC);
-
+	// CheckMenuItem for __APPLE__ is completed in SelectFDC(int FDC)
+    
 	DisplayCycles = 7000000;
 
 	if (NativeFDC || MachineType == Model::Master128)
@@ -1530,8 +1632,11 @@ void BeebWin::OnCopy()
 	TogglePrinter(); // Turn printer back on
 	UpdatePrinterPortMenu();
 
-	m_PrinterBuffer.resize(5);
+	m_PrinterBuffer.clear();
 
+#ifdef __APPLE__
+	m_ClipboardBuffer.resize(5);
+#endif
 	m_ClipboardBuffer[0] = 2;
 	m_ClipboardBuffer[1] = 'L';
 	m_ClipboardBuffer[2] = '.';
@@ -1544,6 +1649,7 @@ void BeebWin::OnCopy()
 
 void BeebWin::OnPaste()
 {
+#ifndef __APPLE__
 	if (!IsClipboardFormatAvailable(CF_TEXT))
 		return;
 
@@ -1571,13 +1677,28 @@ void BeebWin::OnPaste()
 	}
 
 	CloseClipboard();
+#else
+	static const int ClipboardBufferSize = 32768;
+	char clipboardBuffer[ClipboardBufferSize];
+	
+	if (swift_getPasteboard(clipboardBuffer,ClipboardBufferSize))		
+	{
+		size_t Size = strlen(clipboardBuffer);
+
+		m_ClipboardBuffer.insert(m_ClipboardBuffer.end(), &clipboardBuffer[0], &clipboardBuffer[Size]);
+
+		m_ClipboardIndex = 0;
+	}
+#endif
 }
 
 void BeebWin::ClearClipboardBuffer()
 {
 	m_ClipboardBuffer.clear();
 	m_ClipboardIndex = 0;
+#ifndef __APPLE__
 	m_ClipboardLength = 0;
+#endif
 }
 
 /****************************************************************************/
@@ -1601,6 +1722,7 @@ void BeebWin::PrintChar(unsigned char Value)
 
 void BeebWin::CopyPrinterBufferToClipboard()
 {
+#ifndef __APPLE__
 	if (!OpenClipboard(m_hWnd))
 		return;
 
@@ -1622,6 +1744,9 @@ void BeebWin::CopyPrinterBufferToClipboard()
 	SetClipboardData(CF_TEXT, hClipboardData);
 
 	CloseClipboard();
+#else
+	swift_setPasteboard((const char*)m_PrinterBuffer.data(), m_PrinterBuffer.size());
+#endif
 }
 
 /****************************************************************************/
@@ -1768,7 +1893,11 @@ void BeebWin::ImportDiscFiles(int menuId)
 	if (fileName[0] == 0)
 	{
 		// Only one file selected
+#ifndef __APPLE__
 		fileName = strrchr(fileSelection, '\\');
+#else
+		fileName = strrchr(fileSelection, '/');
+#endif
 		if (fileName != NULL)
 			*fileName = 0;
 		fileName++;
@@ -1875,7 +2004,11 @@ void BeebWin::SelectHardDriveFolder()
 
 	if (fileDialog.Open())
 	{
+#ifndef __APPLE__
 		unsigned int PathLength = (unsigned int)(strrchr(FileName, '\\') - FileName);
+#else
+		unsigned int PathLength = (unsigned int)(strrchr(FileName, '/') - FileName);
+#endif
 		strncpy(DefaultPath, FileName, PathLength);
 		DefaultPath[PathLength] = 0;
 
@@ -1967,6 +2100,7 @@ void BeebWin::CaptureBitmapPending(bool autoFilename)
 bool BeebWin::GetImageEncoderClsid(const WCHAR *mimeType, CLSID *encoderClsid)
 {
 	bool Success = false;
+#ifndef __APPLE__
 	UINT num;
 	UINT size;
 	UINT i;
@@ -2011,7 +2145,9 @@ Exit:
 	{
 		free(pImageCodecInfo);
 	}
-
+#else
+	Success = true;
+#endif
 	return Success;
 }
 
@@ -2127,6 +2263,7 @@ void BeebWin::CaptureBitmap(int SourceX,
 		strcat(m_CaptureFileName, AutoName);
 	}
 
+#ifndef __APPLE__
 	int BitmapWidth, BitmapHeight;
 	int DestX, DestY;
 	int DestWidth, DestHeight;
@@ -2258,4 +2395,11 @@ void BeebWin::CaptureBitmap(int SourceX,
 	{
 		DeleteDC(CaptureDC);
 	}
+#else
+	if (strlen(m_CaptureFileName)>0)
+	{
+		// save to PICTURES folder
+		swift_saveScreen(m_CaptureFileName);
+	}
+#endif
 }

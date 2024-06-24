@@ -1,0 +1,1417 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 55;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		DC0997AA2BBAA6E300A109A5 /* beebemrcids.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC09979D2BBAA51300A109A5 /* beebemrcids.cpp */; };
+		DC0D30E32BC12C8E00AFEF01 /* Main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996F72BBA0C9C00A109A5 /* Main.cpp */; };
+		DC1DBA202BB8CF8600AAB22F /* BeebEm-TapeControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC907EB32BB5BB7700523116 /* BeebEm-TapeControl.swift */; };
+		DC1DBA212BB8CF8B00AAB22F /* TapeControlViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1DBA162BB8CF0500AAB22F /* TapeControlViewController.swift */; };
+		DC1DBA222BB998B000AAB22F /* KeyboardMappingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1DBA132BB8CF0400AAB22F /* KeyboardMappingViewController.swift */; };
+		DC1DBA232BB9A2BB00AAB22F /* RomConfigViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1DBA152BB8CF0500AAB22F /* RomConfigViewController.swift */; };
+		DC1DBA252BB9A4C900AAB22F /* BreakoutBoxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1DBA142BB8CF0500AAB22F /* BreakoutBoxViewController.swift */; };
+		DC215BE62C13B4DD003E50A3 /* BeebWinDx-mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCACDAC22BC669B600CEF154 /* BeebWinDx-mac.cpp */; };
+		DC215BEA2C13C359003E50A3 /* AVIWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996F62BBA0C9C00A109A5 /* AVIWriter.cpp */; };
+		DC2C9D032BF9788700F2E613 /* RomConfigFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC2C9D002BF9788700F2E613 /* RomConfigFile.cpp */; };
+		DC2C9D042BF9788700F2E613 /* Rtc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC2C9D022BF9788700F2E613 /* Rtc.cpp */; };
+		DC2C9D072BF978AF00F2E613 /* UserPortRTC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC2C9D052BF978AE00F2E613 /* UserPortRTC.cpp */; };
+		DC33555F2BDF84C00014DC3A /* RomConfigDialog-mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC33555D2BDF84C00014DC3A /* RomConfigDialog-mac.cpp */; };
+		DC3355602BDF8D720014DC3A /* BeebEm-RomConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC907EB72BB5BB9A00523116 /* BeebEm-RomConfig.swift */; };
+		DC3FB54C2BE8E02300CF36A0 /* KeyMap-mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC3FB5492BE8DEDB00CF36A0 /* KeyMap-mac.cpp */; };
+		DC527AD12BC71C21000D7CCF /* BeebEm-Bridging-Video.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCACDAC52BC66F5600CEF154 /* BeebEm-Bridging-Video.cpp */; };
+		DC527AD22BC71CBC000D7CCF /* BeebEm-Bridging-Main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCACDAC82BC67D2500CEF154 /* BeebEm-Bridging-Main.cpp */; };
+		DC527BC82BC75107000D7CCF /* Teletext.fnt in Resources */ = {isa = PBXBuildFile; fileRef = DC527BC42BC75107000D7CCF /* Teletext.fnt */; };
+		DC527BC92BC75107000D7CCF /* RelayOn.snd in Resources */ = {isa = PBXBuildFile; fileRef = DC527BC52BC75107000D7CCF /* RelayOn.snd */; };
+		DC527BCA2BC75107000D7CCF /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = DC527BC62BC75107000D7CCF /* README.md */; };
+		DC527BCB2BC75107000D7CCF /* RelayOff.snd in Resources */ = {isa = PBXBuildFile; fileRef = DC527BC72BC75107000D7CCF /* RelayOff.snd */; };
+		DC527BD12BC75114000D7CCF /* DriveMotor.snd in Resources */ = {isa = PBXBuildFile; fileRef = DC527BCC2BC75114000D7CCF /* DriveMotor.snd */; };
+		DC527BD22BC75114000D7CCF /* HeadStep.snd in Resources */ = {isa = PBXBuildFile; fileRef = DC527BCD2BC75114000D7CCF /* HeadStep.snd */; };
+		DC527BD32BC75114000D7CCF /* HeadSeek.snd in Resources */ = {isa = PBXBuildFile; fileRef = DC527BCE2BC75114000D7CCF /* HeadSeek.snd */; };
+		DC527BD42BC75114000D7CCF /* HeadUnload.snd in Resources */ = {isa = PBXBuildFile; fileRef = DC527BCF2BC75114000D7CCF /* HeadUnload.snd */; };
+		DC527BD52BC75114000D7CCF /* HeadLoad.snd in Resources */ = {isa = PBXBuildFile; fileRef = DC527BD02BC75114000D7CCF /* HeadLoad.snd */; };
+		DC527BD72BC75122000D7CCF /* COPYRIGHT.txt in Resources */ = {isa = PBXBuildFile; fileRef = DC527BD62BC75122000D7CCF /* COPYRIGHT.txt */; };
+		DC527C1E2BC75165000D7CCF /* CHANGES.md in Resources */ = {isa = PBXBuildFile; fileRef = DC527C1D2BC75165000D7CCF /* CHANGES.md */; };
+		DC527C202BC75175000D7CCF /* README-SPROW.txt in Resources */ = {isa = PBXBuildFile; fileRef = DC527C1F2BC75175000D7CCF /* README-SPROW.txt */; };
+		DC527D122BC75316000D7CCF /* UserData in Resources */ = {isa = PBXBuildFile; fileRef = DC527D112BC75316000D7CCF /* UserData */; };
+		DC527D142BC7532E000D7CCF /* Help in Resources */ = {isa = PBXBuildFile; fileRef = DC527D132BC7532E000D7CCF /* Help */; };
+		DC527D172BC9110E000D7CCF /* BeebEm-Bridging-Keyboard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC527D152BC9110E000D7CCF /* BeebEm-Bridging-Keyboard.cpp */; };
+		DC69C9F52BF2BDB600610067 /* KeyboardLinksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC69C9F42BF2BDB600610067 /* KeyboardLinksViewController.swift */; };
+		DC69C9F72BF2BDC700610067 /* BeebEm-KeyboardLinks.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC69C9F62BF2BDC700610067 /* BeebEm-KeyboardLinks.swift */; };
+		DC69C9FA2BF2BDE100610067 /* KeyboardLinksDialog-mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC69C9F82BF2BDE100610067 /* KeyboardLinksDialog-mac.cpp */; };
+		DC69C9FD2BF2C87A00610067 /* BeebEm-Bridging-KeyboardLinks.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC69C9FB2BF2C87A00610067 /* BeebEm-Bridging-KeyboardLinks.cpp */; };
+		DC74E1CE2C29D88C006826EE /* FileType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC74E1CB2C29D88C006826EE /* FileType.cpp */; };
+		DC74E1CF2C29D88C006826EE /* Registry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC74E1CD2C29D88C006826EE /* Registry.cpp */; };
+		DC7E1E622BCE53E000494CBE /* BeebEm-Bridging-IO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC7E1E602BCE53E000494CBE /* BeebEm-Bridging-IO.cpp */; };
+		DC7E1E652BCE58D400494CBE /* FileDialog-mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC7E1E632BCE58D400494CBE /* FileDialog-mac.cpp */; };
+		DC7E1E682BCF229600494CBE /* ExportFileDialog-mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC7E1E662BCF229600494CBE /* ExportFileDialog-mac.cpp */; };
+		DC8450052BE2D7F1002015D9 /* UserKeyboardDialog-mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC8450032BE2D7F1002015D9 /* UserKeyboardDialog-mac.cpp */; };
+		DC8450062BE2DA04002015D9 /* BeebEm-KeyboardMapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC907EB52BB5BB9100523116 /* BeebEm-KeyboardMapping.swift */; };
+		DC8450092BE3FAF4002015D9 /* UserPortBreakoutBox-mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC8450072BE3FAF4002015D9 /* UserPortBreakoutBox-mac.cpp */; };
+		DC84500B2BE45931002015D9 /* BeebEm-BreakoutBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC84500A2BE45931002015D9 /* BeebEm-BreakoutBox.swift */; };
+		DC84500E2BE4616C002015D9 /* TapeControlDialog-mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC84500C2BE4616C002015D9 /* TapeControlDialog-mac.cpp */; };
+		DC904DA02BCF3C240069DCDF /* BeebEm-ExportFiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC907EB92BB5BC6200523116 /* BeebEm-ExportFiles.swift */; };
+		DC904DA22BCF3CD60069DCDF /* ExportDiscViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC904DA12BCF3CD60069DCDF /* ExportDiscViewController.swift */; };
+		DC907E9D2BB4DBCE00523116 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DC907E9C2BB4DBCE00523116 /* Assets.xcassets */; };
+		DC907EA02BB4DBCE00523116 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DC907E9F2BB4DBCE00523116 /* Preview Assets.xcassets */; };
+		DC907EAD2BB5B7F300523116 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DC907EAB2BB5B7F300523116 /* Main.storyboard */; };
+		DC907EB02BB5BA4000523116 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC907EAF2BB5BA4000523116 /* AppDelegate.swift */; };
+		DC907EB22BB5BAD300523116 /* BeebEm-Panels.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC907EB12BB5BAD300523116 /* BeebEm-Panels.swift */; };
+		DC907EC12BB5C1F100523116 /* BeebApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC907EC02BB5C1F100523116 /* BeebApplication.swift */; };
+		DC907EC32BB5C23C00523116 /* BeebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC907EC22BB5C23C00523116 /* BeebViewController.swift */; };
+		DC907EC62BB6D48600523116 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC907EC52BB6D48600523116 /* Renderer.swift */; };
+		DC907EC82BB6D55100523116 /* Bitmap.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC907EC72BB6D55100523116 /* Bitmap.swift */; };
+		DC907ECA2BB6D76F00523116 /* Colour.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC907EC92BB6D76F00523116 /* Colour.swift */; };
+		DC907ECC2BB70CE000523116 /* NSImage+Bitmap.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC907ECB2BB70CE000523116 /* NSImage+Bitmap.swift */; };
+		DC907ECE2BB70E7B00523116 /* BeebSKView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC907ECD2BB70E7B00523116 /* BeebSKView.swift */; };
+		DC90FFD12BEB5B820007EB37 /* Model.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC90FFD02BEB5B820007EB37 /* Model.cpp */; };
+		DC9427AA2BF037900012C4E4 /* SelectKeyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9427A92BF037900012C4E4 /* SelectKeyViewController.swift */; };
+		DC9427AC2BF038090012C4E4 /* BeebEm-SerialPort.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9427AB2BF038090012C4E4 /* BeebEm-SerialPort.swift */; };
+		DC9427AE2BF0386C0012C4E4 /* BeebEm-Teletext.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9427AD2BF0386C0012C4E4 /* BeebEm-Teletext.swift */; };
+		DC9427B02BF038B90012C4E4 /* TeletextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9427AF2BF038B90012C4E4 /* TeletextViewController.swift */; };
+		DC9427B22BF038F10012C4E4 /* SerialPortViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9427B12BF038F10012C4E4 /* SerialPortViewController.swift */; };
+		DC9427B52BF0FBAA0012C4E4 /* TeletextDialog-mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC9427B32BF0FBAA0012C4E4 /* TeletextDialog-mac.cpp */; };
+		DC9427B82BF0FBE90012C4E4 /* SerialPortDialog-mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC9427B62BF0FBE90012C4E4 /* SerialPortDialog-mac.cpp */; };
+		DC9B41302BC20C0500C3D9D8 /* IP232.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996E92BBA0C9B00A109A5 /* IP232.cpp */; };
+		DC9B41312BC2108600C3D9D8 /* Serial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC09970D2BBA0C9C00A109A5 /* Serial.cpp */; };
+		DC9B41322BC2145D00C3D9D8 /* Thread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996EB2BBA0C9B00A109A5 /* Thread.cpp */; };
+		DC9B41332BC2151900C3D9D8 /* Video.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0997032BBA0C9C00A109A5 /* Video.cpp */; };
+		DC9B41342BC215BD00C3D9D8 /* Econet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC09971E2BBA0C9C00A109A5 /* Econet.cpp */; };
+		DC9B41352BC2190500C3D9D8 /* BeebWin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996E22BBA0C9B00A109A5 /* BeebWin.cpp */; };
+		DC9B41372BC22AE700C3D9D8 /* BeebWinIo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC09971D2BBA0C9C00A109A5 /* BeebWinIo.cpp */; };
+		DC9B413A2BC22FE200C3D9D8 /* BeebWinPrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC09970B2BBA0C9C00A109A5 /* BeebWinPrefs.cpp */; };
+		DCACDAC12BC5DD2E00CEF154 /* apples.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCACDAC02BC5DD2E00CEF154 /* apples.cpp */; };
+		DCB3B2592BBB865E00F507F4 /* opus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0997BC2BBAA91E00A109A5 /* opus.cpp */; };
+		DCB4EBC72BD5BCD7002AEA8A /* BeebEm-Bridging-Roms.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCB4EBC52BD5BCD7002AEA8A /* BeebEm-Bridging-Roms.cpp */; };
+		DCB4EBCA2BD5BD02002AEA8A /* BeebEm-Bridging-BreakoutBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCB4EBC82BD5BD02002AEA8A /* BeebEm-Bridging-BreakoutBox.cpp */; };
+		DCB4EBCD2BD5BD22002AEA8A /* BeebEm-Bridging-UserKeyboard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCB4EBCB2BD5BD22002AEA8A /* BeebEm-Bridging-UserKeyboard.cpp */; };
+		DCB4EBD02BD5BD4E002AEA8A /* BeebEm-Bridging-TapeControl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCB4EBCE2BD5BD4E002AEA8A /* BeebEm-Bridging-TapeControl.cpp */; };
+		DCB4EBD32BD5BDC4002AEA8A /* BeebEm-Bridging-ExportFIles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCB4EBD12BD5BDC4002AEA8A /* BeebEm-Bridging-ExportFIles.cpp */; };
+		DCB4EBD62BDB26F1002AEA8A /* FolderSelectDialog-mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCB4EBD42BDB26F1002AEA8A /* FolderSelectDialog-mac.cpp */; };
+		DCB4EBD92BDB890F002AEA8A /* RenameFileDialog-mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCB4EBD72BDB890F002AEA8A /* RenameFileDialog-mac.cpp */; };
+		DCB4EBDC2BDB89E5002AEA8A /* Dialog-mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCB4EBDA2BDB89E5002AEA8A /* Dialog-mac.cpp */; };
+		DCBACC552C1591D1005F2079 /* BeebEm.rc in Resources */ = {isa = PBXBuildFile; fileRef = DCBACC532C1591D1005F2079 /* BeebEm.rc */; };
+		DCC91DB92C1AE5D500B751D5 /* BeebWin-mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCC91DB82C1AE5D500B751D5 /* BeebWin-mac.cpp */; };
+		DCCE05BE2C11DD6300CAAD24 /* AppleSoundStreamer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCCE05BC2C11DD6300CAAD24 /* AppleSoundStreamer.cpp */; };
+		DCD283F22BE6E17100ABD9F8 /* SelectKeyDialog-mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCD283F02BE6E17100ABD9F8 /* SelectKeyDialog-mac.cpp */; };
+		DCD283FA2BE8427900ABD9F8 /* BeebWinSpeech-mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCD283F92BE8427900ABD9F8 /* BeebWinSpeech-mac.cpp */; };
+		DCD283FD2BE8C8DA00ABD9F8 /* Debug-mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCD283FB2BE8C8DA00ABD9F8 /* Debug-mac.cpp */; };
+		DCD283FF2BE8D17400ABD9F8 /* BeebEm-Debug.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCD283FE2BE8D17400ABD9F8 /* BeebEm-Debug.swift */; };
+		DCD284022BE8D22C00ABD9F8 /* DebuggerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCD284012BE8D22C00ABD9F8 /* DebuggerViewController.swift */; };
+		DCD284052BE8D2D400ABD9F8 /* BeebEm-Debugger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DCD284032BE8D2D400ABD9F8 /* BeebEm-Debugger.cpp */; };
+		DCDC73062BBE043A00D83402 /* Acorn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0997AF2BBAA91E00A109A5 /* Acorn.cpp */; };
+		DCDC73072BBE043D00D83402 /* Watford.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0997B72BBAA91E00A109A5 /* Watford.cpp */; };
+		DCDC73092BBE108600D83402 /* Bcd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996FE2BBA0C9C00A109A5 /* Bcd.cpp */; };
+		DCDC730B2BBE118B00D83402 /* Preferences.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC09970E2BBA0C9C00A109A5 /* Preferences.cpp */; };
+		DCDC730E2BBE13BF00D83402 /* DiscInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996F32BBA0C9C00A109A5 /* DiscInfo.cpp */; };
+		DCDC730F2BBE13EE00D83402 /* FileUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996E62BBA0C9B00A109A5 /* FileUtils.cpp */; };
+		DCDC73102BBE188400D83402 /* Uef.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996F02BBA0C9B00A109A5 /* Uef.cpp */; };
+		DCDC73132BBE192200D83402 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = DCDC73122BBE192200D83402 /* libz.tbd */; };
+		DCDC73142BBE198A00D83402 /* TapeMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0997182BBA0C9C00A109A5 /* TapeMap.cpp */; };
+		DCDC73152BBE1A9500D83402 /* StringUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0997222BBA0C9C00A109A5 /* StringUtils.cpp */; };
+		DCDC73162BBE1AC600D83402 /* RingBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996F12BBA0C9B00A109A5 /* RingBuffer.cpp */; };
+		DCDC731E2BBE215F00D83402 /* IC32Latch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996E42BBA0C9B00A109A5 /* IC32Latch.cpp */; };
+		DCDC73282BBF574100D83402 /* 6502core.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996E72BBA0C9B00A109A5 /* 6502core.cpp */; };
+		DCDC73292BBF58DC00D83402 /* Arm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC09971B2BBA0C9C00A109A5 /* Arm.cpp */; };
+		DCDC732A2BBF5AF400D83402 /* ArmDisassembler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996FD2BBA0C9C00A109A5 /* ArmDisassembler.cpp */; };
+		DCDC732B2BBF5B7F00D83402 /* armemu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC09972B2BBA0CBB00A109A5 /* armemu.cpp */; };
+		DCDC732C2BBF5E0600D83402 /* armsupp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0997302BBA0CBB00A109A5 /* armsupp.cpp */; };
+		DCDC732D2BBF5E1500D83402 /* thumbemu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0997282BBA0CBB00A109A5 /* thumbemu.cpp */; };
+		DCDC732E2BBF5E1B00D83402 /* arminit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0997312BBA0CBB00A109A5 /* arminit.cpp */; };
+		DCDC732F2BBF5EF600D83402 /* AtoDConv.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0997212BBA0C9C00A109A5 /* AtoDConv.cpp */; };
+		DCDC73302BBF5F2200D83402 /* BeebMem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0997012BBA0C9C00A109A5 /* BeebMem.cpp */; };
+		DCDC73312BBF615E00D83402 /* Csw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996E32BBA0C9B00A109A5 /* Csw.cpp */; };
+		DCDC73332BBFE79800D83402 /* Disc1770.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC09970A2BBA0C9C00A109A5 /* Disc1770.cpp */; };
+		DCDC73342BBFE87C00D83402 /* Disc8271.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC09970F2BBA0C9C00A109A5 /* Disc8271.cpp */; };
+		DCDC73352BC0A73600D83402 /* DiscEdit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0997142BBA0C9C00A109A5 /* DiscEdit.cpp */; };
+		DCDC73372BC0A93800D83402 /* Ext1770.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC09970C2BBA0C9C00A109A5 /* Ext1770.cpp */; };
+		DCDC73382BC0A9F800D83402 /* Ide.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0997112BBA0C9C00A109A5 /* Ide.cpp */; };
+		DCDC733C2BC0ACE200D83402 /* Log.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996DF2BBA0C9B00A109A5 /* Log.cpp */; };
+		DCDC733D2BC0AD1600D83402 /* Master512CoPro.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996F82BBA0C9C00A109A5 /* Master512CoPro.cpp */; };
+		DCDC733E2BC0AED800D83402 /* Music5000.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0997152BBA0C9C00A109A5 /* Music5000.cpp */; };
+		DCDC733F2BC0AFBC00D83402 /* PALRom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996F52BBA0C9C00A109A5 /* PALRom.cpp */; };
+		DCDC73402BC0AFF100D83402 /* Sasi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996EC2BBA0C9B00A109A5 /* Sasi.cpp */; };
+		DCDC73412BC0B0E600D83402 /* Scsi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996EA2BBA0C9B00A109A5 /* Scsi.cpp */; };
+		DCDC73422BC0B12700D83402 /* Sound.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996FA2BBA0C9C00A109A5 /* Sound.cpp */; };
+		DCDC73442BC0B43400D83402 /* SoundStreamer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0997122BBA0C9C00A109A5 /* SoundStreamer.cpp */; };
+		DCDC73452BC0B4A700D83402 /* SprowCoPro.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0997052BBA0C9C00A109A5 /* SprowCoPro.cpp */; };
+		DCDC73462BC0B5B500D83402 /* SysVia.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0997062BBA0C9C00A109A5 /* SysVia.cpp */; };
+		DCDC73472BC0B5C200D83402 /* Teletext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996FB2BBA0C9C00A109A5 /* Teletext.cpp */; };
+		DCDC73482BC0B6CC00D83402 /* TouchScreen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996FF2BBA0C9C00A109A5 /* TouchScreen.cpp */; };
+		DCDC734A2BC0B75800D83402 /* Tube.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0997192BBA0C9C00A109A5 /* Tube.cpp */; };
+		DCDC734B2BC0B78E00D83402 /* UefState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996E12BBA0C9B00A109A5 /* UefState.cpp */; };
+		DCDC734D2BC0B80C00D83402 /* UserVia.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996EE2BBA0C9B00A109A5 /* UserVia.cpp */; };
+		DCDC734E2BC0B85F00D83402 /* Via.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC09971A2BBA0C9C00A109A5 /* Via.cpp */; };
+		DCDC734F2BC0B8C500D83402 /* Z80.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0997082BBA0C9C00A109A5 /* Z80.cpp */; };
+		DCDC73502BC0B8D400D83402 /* Z80dis.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0997042BBA0C9C00A109A5 /* Z80dis.cpp */; };
+		DCDC73512BC0B99700D83402 /* Z80Support.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996EF2BBA0C9B00A109A5 /* Z80Support.cpp */; };
+		DCE94C152BD3109500A5C12A /* BeebEm-Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE94C142BD3109500A5C12A /* BeebEm-Menu.swift */; };
+		DCE94C172BD310C600A5C12A /* BeebEm-Sound.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE94C162BD310C600A5C12A /* BeebEm-Sound.swift */; };
+		DCE94C192BD3117200A5C12A /* BeebEm-Files.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE94C182BD3117200A5C12A /* BeebEm-Files.swift */; };
+		DCE94C1B2BD311D800A5C12A /* BeebEm-Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE94C1A2BD311D800A5C12A /* BeebEm-Bundle.swift */; };
+		DCE94C1D2BD312B100A5C12A /* BeebEm-Beeb.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE94C1C2BD312B100A5C12A /* BeebEm-Beeb.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		DC0996DD2BBA0C9B00A109A5 /* UserPortBreakoutBox.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = UserPortBreakoutBox.cpp; path = ../../../Src/UserPortBreakoutBox.cpp; sourceTree = "<group>"; };
+		DC0996DE2BBA0C9B00A109A5 /* UserKeyboardDialog.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = UserKeyboardDialog.cpp; path = ../../../Src/UserKeyboardDialog.cpp; sourceTree = "<group>"; };
+		DC0996DF2BBA0C9B00A109A5 /* Log.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Log.cpp; path = ../../../Src/Log.cpp; sourceTree = "<group>"; };
+		DC0996E02BBA0C9B00A109A5 /* SerialPortDialog.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = SerialPortDialog.cpp; path = ../../../Src/SerialPortDialog.cpp; sourceTree = "<group>"; };
+		DC0996E12BBA0C9B00A109A5 /* UefState.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = UefState.cpp; path = ../../../Src/UefState.cpp; sourceTree = "<group>"; };
+		DC0996E22BBA0C9B00A109A5 /* BeebWin.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = BeebWin.cpp; path = ../../../Src/BeebWin.cpp; sourceTree = "<group>"; };
+		DC0996E32BBA0C9B00A109A5 /* Csw.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Csw.cpp; path = ../../../Src/Csw.cpp; sourceTree = "<group>"; };
+		DC0996E42BBA0C9B00A109A5 /* IC32Latch.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = IC32Latch.cpp; path = ../../../Src/IC32Latch.cpp; sourceTree = "<group>"; };
+		DC0996E52BBA0C9B00A109A5 /* RomConfigDialog.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = RomConfigDialog.cpp; path = ../../../Src/RomConfigDialog.cpp; sourceTree = "<group>"; };
+		DC0996E62BBA0C9B00A109A5 /* FileUtils.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = FileUtils.cpp; path = ../../../Src/FileUtils.cpp; sourceTree = "<group>"; };
+		DC0996E72BBA0C9B00A109A5 /* 6502core.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = 6502core.cpp; path = ../../../Src/6502core.cpp; sourceTree = "<group>"; };
+		DC0996E82BBA0C9B00A109A5 /* Debug.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Debug.cpp; path = ../../../Src/Debug.cpp; sourceTree = "<group>"; };
+		DC0996E92BBA0C9B00A109A5 /* IP232.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = IP232.cpp; path = ../../../Src/IP232.cpp; sourceTree = "<group>"; };
+		DC0996EA2BBA0C9B00A109A5 /* Scsi.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Scsi.cpp; path = ../../../Src/Scsi.cpp; sourceTree = "<group>"; };
+		DC0996EB2BBA0C9B00A109A5 /* Thread.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Thread.cpp; path = ../../../Src/Thread.cpp; sourceTree = "<group>"; };
+		DC0996EC2BBA0C9B00A109A5 /* Sasi.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Sasi.cpp; path = ../../../Src/Sasi.cpp; sourceTree = "<group>"; };
+		DC0996ED2BBA0C9B00A109A5 /* DebugTrace.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DebugTrace.cpp; path = ../../../Src/DebugTrace.cpp; sourceTree = "<group>"; };
+		DC0996EE2BBA0C9B00A109A5 /* UserVia.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = UserVia.cpp; path = ../../../Src/UserVia.cpp; sourceTree = "<group>"; };
+		DC0996EF2BBA0C9B00A109A5 /* Z80Support.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Z80Support.cpp; path = ../../../Src/Z80Support.cpp; sourceTree = "<group>"; };
+		DC0996F02BBA0C9B00A109A5 /* Uef.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Uef.cpp; path = ../../../Src/Uef.cpp; sourceTree = "<group>"; };
+		DC0996F12BBA0C9B00A109A5 /* RingBuffer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = RingBuffer.cpp; path = ../../../Src/RingBuffer.cpp; sourceTree = "<group>"; };
+		DC0996F22BBA0C9C00A109A5 /* BeebWinDx.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = BeebWinDx.cpp; path = ../../../Src/BeebWinDx.cpp; sourceTree = "<group>"; };
+		DC0996F32BBA0C9C00A109A5 /* DiscInfo.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DiscInfo.cpp; path = ../../../Src/DiscInfo.cpp; sourceTree = "<group>"; };
+		DC0996F42BBA0C9C00A109A5 /* BeebWinSpeech.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = BeebWinSpeech.cpp; path = ../../../Src/BeebWinSpeech.cpp; sourceTree = "<group>"; };
+		DC0996F52BBA0C9C00A109A5 /* PALRom.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = PALRom.cpp; path = ../../../Src/PALRom.cpp; sourceTree = "<group>"; };
+		DC0996F62BBA0C9C00A109A5 /* AVIWriter.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = AVIWriter.cpp; path = ../../../Src/AVIWriter.cpp; sourceTree = "<group>"; };
+		DC0996F72BBA0C9C00A109A5 /* Main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Main.cpp; path = ../../../Src/Main.cpp; sourceTree = "<group>"; };
+		DC0996F82BBA0C9C00A109A5 /* Master512CoPro.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Master512CoPro.cpp; path = ../../../Src/Master512CoPro.cpp; sourceTree = "<group>"; };
+		DC0996F92BBA0C9C00A109A5 /* FileDialog.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = FileDialog.cpp; path = ../../../Src/FileDialog.cpp; sourceTree = "<group>"; };
+		DC0996FA2BBA0C9C00A109A5 /* Sound.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Sound.cpp; path = ../../../Src/Sound.cpp; sourceTree = "<group>"; };
+		DC0996FB2BBA0C9C00A109A5 /* Teletext.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Teletext.cpp; path = ../../../Src/Teletext.cpp; sourceTree = "<group>"; };
+		DC0996FC2BBA0C9C00A109A5 /* KeyboardLinksDialog.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = KeyboardLinksDialog.cpp; path = ../../../Src/KeyboardLinksDialog.cpp; sourceTree = "<group>"; };
+		DC0996FD2BBA0C9C00A109A5 /* ArmDisassembler.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ArmDisassembler.cpp; path = ../../../Src/ArmDisassembler.cpp; sourceTree = "<group>"; };
+		DC0996FE2BBA0C9C00A109A5 /* Bcd.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Bcd.cpp; path = ../../../Src/Bcd.cpp; sourceTree = "<group>"; };
+		DC0996FF2BBA0C9C00A109A5 /* TouchScreen.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = TouchScreen.cpp; path = ../../../Src/TouchScreen.cpp; sourceTree = "<group>"; };
+		DC0997002BBA0C9C00A109A5 /* FolderSelectDialog.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = FolderSelectDialog.cpp; path = ../../../Src/FolderSelectDialog.cpp; sourceTree = "<group>"; };
+		DC0997012BBA0C9C00A109A5 /* BeebMem.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = BeebMem.cpp; path = ../../../Src/BeebMem.cpp; sourceTree = "<group>"; };
+		DC0997022BBA0C9C00A109A5 /* AboutDialog.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = AboutDialog.cpp; path = ../../../Src/AboutDialog.cpp; sourceTree = "<group>"; };
+		DC0997032BBA0C9C00A109A5 /* Video.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Video.cpp; path = ../../../Src/Video.cpp; sourceTree = "<group>"; };
+		DC0997042BBA0C9C00A109A5 /* Z80dis.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Z80dis.cpp; path = ../../../Src/Z80dis.cpp; sourceTree = "<group>"; };
+		DC0997052BBA0C9C00A109A5 /* SprowCoPro.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = SprowCoPro.cpp; path = ../../../Src/SprowCoPro.cpp; sourceTree = "<group>"; };
+		DC0997062BBA0C9C00A109A5 /* SysVia.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = SysVia.cpp; path = ../../../Src/SysVia.cpp; sourceTree = "<group>"; };
+		DC0997072BBA0C9C00A109A5 /* ListView.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ListView.cpp; path = ../../../Src/ListView.cpp; sourceTree = "<group>"; };
+		DC0997082BBA0C9C00A109A5 /* Z80.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Z80.cpp; path = ../../../Src/Z80.cpp; sourceTree = "<group>"; };
+		DC0997092BBA0C9C00A109A5 /* RenameFileDialog.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = RenameFileDialog.cpp; path = ../../../Src/RenameFileDialog.cpp; sourceTree = "<group>"; };
+		DC09970A2BBA0C9C00A109A5 /* Disc1770.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Disc1770.cpp; path = ../../../Src/Disc1770.cpp; sourceTree = "<group>"; };
+		DC09970B2BBA0C9C00A109A5 /* BeebWinPrefs.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = BeebWinPrefs.cpp; path = ../../../Src/BeebWinPrefs.cpp; sourceTree = "<group>"; };
+		DC09970C2BBA0C9C00A109A5 /* Ext1770.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Ext1770.cpp; path = ../../../Src/Ext1770.cpp; sourceTree = "<group>"; };
+		DC09970D2BBA0C9C00A109A5 /* Serial.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Serial.cpp; path = ../../../Src/Serial.cpp; sourceTree = "<group>"; };
+		DC09970E2BBA0C9C00A109A5 /* Preferences.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Preferences.cpp; path = ../../../Src/Preferences.cpp; sourceTree = "<group>"; };
+		DC09970F2BBA0C9C00A109A5 /* Disc8271.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Disc8271.cpp; path = ../../../Src/Disc8271.cpp; sourceTree = "<group>"; };
+		DC0997102BBA0C9C00A109A5 /* ExportFileDialog.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ExportFileDialog.cpp; path = ../../../Src/ExportFileDialog.cpp; sourceTree = "<group>"; };
+		DC0997112BBA0C9C00A109A5 /* Ide.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Ide.cpp; path = ../../../Src/Ide.cpp; sourceTree = "<group>"; };
+		DC0997122BBA0C9C00A109A5 /* SoundStreamer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = SoundStreamer.cpp; path = ../../../Src/SoundStreamer.cpp; sourceTree = "<group>"; };
+		DC0997132BBA0C9C00A109A5 /* KeyMap.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = KeyMap.cpp; path = ../../../Src/KeyMap.cpp; sourceTree = "<group>"; };
+		DC0997142BBA0C9C00A109A5 /* DiscEdit.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DiscEdit.cpp; path = ../../../Src/DiscEdit.cpp; sourceTree = "<group>"; };
+		DC0997152BBA0C9C00A109A5 /* Music5000.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Music5000.cpp; path = ../../../Src/Music5000.cpp; sourceTree = "<group>"; };
+		DC0997162BBA0C9C00A109A5 /* DirectSoundStreamer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DirectSoundStreamer.cpp; path = ../../../Src/DirectSoundStreamer.cpp; sourceTree = "<group>"; };
+		DC0997172BBA0C9C00A109A5 /* TapeControlDialog.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = TapeControlDialog.cpp; path = ../../../Src/TapeControlDialog.cpp; sourceTree = "<group>"; };
+		DC0997182BBA0C9C00A109A5 /* TapeMap.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = TapeMap.cpp; path = ../../../Src/TapeMap.cpp; sourceTree = "<group>"; };
+		DC0997192BBA0C9C00A109A5 /* Tube.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Tube.cpp; path = ../../../Src/Tube.cpp; sourceTree = "<group>"; };
+		DC09971A2BBA0C9C00A109A5 /* Via.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Via.cpp; path = ../../../Src/Via.cpp; sourceTree = "<group>"; };
+		DC09971B2BBA0C9C00A109A5 /* Arm.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Arm.cpp; path = ../../../Src/Arm.cpp; sourceTree = "<group>"; };
+		DC09971C2BBA0C9C00A109A5 /* Dialog.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Dialog.cpp; path = ../../../Src/Dialog.cpp; sourceTree = "<group>"; };
+		DC09971D2BBA0C9C00A109A5 /* BeebWinIo.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = BeebWinIo.cpp; path = ../../../Src/BeebWinIo.cpp; sourceTree = "<group>"; };
+		DC09971E2BBA0C9C00A109A5 /* Econet.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Econet.cpp; path = ../../../Src/Econet.cpp; sourceTree = "<group>"; };
+		DC09971F2BBA0C9C00A109A5 /* XAudio2Streamer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = XAudio2Streamer.cpp; path = ../../../Src/XAudio2Streamer.cpp; sourceTree = "<group>"; };
+		DC0997202BBA0C9C00A109A5 /* SelectKeyDialog.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = SelectKeyDialog.cpp; path = ../../../Src/SelectKeyDialog.cpp; sourceTree = "<group>"; };
+		DC0997212BBA0C9C00A109A5 /* AtoDConv.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = AtoDConv.cpp; path = ../../../Src/AtoDConv.cpp; sourceTree = "<group>"; };
+		DC0997222BBA0C9C00A109A5 /* StringUtils.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = StringUtils.cpp; path = ../../../Src/StringUtils.cpp; sourceTree = "<group>"; };
+		DC0997232BBA0C9C00A109A5 /* Speech.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Speech.cpp; path = ../../../Src/Speech.cpp; sourceTree = "<group>"; };
+		DC0997282BBA0CBB00A109A5 /* thumbemu.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = thumbemu.cpp; sourceTree = "<group>"; };
+		DC09972B2BBA0CBB00A109A5 /* armemu.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = armemu.cpp; sourceTree = "<group>"; };
+		DC09972C2BBA0CBB00A109A5 /* armdis.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = armdis.cpp; sourceTree = "<group>"; };
+		DC0997302BBA0CBB00A109A5 /* armsupp.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = armsupp.cpp; sourceTree = "<group>"; };
+		DC0997312BBA0CBB00A109A5 /* arminit.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = arminit.cpp; sourceTree = "<group>"; };
+		DC0997352BBA0CD400A109A5 /* armos.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = armos.h; sourceTree = "<group>"; };
+		DC0997362BBA0CD400A109A5 /* iwmmxt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iwmmxt.h; sourceTree = "<group>"; };
+		DC0997382BBA0CD400A109A5 /* armdis.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = armdis.h; sourceTree = "<group>"; };
+		DC0997392BBA0CD400A109A5 /* ansidecl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ansidecl.h; sourceTree = "<group>"; };
+		DC09973C2BBA0CD400A109A5 /* armopts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = armopts.h; sourceTree = "<group>"; };
+		DC09973D2BBA0CD400A109A5 /* dbg_rdi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dbg_rdi.h; sourceTree = "<group>"; };
+		DC09973E2BBA0CD400A109A5 /* armdefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = armdefs.h; sourceTree = "<group>"; };
+		DC0997412BBA0CD400A109A5 /* armemu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = armemu.h; sourceTree = "<group>"; };
+		DC0997482BBA0E2500A109A5 /* StringUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = StringUtils.h; path = ../../../Src/StringUtils.h; sourceTree = "<group>"; };
+		DC0997492BBA0E2500A109A5 /* DiscInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DiscInfo.h; path = ../../../Src/DiscInfo.h; sourceTree = "<group>"; };
+		DC09974A2BBA0E2500A109A5 /* ML675001.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ML675001.h; path = ../../../Src/ML675001.h; sourceTree = "<group>"; };
+		DC09974B2BBA0E2500A109A5 /* KeyboardLinksDialog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = KeyboardLinksDialog.h; path = ../../../Src/KeyboardLinksDialog.h; sourceTree = "<group>"; };
+		DC09974C2BBA0E2500A109A5 /* TapeMap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TapeMap.h; path = ../../../Src/TapeMap.h; sourceTree = "<group>"; };
+		DC09974D2BBA0E2500A109A5 /* IP232.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = IP232.h; path = ../../../Src/IP232.h; sourceTree = "<group>"; };
+		DC09974E2BBA0E2500A109A5 /* TapeControlDialog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TapeControlDialog.h; path = ../../../Src/TapeControlDialog.h; sourceTree = "<group>"; };
+		DC09974F2BBA0E2500A109A5 /* PALRom.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PALRom.h; path = ../../../Src/PALRom.h; sourceTree = "<group>"; };
+		DC0997502BBA0E2500A109A5 /* TouchScreen.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TouchScreen.h; path = ../../../Src/TouchScreen.h; sourceTree = "<group>"; };
+		DC0997512BBA0E2500A109A5 /* ArmDisassembler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ArmDisassembler.h; path = ../../../Src/ArmDisassembler.h; sourceTree = "<group>"; };
+		DC0997522BBA0E2500A109A5 /* Csw.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Csw.h; path = ../../../Src/Csw.h; sourceTree = "<group>"; };
+		DC0997532BBA0E2500A109A5 /* FileDialog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FileDialog.h; path = ../../../Src/FileDialog.h; sourceTree = "<group>"; };
+		DC0997542BBA0E2500A109A5 /* FileUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FileUtils.h; path = ../../../Src/FileUtils.h; sourceTree = "<group>"; };
+		DC0997552BBA0E2500A109A5 /* BeebMem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = BeebMem.h; path = ../../../Src/BeebMem.h; sourceTree = "<group>"; };
+		DC0997562BBA0E2500A109A5 /* Bcd.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Bcd.h; path = ../../../Src/Bcd.h; sourceTree = "<group>"; };
+		DC0997572BBA0E2500A109A5 /* Sasi.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Sasi.h; path = ../../../Src/Sasi.h; sourceTree = "<group>"; };
+		DC0997582BBA0E2500A109A5 /* 6502core.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = 6502core.h; path = ../../../Src/6502core.h; sourceTree = "<group>"; };
+		DC0997592BBA0E2500A109A5 /* SelectKeyDialog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SelectKeyDialog.h; path = ../../../Src/SelectKeyDialog.h; sourceTree = "<group>"; };
+		DC09975A2BBA0E2500A109A5 /* Video.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Video.h; path = ../../../Src/Video.h; sourceTree = "<group>"; };
+		DC09975B2BBA0E2500A109A5 /* FolderSelectDialog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FolderSelectDialog.h; path = ../../../Src/FolderSelectDialog.h; sourceTree = "<group>"; };
+		DC09975C2BBA0E2500A109A5 /* ARMulator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ARMulator.h; path = ../../../Src/ARMulator.h; sourceTree = "<group>"; };
+		DC09975D2BBA0E2600A109A5 /* AboutDialog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AboutDialog.h; path = ../../../Src/AboutDialog.h; sourceTree = "<group>"; };
+		DC09975E2BBA0E2600A109A5 /* Serial.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Serial.h; path = ../../../Src/Serial.h; sourceTree = "<group>"; };
+		DC09975F2BBA0E2600A109A5 /* Econet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Econet.h; path = ../../../Src/Econet.h; sourceTree = "<group>"; };
+		DC0997602BBA0E2600A109A5 /* Model.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Model.h; path = ../../../Src/Model.h; sourceTree = "<group>"; };
+		DC0997612BBA0E2600A109A5 /* SoundStreamer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SoundStreamer.h; path = ../../../Src/SoundStreamer.h; sourceTree = "<group>"; };
+		DC0997622BBA0E2600A109A5 /* Speech.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Speech.h; path = ../../../Src/Speech.h; sourceTree = "<group>"; };
+		DC0997632BBA0E2600A109A5 /* DirectSoundStreamer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DirectSoundStreamer.h; path = ../../../Src/DirectSoundStreamer.h; sourceTree = "<group>"; };
+		DC0997642BBA0E2600A109A5 /* Via.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Via.h; path = ../../../Src/Via.h; sourceTree = "<group>"; };
+		DC0997652BBA0E2600A109A5 /* Music5000.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Music5000.h; path = ../../../Src/Music5000.h; sourceTree = "<group>"; };
+		DC0997662BBA0E2600A109A5 /* Ide.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Ide.h; path = ../../../Src/Ide.h; sourceTree = "<group>"; };
+		DC0997672BBA0E2600A109A5 /* Master512CoPro.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Master512CoPro.h; path = ../../../Src/Master512CoPro.h; sourceTree = "<group>"; };
+		DC0997682BBA0E2600A109A5 /* SysVia.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SysVia.h; path = ../../../Src/SysVia.h; sourceTree = "<group>"; };
+		DC0997692BBA0E2600A109A5 /* Disc8271.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Disc8271.h; path = ../../../Src/Disc8271.h; sourceTree = "<group>"; };
+		DC09976A2BBA0E2600A109A5 /* Main.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Main.h; path = ../../../Src/Main.h; sourceTree = "<group>"; };
+		DC09976B2BBA0E2600A109A5 /* KeyMap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = KeyMap.h; path = ../../../Src/KeyMap.h; sourceTree = "<group>"; };
+		DC09976C2BBA0E2600A109A5 /* Thread.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Thread.h; path = ../../../Src/Thread.h; sourceTree = "<group>"; };
+		DC09976D2BBA0E2600A109A5 /* AtoDConv.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AtoDConv.h; path = ../../../Src/AtoDConv.h; sourceTree = "<group>"; };
+		DC09976E2BBA0E2600A109A5 /* DebugTrace.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DebugTrace.h; path = ../../../Src/DebugTrace.h; sourceTree = "<group>"; };
+		DC09976F2BBA0E2600A109A5 /* ListView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ListView.h; path = ../../../Src/ListView.h; sourceTree = "<group>"; };
+		DC0997702BBA0E2600A109A5 /* RomConfigDialog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = RomConfigDialog.h; path = ../../../Src/RomConfigDialog.h; sourceTree = "<group>"; };
+		DC0997712BBA0E2600A109A5 /* Tube.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Tube.h; path = ../../../Src/Tube.h; sourceTree = "<group>"; };
+		DC0997722BBA0E2600A109A5 /* BeebWin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = BeebWin.h; path = ../../../Src/BeebWin.h; sourceTree = "<group>"; };
+		DC0997732BBA0E2600A109A5 /* Ext1770.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Ext1770.h; path = ../../../Src/Ext1770.h; sourceTree = "<group>"; };
+		DC0997742BBA0E2600A109A5 /* Port.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Port.h; path = ../../../Src/Port.h; sourceTree = "<group>"; };
+		DC0997752BBA0E2600A109A5 /* ExportFileDialog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ExportFileDialog.h; path = ../../../Src/ExportFileDialog.h; sourceTree = "<group>"; };
+		DC0997762BBA0E2600A109A5 /* AVIWriter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AVIWriter.h; path = ../../../Src/AVIWriter.h; sourceTree = "<group>"; };
+		DC0997772BBA0E2600A109A5 /* DiscEdit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DiscEdit.h; path = ../../../Src/DiscEdit.h; sourceTree = "<group>"; };
+		DC0997782BBA0E2600A109A5 /* Z80mem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Z80mem.h; path = ../../../Src/Z80mem.h; sourceTree = "<group>"; };
+		DC0997792BBA0E2600A109A5 /* SerialPortDialog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SerialPortDialog.h; path = ../../../Src/SerialPortDialog.h; sourceTree = "<group>"; };
+		DC09977A2BBA0E2600A109A5 /* Arm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Arm.h; path = ../../../Src/Arm.h; sourceTree = "<group>"; };
+		DC09977B2BBA0E2600A109A5 /* RenameFileDialog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = RenameFileDialog.h; path = ../../../Src/RenameFileDialog.h; sourceTree = "<group>"; };
+		DC09977C2BBA0E2600A109A5 /* DiscType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DiscType.h; path = ../../../Src/DiscType.h; sourceTree = "<group>"; };
+		DC09977D2BBA0E2600A109A5 /* Scsi.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Scsi.h; path = ../../../Src/Scsi.h; sourceTree = "<group>"; };
+		DC09977E2BBA0E2600A109A5 /* Debug.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Debug.h; path = ../../../Src/Debug.h; sourceTree = "<group>"; };
+		DC09977F2BBA0E2600A109A5 /* Log.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Log.h; path = ../../../Src/Log.h; sourceTree = "<group>"; };
+		DC0997802BBA0E2600A109A5 /* Disc1770.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Disc1770.h; path = ../../../Src/Disc1770.h; sourceTree = "<group>"; };
+		DC0997812BBA0E2600A109A5 /* IC32Latch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = IC32Latch.h; path = ../../../Src/IC32Latch.h; sourceTree = "<group>"; };
+		DC0997822BBA0E2600A109A5 /* Resource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Resource.h; path = ../../../Src/Resource.h; sourceTree = "<group>"; };
+		DC0997832BBA0E2600A109A5 /* Sound.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Sound.h; path = ../../../Src/Sound.h; sourceTree = "<group>"; };
+		DC0997842BBA0E2600A109A5 /* Teletext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Teletext.h; path = ../../../Src/Teletext.h; sourceTree = "<group>"; };
+		DC0997852BBA0E2600A109A5 /* Uef.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Uef.h; path = ../../../Src/Uef.h; sourceTree = "<group>"; };
+		DC0997862BBA0E2600A109A5 /* Preferences.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Preferences.h; path = ../../../Src/Preferences.h; sourceTree = "<group>"; };
+		DC0997872BBA0E2600A109A5 /* UserKeyboardDialog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = UserKeyboardDialog.h; path = ../../../Src/UserKeyboardDialog.h; sourceTree = "<group>"; };
+		DC0997882BBA0E2700A109A5 /* TarmacGlobals.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TarmacGlobals.h; path = ../../../Src/TarmacGlobals.h; sourceTree = "<group>"; };
+		DC0997892BBA0E2700A109A5 /* XAudio2Streamer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = XAudio2Streamer.h; path = ../../../Src/XAudio2Streamer.h; sourceTree = "<group>"; };
+		DC09978A2BBA0E2700A109A5 /* RingBuffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = RingBuffer.h; path = ../../../Src/RingBuffer.h; sourceTree = "<group>"; };
+		DC09978B2BBA0E2700A109A5 /* SprowCoPro.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SprowCoPro.h; path = ../../../Src/SprowCoPro.h; sourceTree = "<group>"; };
+		DC09978C2BBA0E2700A109A5 /* Dialog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Dialog.h; path = ../../../Src/Dialog.h; sourceTree = "<group>"; };
+		DC09978D2BBA0E2700A109A5 /* UefState.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = UefState.h; path = ../../../Src/UefState.h; sourceTree = "<group>"; };
+		DC09978E2BBA0E2700A109A5 /* UserPortBreakoutBox.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = UserPortBreakoutBox.h; path = ../../../Src/UserPortBreakoutBox.h; sourceTree = "<group>"; };
+		DC09978F2BBA0E2700A109A5 /* Messages.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Messages.h; path = ../../../Src/Messages.h; sourceTree = "<group>"; };
+		DC0997902BBA0E2700A109A5 /* UserVia.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = UserVia.h; path = ../../../Src/UserVia.h; sourceTree = "<group>"; };
+		DC0997912BBA0E2700A109A5 /* Version.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Version.h; path = ../../../Src/Version.h; sourceTree = "<group>"; };
+		DC0997922BBA0E2700A109A5 /* Z80.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Z80.h; path = ../../../Src/Z80.h; sourceTree = "<group>"; };
+		DC0997992BBAA51200A109A5 /* beebemrcids.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = beebemrcids.h; sourceTree = "<group>"; };
+		DC09979D2BBAA51300A109A5 /* beebemrcids.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = beebemrcids.cpp; sourceTree = "<group>"; };
+		DC0997A52BBAA5D500A109A5 /* windows.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = windows.h; path = Src/windows_stubs/windows.h; sourceTree = SOURCE_ROOT; };
+		DC0997A72BBAA68600A109A5 /* d3dx9.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = d3dx9.h; sourceTree = "<group>"; };
+		DC0997A82BBAA6A300A109A5 /* ddraw.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ddraw.h; sourceTree = "<group>"; };
+		DC0997A92BBAA6C200A109A5 /* sapi.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sapi.h; sourceTree = "<group>"; };
+		DC0997AB2BBAA8D100A109A5 /* armmem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = armmem.c; sourceTree = "<group>"; };
+		DC0997AF2BBAA91E00A109A5 /* Acorn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Acorn.cpp; sourceTree = "<group>"; };
+		DC0997B12BBAA91E00A109A5 /* Acorn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Acorn.h; sourceTree = "<group>"; };
+		DC0997B62BBAA91E00A109A5 /* Watford.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Watford.h; sourceTree = "<group>"; };
+		DC0997B72BBAA91E00A109A5 /* Watford.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Watford.cpp; sourceTree = "<group>"; };
+		DC0997BA2BBAA91E00A109A5 /* opus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opus.h; sourceTree = "<group>"; };
+		DC0997BC2BBAA91E00A109A5 /* opus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = opus.cpp; sourceTree = "<group>"; };
+		DC1DBA132BB8CF0400AAB22F /* KeyboardMappingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyboardMappingViewController.swift; sourceTree = "<group>"; };
+		DC1DBA142BB8CF0500AAB22F /* BreakoutBoxViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BreakoutBoxViewController.swift; sourceTree = "<group>"; };
+		DC1DBA152BB8CF0500AAB22F /* RomConfigViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RomConfigViewController.swift; sourceTree = "<group>"; };
+		DC1DBA162BB8CF0500AAB22F /* TapeControlViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TapeControlViewController.swift; sourceTree = "<group>"; };
+		DC215BE72C13C27E003E50A3 /* Registry.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Registry.h; path = ../../../Src/Registry.h; sourceTree = "<group>"; };
+		DC2C9CFE2BF9444F00F2E613 /* process.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = process.h; sourceTree = "<group>"; };
+		DC2C9CFF2BF9788700F2E613 /* Rtc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Rtc.h; path = ../../../Src/Rtc.h; sourceTree = "<group>"; };
+		DC2C9D002BF9788700F2E613 /* RomConfigFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RomConfigFile.cpp; path = ../../../Src/RomConfigFile.cpp; sourceTree = "<group>"; };
+		DC2C9D012BF9788700F2E613 /* RomConfigFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RomConfigFile.h; path = ../../../Src/RomConfigFile.h; sourceTree = "<group>"; };
+		DC2C9D022BF9788700F2E613 /* Rtc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Rtc.cpp; path = ../../../Src/Rtc.cpp; sourceTree = "<group>"; };
+		DC2C9D052BF978AE00F2E613 /* UserPortRTC.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = UserPortRTC.cpp; path = ../../../Src/UserPortRTC.cpp; sourceTree = "<group>"; };
+		DC2C9D062BF978AF00F2E613 /* UserPortRTC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UserPortRTC.h; path = ../../../Src/UserPortRTC.h; sourceTree = "<group>"; };
+		DC33555D2BDF84C00014DC3A /* RomConfigDialog-mac.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "RomConfigDialog-mac.cpp"; sourceTree = "<group>"; };
+		DC33555E2BDF84C00014DC3A /* RomConfigDialog-mac.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "RomConfigDialog-mac.hpp"; sourceTree = "<group>"; };
+		DC3FB5492BE8DEDB00CF36A0 /* KeyMap-mac.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "KeyMap-mac.cpp"; sourceTree = "<group>"; };
+		DC3FB54A2BE8DEDB00CF36A0 /* KeyMap-mac.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "KeyMap-mac.hpp"; sourceTree = "<group>"; };
+		DC423BFE2BFC7F99009736E1 /* vfw.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vfw.h; sourceTree = "<group>"; };
+		DC527BC42BC75107000D7CCF /* Teletext.fnt */ = {isa = PBXFileReference; lastKnownFileType = file; name = Teletext.fnt; path = ../../Teletext.fnt; sourceTree = "<group>"; };
+		DC527BC52BC75107000D7CCF /* RelayOn.snd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = RelayOn.snd; path = ../../RelayOn.snd; sourceTree = "<group>"; };
+		DC527BC62BC75107000D7CCF /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../../README.md; sourceTree = "<group>"; };
+		DC527BC72BC75107000D7CCF /* RelayOff.snd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = RelayOff.snd; path = ../../RelayOff.snd; sourceTree = "<group>"; };
+		DC527BCC2BC75114000D7CCF /* DriveMotor.snd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = DriveMotor.snd; path = ../../DriveMotor.snd; sourceTree = "<group>"; };
+		DC527BCD2BC75114000D7CCF /* HeadStep.snd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = HeadStep.snd; path = ../../HeadStep.snd; sourceTree = "<group>"; };
+		DC527BCE2BC75114000D7CCF /* HeadSeek.snd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = HeadSeek.snd; path = ../../HeadSeek.snd; sourceTree = "<group>"; };
+		DC527BCF2BC75114000D7CCF /* HeadUnload.snd */ = {isa = PBXFileReference; lastKnownFileType = file; name = HeadUnload.snd; path = ../../HeadUnload.snd; sourceTree = "<group>"; };
+		DC527BD02BC75114000D7CCF /* HeadLoad.snd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = HeadLoad.snd; path = ../../HeadLoad.snd; sourceTree = "<group>"; };
+		DC527BD62BC75122000D7CCF /* COPYRIGHT.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = COPYRIGHT.txt; path = ../../COPYRIGHT.txt; sourceTree = "<group>"; };
+		DC527C1D2BC75165000D7CCF /* CHANGES.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = CHANGES.md; path = ../../CHANGES.md; sourceTree = "<group>"; };
+		DC527C1F2BC75175000D7CCF /* README-SPROW.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "README-SPROW.txt"; path = "../../README-SPROW.txt"; sourceTree = "<group>"; };
+		DC527D112BC75316000D7CCF /* UserData */ = {isa = PBXFileReference; lastKnownFileType = folder; name = UserData; path = ../../UserData; sourceTree = "<group>"; };
+		DC527D132BC7532E000D7CCF /* Help */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Help; path = ../../Help; sourceTree = "<group>"; };
+		DC527D152BC9110E000D7CCF /* BeebEm-Bridging-Keyboard.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "BeebEm-Bridging-Keyboard.cpp"; sourceTree = "<group>"; };
+		DC69C9F42BF2BDB600610067 /* KeyboardLinksViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardLinksViewController.swift; sourceTree = "<group>"; };
+		DC69C9F62BF2BDC700610067 /* BeebEm-KeyboardLinks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BeebEm-KeyboardLinks.swift"; sourceTree = "<group>"; };
+		DC69C9F82BF2BDE100610067 /* KeyboardLinksDialog-mac.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "KeyboardLinksDialog-mac.cpp"; sourceTree = "<group>"; };
+		DC69C9F92BF2BDE100610067 /* KeyboardLinksDialog-mac.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "KeyboardLinksDialog-mac.hpp"; sourceTree = "<group>"; };
+		DC69C9FB2BF2C87A00610067 /* BeebEm-Bridging-KeyboardLinks.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "BeebEm-Bridging-KeyboardLinks.cpp"; sourceTree = "<group>"; };
+		DC74E1CB2C29D88C006826EE /* FileType.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FileType.cpp; path = ../../../Src/FileType.cpp; sourceTree = "<group>"; };
+		DC74E1CC2C29D88C006826EE /* FileType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FileType.h; path = ../../../Src/FileType.h; sourceTree = "<group>"; };
+		DC74E1CD2C29D88C006826EE /* Registry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Registry.cpp; path = ../../../Src/Registry.cpp; sourceTree = "<group>"; };
+		DC7E1E602BCE53E000494CBE /* BeebEm-Bridging-IO.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "BeebEm-Bridging-IO.cpp"; sourceTree = "<group>"; };
+		DC7E1E632BCE58D400494CBE /* FileDialog-mac.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "FileDialog-mac.cpp"; sourceTree = "<group>"; };
+		DC7E1E642BCE58D400494CBE /* FileDialog-mac.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "FileDialog-mac.hpp"; sourceTree = "<group>"; };
+		DC7E1E662BCF229600494CBE /* ExportFileDialog-mac.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "ExportFileDialog-mac.cpp"; sourceTree = "<group>"; };
+		DC7E1E672BCF229600494CBE /* ExportFileDialog-mac.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "ExportFileDialog-mac.hpp"; sourceTree = "<group>"; };
+		DC8450032BE2D7F1002015D9 /* UserKeyboardDialog-mac.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "UserKeyboardDialog-mac.cpp"; sourceTree = "<group>"; };
+		DC8450042BE2D7F1002015D9 /* UserKeyboardDialog-mac.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "UserKeyboardDialog-mac.hpp"; sourceTree = "<group>"; };
+		DC8450072BE3FAF4002015D9 /* UserPortBreakoutBox-mac.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "UserPortBreakoutBox-mac.cpp"; sourceTree = "<group>"; };
+		DC8450082BE3FAF4002015D9 /* UserPortBreakoutBox-mac.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "UserPortBreakoutBox-mac.hpp"; sourceTree = "<group>"; };
+		DC84500A2BE45931002015D9 /* BeebEm-BreakoutBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BeebEm-BreakoutBox.swift"; sourceTree = "<group>"; };
+		DC84500C2BE4616C002015D9 /* TapeControlDialog-mac.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "TapeControlDialog-mac.cpp"; sourceTree = "<group>"; };
+		DC84500D2BE4616C002015D9 /* TapeControlDialog-mac.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "TapeControlDialog-mac.hpp"; sourceTree = "<group>"; };
+		DC904DA12BCF3CD60069DCDF /* ExportDiscViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExportDiscViewController.swift; sourceTree = "<group>"; };
+		DC907E952BB4DBCD00523116 /* BeebEm.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BeebEm.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DC907E982BB4DBCD00523116 /* BeebEmApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeebEmApp.swift; sourceTree = "<group>"; };
+		DC907E9A2BB4DBCD00523116 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		DC907E9C2BB4DBCE00523116 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		DC907E9F2BB4DBCE00523116 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		DC907EA12BB4DBCE00523116 /* BeebEm.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BeebEm.entitlements; sourceTree = "<group>"; };
+		DC907EAC2BB5B7F300523116 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		DC907EAF2BB5BA4000523116 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		DC907EB12BB5BAD300523116 /* BeebEm-Panels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "BeebEm-Panels.swift"; sourceTree = "<group>"; };
+		DC907EB32BB5BB7700523116 /* BeebEm-TapeControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BeebEm-TapeControl.swift"; sourceTree = "<group>"; };
+		DC907EB52BB5BB9100523116 /* BeebEm-KeyboardMapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BeebEm-KeyboardMapping.swift"; sourceTree = "<group>"; };
+		DC907EB72BB5BB9A00523116 /* BeebEm-RomConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BeebEm-RomConfig.swift"; sourceTree = "<group>"; };
+		DC907EB92BB5BC6200523116 /* BeebEm-ExportFiles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BeebEm-ExportFiles.swift"; sourceTree = "<group>"; };
+		DC907EBF2BB5C02D00523116 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		DC907EC02BB5C1F100523116 /* BeebApplication.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BeebApplication.swift; sourceTree = "<group>"; };
+		DC907EC22BB5C23C00523116 /* BeebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BeebViewController.swift; sourceTree = "<group>"; };
+		DC907EC52BB6D48600523116 /* Renderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
+		DC907EC72BB6D55100523116 /* Bitmap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bitmap.swift; sourceTree = "<group>"; };
+		DC907EC92BB6D76F00523116 /* Colour.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Colour.swift; sourceTree = "<group>"; };
+		DC907ECB2BB70CE000523116 /* NSImage+Bitmap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSImage+Bitmap.swift"; sourceTree = "<group>"; };
+		DC907ECD2BB70E7B00523116 /* BeebSKView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BeebSKView.swift; sourceTree = "<group>"; };
+		DC907ECF2BB7101900523116 /* BeebEm-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BeebEm-Bridging-Header.h"; sourceTree = "<group>"; };
+		DC907ED32BB7191300523116 /* mergenotes.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = mergenotes.txt; sourceTree = "<group>"; };
+		DC90FFCD2BEB5B4D0007EB37 /* TeletextDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TeletextDialog.cpp; path = ../../../Src/TeletextDialog.cpp; sourceTree = "<group>"; };
+		DC90FFCE2BEB5B4D0007EB37 /* TeletextDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TeletextDialog.h; path = ../../../Src/TeletextDialog.h; sourceTree = "<group>"; };
+		DC90FFD02BEB5B820007EB37 /* Model.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Model.cpp; path = ../../../Src/Model.cpp; sourceTree = "<group>"; };
+		DC9427A92BF037900012C4E4 /* SelectKeyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectKeyViewController.swift; sourceTree = "<group>"; };
+		DC9427AB2BF038090012C4E4 /* BeebEm-SerialPort.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BeebEm-SerialPort.swift"; sourceTree = "<group>"; };
+		DC9427AD2BF0386C0012C4E4 /* BeebEm-Teletext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BeebEm-Teletext.swift"; sourceTree = "<group>"; };
+		DC9427AF2BF038B90012C4E4 /* TeletextViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeletextViewController.swift; sourceTree = "<group>"; };
+		DC9427B12BF038F10012C4E4 /* SerialPortViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SerialPortViewController.swift; sourceTree = "<group>"; };
+		DC9427B32BF0FBAA0012C4E4 /* TeletextDialog-mac.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "TeletextDialog-mac.cpp"; sourceTree = "<group>"; };
+		DC9427B42BF0FBAA0012C4E4 /* TeletextDialog-mac.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "TeletextDialog-mac.hpp"; sourceTree = "<group>"; };
+		DC9427B62BF0FBE90012C4E4 /* SerialPortDialog-mac.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "SerialPortDialog-mac.cpp"; sourceTree = "<group>"; };
+		DC9427B72BF0FBE90012C4E4 /* SerialPortDialog-mac.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "SerialPortDialog-mac.hpp"; sourceTree = "<group>"; };
+		DC9697DB2C08632F00B8913F /* todo.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = todo.md; sourceTree = "<group>"; };
+		DCACDAC02BC5DD2E00CEF154 /* apples.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = apples.cpp; sourceTree = "<group>"; };
+		DCACDAC22BC669B600CEF154 /* BeebWinDx-mac.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "BeebWinDx-mac.cpp"; sourceTree = "<group>"; };
+		DCACDAC52BC66F5600CEF154 /* BeebEm-Bridging-Video.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "BeebEm-Bridging-Video.cpp"; sourceTree = "<group>"; };
+		DCACDAC82BC67D2500CEF154 /* BeebEm-Bridging-Main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "BeebEm-Bridging-Main.cpp"; sourceTree = "<group>"; };
+		DCB3B2512BBAB97A00F507F4 /* apples.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = apples.h; sourceTree = "<group>"; };
+		DCB441642BE63A2000FA2F38 /* appleKeyCodes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = appleKeyCodes.h; sourceTree = "<group>"; };
+		DCB4EBC52BD5BCD7002AEA8A /* BeebEm-Bridging-Roms.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "BeebEm-Bridging-Roms.cpp"; sourceTree = "<group>"; };
+		DCB4EBC82BD5BD02002AEA8A /* BeebEm-Bridging-BreakoutBox.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "BeebEm-Bridging-BreakoutBox.cpp"; sourceTree = "<group>"; };
+		DCB4EBCB2BD5BD22002AEA8A /* BeebEm-Bridging-UserKeyboard.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "BeebEm-Bridging-UserKeyboard.cpp"; sourceTree = "<group>"; };
+		DCB4EBCE2BD5BD4E002AEA8A /* BeebEm-Bridging-TapeControl.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "BeebEm-Bridging-TapeControl.cpp"; sourceTree = "<group>"; };
+		DCB4EBD12BD5BDC4002AEA8A /* BeebEm-Bridging-ExportFIles.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "BeebEm-Bridging-ExportFIles.cpp"; sourceTree = "<group>"; };
+		DCB4EBD42BDB26F1002AEA8A /* FolderSelectDialog-mac.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "FolderSelectDialog-mac.cpp"; sourceTree = "<group>"; };
+		DCB4EBD52BDB26F1002AEA8A /* FolderSelectDialog-mac.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "FolderSelectDialog-mac.hpp"; sourceTree = "<group>"; };
+		DCB4EBD72BDB890F002AEA8A /* RenameFileDialog-mac.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "RenameFileDialog-mac.cpp"; sourceTree = "<group>"; };
+		DCB4EBD82BDB890F002AEA8A /* RenameFileDialog-mac.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "RenameFileDialog-mac.hpp"; sourceTree = "<group>"; };
+		DCB4EBDA2BDB89E5002AEA8A /* Dialog-mac.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "Dialog-mac.cpp"; sourceTree = "<group>"; };
+		DCB4EBDB2BDB89E5002AEA8A /* Dialog-mac.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "Dialog-mac.hpp"; sourceTree = "<group>"; };
+		DCBACC532C1591D1005F2079 /* BeebEm.rc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = BeebEm.rc; path = ../../../Src/BeebEm.rc; sourceTree = "<group>"; };
+		DCBACC542C1591D1005F2079 /* BeebWinPrefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BeebWinPrefs.h; path = ../../../Src/BeebWinPrefs.h; sourceTree = "<group>"; };
+		DCC91DB82C1AE5D500B751D5 /* BeebWin-mac.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "BeebWin-mac.cpp"; sourceTree = "<group>"; };
+		DCCE05BC2C11DD6300CAAD24 /* AppleSoundStreamer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = AppleSoundStreamer.cpp; sourceTree = "<group>"; };
+		DCCE05BD2C11DD6300CAAD24 /* AppleSoundStreamer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = AppleSoundStreamer.hpp; sourceTree = "<group>"; };
+		DCD283F02BE6E17100ABD9F8 /* SelectKeyDialog-mac.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "SelectKeyDialog-mac.cpp"; sourceTree = "<group>"; };
+		DCD283F12BE6E17100ABD9F8 /* SelectKeyDialog-mac.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "SelectKeyDialog-mac.hpp"; sourceTree = "<group>"; };
+		DCD283F32BE6E63300ABD9F8 /* windowsx.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = windowsx.h; sourceTree = "<group>"; };
+		DCD283F42BE6E64E00ABD9F8 /* initguid.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = initguid.h; sourceTree = "<group>"; };
+		DCD283F52BE6E66C00ABD9F8 /* shlobj.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = shlobj.h; sourceTree = "<group>"; };
+		DCD283F62BE6E67A00ABD9F8 /* shlwapi.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = shlwapi.h; sourceTree = "<group>"; };
+		DCD283F72BE6E6A600ABD9F8 /* gdiplus.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gdiplus.h; sourceTree = "<group>"; };
+		DCD283F82BE8415000ABD9F8 /* sphelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sphelper.h; sourceTree = "<group>"; };
+		DCD283F92BE8427900ABD9F8 /* BeebWinSpeech-mac.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "BeebWinSpeech-mac.cpp"; sourceTree = "<group>"; };
+		DCD283FB2BE8C8DA00ABD9F8 /* Debug-mac.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "Debug-mac.cpp"; sourceTree = "<group>"; };
+		DCD283FC2BE8C8DA00ABD9F8 /* Debug-mac.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "Debug-mac.hpp"; sourceTree = "<group>"; };
+		DCD283FE2BE8D17400ABD9F8 /* BeebEm-Debug.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BeebEm-Debug.swift"; sourceTree = "<group>"; };
+		DCD284012BE8D22C00ABD9F8 /* DebuggerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebuggerViewController.swift; sourceTree = "<group>"; };
+		DCD284032BE8D2D400ABD9F8 /* BeebEm-Debugger.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "BeebEm-Debugger.cpp"; sourceTree = "<group>"; };
+		DCDC73122BBE192200D83402 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
+		DCDC73182BBE1B9F00D83402 /* commctrl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = commctrl.h; sourceTree = "<group>"; };
+		DCE94C142BD3109500A5C12A /* BeebEm-Menu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BeebEm-Menu.swift"; sourceTree = "<group>"; };
+		DCE94C162BD310C600A5C12A /* BeebEm-Sound.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BeebEm-Sound.swift"; sourceTree = "<group>"; };
+		DCE94C182BD3117200A5C12A /* BeebEm-Files.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BeebEm-Files.swift"; sourceTree = "<group>"; };
+		DCE94C1A2BD311D800A5C12A /* BeebEm-Bundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BeebEm-Bundle.swift"; sourceTree = "<group>"; };
+		DCE94C1C2BD312B100A5C12A /* BeebEm-Beeb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BeebEm-Beeb.swift"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		DC907E922BB4DBCD00523116 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DCDC73132BBE192200D83402 /* libz.tbd in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		DC0996DB2BBA0C5000A109A5 /* windows_code */ = {
+			isa = PBXGroup;
+			children = (
+				DC74E1CB2C29D88C006826EE /* FileType.cpp */,
+				DC74E1CD2C29D88C006826EE /* Registry.cpp */,
+				DC2C9D052BF978AE00F2E613 /* UserPortRTC.cpp */,
+				DC2C9D002BF9788700F2E613 /* RomConfigFile.cpp */,
+				DC2C9D022BF9788700F2E613 /* Rtc.cpp */,
+				DC90FFD02BEB5B820007EB37 /* Model.cpp */,
+				DC90FFCD2BEB5B4D0007EB37 /* TeletextDialog.cpp */,
+				DC0996E72BBA0C9B00A109A5 /* 6502core.cpp */,
+				DC0997022BBA0C9C00A109A5 /* AboutDialog.cpp */,
+				DC09971B2BBA0C9C00A109A5 /* Arm.cpp */,
+				DC0996FD2BBA0C9C00A109A5 /* ArmDisassembler.cpp */,
+				DC0997242BBA0CBB00A109A5 /* ARMulator */,
+				DC0997212BBA0C9C00A109A5 /* AtoDConv.cpp */,
+				DC0996F62BBA0C9C00A109A5 /* AVIWriter.cpp */,
+				DC0996FE2BBA0C9C00A109A5 /* Bcd.cpp */,
+				DC0997012BBA0C9C00A109A5 /* BeebMem.cpp */,
+				DC0996E22BBA0C9B00A109A5 /* BeebWin.cpp */,
+				DC0996F22BBA0C9C00A109A5 /* BeebWinDx.cpp */,
+				DC09971D2BBA0C9C00A109A5 /* BeebWinIo.cpp */,
+				DC09970B2BBA0C9C00A109A5 /* BeebWinPrefs.cpp */,
+				DC0996F42BBA0C9C00A109A5 /* BeebWinSpeech.cpp */,
+				DC0996E32BBA0C9B00A109A5 /* Csw.cpp */,
+				DC0996E82BBA0C9B00A109A5 /* Debug.cpp */,
+				DC0996ED2BBA0C9B00A109A5 /* DebugTrace.cpp */,
+				DC09971C2BBA0C9C00A109A5 /* Dialog.cpp */,
+				DC0997162BBA0C9C00A109A5 /* DirectSoundStreamer.cpp */,
+				DC09970A2BBA0C9C00A109A5 /* Disc1770.cpp */,
+				DC09970F2BBA0C9C00A109A5 /* Disc8271.cpp */,
+				DC0997142BBA0C9C00A109A5 /* DiscEdit.cpp */,
+				DC0996F32BBA0C9C00A109A5 /* DiscInfo.cpp */,
+				DC09971E2BBA0C9C00A109A5 /* Econet.cpp */,
+				DC0997102BBA0C9C00A109A5 /* ExportFileDialog.cpp */,
+				DC09970C2BBA0C9C00A109A5 /* Ext1770.cpp */,
+				DC0996F92BBA0C9C00A109A5 /* FileDialog.cpp */,
+				DC0996E62BBA0C9B00A109A5 /* FileUtils.cpp */,
+				DC0997002BBA0C9C00A109A5 /* FolderSelectDialog.cpp */,
+				DC0997AD2BBAA91E00A109A5 /* Hardware */,
+				DC0996E42BBA0C9B00A109A5 /* IC32Latch.cpp */,
+				DC0997112BBA0C9C00A109A5 /* Ide.cpp */,
+				DC0996FC2BBA0C9C00A109A5 /* KeyboardLinksDialog.cpp */,
+				DC0997132BBA0C9C00A109A5 /* KeyMap.cpp */,
+				DC0996E92BBA0C9B00A109A5 /* IP232.cpp */,
+				DC0997072BBA0C9C00A109A5 /* ListView.cpp */,
+				DC0996DF2BBA0C9B00A109A5 /* Log.cpp */,
+				DC0996F72BBA0C9C00A109A5 /* Main.cpp */,
+				DC0996F82BBA0C9C00A109A5 /* Master512CoPro.cpp */,
+				DC0997152BBA0C9C00A109A5 /* Music5000.cpp */,
+				DC0996F52BBA0C9C00A109A5 /* PALRom.cpp */,
+				DC09970E2BBA0C9C00A109A5 /* Preferences.cpp */,
+				DC0997092BBA0C9C00A109A5 /* RenameFileDialog.cpp */,
+				DC0996F12BBA0C9B00A109A5 /* RingBuffer.cpp */,
+				DC0996E52BBA0C9B00A109A5 /* RomConfigDialog.cpp */,
+				DC0996EC2BBA0C9B00A109A5 /* Sasi.cpp */,
+				DC0996EA2BBA0C9B00A109A5 /* Scsi.cpp */,
+				DC0997202BBA0C9C00A109A5 /* SelectKeyDialog.cpp */,
+				DC09970D2BBA0C9C00A109A5 /* Serial.cpp */,
+				DC0996E02BBA0C9B00A109A5 /* SerialPortDialog.cpp */,
+				DC0996FA2BBA0C9C00A109A5 /* Sound.cpp */,
+				DC0997122BBA0C9C00A109A5 /* SoundStreamer.cpp */,
+				DC0997232BBA0C9C00A109A5 /* Speech.cpp */,
+				DC0997052BBA0C9C00A109A5 /* SprowCoPro.cpp */,
+				DC0997222BBA0C9C00A109A5 /* StringUtils.cpp */,
+				DC0997062BBA0C9C00A109A5 /* SysVia.cpp */,
+				DC0997182BBA0C9C00A109A5 /* TapeMap.cpp */,
+				DC0997172BBA0C9C00A109A5 /* TapeControlDialog.cpp */,
+				DC0996FB2BBA0C9C00A109A5 /* Teletext.cpp */,
+				DC0996EB2BBA0C9B00A109A5 /* Thread.cpp */,
+				DC0996FF2BBA0C9C00A109A5 /* TouchScreen.cpp */,
+				DC0997192BBA0C9C00A109A5 /* Tube.cpp */,
+				DC0996F02BBA0C9B00A109A5 /* Uef.cpp */,
+				DC0996E12BBA0C9B00A109A5 /* UefState.cpp */,
+				DC0996DE2BBA0C9B00A109A5 /* UserKeyboardDialog.cpp */,
+				DC0996DD2BBA0C9B00A109A5 /* UserPortBreakoutBox.cpp */,
+				DC0996EE2BBA0C9B00A109A5 /* UserVia.cpp */,
+				DC09971A2BBA0C9C00A109A5 /* Via.cpp */,
+				DC0997032BBA0C9C00A109A5 /* Video.cpp */,
+				DC09971F2BBA0C9C00A109A5 /* XAudio2Streamer.cpp */,
+				DC0997082BBA0C9C00A109A5 /* Z80.cpp */,
+				DC0997042BBA0C9C00A109A5 /* Z80dis.cpp */,
+				DC0996EF2BBA0C9B00A109A5 /* Z80Support.cpp */,
+			);
+			name = windows_code;
+			sourceTree = "<group>";
+		};
+		DC0996DC2BBA0C6400A109A5 /* windows_headers */ = {
+			isa = PBXGroup;
+			children = (
+				DC74E1CC2C29D88C006826EE /* FileType.h */,
+				DCBACC542C1591D1005F2079 /* BeebWinPrefs.h */,
+				DC215BE72C13C27E003E50A3 /* Registry.h */,
+				DC2C9D062BF978AF00F2E613 /* UserPortRTC.h */,
+				DC2C9D012BF9788700F2E613 /* RomConfigFile.h */,
+				DC2C9CFF2BF9788700F2E613 /* Rtc.h */,
+				DC90FFCE2BEB5B4D0007EB37 /* TeletextDialog.h */,
+				DC0997582BBA0E2500A109A5 /* 6502core.h */,
+				DC09975D2BBA0E2600A109A5 /* AboutDialog.h */,
+				DC09977A2BBA0E2600A109A5 /* Arm.h */,
+				DC0997512BBA0E2500A109A5 /* ArmDisassembler.h */,
+				DC09975C2BBA0E2500A109A5 /* ARMulator.h */,
+				DC0997332BBA0CD400A109A5 /* ARMulator */,
+				DC09976D2BBA0E2600A109A5 /* AtoDConv.h */,
+				DC0997762BBA0E2600A109A5 /* AVIWriter.h */,
+				DC0997562BBA0E2500A109A5 /* Bcd.h */,
+				DC0997552BBA0E2500A109A5 /* BeebMem.h */,
+				DC0997722BBA0E2600A109A5 /* BeebWin.h */,
+				DC0997522BBA0E2500A109A5 /* Csw.h */,
+				DC09977E2BBA0E2600A109A5 /* Debug.h */,
+				DC09976E2BBA0E2600A109A5 /* DebugTrace.h */,
+				DC09978C2BBA0E2700A109A5 /* Dialog.h */,
+				DC0997632BBA0E2600A109A5 /* DirectSoundStreamer.h */,
+				DC0997802BBA0E2600A109A5 /* Disc1770.h */,
+				DC0997692BBA0E2600A109A5 /* Disc8271.h */,
+				DC0997772BBA0E2600A109A5 /* DiscEdit.h */,
+				DC0997492BBA0E2500A109A5 /* DiscInfo.h */,
+				DC09977C2BBA0E2600A109A5 /* DiscType.h */,
+				DC09975F2BBA0E2600A109A5 /* Econet.h */,
+				DC0997752BBA0E2600A109A5 /* ExportFileDialog.h */,
+				DC0997732BBA0E2600A109A5 /* Ext1770.h */,
+				DC0997532BBA0E2500A109A5 /* FileDialog.h */,
+				DC0997542BBA0E2500A109A5 /* FileUtils.h */,
+				DC09975B2BBA0E2500A109A5 /* FolderSelectDialog.h */,
+				DC0997812BBA0E2600A109A5 /* IC32Latch.h */,
+				DC09974B2BBA0E2500A109A5 /* KeyboardLinksDialog.h */,
+				DC09976F2BBA0E2600A109A5 /* ListView.h */,
+				DC0997672BBA0E2600A109A5 /* Master512CoPro.h */,
+				DC0997662BBA0E2600A109A5 /* Ide.h */,
+				DC09974D2BBA0E2500A109A5 /* IP232.h */,
+				DC09976B2BBA0E2600A109A5 /* KeyMap.h */,
+				DC09977F2BBA0E2600A109A5 /* Log.h */,
+				DC09976A2BBA0E2600A109A5 /* Main.h */,
+				DC09978F2BBA0E2700A109A5 /* Messages.h */,
+				DC09974A2BBA0E2500A109A5 /* ML675001.h */,
+				DC0997602BBA0E2600A109A5 /* Model.h */,
+				DC0997652BBA0E2600A109A5 /* Music5000.h */,
+				DC09974F2BBA0E2500A109A5 /* PALRom.h */,
+				DC0997742BBA0E2600A109A5 /* Port.h */,
+				DC0997862BBA0E2600A109A5 /* Preferences.h */,
+				DC09977B2BBA0E2600A109A5 /* RenameFileDialog.h */,
+				DC0997822BBA0E2600A109A5 /* Resource.h */,
+				DC09978A2BBA0E2700A109A5 /* RingBuffer.h */,
+				DC0997702BBA0E2600A109A5 /* RomConfigDialog.h */,
+				DC0997572BBA0E2500A109A5 /* Sasi.h */,
+				DC09977D2BBA0E2600A109A5 /* Scsi.h */,
+				DC0997592BBA0E2500A109A5 /* SelectKeyDialog.h */,
+				DC09975E2BBA0E2600A109A5 /* Serial.h */,
+				DC0997792BBA0E2600A109A5 /* SerialPortDialog.h */,
+				DC0997832BBA0E2600A109A5 /* Sound.h */,
+				DC0997612BBA0E2600A109A5 /* SoundStreamer.h */,
+				DC0997622BBA0E2600A109A5 /* Speech.h */,
+				DC09978B2BBA0E2700A109A5 /* SprowCoPro.h */,
+				DC0997482BBA0E2500A109A5 /* StringUtils.h */,
+				DC0997682BBA0E2600A109A5 /* SysVia.h */,
+				DC09974E2BBA0E2500A109A5 /* TapeControlDialog.h */,
+				DC09974C2BBA0E2500A109A5 /* TapeMap.h */,
+				DC0997882BBA0E2700A109A5 /* TarmacGlobals.h */,
+				DC0997842BBA0E2600A109A5 /* Teletext.h */,
+				DC09976C2BBA0E2600A109A5 /* Thread.h */,
+				DC0997502BBA0E2500A109A5 /* TouchScreen.h */,
+				DC0997712BBA0E2600A109A5 /* Tube.h */,
+				DC0997852BBA0E2600A109A5 /* Uef.h */,
+				DC09978D2BBA0E2700A109A5 /* UefState.h */,
+				DC0997872BBA0E2600A109A5 /* UserKeyboardDialog.h */,
+				DC09978E2BBA0E2700A109A5 /* UserPortBreakoutBox.h */,
+				DC0997902BBA0E2700A109A5 /* UserVia.h */,
+				DC0997912BBA0E2700A109A5 /* Version.h */,
+				DC0997642BBA0E2600A109A5 /* Via.h */,
+				DC09975A2BBA0E2500A109A5 /* Video.h */,
+				DC0997892BBA0E2700A109A5 /* XAudio2Streamer.h */,
+				DC0997922BBA0E2700A109A5 /* Z80.h */,
+				DC0997782BBA0E2600A109A5 /* Z80mem.h */,
+			);
+			name = windows_headers;
+			sourceTree = "<group>";
+		};
+		DC0997242BBA0CBB00A109A5 /* ARMulator */ = {
+			isa = PBXGroup;
+			children = (
+				DC09972C2BBA0CBB00A109A5 /* armdis.cpp */,
+				DC0997AB2BBAA8D100A109A5 /* armmem.c */,
+				DC09972B2BBA0CBB00A109A5 /* armemu.cpp */,
+				DC0997312BBA0CBB00A109A5 /* arminit.cpp */,
+				DC0997302BBA0CBB00A109A5 /* armsupp.cpp */,
+				DC0997282BBA0CBB00A109A5 /* thumbemu.cpp */,
+			);
+			name = ARMulator;
+			path = ../../../Src/ARMulator;
+			sourceTree = "<group>";
+		};
+		DC0997332BBA0CD400A109A5 /* ARMulator */ = {
+			isa = PBXGroup;
+			children = (
+				DC0997392BBA0CD400A109A5 /* ansidecl.h */,
+				DC09973E2BBA0CD400A109A5 /* armdefs.h */,
+				DC0997382BBA0CD400A109A5 /* armdis.h */,
+				DC0997412BBA0CD400A109A5 /* armemu.h */,
+				DC09973C2BBA0CD400A109A5 /* armopts.h */,
+				DC0997352BBA0CD400A109A5 /* armos.h */,
+				DC09973D2BBA0CD400A109A5 /* dbg_rdi.h */,
+				DC0997362BBA0CD400A109A5 /* iwmmxt.h */,
+			);
+			name = ARMulator;
+			path = ../../../Src/ARMulator;
+			sourceTree = "<group>";
+		};
+		DC0997A62BBAA65E00A109A5 /* windows_stubs */ = {
+			isa = PBXGroup;
+			children = (
+				DC0997A72BBAA68600A109A5 /* d3dx9.h */,
+				DC0997A82BBAA6A300A109A5 /* ddraw.h */,
+				DC0997A52BBAA5D500A109A5 /* windows.h */,
+				DC0997A92BBAA6C200A109A5 /* sapi.h */,
+				DCDC73182BBE1B9F00D83402 /* commctrl.h */,
+				DCD283F32BE6E63300ABD9F8 /* windowsx.h */,
+				DCD283F42BE6E64E00ABD9F8 /* initguid.h */,
+				DCD283F52BE6E66C00ABD9F8 /* shlobj.h */,
+				DCD283F62BE6E67A00ABD9F8 /* shlwapi.h */,
+				DCD283F72BE6E6A600ABD9F8 /* gdiplus.h */,
+				DCD283F82BE8415000ABD9F8 /* sphelper.h */,
+				DC2C9CFE2BF9444F00F2E613 /* process.h */,
+				DC423BFE2BFC7F99009736E1 /* vfw.h */,
+			);
+			path = windows_stubs;
+			sourceTree = "<group>";
+		};
+		DC0997AD2BBAA91E00A109A5 /* Hardware */ = {
+			isa = PBXGroup;
+			children = (
+				DC0997AE2BBAA91E00A109A5 /* Acorn1770 */,
+				DC0997B32BBAA91E00A109A5 /* Watford */,
+				DC0997B82BBAA91E00A109A5 /* OpusDDOS */,
+			);
+			name = Hardware;
+			path = ../../../Src/Hardware;
+			sourceTree = "<group>";
+		};
+		DC0997AE2BBAA91E00A109A5 /* Acorn1770 */ = {
+			isa = PBXGroup;
+			children = (
+				DC0997B12BBAA91E00A109A5 /* Acorn.h */,
+				DC0997AF2BBAA91E00A109A5 /* Acorn.cpp */,
+			);
+			path = Acorn1770;
+			sourceTree = "<group>";
+		};
+		DC0997B32BBAA91E00A109A5 /* Watford */ = {
+			isa = PBXGroup;
+			children = (
+				DC0997B62BBAA91E00A109A5 /* Watford.h */,
+				DC0997B72BBAA91E00A109A5 /* Watford.cpp */,
+			);
+			path = Watford;
+			sourceTree = "<group>";
+		};
+		DC0997B82BBAA91E00A109A5 /* OpusDDOS */ = {
+			isa = PBXGroup;
+			children = (
+				DC0997BA2BBAA91E00A109A5 /* opus.h */,
+				DC0997BC2BBAA91E00A109A5 /* opus.cpp */,
+			);
+			path = OpusDDOS;
+			sourceTree = "<group>";
+		};
+		DC1DBA1E2BB8CF2500AAB22F /* BeebBridge */ = {
+			isa = PBXGroup;
+			children = (
+				DCE94C1C2BD312B100A5C12A /* BeebEm-Beeb.swift */,
+				DCE94C1A2BD311D800A5C12A /* BeebEm-Bundle.swift */,
+				DCE94C182BD3117200A5C12A /* BeebEm-Files.swift */,
+				DC907EB52BB5BB9100523116 /* BeebEm-KeyboardMapping.swift */,
+				DC84500A2BE45931002015D9 /* BeebEm-BreakoutBox.swift */,
+				DC907EB92BB5BC6200523116 /* BeebEm-ExportFiles.swift */,
+				DCE94C142BD3109500A5C12A /* BeebEm-Menu.swift */,
+				DC907EB12BB5BAD300523116 /* BeebEm-Panels.swift */,
+				DC907EB72BB5BB9A00523116 /* BeebEm-RomConfig.swift */,
+				DCE94C162BD310C600A5C12A /* BeebEm-Sound.swift */,
+				DC907EB32BB5BB7700523116 /* BeebEm-TapeControl.swift */,
+				DCD283FE2BE8D17400ABD9F8 /* BeebEm-Debug.swift */,
+				DC9427AB2BF038090012C4E4 /* BeebEm-SerialPort.swift */,
+				DC9427AD2BF0386C0012C4E4 /* BeebEm-Teletext.swift */,
+				DC69C9F62BF2BDC700610067 /* BeebEm-KeyboardLinks.swift */,
+			);
+			path = BeebBridge;
+			sourceTree = "<group>";
+		};
+		DC1DBA1F2BB8CF2B00AAB22F /* MacBridge */ = {
+			isa = PBXGroup;
+			children = (
+				DC907ECF2BB7101900523116 /* BeebEm-Bridging-Header.h */,
+				DCACDAC52BC66F5600CEF154 /* BeebEm-Bridging-Video.cpp */,
+				DCACDAC82BC67D2500CEF154 /* BeebEm-Bridging-Main.cpp */,
+				DC527D152BC9110E000D7CCF /* BeebEm-Bridging-Keyboard.cpp */,
+				DC7E1E602BCE53E000494CBE /* BeebEm-Bridging-IO.cpp */,
+				DCB4EBC52BD5BCD7002AEA8A /* BeebEm-Bridging-Roms.cpp */,
+				DCB4EBC82BD5BD02002AEA8A /* BeebEm-Bridging-BreakoutBox.cpp */,
+				DCB4EBCB2BD5BD22002AEA8A /* BeebEm-Bridging-UserKeyboard.cpp */,
+				DCB4EBCE2BD5BD4E002AEA8A /* BeebEm-Bridging-TapeControl.cpp */,
+				DCB4EBD12BD5BDC4002AEA8A /* BeebEm-Bridging-ExportFIles.cpp */,
+				DCD284032BE8D2D400ABD9F8 /* BeebEm-Debugger.cpp */,
+				DC69C9FB2BF2C87A00610067 /* BeebEm-Bridging-KeyboardLinks.cpp */,
+			);
+			path = MacBridge;
+			sourceTree = "<group>";
+		};
+		DC3FB5482BE8DB4600CF36A0 /* MacDialogs */ = {
+			isa = PBXGroup;
+			children = (
+				DC7E1E632BCE58D400494CBE /* FileDialog-mac.cpp */,
+				DC7E1E642BCE58D400494CBE /* FileDialog-mac.hpp */,
+				DCB4EBDA2BDB89E5002AEA8A /* Dialog-mac.cpp */,
+				DCB4EBDB2BDB89E5002AEA8A /* Dialog-mac.hpp */,
+				DC7E1E662BCF229600494CBE /* ExportFileDialog-mac.cpp */,
+				DC7E1E672BCF229600494CBE /* ExportFileDialog-mac.hpp */,
+				DCB4EBD72BDB890F002AEA8A /* RenameFileDialog-mac.cpp */,
+				DCB4EBD82BDB890F002AEA8A /* RenameFileDialog-mac.hpp */,
+				DCB4EBD42BDB26F1002AEA8A /* FolderSelectDialog-mac.cpp */,
+				DCB4EBD52BDB26F1002AEA8A /* FolderSelectDialog-mac.hpp */,
+				DC33555D2BDF84C00014DC3A /* RomConfigDialog-mac.cpp */,
+				DC33555E2BDF84C00014DC3A /* RomConfigDialog-mac.hpp */,
+				DC8450032BE2D7F1002015D9 /* UserKeyboardDialog-mac.cpp */,
+				DC8450042BE2D7F1002015D9 /* UserKeyboardDialog-mac.hpp */,
+				DC8450072BE3FAF4002015D9 /* UserPortBreakoutBox-mac.cpp */,
+				DC8450082BE3FAF4002015D9 /* UserPortBreakoutBox-mac.hpp */,
+				DC84500C2BE4616C002015D9 /* TapeControlDialog-mac.cpp */,
+				DC84500D2BE4616C002015D9 /* TapeControlDialog-mac.hpp */,
+				DCD283F02BE6E17100ABD9F8 /* SelectKeyDialog-mac.cpp */,
+				DCD283F12BE6E17100ABD9F8 /* SelectKeyDialog-mac.hpp */,
+				DCD283FB2BE8C8DA00ABD9F8 /* Debug-mac.cpp */,
+				DCD283FC2BE8C8DA00ABD9F8 /* Debug-mac.hpp */,
+				DC9427B32BF0FBAA0012C4E4 /* TeletextDialog-mac.cpp */,
+				DC9427B42BF0FBAA0012C4E4 /* TeletextDialog-mac.hpp */,
+				DC9427B62BF0FBE90012C4E4 /* SerialPortDialog-mac.cpp */,
+				DC9427B72BF0FBE90012C4E4 /* SerialPortDialog-mac.hpp */,
+				DC69C9F82BF2BDE100610067 /* KeyboardLinksDialog-mac.cpp */,
+				DC69C9F92BF2BDE100610067 /* KeyboardLinksDialog-mac.hpp */,
+			);
+			path = MacDialogs;
+			sourceTree = "<group>";
+		};
+		DC527AD32BC7505C000D7CCF /* Bundle */ = {
+			isa = PBXGroup;
+			children = (
+				DC527D132BC7532E000D7CCF /* Help */,
+				DC527D112BC75316000D7CCF /* UserData */,
+				DC527C1D2BC75165000D7CCF /* CHANGES.md */,
+				DC527BD62BC75122000D7CCF /* COPYRIGHT.txt */,
+				DC527BCC2BC75114000D7CCF /* DriveMotor.snd */,
+				DC527BD02BC75114000D7CCF /* HeadLoad.snd */,
+				DC527BCE2BC75114000D7CCF /* HeadSeek.snd */,
+				DC527BCD2BC75114000D7CCF /* HeadStep.snd */,
+				DC527BCF2BC75114000D7CCF /* HeadUnload.snd */,
+				DC527C1F2BC75175000D7CCF /* README-SPROW.txt */,
+				DC527BC62BC75107000D7CCF /* README.md */,
+				DC527BC72BC75107000D7CCF /* RelayOff.snd */,
+				DC527BC52BC75107000D7CCF /* RelayOn.snd */,
+				DC527BC42BC75107000D7CCF /* Teletext.fnt */,
+			);
+			name = Bundle;
+			sourceTree = "<group>";
+		};
+		DC907E8C2BB4DBCD00523116 = {
+			isa = PBXGroup;
+			children = (
+				DC9697DB2C08632F00B8913F /* todo.md */,
+				DC907ED32BB7191300523116 /* mergenotes.txt */,
+				DC907EBB2BB5BE0B00523116 /* Src */,
+				DC907EAE2BB5BA2500523116 /* Swift */,
+				DC907EA82BB5B5F000523116 /* Scenes */,
+				DC907E972BB4DBCD00523116 /* BeebEm */,
+				DC907E962BB4DBCD00523116 /* Products */,
+				DC527AD32BC7505C000D7CCF /* Bundle */,
+				DCDC73112BBE192200D83402 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		DC907E962BB4DBCD00523116 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				DC907E952BB4DBCD00523116 /* BeebEm.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		DC907E972BB4DBCD00523116 /* BeebEm */ = {
+			isa = PBXGroup;
+			children = (
+				DC907EBF2BB5C02D00523116 /* Info.plist */,
+				DC907E982BB4DBCD00523116 /* BeebEmApp.swift */,
+				DC907E9A2BB4DBCD00523116 /* ContentView.swift */,
+				DC907E9C2BB4DBCE00523116 /* Assets.xcassets */,
+				DC907EA12BB4DBCE00523116 /* BeebEm.entitlements */,
+				DC907E9E2BB4DBCE00523116 /* Preview Content */,
+			);
+			path = BeebEm;
+			sourceTree = "<group>";
+		};
+		DC907E9E2BB4DBCE00523116 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				DC907E9F2BB4DBCE00523116 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		DC907EA82BB5B5F000523116 /* Scenes */ = {
+			isa = PBXGroup;
+			children = (
+				DC907EAB2BB5B7F300523116 /* Main.storyboard */,
+			);
+			path = Scenes;
+			sourceTree = "<group>";
+		};
+		DC907EAE2BB5BA2500523116 /* Swift */ = {
+			isa = PBXGroup;
+			children = (
+				DCD284002BE8D1CA00ABD9F8 /* BeebControllers */,
+				DC1DBA1E2BB8CF2500AAB22F /* BeebBridge */,
+				DC907EAF2BB5BA4000523116 /* AppDelegate.swift */,
+				DC907EC02BB5C1F100523116 /* BeebApplication.swift */,
+				DC907EC52BB6D48600523116 /* Renderer.swift */,
+				DC907EC92BB6D76F00523116 /* Colour.swift */,
+				DC907EC72BB6D55100523116 /* Bitmap.swift */,
+				DC907ECB2BB70CE000523116 /* NSImage+Bitmap.swift */,
+				DC907ECD2BB70E7B00523116 /* BeebSKView.swift */,
+			);
+			path = Swift;
+			sourceTree = "<group>";
+		};
+		DC907EBB2BB5BE0B00523116 /* Src */ = {
+			isa = PBXGroup;
+			children = (
+				DC0997A62BBAA65E00A109A5 /* windows_stubs */,
+				DC0996DC2BBA0C6400A109A5 /* windows_headers */,
+				DC0996DB2BBA0C5000A109A5 /* windows_code */,
+				DCBACC522C159055005F2079 /* windows_projectresources */,
+				DC3FB5482BE8DB4600CF36A0 /* MacDialogs */,
+				DC1DBA1F2BB8CF2B00AAB22F /* MacBridge */,
+				DCB441642BE63A2000FA2F38 /* appleKeyCodes.h */,
+				DC0997992BBAA51200A109A5 /* beebemrcids.h */,
+				DCB3B2512BBAB97A00F507F4 /* apples.h */,
+				DCACDAC02BC5DD2E00CEF154 /* apples.cpp */,
+				DC09979D2BBAA51300A109A5 /* beebemrcids.cpp */,
+				DCC91DB82C1AE5D500B751D5 /* BeebWin-mac.cpp */,
+				DCACDAC22BC669B600CEF154 /* BeebWinDx-mac.cpp */,
+				DCD283F92BE8427900ABD9F8 /* BeebWinSpeech-mac.cpp */,
+				DC3FB5492BE8DEDB00CF36A0 /* KeyMap-mac.cpp */,
+				DC3FB54A2BE8DEDB00CF36A0 /* KeyMap-mac.hpp */,
+				DCCE05BC2C11DD6300CAAD24 /* AppleSoundStreamer.cpp */,
+				DCCE05BD2C11DD6300CAAD24 /* AppleSoundStreamer.hpp */,
+			);
+			path = Src;
+			sourceTree = "<group>";
+		};
+		DCBACC522C159055005F2079 /* windows_projectresources */ = {
+			isa = PBXGroup;
+			children = (
+				DCBACC532C1591D1005F2079 /* BeebEm.rc */,
+			);
+			name = windows_projectresources;
+			sourceTree = "<group>";
+		};
+		DCD284002BE8D1CA00ABD9F8 /* BeebControllers */ = {
+			isa = PBXGroup;
+			children = (
+				DC907EC22BB5C23C00523116 /* BeebViewController.swift */,
+				DC1DBA142BB8CF0500AAB22F /* BreakoutBoxViewController.swift */,
+				DC1DBA132BB8CF0400AAB22F /* KeyboardMappingViewController.swift */,
+				DC1DBA152BB8CF0500AAB22F /* RomConfigViewController.swift */,
+				DC1DBA162BB8CF0500AAB22F /* TapeControlViewController.swift */,
+				DCD284012BE8D22C00ABD9F8 /* DebuggerViewController.swift */,
+				DC904DA12BCF3CD60069DCDF /* ExportDiscViewController.swift */,
+				DC9427A92BF037900012C4E4 /* SelectKeyViewController.swift */,
+				DC9427AF2BF038B90012C4E4 /* TeletextViewController.swift */,
+				DC9427B12BF038F10012C4E4 /* SerialPortViewController.swift */,
+				DC69C9F42BF2BDB600610067 /* KeyboardLinksViewController.swift */,
+			);
+			path = BeebControllers;
+			sourceTree = "<group>";
+		};
+		DCDC73112BBE192200D83402 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				DCDC73122BBE192200D83402 /* libz.tbd */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		DC907E942BB4DBCD00523116 /* BeebEm */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DC907EA42BB4DBCE00523116 /* Build configuration list for PBXNativeTarget "BeebEm" */;
+			buildPhases = (
+				DC907E912BB4DBCD00523116 /* Sources */,
+				DC907E922BB4DBCD00523116 /* Frameworks */,
+				DC907E932BB4DBCD00523116 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = BeebEm;
+			productName = BeebEm;
+			productReference = DC907E952BB4DBCD00523116 /* BeebEm.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		DC907E8D2BB4DBCD00523116 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1340;
+				LastUpgradeCheck = 1340;
+				TargetAttributes = {
+					DC907E942BB4DBCD00523116 = {
+						CreatedOnToolsVersion = 13.4.1;
+						LastSwiftMigration = 1340;
+					};
+				};
+			};
+			buildConfigurationList = DC907E902BB4DBCD00523116 /* Build configuration list for PBXProject "BeebEm" */;
+			compatibilityVersion = "Xcode 13.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = DC907E8C2BB4DBCD00523116;
+			productRefGroup = DC907E962BB4DBCD00523116 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				DC907E942BB4DBCD00523116 /* BeebEm */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		DC907E932BB4DBCD00523116 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DC527D142BC7532E000D7CCF /* Help in Resources */,
+				DC527BD72BC75122000D7CCF /* COPYRIGHT.txt in Resources */,
+				DC527D122BC75316000D7CCF /* UserData in Resources */,
+				DC527BD32BC75114000D7CCF /* HeadSeek.snd in Resources */,
+				DC527BCB2BC75107000D7CCF /* RelayOff.snd in Resources */,
+				DC527C1E2BC75165000D7CCF /* CHANGES.md in Resources */,
+				DC907EA02BB4DBCE00523116 /* Preview Assets.xcassets in Resources */,
+				DC527BD22BC75114000D7CCF /* HeadStep.snd in Resources */,
+				DC527BD42BC75114000D7CCF /* HeadUnload.snd in Resources */,
+				DC527BC82BC75107000D7CCF /* Teletext.fnt in Resources */,
+				DC527BD12BC75114000D7CCF /* DriveMotor.snd in Resources */,
+				DC527BC92BC75107000D7CCF /* RelayOn.snd in Resources */,
+				DC907E9D2BB4DBCE00523116 /* Assets.xcassets in Resources */,
+				DC527C202BC75175000D7CCF /* README-SPROW.txt in Resources */,
+				DC527BD52BC75114000D7CCF /* HeadLoad.snd in Resources */,
+				DC907EAD2BB5B7F300523116 /* Main.storyboard in Resources */,
+				DCBACC552C1591D1005F2079 /* BeebEm.rc in Resources */,
+				DC527BCA2BC75107000D7CCF /* README.md in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		DC907E912BB4DBCD00523116 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DCDC73312BBF615E00D83402 /* Csw.cpp in Sources */,
+				DC907EC32BB5C23C00523116 /* BeebViewController.swift in Sources */,
+				DCDC73282BBF574100D83402 /* 6502core.cpp in Sources */,
+				DC9427AA2BF037900012C4E4 /* SelectKeyViewController.swift in Sources */,
+				DC33555F2BDF84C00014DC3A /* RomConfigDialog-mac.cpp in Sources */,
+				DCDC732A2BBF5AF400D83402 /* ArmDisassembler.cpp in Sources */,
+				DCB4EBD32BD5BDC4002AEA8A /* BeebEm-Bridging-ExportFIles.cpp in Sources */,
+				DC7E1E652BCE58D400494CBE /* FileDialog-mac.cpp in Sources */,
+				DCE94C152BD3109500A5C12A /* BeebEm-Menu.swift in Sources */,
+				DC0997AA2BBAA6E300A109A5 /* beebemrcids.cpp in Sources */,
+				DC0D30E32BC12C8E00AFEF01 /* Main.cpp in Sources */,
+				DCB3B2592BBB865E00F507F4 /* opus.cpp in Sources */,
+				DC3FB54C2BE8E02300CF36A0 /* KeyMap-mac.cpp in Sources */,
+				DCE94C172BD310C600A5C12A /* BeebEm-Sound.swift in Sources */,
+				DCDC733E2BC0AED800D83402 /* Music5000.cpp in Sources */,
+				DCD284052BE8D2D400ABD9F8 /* BeebEm-Debugger.cpp in Sources */,
+				DCDC73062BBE043A00D83402 /* Acorn.cpp in Sources */,
+				DCDC73142BBE198A00D83402 /* TapeMap.cpp in Sources */,
+				DCDC73352BC0A73600D83402 /* DiscEdit.cpp in Sources */,
+				DC907ECA2BB6D76F00523116 /* Colour.swift in Sources */,
+				DCDC732F2BBF5EF600D83402 /* AtoDConv.cpp in Sources */,
+				DCDC733F2BC0AFBC00D83402 /* PALRom.cpp in Sources */,
+				DCDC73382BC0A9F800D83402 /* Ide.cpp in Sources */,
+				DCDC73372BC0A93800D83402 /* Ext1770.cpp in Sources */,
+				DCDC732E2BBF5E1B00D83402 /* arminit.cpp in Sources */,
+				DCDC732B2BBF5B7F00D83402 /* armemu.cpp in Sources */,
+				DCDC73412BC0B0E600D83402 /* Scsi.cpp in Sources */,
+				DCDC73422BC0B12700D83402 /* Sound.cpp in Sources */,
+				DC215BE62C13B4DD003E50A3 /* BeebWinDx-mac.cpp in Sources */,
+				DC7E1E622BCE53E000494CBE /* BeebEm-Bridging-IO.cpp in Sources */,
+				DC9427B22BF038F10012C4E4 /* SerialPortViewController.swift in Sources */,
+				DC74E1CE2C29D88C006826EE /* FileType.cpp in Sources */,
+				DCB4EBD92BDB890F002AEA8A /* RenameFileDialog-mac.cpp in Sources */,
+				DCDC73452BC0B4A700D83402 /* SprowCoPro.cpp in Sources */,
+				DC907EC12BB5C1F100523116 /* BeebApplication.swift in Sources */,
+				DC69C9F72BF2BDC700610067 /* BeebEm-KeyboardLinks.swift in Sources */,
+				DCACDAC12BC5DD2E00CEF154 /* apples.cpp in Sources */,
+				DCDC73472BC0B5C200D83402 /* Teletext.cpp in Sources */,
+				DCB4EBCA2BD5BD02002AEA8A /* BeebEm-Bridging-BreakoutBox.cpp in Sources */,
+				DCDC733C2BC0ACE200D83402 /* Log.cpp in Sources */,
+				DCDC734B2BC0B78E00D83402 /* UefState.cpp in Sources */,
+				DC9427B02BF038B90012C4E4 /* TeletextViewController.swift in Sources */,
+				DCD283FF2BE8D17400ABD9F8 /* BeebEm-Debug.swift in Sources */,
+				DCDC73462BC0B5B500D83402 /* SysVia.cpp in Sources */,
+				DC3355602BDF8D720014DC3A /* BeebEm-RomConfig.swift in Sources */,
+				DC2C9D072BF978AF00F2E613 /* UserPortRTC.cpp in Sources */,
+				DCB4EBCD2BD5BD22002AEA8A /* BeebEm-Bridging-UserKeyboard.cpp in Sources */,
+				DCDC73342BBFE87C00D83402 /* Disc8271.cpp in Sources */,
+				DC9427B82BF0FBE90012C4E4 /* SerialPortDialog-mac.cpp in Sources */,
+				DC527AD12BC71C21000D7CCF /* BeebEm-Bridging-Video.cpp in Sources */,
+				DC8450092BE3FAF4002015D9 /* UserPortBreakoutBox-mac.cpp in Sources */,
+				DC9B41342BC215BD00C3D9D8 /* Econet.cpp in Sources */,
+				DCDC734D2BC0B80C00D83402 /* UserVia.cpp in Sources */,
+				DC9B41322BC2145D00C3D9D8 /* Thread.cpp in Sources */,
+				DC9B41332BC2151900C3D9D8 /* Video.cpp in Sources */,
+				DC1DBA212BB8CF8B00AAB22F /* TapeControlViewController.swift in Sources */,
+				DCDC734E2BC0B85F00D83402 /* Via.cpp in Sources */,
+				DCDC73092BBE108600D83402 /* Bcd.cpp in Sources */,
+				DCDC73442BC0B43400D83402 /* SoundStreamer.cpp in Sources */,
+				DC907ECC2BB70CE000523116 /* NSImage+Bitmap.swift in Sources */,
+				DCB4EBC72BD5BCD7002AEA8A /* BeebEm-Bridging-Roms.cpp in Sources */,
+				DC9B41352BC2190500C3D9D8 /* BeebWin.cpp in Sources */,
+				DCDC73152BBE1A9500D83402 /* StringUtils.cpp in Sources */,
+				DC69C9FD2BF2C87A00610067 /* BeebEm-Bridging-KeyboardLinks.cpp in Sources */,
+				DCB4EBD62BDB26F1002AEA8A /* FolderSelectDialog-mac.cpp in Sources */,
+				DCD283F22BE6E17100ABD9F8 /* SelectKeyDialog-mac.cpp in Sources */,
+				DC69C9FA2BF2BDE100610067 /* KeyboardLinksDialog-mac.cpp in Sources */,
+				DC904DA22BCF3CD60069DCDF /* ExportDiscViewController.swift in Sources */,
+				DCDC733D2BC0AD1600D83402 /* Master512CoPro.cpp in Sources */,
+				DC9427B52BF0FBAA0012C4E4 /* TeletextDialog-mac.cpp in Sources */,
+				DCE94C1D2BD312B100A5C12A /* BeebEm-Beeb.swift in Sources */,
+				DC9427AE2BF0386C0012C4E4 /* BeebEm-Teletext.swift in Sources */,
+				DCDC73482BC0B6CC00D83402 /* TouchScreen.cpp in Sources */,
+				DC1DBA202BB8CF8600AAB22F /* BeebEm-TapeControl.swift in Sources */,
+				DCDC73402BC0AFF100D83402 /* Sasi.cpp in Sources */,
+				DCDC73302BBF5F2200D83402 /* BeebMem.cpp in Sources */,
+				DCDC73072BBE043D00D83402 /* Watford.cpp in Sources */,
+				DCDC732C2BBF5E0600D83402 /* armsupp.cpp in Sources */,
+				DC1DBA252BB9A4C900AAB22F /* BreakoutBoxViewController.swift in Sources */,
+				DC907EB02BB5BA4000523116 /* AppDelegate.swift in Sources */,
+				DC9B41302BC20C0500C3D9D8 /* IP232.cpp in Sources */,
+				DCE94C1B2BD311D800A5C12A /* BeebEm-Bundle.swift in Sources */,
+				DC7E1E682BCF229600494CBE /* ExportFileDialog-mac.cpp in Sources */,
+				DCDC73162BBE1AC600D83402 /* RingBuffer.cpp in Sources */,
+				DC2C9D042BF9788700F2E613 /* Rtc.cpp in Sources */,
+				DC907EC62BB6D48600523116 /* Renderer.swift in Sources */,
+				DCDC73102BBE188400D83402 /* Uef.cpp in Sources */,
+				DC90FFD12BEB5B820007EB37 /* Model.cpp in Sources */,
+				DCE94C192BD3117200A5C12A /* BeebEm-Files.swift in Sources */,
+				DC907EC82BB6D55100523116 /* Bitmap.swift in Sources */,
+				DC9B413A2BC22FE200C3D9D8 /* BeebWinPrefs.cpp in Sources */,
+				DCB4EBD02BD5BD4E002AEA8A /* BeebEm-Bridging-TapeControl.cpp in Sources */,
+				DCCE05BE2C11DD6300CAAD24 /* AppleSoundStreamer.cpp in Sources */,
+				DC1DBA222BB998B000AAB22F /* KeyboardMappingViewController.swift in Sources */,
+				DC527AD22BC71CBC000D7CCF /* BeebEm-Bridging-Main.cpp in Sources */,
+				DC215BEA2C13C359003E50A3 /* AVIWriter.cpp in Sources */,
+				DC84500B2BE45931002015D9 /* BeebEm-BreakoutBox.swift in Sources */,
+				DC8450062BE2DA04002015D9 /* BeebEm-KeyboardMapping.swift in Sources */,
+				DCDC730B2BBE118B00D83402 /* Preferences.cpp in Sources */,
+				DC2C9D032BF9788700F2E613 /* RomConfigFile.cpp in Sources */,
+				DCC91DB92C1AE5D500B751D5 /* BeebWin-mac.cpp in Sources */,
+				DCD283FA2BE8427900ABD9F8 /* BeebWinSpeech-mac.cpp in Sources */,
+				DC1DBA232BB9A2BB00AAB22F /* RomConfigViewController.swift in Sources */,
+				DC9427AC2BF038090012C4E4 /* BeebEm-SerialPort.swift in Sources */,
+				DC74E1CF2C29D88C006826EE /* Registry.cpp in Sources */,
+				DCDC731E2BBE215F00D83402 /* IC32Latch.cpp in Sources */,
+				DCDC734F2BC0B8C500D83402 /* Z80.cpp in Sources */,
+				DCDC734A2BC0B75800D83402 /* Tube.cpp in Sources */,
+				DC907ECE2BB70E7B00523116 /* BeebSKView.swift in Sources */,
+				DCDC732D2BBF5E1500D83402 /* thumbemu.cpp in Sources */,
+				DC69C9F52BF2BDB600610067 /* KeyboardLinksViewController.swift in Sources */,
+				DCDC73512BC0B99700D83402 /* Z80Support.cpp in Sources */,
+				DCDC73332BBFE79800D83402 /* Disc1770.cpp in Sources */,
+				DCDC730E2BBE13BF00D83402 /* DiscInfo.cpp in Sources */,
+				DC9B41372BC22AE700C3D9D8 /* BeebWinIo.cpp in Sources */,
+				DC904DA02BCF3C240069DCDF /* BeebEm-ExportFiles.swift in Sources */,
+				DCD283FD2BE8C8DA00ABD9F8 /* Debug-mac.cpp in Sources */,
+				DC527D172BC9110E000D7CCF /* BeebEm-Bridging-Keyboard.cpp in Sources */,
+				DC907EB22BB5BAD300523116 /* BeebEm-Panels.swift in Sources */,
+				DCDC73502BC0B8D400D83402 /* Z80dis.cpp in Sources */,
+				DCDC73292BBF58DC00D83402 /* Arm.cpp in Sources */,
+				DC84500E2BE4616C002015D9 /* TapeControlDialog-mac.cpp in Sources */,
+				DCB4EBDC2BDB89E5002AEA8A /* Dialog-mac.cpp in Sources */,
+				DC8450052BE2D7F1002015D9 /* UserKeyboardDialog-mac.cpp in Sources */,
+				DCDC730F2BBE13EE00D83402 /* FileUtils.cpp in Sources */,
+				DC9B41312BC2108600C3D9D8 /* Serial.cpp in Sources */,
+				DCD284022BE8D22C00ABD9F8 /* DebuggerViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		DC907EAB2BB5B7F300523116 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				DC907EAC2BB5B7F300523116 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		DC907EA22BB4DBCE00523116 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+					MODET,
+					BEEBEM,
+					MODE32,
+					NDEBUG,
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				MACOSX_DEPLOYMENT_TARGET = 12.3;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		DC907EA32BB4DBCE00523116 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					BEEBEM,
+					MODET,
+					MODE32,
+					NDEBUG,
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				MACOSX_DEPLOYMENT_TARGET = 12.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		DC907EA52BB4DBCE00523116 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = BeebEm/BeebEm.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"BeebEm/Preview Content\"";
+				DEVELOPMENT_TEAM = C9ND6EMJ4W;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = BeebEm/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 1994/1995 David Alan Gilbert. All rights reserved.";
+				INFOPLIST_KEY_NSMainStoryboardFile = Main;
+				INFOPLIST_KEY_NSPrincipalClass = BeebEm.BeebApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = "4.19-mac";
+				PRODUCT_BUNDLE_IDENTIFIER = com.commandercoder.BeebEm;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Src/MacBridge/BeebEm-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				SYSTEM_HEADER_SEARCH_PATHS = Src/windows_stubs;
+			};
+			name = Debug;
+		};
+		DC907EA62BB4DBCE00523116 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = BeebEm/BeebEm.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"BeebEm/Preview Content\"";
+				DEVELOPMENT_TEAM = C9ND6EMJ4W;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = BeebEm/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 1994/1995 David Alan Gilbert. All rights reserved.";
+				INFOPLIST_KEY_NSMainStoryboardFile = Main;
+				INFOPLIST_KEY_NSPrincipalClass = BeebEm.BeebApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = "4.19-mac";
+				PRODUCT_BUNDLE_IDENTIFIER = com.commandercoder.BeebEm;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Src/MacBridge/BeebEm-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				SYSTEM_HEADER_SEARCH_PATHS = Src/windows_stubs;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		DC907E902BB4DBCD00523116 /* Build configuration list for PBXProject "BeebEm" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DC907EA22BB4DBCE00523116 /* Debug */,
+				DC907EA32BB4DBCE00523116 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DC907EA42BB4DBCE00523116 /* Build configuration list for PBXNativeTarget "BeebEm" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DC907EA52BB4DBCE00523116 /* Debug */,
+				DC907EA62BB4DBCE00523116 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = DC907E8D2BB4DBCD00523116 /* Project object */;
+}

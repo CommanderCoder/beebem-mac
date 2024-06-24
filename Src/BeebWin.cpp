@@ -58,7 +58,7 @@ using std::max;
 #include "AboutDialog.h"
 #include "Arm.h"
 #include "AtoDConv.h"
-#include "AviWriter.h"
+#include "AVIWriter.h"
 #include "BeebMem.h"
 #include "Debug.h"
 #include "DebugTrace.h"
@@ -113,11 +113,13 @@ using namespace Gdiplus;
 // Some LED based constants
 constexpr int LED_COL_BASE = 64;
 
+#ifndef __APPLE__
 static const char *CFG_REG_KEY = "Software\\BeebEm";
 
 static const unsigned char CFG_DISABLE_WINDOWS_KEYS[24] = {
 	00,00,00,00,00,00,00,00,03,00,00,00,00,00,0x5B,0xE0,00,00,0x5C,0xE0,00,00,00,00
 };
+#endif
 
 CArm *arm = nullptr;
 CSprowCoPro *sprow = nullptr;
@@ -210,6 +212,7 @@ BeebWin::BeebWin()
 
 	// DirectDraw stuff
 	m_hInstDDraw = nullptr;
+#ifndef __APPLE__
 	m_DD = nullptr;
 	m_DD2  = nullptr;
 	m_DDSPrimary = nullptr;
@@ -226,7 +229,8 @@ BeebWin::BeebWin()
 	m_pVB = nullptr;
 	m_pTexture = nullptr;
 	ZeroMemory(&m_TextureMatrix, sizeof(m_TextureMatrix));
-
+#endif
+	
 	// Audio
 	m_SampleRate = 44100;
 	m_SoundVolume = 100;
@@ -266,6 +270,7 @@ BeebWin::BeebWin()
 
 	// File paths
 
+#ifndef __APPLE__
 	// Get the applications path - used for non-user files
 	char AppPath[_MAX_PATH];
 	char AppDrive[_MAX_DRIVE];
@@ -273,7 +278,10 @@ BeebWin::BeebWin()
 	GetModuleFileName(nullptr, AppPath, _MAX_PATH);
 	_splitpath(AppPath, AppDrive, AppDir, nullptr, nullptr);
 	_makepath(m_AppPath, AppDrive, AppDir, nullptr, nullptr);
-
+#else
+	// Resources for the APP are in the bundle directory
+	swift_GetBundleDirectory(m_AppPath, _MAX_PATH);
+#endif
 	// Read user data path from registry
 	if (!RegGetStringValue(HKEY_CURRENT_USER, CFG_REG_KEY, "UserDataFolder",
 	                       m_UserDataPath, _MAX_PATH))
@@ -281,7 +289,14 @@ BeebWin::BeebWin()
 		// Default user data path to a sub-directory in My Docs
 		if (SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, m_UserDataPath) == NOERROR)
 		{
+#ifndef __APPLE__
 			strcat(m_UserDataPath, "\\BeebEm\\");
+#else
+			// m_UserDataPath is either
+			// 'BeebEm-mac' sub-directory in Application Support Directory
+			// or
+			// 'BeebEm' sub-directory in Documents Directory
+#endif
 		}
 	}
 
@@ -305,7 +320,9 @@ BeebWin::BeebWin()
 	m_AutoSavePrefsChanged = false;
 
 	// Clipboard
+#ifndef __APPLE__
 	m_ClipboardLength = 0;
+#endif
 	m_ClipboardIndex = 0;
 
 	// Printer
@@ -409,6 +426,7 @@ bool BeebWin::Initialise()
 		m_FullScreen = true;
 	}
 
+#ifndef __APPLE__
 	if (FAILED(CoInitialize(NULL)))
 	{
 		Report(MessageType::Error, "Failed to initialise COM");
@@ -431,6 +449,7 @@ bool BeebWin::Initialise()
 		Report(MessageType::Error, "WSA initialisation failed");
 		return false;
 	}
+#endif
 
 	InitClass();
 	CreateBeebWindow();
@@ -620,9 +639,11 @@ BeebWin::~BeebWin()
 	if (m_hDCBitmap != NULL)
 		DeleteDC(m_hDCBitmap);
 
+#ifndef __APPLE__
 	GdiplusShutdown(m_gdiplusToken);
 
 	CoUninitialize();
+#endif
 }
 
 /****************************************************************************/
@@ -967,10 +988,13 @@ void BeebWin::CreateBitmap()
 		DeleteObject(m_hBitmap);
 	if (m_hDCBitmap != NULL)
 		DeleteDC(m_hDCBitmap);
+
 	if (m_screen_blur != NULL)
 		free(m_screen_blur);
 
+#ifndef __APPLE__
 	m_hDCBitmap = CreateCompatibleDC(NULL);
+#endif
 
 	m_bmi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
 	m_bmi.bmiHeader.biWidth = 800;
@@ -1005,6 +1029,12 @@ void BeebWin::CreateBitmap()
 
 			switch (m_PaletteType)
 			{
+#ifdef __APPLE__
+			case PaletteType::RGB:
+				break;
+			case PaletteType::BW:
+				break;
+#endif
 			case PaletteType::Amber:
 				r *= (float) 1.0;
 				g *= (float) 0.8;
@@ -1053,6 +1083,7 @@ void BeebWin::CreateBitmap()
 /****************************************************************************/
 bool BeebWin::InitClass()
 {
+#ifndef __APPLE__
 	WNDCLASS wc;
 
 	// Fill in window class structure with parameters that describe the
@@ -1071,12 +1102,16 @@ bool BeebWin::InitClass()
 
 	// Register the window class and return success/failure code.
 	return RegisterClass(&wc) != 0;
+#else
+	return true;
+#endif
 }
 
 /****************************************************************************/
 
 void BeebWin::CreateBeebWindow()
 {
+#ifndef __APPLE__
 	int x = m_XWinPos;
 	int y = m_YWinPos;
 
@@ -1126,6 +1161,7 @@ void BeebWin::CreateBeebWindow()
 	UpdateWindow(m_hWnd); // Sends WM_PAINT message
 
 	SetWindowAttributes(false);
+#endif
 }
 
 /****************************************************************************/
@@ -1137,6 +1173,7 @@ void BeebWin::CreateBeebWindow()
 
 void BeebWin::DisableRoundedCorners(HWND hWnd)
 {
+#ifndef __APPLE__
 	HMODULE hDwmApi = LoadLibrary("dwmapi.dll");
 
 	if (hDwmApi == nullptr)
@@ -1165,14 +1202,17 @@ void BeebWin::DisableRoundedCorners(HWND hWnd)
 	}
 
 	FreeLibrary(hDwmApi);
+#endif
 }
 
 /****************************************************************************/
 void BeebWin::FlashWindow()
 {
+#ifndef __APPLE__
 	::FlashWindow(m_hWnd, TRUE);
 
 	MessageBeep(MB_ICONEXCLAMATION);
+#endif
 }
 
 /****************************************************************************/
@@ -1201,11 +1241,13 @@ void BeebWin::HideMenu(bool hide)
 
 void BeebWin::TrackPopupMenu(int x, int y)
 {
+#ifndef __APPLE__
 	::TrackPopupMenu(m_hMenu, TPM_LEFTALIGN | TPM_TOPALIGN | TPM_RIGHTBUTTON,
 	                 x, y,
 	                 0,
 	                 m_hWnd,
 	                 NULL);
+#endif
 }
 
 /****************************************************************************/
@@ -1262,12 +1304,14 @@ void BeebWin::InitMenu(void)
 	// View
 	UpdateDisplayRendererMenu();
 
-	const bool DirectXEnabled = m_DisplayRenderer != DisplayRendererType::GDI;
+#ifndef __APPLE__
+    const bool DirectXEnabled = m_DisplayRenderer != DisplayRendererType::GDI;
 	EnableMenuItem(IDM_DXSMOOTHING, DirectXEnabled);
 	EnableMenuItem(IDM_DXSMOOTHMODE7ONLY, DirectXEnabled);
 
 	CheckMenuItem(IDM_DXSMOOTHING, m_DXSmoothing);
 	CheckMenuItem(IDM_DXSMOOTHMODE7ONLY, m_DXSmoothMode7Only);
+#endif
 
 	CheckMenuItem(IDM_SPEEDANDFPS, m_ShowSpeedAndFPS);
 	CheckMenuItem(IDM_FULLSCREEN, m_FullScreen);
@@ -1575,10 +1619,20 @@ void BeebWin::UpdateModelMenu()
 	if (MachineType == Model::Master128)
 	{
 		EnableMenuItem(IDM_FDC_DLL, false);
+#ifdef __APPLE__
+        EnableMenuItem(ID_FDC_ACORN, false);
+        EnableMenuItem(ID_FDC_OPUS, false);
+        EnableMenuItem(ID_FDC_WATFORD, false);
+#endif
 	}
 	else if (MachineType != Model::MasterET)
 	{
 		EnableMenuItem(IDM_FDC_DLL, true);
+#ifdef __APPLE__
+        EnableMenuItem(ID_FDC_ACORN, true);
+        EnableMenuItem(ID_FDC_OPUS, true);
+        EnableMenuItem(ID_FDC_WATFORD, true);
+#endif
 	}
 
 	const bool IsMasterET = MachineType == Model::MasterET;
@@ -1651,6 +1705,11 @@ void BeebWin::UpdateModelMenu()
 	// Model B Floppy Controller sub-menu
 	EnableMenuItem(IDM_8271, IsModelB);
 	EnableMenuItem(IDM_FDC_DLL, IsModelB);
+#ifdef __APPLE__
+    EnableMenuItem(ID_FDC_ACORN, IsModelB);
+    EnableMenuItem(ID_FDC_OPUS, IsModelB);
+    EnableMenuItem(ID_FDC_WATFORD, IsModelB);
+#endif
 
 	EnableMenuItem(IDM_BASIC_HARDWARE_ONLY, !IsMasterET);
 	EnableMenuItem(IDM_TELETEXT, !IsMasterET);
@@ -1713,6 +1772,7 @@ void BeebWin::UpdateTubeMenu()
 }
 
 /****************************************************************************/
+
 
 void BeebWin::SetRomMenu()
 {
@@ -1938,6 +1998,7 @@ void BeebWin::ChangeAMXPosition(int deltaX, int deltaY)
 }
 
 /****************************************************************************/
+#ifndef __APPLE__
 
 LRESULT CALLBACK BeebWin::WndProc(HWND hWnd,
                                   UINT nMessage,
@@ -2377,6 +2438,55 @@ LRESULT BeebWin::WndProc(UINT nMessage, WPARAM wParam, LPARAM lParam)
 
 	return 0;
 }
+
+#else
+
+
+/*
+ 
+ winproc does
+ 
+ 
+ WM_COMMAND - HandleCommand()
+ WM_PAINT - resetpending
+ WM_SIZE
+ WM_MOVE
+ WM_SYSKEYDOWN - altpressed
+ WM_KEYDOWN
+ WM_SYSKEYUP
+ WM_KEYUP
+ WM_ACTIVATE
+ WM_SETFOCUS
+ WM_KILLFOCUS
+ WM_SETCURSOR
+ MM_JOY1MOVE
+ MM_JOY1BUTTONDOWN
+ MM_JOY1BUTTONUP
+ WM_INPUT
+ WM_MOUSEMOVE
+ WM_LBUTTONDOWN
+ WM_LBUTTONUP
+ WM_MBUTTONDOWN
+ WM_MBUTTONUP
+ WM_RBUTTONDOWN
+ WM_RBUTTONUP
+ WM_DESTROY
+ WM_ENTERMENULOOP
+ WM_EXITMENULOOP
+ WM_ENTERSIZEMOVE
+ WM_EXITSIZEMOVE
+ WM_REINITDX
+ WM_TIMER
+ WM_USER_KEYBOARD_DIALOG_CLOSED
+ WM_USER_PORT_BREAKOUT_DIALOG_CLOSED
+ 
+ 
+ see AppProc()
+ 
+ 
+ 
+ */
+#endif
 
 /****************************************************************************/
 int BeebWin::TranslateKey(int vkey, bool keyUp, int &row, int &col)
@@ -3148,6 +3258,7 @@ void BeebWin::SetWindowAttributes(bool wasFullScreen)
 		m_XWinSize = xs;
 		m_YWinSize = ys;
 
+#ifndef __APPLE__
 		DWORD dwStyle = GetWindowLong(m_hWnd, GWL_STYLE);
 		dwStyle &= ~WS_POPUP;
 		dwStyle |= WS_OVERLAPPEDWINDOW;
@@ -3163,6 +3274,7 @@ void BeebWin::SetWindowAttributes(bool wasFullScreen)
 		             Rect.right - Rect.left,
 		             Rect.bottom - Rect.top,
 		             !wasFullScreen ? SWP_NOMOVE : 0);
+#endif
 
 		// Experiment: hide menu in full screen
 		HideMenu(false);
@@ -4031,8 +4143,10 @@ void BeebWin::HandleCommand(UINT MenuID)
 		break;
 
 	case IDM_ABOUT: {
+#ifndef __APPLE__
 		AboutDialog Dialog(hInst, m_hWnd);
 		Dialog.DoModal();
+#endif
 		break;
 	}
 
@@ -4288,7 +4402,15 @@ void BeebWin::HandleCommand(UINT MenuID)
 		if (MachineType != Model::Master128 && MachineType != Model::MasterET)
 			SelectFDC();
 		break;
-
+#ifdef __APPLE__
+        case ID_FDC_WATFORD:
+        case ID_FDC_ACORN:
+        case ID_FDC_OPUS:
+            if (MachineType != Model::Master128 && MachineType != Model::MasterET)
+                SelectFDC(MenuID);
+            break;
+#endif
+            
 	case IDM_8271:
 		KillDLLs();
 		NativeFDC = true;
@@ -4296,6 +4418,13 @@ void BeebWin::HandleCommand(UINT MenuID)
 		CheckMenuItem(IDM_8271, true);
 		CheckMenuItem(IDM_FDC_DLL, false);
 
+#ifdef __APPLE__
+		// uncheck all ID_FDC_DLL items
+		CheckMenuItem(ID_FDC_ACORN, false);
+		CheckMenuItem(ID_FDC_OPUS, false);
+		CheckMenuItem(ID_FDC_WATFORD, false);
+#endif
+			
 		if (MachineType != Model::Master128 && MachineType != Model::MasterET)
 		{
 			char CfgName[20];
@@ -4654,9 +4783,11 @@ void BeebWin::HandleCommand(UINT MenuID)
 			           "Disabling the Windows keys will affect the whole PC.\n"
 			           "Go ahead and disable the Windows keys?") == MessageResult::Yes)
 			{
+#ifndef __APPLE__
 				int binsize=sizeof(CFG_DISABLE_WINDOWS_KEYS);
 				RegSetBinaryValue(HKEY_LOCAL_MACHINE, CFG_KEYBOARD_LAYOUT,
 				                  CFG_SCANCODE_MAP, CFG_DISABLE_WINDOWS_KEYS, &binsize);
+#endif
 				reboot = true;
 			}
 			else
@@ -4667,9 +4798,11 @@ void BeebWin::HandleCommand(UINT MenuID)
 		}
 		else
 		{
+#ifndef __APPLE__
 			int binsize=0;
 			RegSetBinaryValue(HKEY_LOCAL_MACHINE, CFG_KEYBOARD_LAYOUT,
 			                  CFG_SCANCODE_MAP, CFG_DISABLE_WINDOWS_KEYS, &binsize);
+#endif
 			reboot = true;
 		}
 
@@ -4856,6 +4989,7 @@ void BeebWin::CaptureMouse()
 	if (m_MouseCaptured)
 		return;
 
+#ifndef __APPLE__
 	RAWINPUTDEVICE Rid[1];
 	Rid[0].usUsagePage = HID_USAGE_PAGE_GENERIC;
 	Rid[0].usUsage = HID_USAGE_GENERIC_MOUSE;
@@ -4882,6 +5016,7 @@ void BeebWin::CaptureMouse()
 	MapWindowPoints(m_hWnd, nullptr, reinterpret_cast<LPPOINT>(&clientRect), 2);
 	ClipCursor(&clientRect);
 
+#endif
 	// Display info on title bar
 	UpdateWindowTitle();
 }
@@ -4890,6 +5025,7 @@ void BeebWin::ReleaseMouse()
 {
 	if (!m_MouseCaptured)
 		return;
+#ifndef __APPLE__
 
 	// Deregister to stop receiving WM_INPUT messages.
 	RAWINPUTDEVICE Rid[1];
@@ -4911,6 +5047,7 @@ void BeebWin::ReleaseMouse()
 	ShowCursor(true);
 	ReleaseCapture();
 
+#endif
 	m_MouseCaptured = false;
 
 	// Restore original window title
@@ -5411,6 +5548,7 @@ void BeebWin::KillBootDiscTimer()
 /****************************************************************************/
 bool BeebWin::RebootSystem()
 {
+#ifndef __APPLE__
 	HANDLE hToken;
 	TOKEN_PRIVILEGES tkp;
 
@@ -5433,6 +5571,7 @@ bool BeebWin::RebootSystem()
 	                   SHTDN_REASON_FLAG_PLANNED))
 		return false;
 
+#endif
 	return true;
 }
 
@@ -5444,10 +5583,12 @@ bool BeebWin::CheckUserDataPath(bool Persist)
 	bool store_user_data_path = false;
 	char path[_MAX_PATH];
 
+#ifndef __APPLE__
 	// Change all '/' to '\'
 	for (size_t i = 0; i < strlen(m_UserDataPath); ++i)
 		if (m_UserDataPath[i] == '/')
 			m_UserDataPath[i] = '\\';
+#endif
 
 	// Check that the folder exists
 	if (!FolderExists(m_UserDataPath))
@@ -5458,8 +5599,12 @@ bool BeebWin::CheckUserDataPath(bool Persist)
 		{
 			// Use data dir installed with BeebEm
 			strcpy(m_UserDataPath, m_AppPath);
+#ifndef __APPLE__
 			strcat(m_UserDataPath, "UserData\\");
 
+#else
+			strcat(m_UserDataPath, "UserData/");
+#endif
 			store_user_data_path = true;
 		}
 		else
@@ -5558,7 +5703,11 @@ bool BeebWin::CheckUserDataPath(bool Persist)
 		fileOp.fFlags = 0;
 
 		strcpy(path, m_AppPath);
+#ifndef __APPLE__
 		strcat(path, "UserData\\*.*");
+#else
+		strcat(path, "UserData");
+#endif
 		path[strlen(path)+1] = 0; // need double 0
 		fileOp.pFrom = path;
 
@@ -5638,6 +5787,10 @@ void BeebWin::SelectUserDataPath()
 	FolderSelectDialog::Result result = Dialog.DoModal();
 
 	switch (result) {
+#ifdef __APPLE__
+		case FolderSelectDialog::Result::Cancel:
+			break;
+#endif
 		case FolderSelectDialog::Result::OK:
 			PathBackup = m_UserDataPath;
 			strcpy(m_UserDataPath, Dialog.GetFolder().c_str());

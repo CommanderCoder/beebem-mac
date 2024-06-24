@@ -292,6 +292,7 @@ void BeebWin::LoadWindowPosPreferences(int Version)
 		}
 	}
 
+#ifndef __APPLE__
 	if (Version >= 3)
 	{
 		m_Preferences.GetDecimalValue(CFG_VIEW_WINDOW_POS_X, m_XWinPos, -1);
@@ -322,6 +323,7 @@ void BeebWin::LoadWindowPosPreferences(int Version)
 
 	if (m_YWinPos > WorkAreaRect.bottom - 80)
 		m_YWinPos = -1;
+#endif
 }
 
 /****************************************************************************/
@@ -1075,7 +1077,11 @@ void BeebWin::LoadTeletextAdapterPreferences(int Version)
 			GetDataPath(m_UserDataPath, DiscsPath);
 
 			char TeletextFile[256];
+#ifndef __APPLE__
 			sprintf(TeletextFile, "%s\\txt%d.dat", DiscsPath, ch);
+#else
+			sprintf(TeletextFile, "%s/txt%d.dat", DiscsPath, ch);
+#endif
 
 			TeletextFileName[ch] = TeletextFile;
 		}
@@ -1321,6 +1327,8 @@ void BeebWin::LoadKeyMapPreferences()
 	m_Preferences.GetBoolValue(CFG_DISABLE_KEYS_ESCAPE, m_DisableKeysEscape, false);
 	m_Preferences.GetBoolValue(CFG_DISABLE_KEYS_SHORTCUT, m_DisableKeysShortcut, false);
 
+
+#ifndef __APPLE__
 	// Windows key enable/disable still comes from registry
 	int Size = 24;
 	unsigned char KeyData[24];
@@ -1334,6 +1342,7 @@ void BeebWin::LoadKeyMapPreferences()
 	{
 		m_DisableKeysWindows = false;
 	}
+#endif
 }
 
 /****************************************************************************/

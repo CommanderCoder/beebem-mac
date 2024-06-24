@@ -31,12 +31,20 @@ Boston, MA  02110-1301, USA.
 
 #include "Sound.h"
 #include "6502core.h"
+#ifndef __APPLE__
 #include "AviWriter.h"
+#else
+#include "AVIWriter.h"
+#endif
 #include "BeebWin.h"
 #include "Main.h"
 #include "SoundStreamer.h"
 #include "Speech.h"
+#ifndef __APPLE__
 #include "UEFState.h"
+#else
+#include "UefState.h"
+#endif
 
 //  #define DEBUGSOUNDTOFILE
 
@@ -135,6 +143,7 @@ SoundStreamer *pSoundStreamer = nullptr;
 
 static void WriteToSoundBuffer(BYTE *pSoundData)
 {
+#ifndef __APPLE__
 	if (pSoundStreamer != nullptr)
 	{
 		pSoundStreamer->Stream(pSoundData);
@@ -151,6 +160,12 @@ static void WriteToSoundBuffer(BYTE *pSoundData)
 			mainWin->EndVideo();
 		}
 	}
+#else
+	if (pSoundStreamer != nullptr)
+	{
+		pSoundStreamer->Stream(pSoundData);
+	}
+#endif
 }
 
 /****************************************************************************/
@@ -457,7 +472,11 @@ void LoadSoundSamples()
 			FILE *fd = fopen(FileName, "rb");
 			if (fd != NULL) {
 				fseek(fd, 0, SEEK_END);
+#ifndef __APPLE__
 				SoundSamples[i].len = ftell(fd);
+#else
+				SoundSamples[i].len = (int)ftell(fd);
+#endif
 				SoundSamples[i].pBuf = (unsigned char *)malloc(SoundSamples[i].len);
 				fseek(fd, 0, SEEK_SET);
 				fread(SoundSamples[i].pBuf, 1, SoundSamples[i].len, fd);

@@ -234,12 +234,19 @@ public:
 	void ApplyPrefs();
 	void Shutdown();
 
+#ifndef __APPLE__
 	static LRESULT CALLBACK WndProc(HWND hWnd,
 	                                  UINT nMessage,
 	                                  WPARAM wParam,
 	                                  LPARAM lParam);
 
 	LRESULT WndProc(UINT nMessage, WPARAM wParam, LPARAM lParam);
+	
+#else
+	LRESULT AppProc(UINT nMessage, WPARAM wParam, LPARAM lParam);
+
+#endif
+
 
 	void UpdateModelMenu();
 	void SetSoundMenu(void);
@@ -249,6 +256,9 @@ public:
 	void SetRomMenu(); // LRW  Added for individual ROM/RAM
 	void UpdateTubeMenu();
 	void SelectFDC();
+#ifdef __APPLE__
+	void SelectFDC(int FDC);
+#endif
 	void LoadFDC(char *DLLName, bool save);
 	void KillDLLs(void);
 	void UpdateLEDMenu();
@@ -262,7 +272,11 @@ public:
 
 	void doHorizLine(int Colour, int y, int sx, int width) {
 		if (TeletextEnabled) y/=TeletextStyle;
+#ifndef __APPLE__
 		int d = (y*800)+sx+ScreenAdjust+(TeletextEnabled?36:0);
+#else
+		long d = (y*800)+sx+ScreenAdjust+(TeletextEnabled?36:0);
+#endif
 		if ((d+width)>(500*800)) return;
 		if (d<0) return;
 		memset(m_screen+d, Colour, width);
@@ -270,7 +284,11 @@ public:
 
 	void doInvHorizLine(int Colour, int y, int sx, int width) {
 		if (TeletextEnabled) y/=TeletextStyle;
+#ifndef __APPLE__
 		int d = (y*800)+sx+ScreenAdjust+(TeletextEnabled?36:0);
+#else
+		long d = (y*800)+sx+ScreenAdjust+(TeletextEnabled?36:0);
+#endif
 		char *vaddr;
 		if ((d+width)>(500*800)) return;
 		if (d<0) return;
@@ -285,14 +303,22 @@ public:
 	}
 
 	EightUChars *GetLinePtr(int y) {
+#ifndef __APPLE__
 		int d = (y*800)+ScreenAdjust;
+#else
+		long d = (y*800)+ScreenAdjust;
+#endif
 		if (d > (MAX_VIDEO_SCAN_LINES*800))
 			return((EightUChars *)(m_screen+(MAX_VIDEO_SCAN_LINES*800)));
 		return((EightUChars *)(m_screen + d));
 	}
 
 	SixteenUChars *GetLinePtr16(int y) {
+#ifndef __APPLE__
 		int d = (y*800)+ScreenAdjust;
+#else
+		long d = (y*800)+ScreenAdjust;
+#endif
 		if (d > (MAX_VIDEO_SCAN_LINES*800))
 			return((SixteenUChars *)(m_screen+(MAX_VIDEO_SCAN_LINES*800)));
 		return((SixteenUChars *)(m_screen + d));
@@ -662,14 +688,17 @@ public:
 
 	// DirectDraw stuff
 	HINSTANCE m_hInstDDraw;
+#ifndef __APPLE__
 	LPDIRECTDRAW m_DD; // DirectDraw object
 	LPDIRECTDRAW2 m_DD2; // DirectDraw object
 	LPDIRECTDRAWSURFACE m_DDSPrimary; // DirectDraw primary surface
 	LPDIRECTDRAWSURFACE2 m_DDS2Primary; // DirectDraw primary surface
 	LPDIRECTDRAWSURFACE m_DDSOne; // Offscreen surface 1
 	LPDIRECTDRAWSURFACE2 m_DDS2One; // Offscreen surface 1
+#endif
 	bool m_DXSmoothing;
 	bool m_DXSmoothMode7Only;
+#ifndef __APPLE__
 	LPDIRECTDRAWCLIPPER m_Clipper; // clipper for primary
 
 	// Direct3D9 stuff
@@ -678,6 +707,7 @@ public:
 	LPDIRECT3DVERTEXBUFFER9 m_pVB;
 	LPDIRECT3DTEXTURE9 m_pTexture;
 	D3DXMATRIX m_TextureMatrix;
+#endif
 
 	// Audio
 	int m_SampleRate;
@@ -731,7 +761,9 @@ public:
 
 	// Clipboard
 	std::vector<char> m_ClipboardBuffer;
+#ifndef __APPLE__
 	size_t m_ClipboardLength;
+#endif
 	size_t m_ClipboardIndex;
 
 	// Printer

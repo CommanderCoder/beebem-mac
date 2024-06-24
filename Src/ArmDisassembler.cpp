@@ -496,12 +496,20 @@ char *decodeSingleDTRegOffsetPreIndex(uint32 /* address */, uint32 instruction, 
 	uint32 imm = getField(instruction, 7,11);
 
 	// table of shift mnemonics
+#ifndef __APPLE__
 	char *shiftMnemonic[4] =
+#else
+	const char* shiftMnemonic[4] =
+#endif
 	{
 		"lsl", "lsr", "asr", "ror"
 	};
 
+#ifndef __APPLE__
 	char *shiftType = shiftMnemonic[ getField(instruction, 5,6) ];
+#else
+	const char *shiftType = shiftMnemonic[ getField(instruction, 5,6) ];
+#endif
 
 	// if not LSL #0
 	if( !( (strcmp(shiftType, "lsl") == 0) && imm == 0) )
@@ -838,7 +846,11 @@ char *decodeSoftwareInterrupt(uint32 /* address */, uint32 instruction, char *bu
 	strcpy(buff, "swi");
 	strcat(buff, decodeConditionCode(instruction));
 	
+#ifndef __APPLE__
 	char *swiList[] = { "WriteC", "WriteS", "Write0", "NewLine", "ReadC", "CLI", "Byte",
+#else
+	const char *swiList[] = { "WriteC", "WriteS", "Write0", "NewLine", "ReadC", "CLI", "Byte",
+#endif
 					   "Word", "File", "Args", "BGet", "BPut", "Multiple", "Open",
 					   "ReadLine", "Control", "GetEnv", "Exit", "SetEnv",
 					   "IntOn", "IntOff", "CallBack", "EnterOS", "BreakPT",
@@ -967,10 +979,19 @@ char *decodeSingleDataSwap(uint32 /* address */, uint32 instruction, char *buff)
 	return buff;
 }
 
+#ifndef __APPLE__
 char *decodeConditionCode(uint32 instruction)
+#else
+const char *decodeConditionCode(uint32 instruction)
+#endif
 {
 	// table of condition code meanings, note that as convention dictates, AL is blank
+
+#ifndef __APPLE__
 	char *conditionCodes[16] =
+#else
+	const char *conditionCodes[16] =
+#endif
 	{
 		"eq", "ne", "cs", "cc",
 		"mi", "pl", "vs", "vc",

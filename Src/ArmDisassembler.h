@@ -31,7 +31,11 @@ char *Arm_disassemble(uint32 address, uint32 instruction, char *buff);
 char *decodeRegisterList(uint32 instruction);
 char *decodeSingleDataSwap(uint32 address, uint32 instruction, char *buff);
 char *decodeMultiply(uint32 address, uint32 instruction, char *buff);
+#ifndef __APPLE__
 char *decodeConditionCode(uint32 instruction);
+#else
+const char *decodeConditionCode(uint32 instruction);
+#endif
 char *decodeSoftwareInterrupt(uint32 address, uint32 instruction, char *buff);
 char *decodeCoProRegTransferOrDataOperation(uint32 address, uint32 instruction, char *buff);
 char *decodeCoProDTPostIndex(uint32 address, uint32 instruction, char *buff);

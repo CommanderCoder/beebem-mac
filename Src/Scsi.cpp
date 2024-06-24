@@ -68,6 +68,12 @@ static bool DiscVerify(unsigned char *buf);
 static void Verify();
 static void Translate();
 
+#ifdef __APPLE__
+// fix the name class with read & write from unistd.h
+#define read read_scsi
+#define write write_scsi
+#endif
+
 enum phase_t {
 	busfree,
 	selection,
@@ -124,7 +130,11 @@ void SCSIReset()
 
 	for (int i = 0; i < 4; ++i)
 	{
+#ifndef __APPLE__
 		sprintf(buff, "%s\\scsi%d.dat", HardDrivePath, i);
+#else
+		sprintf(buff, "%s/scsi%d.dat", HardDrivePath, i);
+#endif
 
 		SCSIDisc[i] = fopen(buff, "rb+");
 
@@ -338,6 +348,12 @@ static void WriteData(unsigned char data)
 			}
 			return;
 
+#ifdef __APPLE__
+		case execute:
+			break;
+		case read:
+			break;
+#endif
 		case write:
 			scsi.buffer[scsi.offset] = data;
 			scsi.offset++;
@@ -388,6 +404,12 @@ static void WriteData(unsigned char data)
 			scsi.next++;
 			scsi.offset = 0;
 			return;
+#ifdef __APPLE__
+		case status:
+			break;
+		case message:
+			break;
+#endif
 	}
 
 	BusFree();

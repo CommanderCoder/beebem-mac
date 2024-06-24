@@ -190,7 +190,14 @@ bool RomConfigFile::Load(const char *FileName)
 			break;
 		}
 
+#ifndef __APPLE__
 		m_FileName[Model][Bank] = Line;
+#else
+		// switch the slashes
+		std::replace(Line.begin(), Line.end(), '\\', '/');
+		m_FileName[Model][Bank] = Line;
+#endif
+
 
 		if (++Bank == ROM_BANK_COUNT + 1)
 		{

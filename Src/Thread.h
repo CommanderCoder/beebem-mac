@@ -21,6 +21,9 @@ Boston, MA  02110-1301, USA.
 #ifndef THREAD_HEADER
 #define THREAD_HEADER
 
+#ifdef __APPLE__
+#define __stdcall
+#endif
 class Thread
 {
 	public:

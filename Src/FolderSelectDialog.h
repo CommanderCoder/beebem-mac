@@ -21,6 +21,7 @@ Boston, MA  02110-1301, USA.
 #ifndef FOLDER_SELECT_DIALOG_HEADER
 #define FOLDER_SELECT_DIALOG_HEADER
 
+#ifndef __APPLE__
 #include <string>
 
 class FolderSelectDialog
@@ -59,4 +60,7 @@ class FolderSelectDialog
 		std::string m_Title;
 };
 
+#else
+#import "FolderSelectDialog-mac.hpp"
+#endif //__APPLE__
 #endif

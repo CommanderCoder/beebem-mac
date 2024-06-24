@@ -100,7 +100,11 @@ struct AddrInfo
 
 struct DebugCmd
 {
+#ifndef __APPLE__
 	char *name;
+#else
+	const char *name;
+#endif
 	bool (*handler)(char* arguments);
 	const char *argdesc;
 	const char *help;

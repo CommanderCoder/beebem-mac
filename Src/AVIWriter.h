@@ -36,7 +36,7 @@ class AVIWriter
 public:
 	AVIWriter();
 	virtual ~AVIWriter();
-
+#ifndef __APPLE__
 	// Open file
 	HRESULT Initialise(const CHAR *psFileName,
 	                   const WAVEFORMATEX *WaveFormat,
@@ -63,6 +63,7 @@ private:
 	LPVOID m_lastVideoFrame;
 	int m_videoBufferSize;
 	LONG m_nFrame;
+#endif
 };
 
 extern AVIWriter *aviWriter;

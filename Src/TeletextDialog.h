@@ -21,6 +21,7 @@ Boston, MA  02110-1301, USA.
 #ifndef TELETEXT_DIALOG_HEADER
 #define TELETEXT_DIALOG_HEADER
 
+#ifndef __APPLE__
 #include <string>
 
 #include "Dialog.h"
@@ -70,4 +71,7 @@ class TeletextDialog : public Dialog
 		u_short m_IPPort[4];
 };
 
+#else
+#include "TeletextDialog-mac.hpp"
+#endif
 #endif

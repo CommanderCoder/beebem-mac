@@ -79,7 +79,9 @@ static unsigned char TeletextStatus = 0x0f;
 static bool TeletextInts = false;
 static bool TeletextEnable = false;
 static int TeletextChannel = 0;
+#ifndef __APPLE__
 static int rowPtrOffset = 0x00;
+#endif
 static int rowPtr = 0x00;
 static int colPtr = 0x00;
 
@@ -203,7 +205,11 @@ void TeletextInit()
                 if (TeletextFile[i] != nullptr)
                 {
                     fseek(TeletextFile[i], 0L, SEEK_END);
+#ifndef __APPLE__
                     TeletextFrameCount[i] = ftell(TeletextFile[i]) / TELETEXT_FRAME_SIZE;
+#else
+					TeletextFrameCount[i] = (int) ftell(TeletextFile[i]) / TELETEXT_FRAME_SIZE;
+#endif
                     fseek(TeletextFile[i], 0L, SEEK_SET);
                 }
                 else
@@ -374,7 +380,11 @@ void TeletextAdapterUpdate()
                 {
                     if (TeletextSocket[i] != INVALID_SOCKET)
                     {
+#ifndef __APPLE__
                         int result;
+#else
+						ssize_t result;
+#endif
 
                         // find out how much data is buffered on the socket
                         unsigned long n;

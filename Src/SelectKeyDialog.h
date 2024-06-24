@@ -20,6 +20,7 @@ Boston, MA  02110-1301, USA.
 
 #ifndef SELECT_KEY_DIALOG_HEADER
 #define SELECT_KEY_DIALOG_HEADER
+#ifndef __APPLE__
 
 #include <windows.h>
 
@@ -76,4 +77,7 @@ class SelectKeyDialog
 
 extern SelectKeyDialog* selectKeyDialog;
 
+#else
+#include "SelectKeyDialog-mac.hpp"
+#endif
 #endif

@@ -42,10 +42,25 @@ HINSTANCE hInst;
 HWND hCurrentDialog = nullptr;
 HACCEL hCurrentAccelTable = nullptr;
 
+#ifndef __APPLE__
 int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE /* hPrevInstance */,
                      LPSTR /* lpszCmdLine */, int /* nCmdShow */)
 {
 	hInst = hInstance;
+#else
+	
+	// Windows MAIN
+	// keep processing instructions until WM_QUIT
+	// When there is a mesage or beeb is frozen, process Messages
+	// either to TranslateAccelerator
+	// Translates virtual key codes,Dispatches message to window
+	// to CurrentDialogue
+	
+	// MacOS Main
+	// three functions - mainInit -> mainStep -> mainEnd
+int mainInit()
+{
+#endif
 
 	mainWin = new(std::nothrow) BeebWin();
 
@@ -64,6 +79,11 @@ int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE /* hPrevInstance */,
 
 	// Create serial threads
 	SerialInit();
+
+#ifdef __APPLE__
+	return 0;
+}
+#else
 
 	for (;;)
 	{
@@ -103,12 +123,31 @@ int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE /* hPrevInstance */,
 				}
 			}
 		}
+#endif
+		
+#ifdef __APPLE__
+int mainStep()
+{
+	 bool done = false;
+	 if (done)
+		 return 1;
 
+#endif
 		if (!mainWin->IsFrozen() && !mainWin->IsPaused()) {
 			Exec6502Instruction();
 		}
+	
+#ifdef __APPLE__
+	return 0;
+}
+#else
 	}
+#endif
 
+#ifdef __APPLE__
+int mainEnd()
+{
+#endif
 	mainWin->KillDLLs();
 
 	CloseLog();

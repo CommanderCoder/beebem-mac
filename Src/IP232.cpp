@@ -271,7 +271,11 @@ unsigned int EthernetPortReadThread::ThreadFunc()
 
 				if (NumReady > 0)
 				{
+#ifndef __APPLE__
 					int BytesReceived = recv(EthernetSocket, (char *)Buffer, 256, 0);
+#else
+					int BytesReceived = (int)recv(EthernetSocket, (char *)Buffer, 256, 0);
+#endif
 
 					if (BytesReceived != SOCKET_ERROR)
 					{
@@ -322,7 +326,11 @@ unsigned int EthernetPortReadThread::ThreadFunc()
 				}
 
 				FD_ZERO(&fds);
+#ifndef __APPLE__
 				static const timeval TimeOut = {0, 0};
+#else
+				static timeval TimeOut = {0, 0};
+#endif
 
 				FD_SET(EthernetSocket, &fds);
 
@@ -337,8 +345,11 @@ unsigned int EthernetPortReadThread::ThreadFunc()
 				}
 				else
 				{
+#ifndef __APPLE__
 					int BytesSent = send(EthernetSocket, (char *)Buffer, BufferLength, 0);
-
+#else
+					int BytesSent = (int)send(EthernetSocket, (char *)Buffer, BufferLength, 0);
+#endif
 					if (BytesSent < BufferLength)
 					{
 						// Should really check what the error was ...

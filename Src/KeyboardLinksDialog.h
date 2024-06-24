@@ -21,6 +21,7 @@ Boston, MA  02110-1301, USA.
 #ifndef KEYBOARDLINKSDIALOG_HEADER
 #define KEYBOARDLINKSDIALOG_HEADER
 
+#ifndef __APPLE__
 #include "Dialog.h"
 
 class KeyboardLinksDialog : public Dialog
@@ -46,4 +47,7 @@ class KeyboardLinksDialog : public Dialog
 		unsigned char m_Value;
 };
 
+#else
+#include "KeyboardLinksDialog-mac.hpp"
+#endif
 #endif

@@ -611,7 +611,11 @@ bool PrinterEnable(const char *FileName)
 {
 	ClosePrinterOutputFile();
 
+#ifndef __APPLE__
 	if (FileName != nullptr)
+#else
+	if (FileName == nullptr || FileName[0] == 0)
+#endif
 	{
 		PrinterEnabled = true;
 		SetTrigger(PRINTER_TRIGGER, PrinterTrigger);

@@ -24,7 +24,11 @@ Boston, MA  02110-1301, USA.
 #define LOG_HEADER
 
 void OpenLog();
+#ifndef __APPLE__
 void WriteLog(char *fmt, ...);
+#else
+void WriteLog(const char *fmt, ...);
+#endif
 void CloseLog();
 
 #endif
