@@ -17,6 +17,11 @@ class AppDelegate: NSObject, NSApplicationDelegate
         // Insert code here to initialize your application
     }
 
+	func applicationWillFinishLaunching(_ notification: Notification) {
+		UserDefaults.standard.set(true, forKey: "NSDisabledDictationMenuItem")
+		UserDefaults.standard.set(true, forKey: "NSDisabledCharacterPaletteMenuItem")
+	}
+	
     func applicationWillTerminate(_ aNotification: Notification) {
 
 		// NSSupportsSuddenTermination set to NO in 'plist'
