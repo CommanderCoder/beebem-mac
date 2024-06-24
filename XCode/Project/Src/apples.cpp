@@ -11,6 +11,7 @@
 #include <string>
 #include <filesystem> // C++17 (or Microsoft-specific implementation in C++14)
 #include "BeebWin.h"
+#include "Main.h"
 
 int __argc;
 char** __argv;
@@ -409,7 +410,20 @@ void DeleteDC(HDC m_hDCBitmap)
 
 }
 
-UINT_PTR SetTimer(HWND hWnd, UINT_PTR  nIDEvent, UINT uElapse, TIMERPROC lpTimerFunc) {return 0;}
+UINT_PTR SetTimer(HWND hWnd, UINT_PTR  nIDEvent, UINT uElapse, TIMERPROC lpTimerFunc) {
+	
+	if (mainWin == NULL)
+		return 0;
+	
+	if (mainWin->TIMER_PRINTER == nIDEvent)
+	{
+		mainWin->CopyPrinterBufferToClipboard();
+		return 1;
+	}
+	fprintf(stderr, "Trying to set timer %d for %d microsec", nIDEvent, uElapse);
+	return 0;
+	
+}
 
 BOOL KillTimer(HWND hWnd, UINT_PTR  nIDEvent) {return 0;}
 

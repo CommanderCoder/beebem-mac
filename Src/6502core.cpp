@@ -1395,8 +1395,12 @@ static void ClipboardREMVHandler()
 	{
 		// Examine buffer state
 
+#ifndef __APPLE__
 		if (mainWin->m_ClipboardIndex < mainWin->m_ClipboardLength)
-		{
+#else
+		if (mainWin->m_ClipboardIndex < mainWin->m_ClipboardBuffer.size())
+#endif
+			{
 			Accumulator = mainWin->m_ClipboardBuffer[mainWin->m_ClipboardIndex];
 			PSR &= ~FlagC;
 		}
@@ -1407,7 +1411,11 @@ static void ClipboardREMVHandler()
 	}
 	else {
 		// Remove character from buffer
+#ifndef __APPLE__
 		if (mainWin->m_ClipboardIndex < mainWin->m_ClipboardLength)
+#else
+		if (mainWin->m_ClipboardIndex < mainWin->m_ClipboardBuffer.size())
+#endif
 		{
 			unsigned char c = mainWin->m_ClipboardBuffer[mainWin->m_ClipboardIndex++];
 
@@ -1480,7 +1488,11 @@ static void ClipboardCNPVHandler()
 		}
 		else
 		{
+#ifndef __APPLE__
 			XReg = mainWin->m_ClipboardIndex < mainWin->m_ClipboardLength;
+#else
+			XReg = mainWin->m_ClipboardIndex < mainWin->m_ClipboardBuffer.size();
+#endif
 			YReg = 0;
 		}
 	}
@@ -1523,7 +1535,11 @@ void Exec6502Instruction()
 			ProgramCounter == (WholeRam[0x20e] | (WholeRam[0x20f] << 8))) {
 			mainWin->SpeakChar(Accumulator);
 		}
+#ifndef __APPLE__
 		else if (mainWin->m_ClipboardLength > 0) {
+#else
+		else if (!mainWin->m_ClipboardBuffer.empty()) {
+#endif
 			// Check for REMV (Remove from buffer vector) and CNPV (Count/purge buffer
 			// vector). X register contains the buffer number (0 indicates the keyboard
 			// buffer). See AUG p.263/264 and p.138
