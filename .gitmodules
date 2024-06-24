@@ -1,0 +1,3 @@
+[submodule "XCode/Installer/create-dmg"]
+	path = XCode/Installer/create-dmg
+	url = https://github.com/create-dmg/create-dmg.git
