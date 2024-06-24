@@ -1909,7 +1909,10 @@ void BeebWin::ScaleJoystick(unsigned int x, unsigned int y)
 		                  (double)(m_JoystickCaps.wXmax - m_JoystickCaps.wXmin));
 		JoystickY = (int)((double)(m_JoystickCaps.wYmax - y) * 65535.0 /
 		                  (double)(m_JoystickCaps.wYmax - m_JoystickCaps.wYmin));
+		
+		fprintf(stderr, "%d, %d\n", JoystickX, JoystickY);
 	}
+	
 }
 
 /****************************************************************************/

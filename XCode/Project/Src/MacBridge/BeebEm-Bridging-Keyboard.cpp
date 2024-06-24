@@ -577,7 +577,7 @@ extern "C" void beeb_handlemouse(long message, long wParam, long lParam)
 	switch (message)
 	{
 		case kEventMouseUp:
-			fprintf(stderr, "mouseup : code = %ld\n", wParam);
+//			fprintf(stderr, "mouseup : code = %ld\n", wParam);
 			switch (wParam)
 			{
 				case MK_RBUTTON: msg = WM_RBUTTONUP; break;
@@ -587,7 +587,7 @@ extern "C" void beeb_handlemouse(long message, long wParam, long lParam)
 			mainWin->AppProc(msg, wParam, lParam);
 			break;
 		case kEventMouseDown:
-			fprintf(stderr, "mousedown : code = %ld\n", wParam);
+//			fprintf(stderr, "mousedown : code = %ld\n", wParam);
 			switch (wParam)
 			{
 				case MK_RBUTTON: msg = WM_RBUTTONDOWN; break;

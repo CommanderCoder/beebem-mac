@@ -13,6 +13,7 @@ import Carbon
 import IOKit
 import IOKit.hid
 
+import os
 
 // need to have given the controller an identified (StoryboardID)
 let keyMapWindow: NSWindowController = GetWindowCtrl(for:Dialogs.keyboardMapping)
@@ -69,31 +70,43 @@ func CONVERT_MAGNITUDE(_ x:Int) -> Int { return  (((x)*10000) / 0x7FFF) }
 
 let hidManager = IOHIDManagerCreate(kCFAllocatorDefault, IOOptionBits(kIOHIDOptionsTypeNone))
 
+// vendor and produce numbers for PS3 controller
+let PS3vendorIdNum = 0x054C as Int
+let PS3productIdNum = 0x0268 as Int
+
+let vendorIDKey = kIOHIDVendorIDKey as CFString
+let productIDKey = kIOHIDProductIDKey as CFString
+
+
 let deviceCriteria:NSArray = [
 	[
 		kIOHIDDeviceUsagePageKey: kHIDPage_GenericDesktop,
 		kIOHIDDeviceUsageKey: kHIDUsage_GD_Joystick
 	],
-	[
-		kIOHIDDeviceUsagePageKey: kHIDPage_GenericDesktop,
-		kIOHIDDeviceUsageKey: kHIDUsage_GD_GamePad
-	]
-	,
+//	[
+//		kIOHIDDeviceUsagePageKey: kHIDPage_GenericDesktop,
+//		kIOHIDDeviceUsageKey: kHIDUsage_GD_GamePad
+//	]
+//	,
 //	[
 //		kIOHIDDeviceUsagePageKey: kHIDPage_GenericDesktop,
 //		kIOHIDDeviceUsageKey: kHIDUsage_GD_Hatswitch
 //	]
 //	,
+//	[
+//		kIOHIDDeviceUsagePageKey: kHIDPage_GenericDesktop,
+//		kIOHIDDeviceUsageKey: kHIDUsage_GD_MultiAxisController
+//	]
+//	,
 	[
-		kIOHIDDeviceUsagePageKey: kHIDPage_GenericDesktop,
-		kIOHIDDeviceUsageKey: kHIDUsage_GD_MultiAxisController
-	],
+		kIOHIDVendorIDKey: PS3vendorIdNum,
+		kIOHIDProductIDKey: PS3productIdNum,
+	]
+	,
 ]
 
 let versionKey = kIOHIDVersionNumberKey as CFString
-let vendorKey = kIOHIDVendorIDKey as CFString
 let productKey = kIOHIDProductKey as CFString
-let productIDKey = kIOHIDProductIDKey as CFString
 let usagePageKey = kIOHIDPrimaryUsagePageKey as CFString
 let usageKey = kIOHIDPrimaryUsageKey as CFString
 let manufacturerKey = kIOHIDManufacturerKey as CFString
@@ -210,20 +223,27 @@ func AddElement(to list: inout [recElement], element: IOHIDElement, cookie : IOH
 
 func AddHIDElement(_ element : IOHIDElement, _ device : inout recDevice)
 {
+	let logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "HID")
+	
 	let elementTypeID = CFGetTypeID(element)
-
 	if (elementTypeID == IOHIDElementGetTypeID())
 	{
 		let cookie = IOHIDElementGetCookie(element)
 		let usagePage = Int(IOHIDElementGetUsagePage(element))
 		let usage = Int(IOHIDElementGetUsage(element))
-		/* look at types of interest */
-		switch (IOHIDElementGetType(element))
-		{
-		case kIOHIDElementTypeInput_Misc: fallthrough
-		case kIOHIDElementTypeInput_Button: fallthrough
-		case kIOHIDElementTypeInput_Axis:
 		
+		// https://opensource.apple.com/source/IOHIDFamily/IOHIDFamily-421.6/IOHIDFamily/IOHIDUsageTables.h.auto.html
+		let etype = IOHIDElementGetType(element)
+
+		/* look at types of interest */
+		switch (etype)
+		{
+		case kIOHIDElementTypeInput_Misc:
+			fallthrough
+		case kIOHIDElementTypeInput_Button:
+			fallthrough
+		case kIOHIDElementTypeInput_Axis:
+
 			switch (usagePage) { /* only interested in kHIDPage_GenericDesktop and kHIDPage_Button */
 			case kHIDPage_GenericDesktop:
 				switch (usage) {
@@ -236,9 +256,7 @@ func AddHIDElement(_ element : IOHIDElement, _ device : inout recDevice)
 				case kHIDUsage_GD_Slider:fallthrough
 				case kHIDUsage_GD_Dial:fallthrough
 				case kHIDUsage_GD_Wheel:
-					print("G")
-					print(cookie, usagePage, usage)
-					
+					logger.debug("Generic Desktop axis")
 					if AddElement(to:&device.axisList, element: element, cookie:cookie, usagePage: usagePage, usage: usage)
 					{
 						/* add to list */
@@ -248,8 +266,7 @@ func AddHIDElement(_ element : IOHIDElement, _ device : inout recDevice)
 
 					break
 				case kHIDUsage_GD_Hatswitch:
-					print("H")
-					print(cookie, usagePage, usage)
+					logger.debug("Generic Desktop hat")
 					if !device.hatList.contains(where: { $0.cookie == cookie })
 					{
 						/* add to list */
@@ -272,8 +289,7 @@ func AddHIDElement(_ element : IOHIDElement, _ device : inout recDevice)
 				case kHIDUsage_GD_Start: fallthrough
 				case kHIDUsage_GD_Select: fallthrough
 				case kHIDUsage_GD_SystemMainMenu:
-					print("B")
-					print(cookie, usagePage, usage)
+					logger.debug("Generic Desktop buttons")
 					if !device.buttonList.contains(where: { $0.cookie == cookie })
 					{
 						/* add to list */
@@ -295,10 +311,10 @@ func AddHIDElement(_ element : IOHIDElement, _ device : inout recDevice)
 				}
 			case kHIDPage_Button: fallthrough
 			case kHIDPage_Consumer: /* e.g. 'pause' button on Steelseries MFi gamepads. */
-				print("CB", cookie, usagePage, usage)
+				logger.debug("Buttons")
 				if !device.buttonList.contains(where: { $0.cookie == cookie })
 				{
-					print("adding")
+//					print("adding")
 					/* add to list */
 					device.buttons += 1
 
@@ -317,21 +333,27 @@ func AddHIDElement(_ element : IOHIDElement, _ device : inout recDevice)
 			}
 		
 		case kIOHIDElementTypeCollection:
-			print("T")
-			print(cookie, usagePage, usage)
-			
+			logger.debug("Collection")
+
 			if let array = IOHIDElementGetChildren(element) as? [IOHIDElement]
 			{
-				print("-->")
+				logger.debug("-->")
 				AddHIDElements(array, &device)
 			}
 
 			break
-
+		case kIOHIDElementTypeOutput:
+			logger.debug("Output")
+			break
+		case kIOHIDElementTypeFeature:
+			logger.debug("Feature")
+			break
 		default:
+			logger.debug("?")
 			break
 		}
-		
+		let msg = String(format: "usagepage %02x, usage %02x, etype %02x, cookie %04x, [\(device.product)]", usagePage, usage, etype.rawValue, cookie)
+		logger.debug("\(msg)")
 	}
 
 }
@@ -369,7 +391,7 @@ func GetDeviceInfo(_ hidDevice: IOHIDDevice ) -> recDevice?
 	
 	device.deviceHID = hidDevice
 	
-	vendor = IOHIDDeviceGetProperty(hidDevice, vendorKey) as! CFNumber as! Int
+	vendor = IOHIDDeviceGetProperty(hidDevice, vendorIDKey) as! CFNumber as! Int
 	product = IOHIDDeviceGetProperty(hidDevice, productIDKey) as! CFNumber as! Int
 //	version = IOHIDDeviceGetProperty(hidDevice, versionKey) as! CFNumber as! Int
 
@@ -377,13 +399,18 @@ func GetDeviceInfo(_ hidDevice: IOHIDDevice ) -> recDevice?
 	manufacturer_string = IOHIDDeviceGetProperty(hidDevice, manufacturerKey) as! String
 	product_string = IOHIDDeviceGetProperty(hidDevice, productKey) as! String
 
-	device.product = "\(vendor) \(product) \(manufacturer_string) \(product_string)"
+	device.product = "\(String(vendor, radix:16)) \(String(product, radix:16)) \(manufacturer_string) \(product_string)"
 
 	// if SDL_JoystickHandledByAnotherDriver { return false; }
 	// CreateJoystickGUID
 	
 	let array = IOHIDDeviceCopyMatchingElements(hidDevice, nil, IOOptionBits(kIOHIDOptionsTypeNone)) as! [IOHIDElement]
 	AddHIDElements(array, &device)
+	
+	if device.product.contains("Sony PLAYSTATION(R)3 Controller")
+	{
+		activatePS3(&device)
+	}
 
 	return device
 }
@@ -414,11 +441,9 @@ var JoystickDeviceWasAddedCallback : IOHIDDeviceCallback = {
 	
 	deviceList.append(device)
 	
-	// seize the device for myself - stop system recieving events
-//	IOHIDDeviceOpen(hiddevice, IOOptionBits(kIOHIDOptionsTypeSeizeDevice))
-	
 	// set value callback
-	IOHIDDeviceRegisterInputValueCallback(hiddevice, valueCallback, nil)
+//	IOHIDDeviceRegisterInputValueCallback(hiddevice, valueCallback, nil)
+	print("HIDDIVICE", hiddevice)
 
 	print("attached: \(device.product)")
 }
@@ -429,6 +454,9 @@ let JOY_BUTTON2 =        0x0002
 var valueCallback : IOHIDValueCallback = {
 	(context, result, sender, value) in
 
+	let logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "joystick values")
+	
+	
 	// context will be 'nil'
 	// result will be success if we got a value
 	// sender will be the device
@@ -458,8 +486,8 @@ var valueCallback : IOHIDValueCallback = {
 		
 		for thisButton in theButtons
 		{
-			print("device", thisDev.usagePage, thisDev.usage, terminator:" - ")
-			print("button", cookie, thisButton.usagePage, thisButton.usage, code)
+			logger.debug("device \(thisDev.usagePage) \(thisDev.usage) - ")
+			logger.debug("button \(cookie) \(thisButton.usagePage) \(thisButton.usage) \(code)")
 			if code > 1
 			{
 				/* handle pressure-sensitive buttons */
@@ -482,21 +510,30 @@ var valueCallback : IOHIDValueCallback = {
 
 		for thisAxis in theAxes
 		{
-			print("device", thisDev.usagePage, thisDev.usage, terminator:" - ")
+			logger.debug("device \(thisDev.usagePage) \(thisDev.usage) - ")
 
 			switch thisAxis.usage
 			{
 			case kHIDUsage_GD_X:
-				print("x axis", cookie, thisAxis.usagePage, thisAxis.usage, code)
-				let lparam = toLParam(x:CGFloat(Double(code)/256.0),y:CGFloat(0))
+				logger.debug("left X axis \(cookie) \(thisAxis.usagePage) \(thisAxis.usage) \(code)")
+				let lparam = toLParam(x:CGFloat(Double(code)/256.0),y:CGFloat(127/256.0))
 				beeb_handlejoystick(kEventMouseMoved, 0, lparam)
 				break
 			case kHIDUsage_GD_Y:
-				print("y axis", cookie, thisAxis.usagePage, thisAxis.usage, code)
-				let lparam = toLParam(x:CGFloat(0),y:CGFloat(Double(code)/256.0))
+				logger.debug("left Y axis \(cookie) \(thisAxis.usagePage) \(thisAxis.usage) \(code)")
+				let lparam = toLParam(x:CGFloat(127/256.0),y:CGFloat(Double(code)/256.0))
 				beeb_handlejoystick(kEventMouseMoved, 0, lparam)
 				break
+			case kHIDUsage_GD_Z:
+				logger.debug("left Z axis \(cookie) \(thisAxis.usagePage) \(thisAxis.usage) \(code)")
+				break
+			case kHIDUsage_GD_Rx: fallthrough
+			case kHIDUsage_GD_Ry: fallthrough
+			case kHIDUsage_GD_Rz:
+//				logger.debug("right xyz axis", cookie, thisAxis.usagePage, thisAxis.usage, code)
+				break
 			default:
+//				logger.debug("other", cookie, thisAxis.usagePage, thisAxis.usage, code)
 				break
 			}
 
@@ -506,58 +543,11 @@ var valueCallback : IOHIDValueCallback = {
 	}
 	else
 	{
-		print("not success")
+		logger.debug("not success")
 	}
 	
 	
 }
-
-var valueCallback1 : IOHIDValueCallback = {
-	(context, result, sender, value) in
-
-	let element = IOHIDValueGetElement(value)
-	let cookie = IOHIDElementGetCookie(element)
-	let code = IOHIDValueGetIntegerValue(value)
-
-	let JOY_BUTTON1  =  0x0001
-	let JOY_BUTTON2  =  0x0002
-
-	print (element)
-//	print(cookie,code)
-
-
-	switch cookie {
-	case 6:     /* Button 1 */
-//		print("Button 0: ", code)
-		beeb_handlejoystick((code != 0) ? kEventMouseDown : kEventMouseUp, JOY_BUTTON1, 0)
-	case 7:     /* Button 1 */
-//		print("Button 1: ", code)
-		beeb_handlejoystick((code != 0) ? kEventMouseDown : kEventMouseUp, JOY_BUTTON2, 0)
-	case 15:     /* Horizontal */
-		print("X Axis: ", code)
-		let lparam = toLParam(x:CGFloat(Double(code)/256.0),y:CGFloat(0))
-		beeb_handlejoystick(kEventMouseMoved, 0, lparam)
-	case 16:     /* Vertical */
-		print("Y Axis: ", code)
-		let lparam = toLParam(x:CGFloat(0),y:CGFloat(Double(code)/256.0))
-		beeb_handlejoystick(kEventMouseMoved, 0, lparam)
-	default:
-		print("Unknown element")
-		// kHIDPage_GenericDesktop = 0x01
-		// kHIDUsage_GD_Joystick = 0x04
-		// kHIDUsage_GD_GamePad = 0x05
-		// kHIDUsage_GD_MultiAxisController = 0x08
-		// kHIDUsage_GD_X = 0x30
-		// kHIDUsage_GD_Y = 0x31
-		// kHIDUsage_GD_Hatswitch = 0x39
-
-//		print (element)
-		print(cookie,code)
-
-	}
-
-}
-
 
 
 var JoystickDeviceWasRemovedCallback : IOHIDCallback = {
@@ -592,10 +582,6 @@ func GetHIDScaledCalibratedState(_ device : recDevice, _ element : inout recElem
 }
 func GetHIDElementState(_ device : recDevice, _ element : inout recElement, _ value: inout Int) -> Bool
 {
-	if element.cookie == 6
-	{
-		print("button ", element.usagePage, element.usage)
-	}
 	let valueHID = IOHIDValueCreateWithIntegerValue(nil, element.elementRef!, 0, 0)
 	var valueRef = Unmanaged<IOHIDValue>.passUnretained(valueHID)
 	if IOHIDDeviceGetValue(device.deviceHID!, element.elementRef!, &valueRef) == kIOReturnSuccess
@@ -617,11 +603,10 @@ func GetHIDElementState(_ device : recDevice, _ element : inout recElement, _ va
 
 func JoystickUpdate0()
 {
-//	guard let dev0 = deviceList.first else {return }
-//	for dev in deviceList
-//	{
-//		return JoystickUpdate(dev)
-//	}
+	for dev in deviceList
+	{
+		return JoystickUpdate(dev)
+	}
 }
 
 func JoystickUpdate(_ device: recDevice) // for joytick ID/ref
@@ -640,13 +625,16 @@ func JoystickUpdate(_ device: recDevice) // for joytick ID/ref
 		let goodRead = GetHIDScaledCalibratedState(device, &element, -32768, 32767, &value);
 		if goodRead
 		{
-//			print("axis", timestamp, i, value)
+			//print("axis", timestamp, i, value)
 //			SDL_SendJoystickAxis(timestamp, joystick, i, value);
 		}
 	}
 	
 	for (i, var element) in device.buttonList.enumerated()
 	{
+		if (element.cookie==6)
+		{
+			print(element.elementRef!)
 		var value = 0
 		let goodRead = GetHIDElementState(device, &element, &value)
 		if goodRead
@@ -656,10 +644,10 @@ func JoystickUpdate(_ device: recDevice) // for joytick ID/ref
 				/* handle pressure-sensitive buttons */
 				value = 1
 			}
-			if i == 0 {
-				print("button", timestamp, i, value)
-			}
+			
+			print("button", timestamp, i, value)
 //			SDL_SendJoystickButton(timestamp, joystick, i, value);
+		}
 		}
 
 	}
@@ -782,3 +770,108 @@ CreateHIDManager
 ********
  */
 
+
+/*
+ fix for PS3 controller not working
+ https://github.com/libsdl-org/SDL/issues/4923
+  
+ */
+let TESTRUMBLE = false
+
+func activatePS3(_ device: inout recDevice)
+{
+	// simple activation
+	let controlBlob : [UInt8] = [ 0x42, 0x0C, 0x00, 0x00 ]
+	
+	controlBlob.withUnsafeBytes { (unsafeBytes) in
+		let bytes = unsafeBytes.bindMemory(to: UInt8.self).baseAddress!
+		let _ = IOHIDDeviceSetReport(device.deviceHID!, kIOHIDReportTypeFeature, 0xF4, bytes, unsafeBytes.count)
+	}
+	
+	print ("Activating PS3 device ... ")
+
+	if TESTRUMBLE
+	{
+	// And the following sequence can be used to activate rumble support and additionally disable LEDs
+	var rumbleBlob  : [UInt8] = [
+		0x01,
+		   0x00,
+		   0x00,
+		   0x00,
+		   0x00,
+		   0x00, // rumble values [0x00, right-timeout, right-force, left-timeout, left-force]
+		   0x00,
+		   0x00, // Gyro
+		   0x00,
+		   0x00,
+		   0x00, // 0x02=LED1 .. 0x10=LED4
+		   /*
+			* the total time the led is active (0xff means forever)
+			* |     duty_length: how long a cycle is in deciseconds:
+			* |     |                              (0 means "blink very fast")
+			* |     |     ??? (Maybe a phase shift or duty_length multiplier?)
+			* |     |     |     % of duty_length led is off (0xff means 100%)
+			* |     |     |     |     % of duty_length led is on (0xff is 100%)
+			* |     |     |     |     |
+			* 0xff, 0x27, 0x10, 0x00, 0x32,
+			*/
+		   0xff,
+		   0x27,
+		   0x10,
+		   0x00,
+		   0x32, // LED 4
+		   0xff,
+		   0x27,
+		   0x10,
+		   0x00,
+		   0x32, // LED 3
+		   0xff,
+		   0x27,
+		   0x10,
+		   0x00,
+		   0x32, // LED 2
+		   0xff,
+		   0x27,
+		   0x10,
+		   0x00,
+		   0x32, // LED 1
+		   0x00,
+		   0x00,
+		   0x00,
+		   0x00,
+		   0x00,
+		   // Necessary for Fake DS3
+		   0x00,
+		   0x00,
+		   0x00,
+		   0x00,
+		   0x00,
+		   0x00,
+		   0x00,
+		   0x00,
+		   0x00,
+		   0x00,
+		   0x00,
+		   0x00,
+		   0x00,
+		]
+	
+	let RumbleLengthL = 4;
+	let RumblePowerL = 5;
+	let RumbleLengthR = 2;
+	let RumblePowerR = 3;
+	rumbleBlob[RumbleLengthL] = 80
+	rumbleBlob[RumbleLengthR] = 80
+	rumbleBlob[RumblePowerL] = 255
+	rumbleBlob[RumblePowerR]   = 1
+	
+	rumbleBlob.withUnsafeBytes { (unsafeBytes) in
+		let bytes = unsafeBytes.bindMemory(to: UInt8.self).baseAddress!
+		let r = IOHIDDeviceSetReport(device.deviceHID!, kIOHIDReportTypeFeature, 1, bytes, unsafeBytes.count)
+		print(String(format: "0x%x",bytes))
+		print(String(format: "0x%x",r), r==kIOReturnSuccess)
+	}
+	
+	print("  Should be rumbling!\n");
+	}
+}

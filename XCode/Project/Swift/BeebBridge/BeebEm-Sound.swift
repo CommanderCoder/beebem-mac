@@ -111,6 +111,60 @@ public func swift_ReleaseSoundBuffer(_ index : Int)
 //	print("release: ",index, AudioStreams.keys)
 }
 
+
+
+//
+//  AudioPlayer.swift
+//  bark.swiftui
+//
+//  Created by Pierre-Antoine BANNIER on 10/05/2024.
+//
+
+class AudioPlayer {
+	private var audioEngine: AVAudioEngine
+	private var playerNode: AVAudioPlayerNode
+	private var audioFormat: AVAudioFormat
+	private var buffer: AVAudioPCMBuffer
+
+	init(samples: [Float], sampleRate: Double = 24000.0) {
+		// Initialize the AVFoundation objects
+		audioEngine = AVAudioEngine()
+		playerNode = AVAudioPlayerNode()
+		audioFormat = AVAudioFormat(standardFormatWithSampleRate: sampleRate, channels: 1)!
+		
+		// Set up the audio engine
+		audioEngine.attach(playerNode)
+		audioEngine.connect(playerNode, to: audioEngine.mainMixerNode, format: audioFormat)
+		
+		do {
+			try audioEngine.start()
+		} catch {
+			print("Error starting audio engine: \(error)")
+		}
+		
+		// Prepare the buffer
+		buffer = AVAudioPCMBuffer(pcmFormat: audioFormat, frameCapacity: UInt32(samples.count))!
+		buffer.frameLength = buffer.frameCapacity
+		let channelData = buffer.floatChannelData![0]
+		
+		// Copy samples to buffer
+		for i in 0..<samples.count {
+			channelData[i] = samples[i]
+		}
+	}
+
+	func playAudio() {
+		// Schedule the buffer and play
+		playerNode.scheduleBuffer(buffer, at: nil, options: [], completionHandler: nil)
+		playerNode.play()
+	}
+
+	func stop() {
+		playerNode.stop()
+	}
+}
+
+
 @_cdecl("swift_CreateSoundBuffer")
 public func swift_CreateSoundBuffer(
 	_ nChannels : Int16,
@@ -139,6 +193,8 @@ public func swift_CreateSoundBuffer(
 		channels: Int(nChannels)
 	)
 	
+	let _ = AudioPlayer(samples: [0,0,0])
+
 	let playing = AudioStreams.filter{ a in a.value.playernode.isPlaying }
 	// go through the attached AVAudioPlayerNodes and make an
 	// array of those that are playing
@@ -228,7 +284,7 @@ public func swift_SubmitStream(_ index : Int, _ soundbuffer: UnsafeMutablePointe
 {
 	// !2 = DEFAULT (8 bit 1 channel)
 	// 2  = MUSIC5000 (16 bit 2 channel)
-	guard audioEngine.isRunning else { print("early return"); return}
+	guard audioEngine.isRunning else { print("audio engine is NOT running"); return}
 
 	// this comes through as a square wave with 8 bits mono
 	// at a sample rate of 44100 Hz
