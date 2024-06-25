@@ -9,7 +9,13 @@
 #include <windows.h>
 #include "beebemrcids.h"
 #include <string>
+
+#if ((defined(__ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__) && __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ >= 101500))
 #include <filesystem> // C++17 (or Microsoft-specific implementation in C++14)
+#define HasC17
+
+#endif
+
 #include "BeebWin.h"
 #include "Main.h"
 
@@ -333,7 +339,9 @@ BOOL SetWindowText(HWND    hWnd, LPCSTR lpString)
 
 bool PathIsRelative(const char * winPathString)
 {
+#ifdef HasC17
 	std::filesystem::path path(winPathString); // Construct the path from a string.
+
 	if (path.is_absolute()) {
 		// Arriving here if winPathString = "C:/tmp".
 		return false;
@@ -344,6 +352,12 @@ bool PathIsRelative(const char * winPathString)
 		// Arriving here in windows if winPathString = "/tmp". (see quote below)
 		return true;
 	}
+#else
+	if (winPathString[0] != '/')
+		// this is relative address as first character is NOT '/'
+		return true;
+#endif
+
 	return false;
 }
 

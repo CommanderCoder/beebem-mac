@@ -169,11 +169,6 @@ class recElement
 class recDevice
 {
 	var deviceHID : IOHIDDevice?  /* HIDManager device handle */
-//	io_service_t ffservice;   /* Interface for force feedback, 0 = no ff */
-//	FFDeviceObjectReference ffdevice;
-//	FFEFFECT *ffeffect;
-//	FFEffectObjectReference ffeffect_ref;
-//	SDL_bool ff_initialized;
 
 	var product: String = " " /* name of product */
 	var usage: Int = 0    /* usage page from IOUSBHID Parser.h which defines general usage */
@@ -189,13 +184,9 @@ class recDevice
 	var hatList:[recElement] = [] //firstHat
 
 	var removed: Bool = false
-//	SDL_Joystick *joystick;
 	var runLoopAttached : Bool = false /* is 'deviceRef' attached to a CFRunLoop? */
 
 	var instance_id: Int = 0
-//	SDL_JoystickGUID guid;
-//	int steam_virtual_gamepad_slot;
-	
 }
 var deviceList : [recDevice] = []
 
@@ -223,8 +214,6 @@ func AddElement(to list: inout [recElement], element: IOHIDElement, cookie : IOH
 
 func AddHIDElement(_ element : IOHIDElement, _ device : inout recDevice)
 {
-	let logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "HID")
-	
 	let elementTypeID = CFGetTypeID(element)
 	if (elementTypeID == IOHIDElementGetTypeID())
 	{
@@ -256,7 +245,6 @@ func AddHIDElement(_ element : IOHIDElement, _ device : inout recDevice)
 				case kHIDUsage_GD_Slider:fallthrough
 				case kHIDUsage_GD_Dial:fallthrough
 				case kHIDUsage_GD_Wheel:
-					logger.debug("Generic Desktop axis")
 					if AddElement(to:&device.axisList, element: element, cookie:cookie, usagePage: usagePage, usage: usage)
 					{
 						/* add to list */
@@ -266,7 +254,6 @@ func AddHIDElement(_ element : IOHIDElement, _ device : inout recDevice)
 
 					break
 				case kHIDUsage_GD_Hatswitch:
-					logger.debug("Generic Desktop hat")
 					if !device.hatList.contains(where: { $0.cookie == cookie })
 					{
 						/* add to list */
@@ -289,7 +276,6 @@ func AddHIDElement(_ element : IOHIDElement, _ device : inout recDevice)
 				case kHIDUsage_GD_Start: fallthrough
 				case kHIDUsage_GD_Select: fallthrough
 				case kHIDUsage_GD_SystemMainMenu:
-					logger.debug("Generic Desktop buttons")
 					if !device.buttonList.contains(where: { $0.cookie == cookie })
 					{
 						/* add to list */
@@ -311,7 +297,6 @@ func AddHIDElement(_ element : IOHIDElement, _ device : inout recDevice)
 				}
 			case kHIDPage_Button: fallthrough
 			case kHIDPage_Consumer: /* e.g. 'pause' button on Steelseries MFi gamepads. */
-				logger.debug("Buttons")
 				if !device.buttonList.contains(where: { $0.cookie == cookie })
 				{
 //					print("adding")
@@ -333,27 +318,22 @@ func AddHIDElement(_ element : IOHIDElement, _ device : inout recDevice)
 			}
 		
 		case kIOHIDElementTypeCollection:
-			logger.debug("Collection")
-
+			
 			if let array = IOHIDElementGetChildren(element) as? [IOHIDElement]
 			{
-				logger.debug("-->")
 				AddHIDElements(array, &device)
 			}
 
 			break
 		case kIOHIDElementTypeOutput:
-			logger.debug("Output")
 			break
 		case kIOHIDElementTypeFeature:
-			logger.debug("Feature")
 			break
 		default:
-			logger.debug("?")
 			break
 		}
 		let msg = String(format: "usagepage %02x, usage %02x, etype %02x, cookie %04x, [\(device.product)]", usagePage, usage, etype.rawValue, cookie)
-		logger.debug("\(msg)")
+		print("\(msg)")
 	}
 
 }
@@ -400,9 +380,6 @@ func GetDeviceInfo(_ hidDevice: IOHIDDevice ) -> recDevice?
 	product_string = IOHIDDeviceGetProperty(hidDevice, productKey) as! String
 
 	device.product = "\(String(vendor, radix:16)) \(String(product, radix:16)) \(manufacturer_string) \(product_string)"
-
-	// if SDL_JoystickHandledByAnotherDriver { return false; }
-	// CreateJoystickGUID
 	
 	let array = IOHIDDeviceCopyMatchingElements(hidDevice, nil, IOOptionBits(kIOHIDOptionsTypeNone)) as! [IOHIDElement]
 	AddHIDElements(array, &device)
@@ -426,8 +403,6 @@ var JoystickDeviceWasAddedCallback : IOHIDDeviceCallback = {
 	guard var device = GetDeviceInfo(hiddevice) else {
 		return /* not a device we care about, probably. */
 	}
-	
-//	if (SDL_ShouldIgnoreJoystick(device.product, device.guid)) { return	}
 
 	/* Get notified when this device is disconnected. */
 	IOHIDDeviceRegisterRemovalCallback(hiddevice, JoystickDeviceWasRemovedCallback, nil)
@@ -442,7 +417,7 @@ var JoystickDeviceWasAddedCallback : IOHIDDeviceCallback = {
 	deviceList.append(device)
 	
 	// set value callback
-//	IOHIDDeviceRegisterInputValueCallback(hiddevice, valueCallback, nil)
+	IOHIDDeviceRegisterInputValueCallback(hiddevice, valueCallback, nil)
 	
 	print("HIDDIVICE", hiddevice)
 	print("attached: \(device.product)")
@@ -453,9 +428,6 @@ let JOY_BUTTON2 =        0x0002
 
 var valueCallback : IOHIDValueCallback = {
 	(context, result, sender, value) in
-
-	let logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "joystick values")
-	
 	
 	// context will be 'nil'
 	// result will be success if we got a value
@@ -486,8 +458,6 @@ var valueCallback : IOHIDValueCallback = {
 		
 		for thisButton in theButtons
 		{
-			logger.debug("device \(thisDev.usagePage) \(thisDev.usage) - ")
-			logger.debug("button \(cookie) \(thisButton.usagePage) \(thisButton.usage) \(code)")
 			if code > 1
 			{
 				/* handle pressure-sensitive buttons */
@@ -496,54 +466,23 @@ var valueCallback : IOHIDValueCallback = {
 			
 			var buttonBits = 0 // ought to record the current state of all buttons to send
 			// buttons are bit flags
-			if code == 1
-			{
-				buttonBits = thisButton.usage == 1 ? JOY_BUTTON1 : JOY_BUTTON2
-				beeb_handlejoystick(kEventMouseDown, buttonBits, 0)
-			}
-			else
-			{
-				beeb_handlejoystick(kEventMouseUp, buttonBits, 0)
-			}
+			beeb_handlejoystick(aEventJoystick1Button, buttonMapping[thisButton.usage] ?? 0,  code)
 
 		}
 
-		for thisAxis in theAxes
+		for var thisAxis in theAxes
 		{
-			logger.debug("device \(thisDev.usagePage) \(thisDev.usage) - ")
-
-			switch thisAxis.usage
+			var value = 0
+			let goodRead = GetHIDScaledCalibratedState(thisDev, &thisAxis, -32768, 32767, &value);
+			if goodRead
 			{
-			case kHIDUsage_GD_X:
-				logger.debug("left X axis \(cookie) \(thisAxis.usagePage) \(thisAxis.usage) \(code)")
-				let lparam = toLParam(x:CGFloat(Double(code)/256.0),y:CGFloat(127/256.0))
-				beeb_handlejoystick(kEventMouseMoved, 0, lparam)
-				break
-			case kHIDUsage_GD_Y:
-				logger.debug("left Y axis \(cookie) \(thisAxis.usagePage) \(thisAxis.usage) \(code)")
-				let lparam = toLParam(x:CGFloat(127/256.0),y:CGFloat(Double(code)/256.0))
-				beeb_handlejoystick(kEventMouseMoved, 0, lparam)
-				break
-			case kHIDUsage_GD_Z:
-				logger.debug("left Z axis \(cookie) \(thisAxis.usagePage) \(thisAxis.usage) \(code)")
-				break
-			case kHIDUsage_GD_Rx: fallthrough
-			case kHIDUsage_GD_Ry: fallthrough
-			case kHIDUsage_GD_Rz:
-//				logger.debug("right xyz axis", cookie, thisAxis.usagePage, thisAxis.usage, code)
-				break
-			default:
-//				logger.debug("other", cookie, thisAxis.usagePage, thisAxis.usage, code)
-				break
+				beeb_handlejoystick(aEventJoystick1Axis, axisMapping[thisAxis.usage] ?? 0 , value)
 			}
-
-
 		}
 		
 	}
 	else
 	{
-		logger.debug("not success")
 	}
 	
 	
@@ -602,10 +541,10 @@ func GetHIDElementState(_ device : recDevice, _ element : inout recElement, _ va
 
 func JoystickUpdate0()
 {
-	for dev in deviceList
-	{
-		return JoystickUpdate(dev)
-	}
+//	for dev in deviceList
+//	{
+//		return JoystickUpdate(dev)
+//	}
 }
 
 let axisMapping = [
@@ -624,8 +563,6 @@ let buttonMapping = [
 
 func JoystickUpdate(_ device: recDevice) // for joytick ID/ref
 {
-	let timestamp = 123 //SDL_GetTicksNS();
-
 	if device.removed
 	{
 		/* device was unplugged; ignore it. */
@@ -724,59 +661,11 @@ func JoystickUpdate(_ device: recDevice) // for joytick ID/ref
 				break;
 			}
 
-			print("hat",timestamp,i,pos)
+			print("hat",i,pos)
 
 		}
 	}
 }
-
-/*
-********
-CreateHIDManager
- vals CreateHIDDeviceMatchDictionary x 3
- ---
-   dictionary [kIOHIDDeviceUsagePageKey:page number , kIOHIDDeviceUsageKey: usage number]
- array kCFTypeArrayCallBacks x 3  >>> this is an immutable array
- vals release x 3
- 
- IOHIDManagerCreate
- array ConfigHIDManager
- ---
- IOHIDManagerOpen
- IOHIDManagerSetDeviceMatchingMultiple
- IOHIDManagerRegisterDeviceMatchingCallback  JoystickDeviceWasAddedCallback
- IOHIDManagerScheduleWithRunLoop
- 
- while CFRunLoopRunInMode  kCFRunLoopRunHandledSource
- 
- 
- 
- //==
- JoystickDeviceWasAddedCallback
- JoystickAlreadyKnown ioHIDDeviceObject
- GetDeviceInfo   device->product, device->guid
-   AddHIDElements(array, pDevice);
-   AddHIDElement IOHIDElementRef recDevice
-    
- IOHIDDeviceRegisterRemovalCallback  JoystickDeviceWasRemovedCallback device
- IOHIDDeviceScheduleWithRunLoop
- device->runLoopAttached
- device->instance_id
- ioservice = IOHIDDeviceGetService
- add to list
- 
- 
- 
- 
- DARWIN_JoystickUpdate()
- GetHIDScaledCalibratedState
- 
- GetHIDElementState
- IOHIDDeviceGetValue
- IOHIDValueGetIntegerValue
-********
- */
-
 
 /*
  fix for PS3 controller not working

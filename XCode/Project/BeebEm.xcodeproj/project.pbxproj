@@ -1344,6 +1344,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MARKETING_VERSION = "4.19-mac";
 				PRODUCT_BUNDLE_IDENTIFIER = com.commandercoder.BeebEm;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1380,6 +1381,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MARKETING_VERSION = "4.19-mac";
 				PRODUCT_BUNDLE_IDENTIFIER = com.commandercoder.BeebEm;
 				PRODUCT_NAME = "$(TARGET_NAME)";

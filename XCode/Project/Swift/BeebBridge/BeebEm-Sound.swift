@@ -113,57 +113,6 @@ public func swift_ReleaseSoundBuffer(_ index : Int)
 
 
 
-//
-//  AudioPlayer.swift
-//  bark.swiftui
-//
-//  Created by Pierre-Antoine BANNIER on 10/05/2024.
-//
-
-class AudioPlayer {
-	private var audioEngine: AVAudioEngine
-	private var playerNode: AVAudioPlayerNode
-	private var audioFormat: AVAudioFormat
-	private var buffer: AVAudioPCMBuffer
-
-	init(samples: [Float], sampleRate: Double = 24000.0) {
-		// Initialize the AVFoundation objects
-		audioEngine = AVAudioEngine()
-		playerNode = AVAudioPlayerNode()
-		audioFormat = AVAudioFormat(standardFormatWithSampleRate: sampleRate, channels: 1)!
-		
-		// Set up the audio engine
-		audioEngine.attach(playerNode)
-		audioEngine.connect(playerNode, to: audioEngine.mainMixerNode, format: audioFormat)
-		
-		do {
-			try audioEngine.start()
-		} catch {
-			print("Error starting audio engine: \(error)")
-		}
-		
-		// Prepare the buffer
-		buffer = AVAudioPCMBuffer(pcmFormat: audioFormat, frameCapacity: UInt32(samples.count))!
-		buffer.frameLength = buffer.frameCapacity
-		let channelData = buffer.floatChannelData![0]
-		
-		// Copy samples to buffer
-		for i in 0..<samples.count {
-			channelData[i] = samples[i]
-		}
-	}
-
-	func playAudio() {
-		// Schedule the buffer and play
-		playerNode.scheduleBuffer(buffer, at: nil, options: [], completionHandler: nil)
-		playerNode.play()
-	}
-
-	func stop() {
-		playerNode.stop()
-	}
-}
-
 
 @_cdecl("swift_CreateSoundBuffer")
 public func swift_CreateSoundBuffer(
@@ -174,7 +123,13 @@ public func swift_CreateSoundBuffer(
 	_ wBytesPerSample : Int16
 ) -> Int
 {
+	// go through the attached AVAudioPlayerNodes and make an
+	// array of those that are playing
+
+	let playing = AudioStreams.filter{ a in a.value.playernode.isPlaying }
+
 	let beebAudioFormat = AVAudioFormat(
+		//standardFormatWithSampleRate:
 		commonFormat: AVAudioCommonFormat.pcmFormatFloat32,
 		sampleRate: Double(nSamplesPerSec),
 		channels: AVAudioChannelCount(2), // always 2
@@ -192,20 +147,14 @@ public func swift_CreateSoundBuffer(
 		bytesPerSample: Int(wBytesPerSample),
 		channels: Int(nChannels)
 	)
-	
-	let _ = AudioPlayer(samples: [0,0,0])
-
-	let playing = AudioStreams.filter{ a in a.value.playernode.isPlaying }
-	// go through the attached AVAudioPlayerNodes and make an
-	// array of those that are playing
-
-	// stop the engine before attaching and connecting nodes
-//	audioEngine.stop()
-//	print ("stop:")
 
 	audioEngine.attach(dat.playernode) // attach the player - which can play PCM or from files.
 	// schedule playing from the buffer, now, and looping, so doesn't complete
-	audioEngine.connect(dat.playernode, to: mainMixer, format: nil)  // connect player to the mixer using the player format
+	
+	// known issue
+	// this causes AddInstanceForFactory: No factory registered for id <CFUUID 0x600000258ee0> F8BB1C28-BAE8-11D6-9C31-00039315CD46
+
+	audioEngine.connect(dat.playernode, to: mainMixer, format: beebAudioFormat)  // connect player to the mixer using the player format
 
 	// don't remove streams  - or the IDs that are being returned will not match up
 	let index = StreamKey
@@ -217,16 +166,6 @@ public func swift_CreateSoundBuffer(
 	for p in playing { swift_PlayStream(p.key) }
 	
 	return index
-	
-	// probably shoudn't use BUS 0 by default
-//        print (dat.playernode.outputFormat(forBus: 0))
-//        print (mainMixer.outputFormat(forBus: 0))
-
-//        print (beebAudioFormat)
-//        print (dat.audiobuffers[0].format)
-
-//        dat.playernode.scheduleBuffer(buffer, at: nil, options: .loops, completionHandler: nil)
-	
 }
 
 
@@ -243,12 +182,10 @@ public func swift_SoundInit()
 	do {
 		// start the engine
 		try audioEngine.start()
-//		print ("start:")
 
 		successfullystarted = true
 		for stream in AudioStreams
 		{
-//			print("init ", stream.key)
 			let dat = stream.value
 			dat.playernode.play()
 			successfullystarted = successfullystarted && dat.playernode.isPlaying
@@ -371,11 +308,6 @@ public func swift_SubmitStream(_ index : Int, _ soundbuffer: UnsafeMutablePointe
 		}
 	}
 
-	// NOTES:
-	
-	// THIS EMULATOR IS RUNNING QUICKLY
-	// SOUNDS WILL BE SHORTER AND MAYBE HIGH PITCHED
-	
 	// BBC BASIC TEST
 	// SOUND 1,-15,400,20
 }

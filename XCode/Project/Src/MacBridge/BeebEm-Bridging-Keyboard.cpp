@@ -655,7 +655,7 @@ extern "C" void beeb_handlejoystick(long message, long wParam, long lParam)
 			if (wParam == 3) bitpos = JOY_BUTTON3;
 			if (wParam == 4) bitpos = JOY_BUTTON4;
 
-			int oldpattern = buttons1;
+			long oldpattern = buttons1;
 
 			if (lParam==0)
 			{

@@ -19,6 +19,7 @@ import AppKit
 
 // probably use imported type rather than exported as we aren't the 'canonical' source of
 // these types.  That's someone else
+@available(macOS 11.0, *)
 extension UTType {
 	public static let romcfg = UTType(filenameExtension: "cfg")!
 	public static let ssd = UTType(importedAs: "com.commandercoder.BeebEm.ssd")
@@ -60,6 +61,7 @@ func GetContentDictionary(filterString f : String?) -> ([String: String],[String
 }
 
 
+@available(macOS 11.0, *)
 func GetContentType(_ dictionary : [String:String]) -> [UTType]?
 {
 	var ct : [UTType]? = [] // .ANYFILE
@@ -111,6 +113,60 @@ func GetContentType(_ dictionary : [String:String]) -> [UTType]?
 
 	return ct
 }
+
+@available(macOS, introduced: 10.0, deprecated: 11.0, renamed: "GetContentType")
+func GetFileType(_ dictionary : [String:String]) -> [String]
+{
+	var ct : [String] = []
+	
+	if dictionary.values.contains("*.ssd") // DISC
+	{
+		ct = ["ssd", "dsd", "wdd", "dos", "adl", "adf", "img"]
+	}
+	else if dictionary.values.contains("*.uefstate") //UEFSTATEFILE
+	{
+		Swift.print("found uefstate.")
+		ct = ["uefstate"]
+	}
+	else if dictionary.values.contains("*.uef") //UEFFILE
+	{
+		Swift.print("found uef.")
+		ct = ["uef", "csw"]
+	}
+	else if dictionary.values.contains("*.ifd") //IFD
+	{
+		Swift.print("found ifd.")
+		ct = ["ifd"]
+	}
+	else if dictionary.values.contains("*.kmap") //KEYBOARD
+	{
+		Swift.print("found Key Map File.")
+		ct = ["kmap"]
+	}
+	else if dictionary.values.contains("*.dat") //HARDDRIVE
+	{
+		Swift.print("found hdd.")
+		ct = ["dat"]
+	}
+	else if dictionary.values.contains("*.inf") //DISCFILE
+	{
+		Swift.print("found inf.")
+		ct = ["inf"]
+	}
+	else if dictionary.values.contains("*.cfg") //ROMCFG
+	{
+		Swift.print("found rom config file.")
+		ct = ["cfg"]
+	}
+	else if dictionary.values.contains("*.*") //PRINTFILE
+	{
+		Swift.print("found *.*")
+		ct = []
+	}
+	
+	return ct
+}
+
 	
 
 // allow access to this in C
@@ -138,7 +194,12 @@ func swift_GetFilesWithPreview(filepath : UnsafeMutablePointer<CChar>, bytes: In
 	
 	let (dictionary, _) = GetContentDictionary(filterString: String(bytes:s, encoding: .ascii))
 	
-	dialog.allowedContentTypes = GetContentType(dictionary) ?? []
+	if #available(macOS 11.0, *) {
+		dialog.allowedContentTypes = GetContentType(dictionary) ?? []
+	} else {
+		dialog.allowedFileTypes = GetFileType(dictionary)
+	}
+	
 
     if (dialog.runModal() ==  NSApplication.ModalResponse.OK) {
         let result = dialog.urls // Pathnames of the files
@@ -238,12 +299,23 @@ class SaveDelegate: NSObject, NSOpenSavePanelDelegate {
 	}
 }
 
+
+@available(macOS 11.0, *)
+var contentTypes : [UTType] = []
+
+@available(macOS, introduced: 10.0, deprecated: 11.0, renamed: "GetContentType")
+var fileTypes : [String] = []
+
 class SaveDocument: NSDocument {
 	
 	internal init(filterString f : String?)
 	{
 		(dictionary,names) = GetContentDictionary(filterString:f)
-		contentTypes = GetContentType(dictionary) ?? []
+		if #available(macOS 11.0, *) {
+			contentTypes = GetContentType(dictionary) ?? []
+		} else {
+			fileTypes = GetFileType(dictionary)
+		}
 	}
 	
 	internal var fileurl : URL?
@@ -272,7 +344,6 @@ class SaveDocument: NSDocument {
 	var names = [String]()
 	var dictionary = [ String: String]()
 
-	var contentTypes : [UTType] = []
 	
 	override func prepareSavePanel(_ savePanel: NSSavePanel) -> Bool {
 
@@ -288,7 +359,11 @@ class SaveDocument: NSDocument {
 		//	dialog.showsResizeIndicator    = true
 		//	dialog.showsHiddenFiles        = false
 		//	dialog.canSelectHiddenExtension	= true
-		dialog.allowedContentTypes = contentTypes
+		if #available(macOS 11.0, *) {
+			dialog.allowedContentTypes = contentTypes
+		} else {
+			dialog.allowedFileTypes = fileTypes
+		}
 		
 		return true
 	}
