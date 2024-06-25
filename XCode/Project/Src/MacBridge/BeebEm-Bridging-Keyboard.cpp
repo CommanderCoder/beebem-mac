@@ -8,6 +8,13 @@
 #include <windows.h>
 
 
+enum {
+	aEventJoystick1Axis              = 0x0000,
+	aEventJoystick1Button            = 0x0001,
+	aEventJoystick2Axis              = 0x1000,
+	aEventJoystick2Button            = 0x1001,
+};
+
 
 #include <Carbon/Carbon.h>
 #include "BeebWin.h"
@@ -612,24 +619,57 @@ extern "C" void beeb_handlemouse(long message, long wParam, long lParam)
 	}
 }
 
+static long joy1[4]; // 4 axes
+static long buttons1; // button bitflags
+
 extern "C" void beeb_handlejoystick(long message, long wParam, long lParam)
 {
-	int x = 256*GET_X_LPARAM(lParam)/32768.0f;
-	int y = 256*GET_Y_LPARAM(lParam)/32768.0f;
+	// axis or buttons message (joystick1, joystick2)
+	// axes:
+	//  wParam is the axis number (axis on a PS3 controller)
+	//  lParam is axis values
+	// buttons:
+	//  wParam is the button number
+	//  lParam is value (0 up, 1 down)
+	
 	switch (message)
 	{
-		case kEventMouseMoved:
+		case aEventJoystick1Axis:
+			// wParam is 0,1,2 or 3 for x and y axes (on joystick)
+			if (wParam >= 0 && wParam < 4)
+			{
+				joy1[wParam] = 32768.0+lParam;
+			}
+
 			//	MM_JOY1MOVE
 			//	lParam x,y from wXmax to wXmin..
-			mainWin->AppProc(MM_JOY1MOVE, 0, MAKELPARAM(x,y));
+			mainWin->AppProc(MM_JOY1MOVE, 0, MAKELPARAM(joy1[0],joy1[1]));
 			break;
-		case kEventMouseUp:
+		case aEventJoystick1Button:
 			//	 JOY_BUTTON1 , JOY_BUTTON2
-			mainWin->AppProc(MM_JOY1BUTTONUP, wParam, 0);
+			if (wParam == 0) break;
+			
+			int bitpos = 0;
+			if (wParam == 1) bitpos = JOY_BUTTON1;
+			if (wParam == 2) bitpos = JOY_BUTTON2;
+			if (wParam == 3) bitpos = JOY_BUTTON3;
+			if (wParam == 4) bitpos = JOY_BUTTON4;
+
+			int oldpattern = buttons1;
+
+			if (lParam==0)
+			{
+				buttons1 &= ~bitpos;
+				if (oldpattern != buttons1)
+					mainWin->AppProc(MM_JOY1BUTTONUP, buttons1, 0);
+			}
+			else
+			{
+				buttons1 |= bitpos;
+				if (oldpattern != buttons1)
+					mainWin->AppProc(MM_JOY1BUTTONDOWN, buttons1, 0);
+			}
 			break;
-		case kEventMouseDown:
-			//	 JOY_BUTTON1 , JOY_BUTTON2
-			mainWin->AppProc(MM_JOY1BUTTONDOWN, wParam, 0);
 			break;
 	}
 	

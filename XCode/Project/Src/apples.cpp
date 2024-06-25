@@ -604,7 +604,7 @@ MMRESULT joyGetDevCaps(int jid, JOYCAPS* jc, int l)
 {
 	jc->wXmin = 0;
 	jc->wYmin = 0;
-	jc->wXmax = 255;
-	jc->wYmax = 255;
+	jc->wXmax = 65536;
+	jc->wYmax = 65536;
 	return JOYERR_NOERROR;
 }

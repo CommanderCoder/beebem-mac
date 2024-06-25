@@ -98,11 +98,11 @@ let deviceCriteria:NSArray = [
 //		kIOHIDDeviceUsageKey: kHIDUsage_GD_MultiAxisController
 //	]
 //	,
-	[
-		kIOHIDVendorIDKey: PS3vendorIdNum,
-		kIOHIDProductIDKey: PS3productIdNum,
-	]
-	,
+//	[
+//		kIOHIDVendorIDKey: PS3vendorIdNum,
+//		kIOHIDProductIDKey: PS3productIdNum,
+//	]
+//	,
 ]
 
 let versionKey = kIOHIDVersionNumberKey as CFString
@@ -443,8 +443,8 @@ var JoystickDeviceWasAddedCallback : IOHIDDeviceCallback = {
 	
 	// set value callback
 //	IOHIDDeviceRegisterInputValueCallback(hiddevice, valueCallback, nil)
+	
 	print("HIDDIVICE", hiddevice)
-
 	print("attached: \(device.product)")
 }
 
@@ -549,7 +549,6 @@ var valueCallback : IOHIDValueCallback = {
 	
 }
 
-
 var JoystickDeviceWasRemovedCallback : IOHIDCallback = {
 	(context, result, sender) in
 
@@ -586,7 +585,7 @@ func GetHIDElementState(_ device : recDevice, _ element : inout recElement, _ va
 	var valueRef = Unmanaged<IOHIDValue>.passUnretained(valueHID)
 	if IOHIDDeviceGetValue(device.deviceHID!, element.elementRef!, &valueRef) == kIOReturnSuccess
 	{
-		let value = IOHIDValueGetIntegerValue(valueRef.takeUnretainedValue()) as Int
+		value = IOHIDValueGetIntegerValue(valueRef.takeUnretainedValue()) as Int
 		/* record min and max for auto calibration */
 		if (value < element.minReport) {
 			element.minReport = value;
@@ -609,6 +608,20 @@ func JoystickUpdate0()
 	}
 }
 
+let axisMapping = [
+	kHIDUsage_GD_X : 0,
+	kHIDUsage_GD_Y : 1,
+	kHIDUsage_GD_Rx : 2,
+	kHIDUsage_GD_Ry : 3,
+]
+
+let buttonMapping = [
+	1 : 1,
+	2 : 2,
+	3 : 3,
+	4 : 4,
+]
+
 func JoystickUpdate(_ device: recDevice) // for joytick ID/ref
 {
 	let timestamp = 123 //SDL_GetTicksNS();
@@ -625,16 +638,12 @@ func JoystickUpdate(_ device: recDevice) // for joytick ID/ref
 		let goodRead = GetHIDScaledCalibratedState(device, &element, -32768, 32767, &value);
 		if goodRead
 		{
-			//print("axis", timestamp, i, value)
-//			SDL_SendJoystickAxis(timestamp, joystick, i, value);
+			beeb_handlejoystick(aEventJoystick1Axis, axisMapping[element.usage] ?? 0 , value)
 		}
 	}
-	
-	for (i, var element) in device.buttonList.enumerated()
+
+	for (_, var element) in device.buttonList.enumerated()
 	{
-		if (element.cookie==6)
-		{
-			print(element.elementRef!)
 		var value = 0
 		let goodRead = GetHIDElementState(device, &element, &value)
 		if goodRead
@@ -645,9 +654,8 @@ func JoystickUpdate(_ device: recDevice) // for joytick ID/ref
 				value = 1
 			}
 			
-			print("button", timestamp, i, value)
-//			SDL_SendJoystickButton(timestamp, joystick, i, value);
-		}
+			// element usage is the button number
+			beeb_handlejoystick(aEventJoystick1Button, buttonMapping[element.usage] ?? 0,  value)
 		}
 
 	}
@@ -717,7 +725,6 @@ func JoystickUpdate(_ device: recDevice) // for joytick ID/ref
 			}
 
 			print("hat",timestamp,i,pos)
-//			SDL_SendJoystickHat(timestamp, joystick, i, pos);
 
 		}
 	}

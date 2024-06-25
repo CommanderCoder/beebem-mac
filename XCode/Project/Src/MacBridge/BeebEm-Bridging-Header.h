@@ -73,3 +73,11 @@ void beeb_video(long height, long width, struct CColour buffer[]);
 #define MK_LBUTTON 0x001L
 #define MK_RBUTTON 0x002L
 #define MK_MBUTTON 0x010L
+
+
+enum {
+	aEventJoystick1Axis              = 0x0000,
+	aEventJoystick1Button            = 0x0001,
+	aEventJoystick2Axis              = 0x1000,
+	aEventJoystick2Button            = 0x1001,
+};
