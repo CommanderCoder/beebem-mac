@@ -189,6 +189,7 @@ std::map<int,int> ID2RC =
 {'ejd0', IDM_EJECTDISC0},
 {'ejd1', IDM_EJECTDISC1},
 {'snev', ID_},
+{'txlf', IDM_TRANSLATE_CRLF},
 {'txte', IDM_TELETEXT},
 //{'txtd', ID_TELETEXTFILES},
 //{'txts', ID_TELETEXTLOCALHOST},
@@ -216,7 +217,8 @@ std::map<int,int> ID2RC =
 {'mbco', IDM_FDC_OPUS}, //OPUS 1770 Controller - on DLL on windows
 {'mbcw', IDM_FDC_WATFORD}, //Watford 1770 - on DLL on windows
 //    {'mrty', ID_RTCY2KADJUST},
-    {'jstk', IDM_JOYSTICK},
+	{'nojk', IDM_JOYSTICK_DISABLED},
+	{'jstk', IDM_JOYSTICK},
     {'hcur', IDM_HIDECURSOR},
     {'kf10', IDM_MAPFUNCS},
     {'kdis', IDM_DISABLEKEYSALL},
