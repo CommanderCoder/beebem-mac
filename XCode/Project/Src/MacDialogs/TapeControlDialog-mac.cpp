@@ -85,14 +85,6 @@ static void SetDlgItemChecked(HWND hDlg, UINT nIDDlgItem, bool Checked)
 }
 
 
-static void CheckRadioButton(HWND hwndDlg,
-					  int a,
-					  int b,
-					  int c)
-{
-	
-}
-
 static void UpdateState(HWND hwndDlg)
 {
 	SetFocus(hwndDlg);

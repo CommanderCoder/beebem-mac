@@ -23,6 +23,7 @@ Dialog::Dialog(HINSTANCE hInstance,
 	m_DialogID(DialogID), // Modals::keyboardLinks
 	m_hwnd(nullptr)
 {
+	m_hwnd=(HWND)&m_DialogID;  // hwnd is just a pointer to the dialog id
 }
 
 /****************************************************************************/
@@ -62,26 +63,29 @@ Dialog::Dialog(HINSTANCE hInstance,
 //	}
 //}
 //
-///****************************************************************************/
-//
-//std::string Dialog::GetDlgItemText(int nID)
-//{
-//	int Length = GetWindowTextLength(GetDlgItem(m_hwnd, nID));
-//
-//	std::vector<char> Text;
-//	Text.resize(Length + 1);
-//
-//	::GetDlgItemText(m_hwnd, nID, &Text[0], (int)Text.size());
-//
-//	return std::string(&Text[0]);
-//}
-//
-///****************************************************************************/
-//
-//void Dialog::SetDlgItemText(int nID, const std::string& str)
-//{
+
+/****************************************************************************/
+
+std::string Dialog::GetDlgItemText(int nID)
+{
+	int Length = 200;//GetWindowTextLength(GetDlgItem(m_hwnd, nID));
+
+	std::vector<char> Text;
+	Text.resize(Length + 1);
+
+	::GetDlgItemText(m_hwnd, nID, &Text[0], (int)Text.size());
+
+	return std::string(&Text[0]);
+}
+
+/****************************************************************************/
+
+void Dialog::SetDlgItemText(int nID, const std::string& str)
+{
 //	SetWindowText(GetDlgItem(m_hwnd, nID), str.c_str());
-//}
+
+	::SetDlgItemText(m_hwnd, nID, str.c_str());
+}
 
 
 

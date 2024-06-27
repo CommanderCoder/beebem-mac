@@ -61,7 +61,7 @@ func recurseButtons(find id: String, viewcontroller vc: NSViewController) -> NSB
 	for item in vc.view.subviewsRecursive() {
 	  if item.identifier?.rawValue == id //&& item.isEnabled
 	  {
-		  print(item.identifier?.rawValue, item.self)
+		  print(item.identifier?.rawValue ?? "?" , item.self)
 		  return (item as? NSButton)  // nil otherwise
 	  }
 	}
@@ -80,7 +80,7 @@ func recurseTextFields(find id: String, viewcontroller vc: NSViewController) -> 
 	for item in vc.view.subviewsRecursive() {
 	  if item.identifier?.rawValue == id //&& item.isEnabled
 	  {
-		  print(item.identifier?.rawValue, item.self)
+		  print(item.identifier?.rawValue ?? "?", item.self)
 		  return (item as? NSTextField)  // nil otherwise
 	  }
 	}

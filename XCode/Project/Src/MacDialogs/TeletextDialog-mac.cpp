@@ -118,14 +118,6 @@ static bool IsDlgItemChecked(HWND hDlg, UINT nIDDlgItem)
 }
 #endif
 
-static void SetDlgItemText(int nID, const std::string& str)
-{
-	
-}
-static std::string GetDlgItemText(int nID)
-{
-	return "";
-}
 
 static void SetDlgItemFocus(int nID)
 {

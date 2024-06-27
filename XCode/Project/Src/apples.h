@@ -428,7 +428,10 @@ void GetWindowRect(HWND h, RECT* r);
 void GetClientRect(HWND h, RECT* r);
 void InvalidateRect(HWND h, RECT* r, bool b);
 
-
+void CheckRadioButton(HWND hwndDlg,
+					  int first,
+					  int last,
+					  int checked);
 
 
 //#define IDD_SELECT_KEY			Modals::selectKey

@@ -57,20 +57,6 @@ static void EnableDlgItem(UINT nIDDlgItem, bool Enable)
 
 }
 
-static void SetDlgItemText(int nID, const std::string& str)
-{
-	printf("serialport text %d %s", nID, str.c_str());
-}
-
-static std::string GetDlgItemText(int nID)
-{
-	char str[1000];
-	std::string res;
-
-	bool ok = swift_GetDlgItemText(Modals::serialPort, ConvRC2ID(nID), str, strlen(str));
-	if (ok) res = str;
-	return res;
-}
 
 static void SetDlgItemFocus(int nID)
 {
@@ -78,18 +64,8 @@ static void SetDlgItemFocus(int nID)
 }
 
 
-static void CheckRadioButton(HWND hwndDlg,
-					  int a,
-					  int b,
-					  int c)
-{
-	printf("CheckRadioButton %d %d %d", a, b, c);
-
-}
 
 bool SerialPortDialog::DoModal() {
-	
-	
 	serialPortDialog = this;
 	WM_INITDIALOG();
 	bool ret = swift_DoModal(Modals::serialPort, this);
@@ -124,7 +100,8 @@ bool SerialPortDialog::WM_INITDIALOG()
 
 		char sz[20];
 		sprintf(sz, "%d", m_IPPort);
-		SetWindowText(GetDlgItem(m_hwnd, IDC_IP_PORT), sz);
+//		SetWindowText(GetDlgItem(m_hwnd, IDC_IP_PORT), sz);
+		::SetDlgItemText(m_hwnd, IDC_IP_PORT, sz);
 
 		SetDlgItemChecked(IDC_IP323_RAW_COMMS, m_IP232RawComms);
 		SetDlgItemChecked(IDC_IP232_HANDSHAKE, m_IP232Handshake);

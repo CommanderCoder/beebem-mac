@@ -83,6 +83,7 @@ void beebwin_CheckMenuRadioItem(UINT first, UINT last, UINT cmd)
 	beebwin_SetMenuCheck(cmd, true);
 }
 
+
 void CheckMenuRadioItem(HMENU m_hMenu,
 						UINT first,
 						UINT last,
@@ -97,6 +98,42 @@ void CheckMenuRadioItem(HMENU m_hMenu,
 							   cmdSelectedMenuItem);
 }
 
+
+// set the tick on the menu with a 4 character identifier
+void beebwin_SetDlgCheck(HWND hwnd, UINT cmd, bool check)
+{
+	auto id = ConvRC2ID(cmd);
+	if (id>0)
+	{
+		// check the selected item
+		swift_SetDlgCheck((Dialogs)*hwnd, id, check);
+	}
+	
+}
+
+void beebwin_CheckDlgRadioItem(HWND hwnd, UINT first, UINT last, UINT cmd)
+{
+	
+	for (UINT v = first; v <= last; v++)
+	{
+		// uncheck all the items in the 'radio'
+		beebwin_SetDlgCheck(hwnd, v, false);
+	}
+	// check the selected item
+	beebwin_SetDlgCheck(hwnd, cmd, true);
+}
+
+
+void CheckRadioButton(HWND hwndDlg,
+					  int first,
+					  int last,
+					  int checked)
+{
+	beebwin_CheckDlgRadioItem( hwndDlg,
+							   first,
+							   last,
+							   checked);
+}
 
 
 int _vscprintf (const char * format, va_list pargs) {
@@ -323,6 +360,7 @@ BOOL SetWindowText(HWND    hWnd, LPTSTR lpString)
 {
 	return SetWindowText(hWnd, (LPCSTR) lpString);
 }
+
 BOOL SetWindowText(HWND    hWnd, LPCSTR lpString)
 {
 	// set the window title via swift
@@ -462,13 +500,20 @@ LRESULT SendDlgItemMessage(
 	return 0;
 }
 
+void SetDlgItemText(int nID, const std::string& str)
+{
+	swift_SetDlgItemText(Modals::serialPort, ConvRC2ID(nID), str.c_str());
+}
+
+
+
 BOOL SetDlgItemText(
   HWND   hDlg,
   int    nIDDlgItem,
   LPCSTR lpString
 )
 {
-	return swift_SetDlgItemText((Dialogs)*hDlg, nIDDlgItem, lpString);
+	return swift_SetDlgItemText((Dialogs)*hDlg, ConvRC2ID(nIDDlgItem), lpString);
 }
 
 UINT GetDlgItemText(
@@ -478,7 +523,8 @@ UINT GetDlgItemText(
 	int   cchMax
 )
 {
-	return 0;
+	bool ok = swift_GetDlgItemText((Dialogs)*hDlg, ConvRC2ID(nIDDlgItem), lpString, cchMax);
+	return ok;
 }
 
 HWND GetDlgItem(

@@ -1732,7 +1732,7 @@
                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                     <prototypeCellViews>
                                                         <tableCellView id="eE8-AA-waO">
-                                                            <rect key="frame" x="129" y="1" width="127" height="17"/>
+                                                            <rect key="frame" x="128.5" y="1" width="127" height="17"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="5fe-H1-wPI">
@@ -3271,7 +3271,7 @@ DQ
                                 <subviews>
                                     <button identifier="iprc" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="YXw-NH-1S8">
                                         <rect key="frame" x="-2" y="23" width="140" height="18"/>
-                                        <buttonCell key="cell" type="radio" title="IP232 Raw Comms" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="q0w-pS-3of">
+                                        <buttonCell key="cell" type="check" title="IP232 Raw Comms" bezelStyle="regularSquare" imagePosition="left" inset="2" id="q0w-pS-3of">
                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                             <font key="font" metaFont="system"/>
                                         </buttonCell>
@@ -3281,7 +3281,7 @@ DQ
                                     </button>
                                     <button identifier="iphs" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="e4S-PK-jhI">
                                         <rect key="frame" x="-2" y="-1" width="133" height="18"/>
-                                        <buttonCell key="cell" type="radio" title="IP232 Handshake" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="kWk-Dn-XVX">
+                                        <buttonCell key="cell" type="check" title="IP232 Handshake" bezelStyle="regularSquare" imagePosition="left" inset="2" id="kWk-Dn-XVX">
                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                             <font key="font" metaFont="system"/>
                                         </buttonCell>
