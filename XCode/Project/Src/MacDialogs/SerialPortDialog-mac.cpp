@@ -18,9 +18,12 @@
 #include "Resource.h"
 #include "StringUtils.h"
 
-#undef IDD_SERIAL
-#define IDD_SERIAL				Dialogs::serialPort
+#include "beebemrcids.h"
 
+#undef IDD_SERIAL
+#define IDD_SERIAL				Modals::serialPort
+
+SerialPortDialog* serialPortDialog = nullptr;
 
 /****************************************************************************/
 
@@ -50,6 +53,8 @@ static void EnableDlgItem(UINT nIDDlgItem, bool Enable)
 #ifndef __APPLE__
 	EnableWindow(GetDlgItem(hDlg, nIDDlgItem), Enable);
 #endif
+	printf("EnableDlgItem %d %d", nIDDlgItem, Enable);
+
 }
 
 static void SetDlgItemText(int nID, const std::string& str)
@@ -59,7 +64,12 @@ static void SetDlgItemText(int nID, const std::string& str)
 
 static std::string GetDlgItemText(int nID)
 {
-	return "";
+	char str[1000];
+	std::string res;
+
+	bool ok = swift_GetDlgItemText(Modals::serialPort, ConvRC2ID(nID), str, strlen(str));
+	if (ok) res = str;
+	return res;
 }
 
 static void SetDlgItemFocus(int nID)
@@ -73,15 +83,19 @@ static void CheckRadioButton(HWND hwndDlg,
 					  int b,
 					  int c)
 {
-	
+	printf("CheckRadioButton %d %d %d", a, b, c);
+
 }
 
 bool SerialPortDialog::DoModal() {
-//	runningSPDialog = this;
+	
+	
+	serialPortDialog = this;
 	WM_INITDIALOG();
-	bool ret = swift_OpenDialog(Dialogs::serialPort, this);
-//	runningSPDialog = NULL;
+	bool ret = swift_DoModal(Modals::serialPort, this);
+	serialPortDialog = NULL;
 	return ret;
+
 }
 
 /****************************************************************************/

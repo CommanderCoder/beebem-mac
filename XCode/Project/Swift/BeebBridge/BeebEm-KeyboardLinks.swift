@@ -16,10 +16,10 @@ import Cocoa
 	case romConfig
 	case exportFiles
 	case keyboardMapping
+	case serialPort
 	case breakoutBox = 256
 	case tapeControl
 	case debugWindow
-	case serialPort
 	case teletextSelect
 }
 
@@ -57,10 +57,11 @@ func GetWindowCtrl(for f: Dialogs) -> NSWindowController
 }
 
 
-func recurse2(find id: String, viewcontroller vc: NSViewController) -> NSButton? {
+func recurseButtons(find id: String, viewcontroller vc: NSViewController) -> NSButton? {
 	for item in vc.view.subviewsRecursive() {
 	  if item.identifier?.rawValue == id //&& item.isEnabled
 	  {
+		  print(item.identifier?.rawValue, item.self)
 		  return (item as? NSButton)  // nil otherwise
 	  }
 	}
@@ -70,7 +71,26 @@ func recurse2(find id: String, viewcontroller vc: NSViewController) -> NSButton?
 
 func dlgItemByIdentifier(_ id: String, _ vc: NSViewController) -> NSButton? {
 
-	return recurse2(find: id, viewcontroller: vc)
+	return recurseButtons(find: id, viewcontroller: vc)
+}
+
+
+// should do something about Button & TextField being only difference.
+func recurseTextFields(find id: String, viewcontroller vc: NSViewController) -> NSTextField? {
+	for item in vc.view.subviewsRecursive() {
+	  if item.identifier?.rawValue == id //&& item.isEnabled
+	  {
+		  print(item.identifier?.rawValue, item.self)
+		  return (item as? NSTextField)  // nil otherwise
+	  }
+	}
+  return nil
+}
+
+
+func dlgItemTextByIdentifier(_ id: String, _ vc: NSViewController) -> NSTextField? {
+
+	return recurseTextFields(find: id, viewcontroller: vc)
 }
 
 // set the tick on the menu with a 4 character identifier
@@ -119,8 +139,57 @@ public func swift_GetDlgCheck(_ dlg: Dialogs, _ cmd: UInt32) -> Bool
 }
 
 
+// set the text on the menu with a 4 character identifier
+@_cdecl("swift_SetDlgItemText")
+public func swift_SetDlgItemText(_ dlg: Dialogs, _ cmd: UInt32, _ text : UnsafePointer<CChar>) -> Bool
+{
+	guard let dlgView : NSViewController = allViews[dlg] else {
+		return false
+	}
+
+	let cmdSTR =  conv(cmd)
+	if let n = dlgItemTextByIdentifier(cmdSTR, dlgView)
+	{
+		let t = String(cString: text)
+        print("\(#function)",cmdSTR,t)
+		n.stringValue = t
+		return true
+	}
+	else
+	{
+		print("\(#function): \(cmd) not found: \(cmdSTR)")
+	}
+
+	return false
+}
 
 
+// set the text on the menu with a 4 character identifier
+@_cdecl("swift_GetDlgItemText")
+public func swift_GetDlgItemText(_ dlg: Dialogs, _ cmd: UInt32, _ text : UnsafeMutablePointer<CChar>, _ length : Int) -> Bool
+{
+	guard let dlgView : NSViewController = allViews[dlg] else {
+		return false
+	}
+
+	let cmdSTR =  conv(cmd)
+	if let n = dlgItemTextByIdentifier(cmdSTR, dlgView)
+	{
+		let t = n.stringValue
+		print("\(#function)",cmdSTR,t)
+
+		// set the filepath back in the C code - fill with zeros first
+		text.assign(repeating: 0, count: length)
+		text.assign(from: t, count: t.count)
+		return true
+	}
+	else
+	{
+		print("\(#function): \(cmd) not found: \(cmdSTR)")
+	}
+
+	return false
+}
 
 // need to have given the controller an identified (StoryboardID)
 let keyboardLinksWindow: NSWindowController = GetWindowCtrl(for: Dialogs.keyboardLinks)

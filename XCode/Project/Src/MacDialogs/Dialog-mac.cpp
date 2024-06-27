@@ -87,16 +87,16 @@ Dialog::Dialog(HINSTANCE hInstance,
 
 bool Dialog::IsDlgItemChecked(int nID)
 {
-	auto cmdID = RC2ID.find(nID);
-	if (cmdID != RC2ID.end())
+	int cmdId = ConvRC2ID(nID);
+	if (cmdId > 0)
 	{
-		return swift_GetDlgCheck(m_DialogID, cmdID->second);
+		return swift_GetDlgCheck(m_DialogID, cmdId);
 	}
 	else
 	{
 		mainWin->Report(MessageType::Error, "cannot find menu item %d\n", nID);
 	}
-	return FALSE;
+	return 0;
 }
 
 

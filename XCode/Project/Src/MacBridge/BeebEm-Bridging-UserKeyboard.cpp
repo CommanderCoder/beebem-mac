@@ -20,17 +20,7 @@ extern "C" void beeb_UserKeyboardClosed()
 // user keyboard
 extern "C" long beeb_UKHandleCommand(unsigned int cmdID)
 {
-	char* cmdCHR = (char*)&cmdID;
-	
-	auto cmdRC = ID2RC.find(cmdID);
-	if (cmdRC != ID2RC.end())
-	{
-		printf("HANDLECMD %c%c%c%c\n", cmdCHR[3], cmdCHR[2], cmdCHR[1], cmdCHR[0]);
-		return UK_WM_COMMAND((WPARAM)cmdRC->second);//
-	}
-
-	printf("NOT FOUND %c%c%c%c\n", cmdCHR[3], cmdCHR[2], cmdCHR[1], cmdCHR[0]);
-	return 0;
+	return UK_WM_COMMAND((WPARAM)ConvID2RC(cmdID));
 }
 
 extern "C" void beeb_ukhandlekeys(long eventkind, unsigned int keycode, char charCode)

@@ -32,35 +32,14 @@ void TapeControlOpenDialog(HINSTANCE hinst, HWND /* hwndMain */)
 {
 	TapeControlEnabled = true;
 
-#ifndef __APPLE__
-	if (!IsWindow(hwndTapeControl))
-	{
-		hwndTapeControl = CreateDialog(hinst, MAKEINTRESOURCE(IDD_TAPECONTROL),
-									   NULL, TapeControlDlgProc);
-		hCurrentDialog = hwndTapeControl;
-		ShowWindow(hwndTapeControl, SW_SHOW);
-
-		hwndMap = GetDlgItem(hwndTapeControl, IDC_TAPE_CONTROL_MAP);
-		SendMessage(hwndMap, WM_SETFONT, (WPARAM)GetStockObject(ANSI_FIXED_FONT),
-					(LPARAM)MAKELPARAM(FALSE,0));
-
-		int Time = SerialGetTapeClock();
-		TapeControlAddMapLines();
-		TapeControlUpdateCounter(Time);
-	}
-#else
 	swift_OpenDialog(Dialogs::tapeControl, NULL);
 	int Time = SerialGetTapeClock();
 	TapeControlAddMapLines();
 	TapeControlUpdateCounter(Time);
-#endif
 }
 
 void TapeControlCloseDialog()
 {
-#ifndef __APPLE__
-	DestroyWindow(hwndTapeControl);
-#endif
 	hwndTapeControl = nullptr;
 	hwndMap = nullptr;
 	TapeControlEnabled = false;
@@ -69,17 +48,8 @@ void TapeControlCloseDialog()
 
 void TapeControlAddMapLines()
 {
-#ifndef __APPLE__
-	SendMessage(hwndMap, LB_RESETCONTENT, 0, 0);
-
-	for (const TapeMapEntry& line : TapeMap)
-	{
-		SendMessage(hwndMap, LB_ADDSTRING, 0, (LPARAM)line.desc.c_str());
-	}
-#else
 	beeb_TapeMap = TapeMap;
 	swift_TCReload();
-#endif
 	UpdateState(hwndTapeControl);
 }
 
@@ -94,21 +64,14 @@ void TapeControlUpdateCounter(int tape_time)
 
 		if (i > 0)
 			i--;
-#ifndef __APPLE__
-		SendMessage(hwndMap, LB_SETCURSEL, (WPARAM)i, 0);
-#else
-		swift_TCSelectItem(i);
-#endif
-		
+		swift_TCSelectItem(i);  //LB_SETCURSEL
 	}
 
 }
 
 static void EnableDlgItem(HWND hDlg, UINT nIDDlgItem, bool Enable)
 {
-#ifndef __APPLE__
-	EnableWindow(GetDlgItem(hDlg, nIDDlgItem), Enable);
-#endif
+//	EnableWindow(GetDlgItem(hDlg, nIDDlgItem), Enable);
 }
 
 static bool IsDlgItemChecked(HWND hDlg, UINT nIDDlgItem)
@@ -279,7 +242,7 @@ INT_PTR CALLBACK TapeControlDlgProc(HWND hwndDlg, UINT message, WPARAM wParam, L
 #else
 
 
-long TCWindowCommandHandler(UINT32 cmdID)
+long TC_WM_COMMAND(UINT32 cmdID)
 {
 	HWND hwndDlg = NULL;
 	
@@ -370,12 +333,8 @@ void TapeControlRecord()
 
 void TapeControlCloseTape()
 {
-#ifndef __APPLE__
-	SendMessage(hwndMap, LB_RESETCONTENT, 0, 0);
-#else
 	beeb_TapeMap.clear();
-	swift_TCReload();
-#endif
+	swift_TCReload();  // 	LB_RESETCONTENT
 	UpdateState(hwndTapeControl);
 }
 

@@ -67,15 +67,5 @@ extern "C" void beeb_Destroy()
 
 extern "C" void beeb_HandleCommand(unsigned int cmdID)
 {
-	char* cmdCHR = (char*)&cmdID;
-	
-	auto cmdRC = ID2RC.find(cmdID);
-	if (cmdRC != ID2RC.end())
-	{
-		printf("HANDLECMD %c%c%c%c\n", cmdCHR[3], cmdCHR[2], cmdCHR[1], cmdCHR[0]);
-		mainWin->HandleCommand(cmdRC->second);
-	}
-	else
-		printf("NOT FOUND %c%c%c%c\n", cmdCHR[3], cmdCHR[2], cmdCHR[1], cmdCHR[0]);
-
+	mainWin->HandleCommand(ConvID2RC(cmdID));
 }

@@ -199,10 +199,10 @@ std::map<int,int> ID2RC =
 {'hdsc', IDM_SCSI_HARD_DRIVE},
 {'hdde', IDM_IDE_HARD_DRIVE},
 {'hdre', IDM_SELECT_HARD_DRIVE_FOLDER},
-{'rs42', ID_},
-{'sdts', ID_},
-{'sdep', ID_},
-{'sdsp', ID_},
+//{'rs42', ID_},
+//{'sdts', ID_},
+//{'sdep', ID_},
+//{'sdsp', ID_},
 {'page', ID_}, // page setup
 {'prns', ID_}, // print window
 {'cpyc', ID_}, // copy window to clipboard
@@ -228,6 +228,11 @@ std::map<int,int> ID2RC =
     {'kesc', IDM_DISABLEKEYSESCAPE},
     {'sram', IDM_SWRAMBOARD},
     {'erom', IDM_ROMCONFIG},
+
+	{'sril', IDM_SERIAL},
+	{'srld', IDM_SELECT_SERIAL_DESTINATION},
+	
+	
     // userportbreakout
     {'upb0',IDK_BIT0},
     {'upb1',IDK_BIT1},
@@ -245,6 +250,18 @@ std::map<int,int> ID2RC =
     {'upc2',IDC_IB2},
     {'upc1',IDC_IB1},
     {'upc0',IDC_IB0},
+	
+	{'spsp',IDC_SERIAL_PORT_DESTINATION_SERIAL_PORT},
+	{'spts',IDC_SERIAL_PORT_DESTINATION_TOUCH_SCREEN},
+	{'spip',IDC_SERIAL_PORT_DESTINATION_IP},
+
+	{'sprt',IDC_SERIAL_PORT},
+	{'ipad',IDC_IP_ADDRESS},
+	{'ippt',IDC_IP_PORT},
+	
+	{'iprc',IDC_IP323_RAW_COMMS},
+	{'iphs',IDC_IP232_HANDSHAKE},
+
     //keyb
     {'A   ',IDK_A},
     {'B   ',IDK_B},
@@ -358,3 +375,35 @@ invertMap(std::map<int,int> const& myMap)
 
 std::map<int,int> RC2ID = invertMap(ID2RC);
 
+
+int
+ConvID2RC(unsigned int cmdID)
+{
+	char* cmdCHR = (char*)&cmdID;
+
+	auto cmdRC = ID2RC.find(cmdID);
+	if (cmdRC != ID2RC.end())
+	{
+		printf("ConvID2RC %c%c%c%c\n", cmdCHR[3], cmdCHR[2], cmdCHR[1], cmdCHR[0]);
+		return cmdRC->second;
+	}
+
+	printf(" NOT FOUND %c%c%c%c\n", cmdCHR[3], cmdCHR[2], cmdCHR[1], cmdCHR[0]);
+	return 0;
+}
+
+
+int
+ConvRC2ID(unsigned int nID)
+{
+	auto cmdID = RC2ID.find(nID);
+	if (cmdID != RC2ID.end())
+	{
+		char* cmdCHR = (char*)&cmdID->second;
+		printf("ConvID2RC %d %c%c%c%c\n", nID, cmdCHR[3], cmdCHR[2], cmdCHR[1], cmdCHR[0]);
+
+		return cmdID->second;
+	}
+	printf(" NOT FOUND %d\n", nID);
+	return -1;
+}

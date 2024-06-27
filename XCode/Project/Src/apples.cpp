@@ -39,23 +39,16 @@ DWORD GetTickCount() // milliseconds
 	return (DWORD) millis;
 }
 
-int beebwin_RC2ID(int rc)
-{
-	auto cmdID = RC2ID.find(rc);
-	if (cmdID != RC2ID.end())
-		return cmdID->second;
-	return -1;
-}
 
 void beebwin_ModifyMenu(
 						UINT position,
 						UINT newitem,
 						LPCSTR newtext)
 {
-	auto id = beebwin_RC2ID(position);
+	auto id = ConvRC2ID(position);
 	if (id>0)
 		// check the selected item
-		swift_ModifyMenu(id, beebwin_RC2ID(newitem), newtext);
+		swift_ModifyMenu(id, ConvRC2ID(newitem), newtext);
 }
 
 
@@ -69,7 +62,7 @@ void ModifyMenu(HMENU m_hMenu, UINT pf, UINT flags, UINT_PTR newID, LPCSTR str)
 // set the tick on the menu with a 4 character identifier
 void beebwin_SetMenuCheck(UINT cmd, bool check)
 {
-	auto id = beebwin_RC2ID(cmd);
+	auto id = ConvRC2ID(cmd);
 	if (id>0)
 	{
 		// check the selected item
@@ -371,14 +364,14 @@ void SetMenu(HWND w, bool s)
 
 DWORD CheckMenuItem( HMENU hMenu,  UINT  uIDCheckItem,UINT  uCheck)
 {
-	swift_SetMenuCheck(beebwin_RC2ID(uIDCheckItem), uCheck);
+	swift_SetMenuCheck(ConvRC2ID(uIDCheckItem), uCheck);
 	return uCheck;   // should be the previous value of this item
 }
 
 
 DWORD EnableMenuItem(  HMENU hMenu,  UINT  uIDCheckItem,UINT  uEnable)
 {
-	swift_SetMenuEnable(beebwin_RC2ID(uIDCheckItem), uEnable);
+	swift_SetMenuEnable(ConvRC2ID(uIDCheckItem), uEnable);
 	return uEnable;  // should be the previous value of this item
 }
 
@@ -475,7 +468,7 @@ BOOL SetDlgItemText(
   LPCSTR lpString
 )
 {
-	return 0;
+	return swift_SetDlgItemText((Dialogs)*hDlg, nIDDlgItem, lpString);
 }
 
 UINT GetDlgItemText(

@@ -14,4 +14,13 @@ class SerialPortViewController: NSViewController {
 	 beeb_DbgHandleCommand(conv("idcl")); //IDCANCEL
 	}
 	
+	
+	// for bitbuttons and reset button
+	@IBAction func SPHandleCommand(_ sender: NSButton) {
+		handlingCommand = true
+		let cmd: String = sender.identifier?.rawValue.padding(toLength: 4, withPad: " ", startingAt: 0) ?? "none"
+		let p = conv(cmd)
+		beeb_SPHandleCommand(p)
+		handlingCommand = false
+	}
 }

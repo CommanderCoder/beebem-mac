@@ -45,20 +45,6 @@ extern "C" void beeb_BreakoutBoxCloseDialog()
 
 extern "C" long beeb_BBHandleCommand(unsigned int cmdID)
 {
-	char* cmdCHR = (char*)&cmdID;
-	
-	auto cmdRC = ID2RC.find(cmdID);
-	if (cmdRC != ID2RC.end())
-	{
-		printf("TCHANDLECMD %c%c%c%c\n", cmdCHR[3], cmdCHR[2], cmdCHR[1], cmdCHR[0]);
-		return userPortBreakoutDialog->WM_COMMAND(cmdRC->second);
-	}
-
-	printf(" NOT FOUND %c%c%c%c\n", cmdCHR[3], cmdCHR[2], cmdCHR[1], cmdCHR[0]);
-	return 0;
-
-
-	
-	
+	return userPortBreakoutDialog->WM_COMMAND(ConvID2RC(cmdID));
 }
 

@@ -11,7 +11,7 @@
 
 RomConfigDialog* runningRCDialog;
 
-extern "C" bool RCWindowCommandHandler(int wParam)
+extern "C" bool beeb_RCHandleCommand(int wParam)
 {
 	if (runningRCDialog != NULL)
 		return runningRCDialog->WM_COMMAND(wParam);

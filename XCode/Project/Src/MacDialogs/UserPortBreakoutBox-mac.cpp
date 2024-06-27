@@ -14,6 +14,7 @@
 #include "SelectKeyDialog.h"
 #include "UserVia.h"
 
+#include "beebemrcids.h"
 
 /****************************************************************************/
 
@@ -414,11 +415,9 @@ void UserPortBreakoutDialog::ShowInputs(unsigned char data)
 
 void UserPortBreakoutDialog::ShowBitKey(int key, int ctrlID)
 {
-#ifdef BEEBWIN
-	SetDlgItemText(m_hwnd, ctrlID, GetPCKeyName(BitKeys[key]));
-#else
-	printf("showbitkey %d %s\n", ctrlID, GetPCKeyName(BitKeys[key]));
-#endif
+	printf("showbitkey %d %s\n", ConvRC2ID(ctrlID), GetPCKeyName(BitKeys[key]));
+	uint32_t bb = Dialogs::breakoutBox;
+    SetDlgItemText(&bb, ConvRC2ID(ctrlID), GetPCKeyName(BitKeys[key]));
 }
 
 /****************************************************************************/

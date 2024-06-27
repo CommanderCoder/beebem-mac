@@ -38,10 +38,11 @@ class SerialPortDialog : public Dialog
 		bool GetIP232Handshake() const { return m_IP232Handshake; }
 		bool DoModal();
 
-	private:
 	virtual bool WM_INITDIALOG();
 	virtual bool WM_COMMAND(WPARAM wParam);
 	virtual void WM_NOTIFY() {}
+
+	private:
 
 //		virtual INT_PTR DlgProc(
 //			UINT   nMessage,
@@ -61,5 +62,6 @@ class SerialPortDialog : public Dialog
 		bool m_IP232Handshake;
 };
 
+extern SerialPortDialog* serialPortDialog;
 
 #endif /* SerialPortDialog_mac_hpp */

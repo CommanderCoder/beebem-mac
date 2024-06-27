@@ -27,5 +27,7 @@
 extern std::map<int,int> ID2RC;
 extern std::map<int,int> RC2ID;
 
+int ConvID2RC(unsigned int);
+int ConvRC2ID(unsigned int);
 
 #endif /* beebemrcids_h */

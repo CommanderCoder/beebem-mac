@@ -7,7 +7,7 @@
 
 #include "apples.h"
 #include "beebemrcids.h"
-extern long TCWindowCommandHandler(UINT32 cmdID);
+#include "TapeControlDialog-mac.hpp"
 
 #include <vector>
 
@@ -72,20 +72,8 @@ extern "C" const char* beeb_getTableCellData(UINT32 property, long itemID)
 	return temp.c_str();
 }
 
-
 extern "C" long beeb_TCHandleCommand(unsigned int cmdID)
 {
-	char* cmdCHR = (char*)&cmdID;
-	
-	auto cmdRC = ID2RC.find(cmdID);
-	if (cmdRC != ID2RC.end())
-	{
-		printf("TCHANDLECMD %c%c%c%c\n", cmdCHR[3], cmdCHR[2], cmdCHR[1], cmdCHR[0]);
-		return TCWindowCommandHandler(cmdRC->second);
-	}
-
-	printf(" NOT FOUND %c%c%c%c\n", cmdCHR[3], cmdCHR[2], cmdCHR[1], cmdCHR[0]);
-	return 0;
-
+	return TC_WM_COMMAND(ConvID2RC(cmdID));
 }
 

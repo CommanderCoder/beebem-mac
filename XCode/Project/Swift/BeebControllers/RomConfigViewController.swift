@@ -28,33 +28,32 @@ class RomConfigViewController: NSViewController
     override func viewDidDisappear() {
 		NSApp.stopModal()
     }
-    
     @IBAction func SelectROM(_ sender: Any) {
-        RCWindowCommandHandler(IDC_SELECTROM)
+		beeb_RCHandleCommand(IDC_SELECTROM)
     }
     @IBAction func MarkWritable(_ sender: Any) {
-        RCWindowCommandHandler(IDC_MARKWRITABLE)
+		beeb_RCHandleCommand(IDC_MARKWRITABLE)
     }
     @IBAction func RAM(_ sender: Any) {
-        RCWindowCommandHandler(IDC_RAM)
+		beeb_RCHandleCommand(IDC_RAM)
     }
     @IBAction func Empty(_ sender: Any) {
-        RCWindowCommandHandler(IDC_EMPTY)
+		beeb_RCHandleCommand(IDC_EMPTY)
     }
     @IBAction func LoadConfig(_ sender: Any) {
-        RCWindowCommandHandler(IDC_LOAD)
+		beeb_RCHandleCommand(IDC_LOAD)
     }
     @IBAction func SaveConfig(_ sender: Any) {
-        RCWindowCommandHandler(IDC_SAVE)
+		beeb_RCHandleCommand(IDC_SAVE)
     }
     
     @IBAction func OK(_ sender: Any) {
-		RCWindowCommandHandler(0x30) //IDOK
+		beeb_RCHandleCommand(0x30) //IDOK
 //        self.view.window!.performClose(nil)
     }
 	
     @IBAction func Cancel(_ sender: Any) {
-		RCWindowCommandHandler(0x40) //IDCANCEL
+		beeb_RCHandleCommand(0x40) //IDCANCEL
     }
 
     override func viewDidLoad() {
@@ -99,7 +98,7 @@ extension RomConfigViewController: NSComboBoxDelegate {
 		let m = (notification.object as! NSComboBox).indexOfSelectedItem
 		let p = IDC_MODEL | Int32(m<<16)
 		
-		RCWindowCommandHandler(p)
+		beeb_RCHandleCommand(p)
 		tableView.reloadData()
 	}
 }

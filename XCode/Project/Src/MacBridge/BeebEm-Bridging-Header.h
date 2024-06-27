@@ -20,9 +20,9 @@ void beeb_handlejoystick(long message, long wParam, long lParam);
 
 
 // Exposed to TapeControlViewController
-//void beeb_TapeControlOpenDialog();
-//void beeb_TapeControlCloseDialog();
 long beeb_TCHandleCommand(unsigned int cmdID);
+
+
 long beeb_KLHandleCommand(unsigned int cmdID);
 
 
@@ -44,7 +44,7 @@ void beeb_ukhandlekeys(long eventkind, unsigned int keycode, char charCode);
 
 
 // Exposed to RomConfigViewController
-int RCWindowCommandHandler(int);
+long beeb_RCHandleCommand(int cmdID);
 const char* beeb_getRCEntry(int row, int column);
 
 // Exposed to BreakoutBoxViewController
@@ -52,6 +52,9 @@ void beeb_bbhandlekeys(long eventkind, unsigned int keycode, char charCode);
 void beeb_BreakoutBoxOpenDialog();
 void beeb_BreakoutBoxCloseDialog();
 long beeb_BBHandleCommand(unsigned int cmdID);
+
+
+long beeb_SPHandleCommand(unsigned int cmdID);
 
 
 // Exposed to ExportDiscViewController

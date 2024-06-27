@@ -13,3 +13,5 @@ import Cocoa
 let serialPortWindow: NSWindowController = GetWindowCtrl(for: Dialogs.serialPort)
 
 let serialPortView: SerialPortViewController = serialPortWindow.contentViewController as! SerialPortViewController
+
+
