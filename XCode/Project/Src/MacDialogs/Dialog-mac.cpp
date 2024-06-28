@@ -106,10 +106,11 @@ bool Dialog::IsDlgItemChecked(int nID)
 
 void Dialog::SetDlgItemChecked(int nID, bool bChecked)
 {
-	auto cmdID = RC2ID.find(nID);
-	if (cmdID != RC2ID.end())
+	
+	int cmdId = ConvRC2ID(nID);
+	if (cmdId != 0)
 	{
-		swift_SetDlgCheck(m_DialogID, cmdID->second, bChecked);
+		swift_SetDlgCheck(m_DialogID, cmdId, bChecked);
 	}
 	else
 	{
@@ -125,11 +126,14 @@ void Dialog::SetDlgItemChecked(int nID, bool bChecked)
 //}
 //
 //
-///****************************************************************************/
-//void Dialog::EnableDlgItem(int nID, bool bEnable)
-//{
+/****************************************************************************/
+void Dialog::EnableDlgItem(int nID, bool bEnable)
+{
 //	EnableWindow(GetDlgItem(m_hwnd, nID), bEnable);
-//}
+
+	printf("SetDlgItem %d %d", nID, bEnable);
+	swift_SetDlgItem((Dialogs)*m_hwnd, ConvRC2ID(nID), bEnable);
+}
 //
 ///****************************************************************************/
 //

@@ -107,11 +107,6 @@ static void SetDlgItemText(HWND hDlg, int nID, const char* str)
 	printf("tapecontrol text %d %s", nID, str);
 }
 
-static void EnableDlgItem(UINT nIDDlgItem, bool Enable)
-{
-	EnableWindow(GetDlgItem(hDlg, nIDDlgItem), Enable);
-}
-
 static bool IsDlgItemChecked(HWND hDlg, UINT nIDDlgItem)
 {
 	return SendDlgItemMessage(hDlg, nIDDlgItem, BM_GETCHECK, 0, 0) == BST_CHECKED;

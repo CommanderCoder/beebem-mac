@@ -3254,11 +3254,11 @@ DQ
             <objects>
                 <viewController id="as8-pM-7O7" userLabel="Serial Port View Controller" customClass="SerialPortViewController" customModule="BeebEm" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="zJj-39-CPf">
-                        <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+                        <rect key="frame" x="0.0" y="0.0" width="388" height="330"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0En-SC-Qky">
-                                <rect key="frame" x="20" y="235" width="348" height="21"/>
+                                <rect key="frame" x="20" y="295" width="348" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" title="RS423 Destination" drawsBackground="YES" id="yQq-an-RNu">
                                     <font key="font" usesAppearanceFont="YES"/>
@@ -3266,131 +3266,12 @@ DQ
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
-                            <stackView distribution="fill" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" fixedFrame="YES" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dpL-l4-BK0">
-                                <rect key="frame" x="20" y="179" width="138" height="40"/>
-                                <subviews>
-                                    <button identifier="iprc" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="YXw-NH-1S8">
-                                        <rect key="frame" x="-2" y="23" width="140" height="18"/>
-                                        <buttonCell key="cell" type="check" title="IP232 Raw Comms" bezelStyle="regularSquare" imagePosition="left" inset="2" id="q0w-pS-3of">
-                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                            <font key="font" metaFont="system"/>
-                                        </buttonCell>
-                                        <connections>
-                                            <action selector="SPHandleCommand:" target="bPf-dx-zLs" id="MnH-Gq-s4M"/>
-                                        </connections>
-                                    </button>
-                                    <button identifier="iphs" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="e4S-PK-jhI">
-                                        <rect key="frame" x="-2" y="-1" width="133" height="18"/>
-                                        <buttonCell key="cell" type="check" title="IP232 Handshake" bezelStyle="regularSquare" imagePosition="left" inset="2" id="kWk-Dn-XVX">
-                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                            <font key="font" metaFont="system"/>
-                                        </buttonCell>
-                                        <connections>
-                                            <action selector="SPHandleCommand:" target="bPf-dx-zLs" id="kXa-dK-Zna"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
-                                <visibilityPriorities>
-                                    <integer value="1000"/>
-                                    <integer value="1000"/>
-                                </visibilityPriorities>
-                                <customSpacing>
-                                    <real value="3.4028234663852886e+38"/>
-                                    <real value="3.4028234663852886e+38"/>
-                                </customSpacing>
-                            </stackView>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="N6Q-sR-JCJ">
-                                <rect key="frame" x="80" y="112" width="34" height="16"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <textFieldCell key="cell" lineBreakMode="clipping" title="Port:" id="tXq-Ti-f5q">
-                                    <font key="font" metaFont="system"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
-                            <textField identifier="sprt" verticalHuggingPriority="750" fixedFrame="YES" preferredMaxLayoutWidth="96" translatesAutoresizingMaskIntoConstraints="NO" id="CDH-dh-2RV">
-                                <rect key="frame" x="153" y="109" width="70" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" placeholderString="serial port" drawsBackground="YES" id="jkj-hh-GEU">
-                                    <font key="font" metaFont="system"/>
-                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Biz-0W-AA4">
-                                <rect key="frame" x="79" y="83" width="73" height="16"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <textFieldCell key="cell" lineBreakMode="clipping" title="IP Address:" id="sZz-5s-wma">
-                                    <font key="font" metaFont="system"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
-                            <textField identifier="ipad" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OLN-rD-L16">
-                                <rect key="frame" x="183" y="83" width="96" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <textFieldCell key="cell" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" title="7890" drawsBackground="YES" id="oMc-Gc-ALP">
-                                    <font key="font" metaFont="system"/>
-                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jAP-Yy-yr1">
-                                <rect key="frame" x="93" y="57" width="34" height="16"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <textFieldCell key="cell" lineBreakMode="clipping" title="Port:" id="rYE-Dh-PCN">
-                                    <font key="font" metaFont="system"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
                             <stackView distribution="fill" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" fixedFrame="YES" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="XXm-du-5js">
-                                <rect key="frame" x="231" y="155" width="174" height="64"/>
-                                <subviews>
-                                    <button identifier="spsp" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ivJ-dD-k6C">
-                                        <rect key="frame" x="-2" y="47" width="89" height="18"/>
-                                        <buttonCell key="cell" type="radio" title="Serial Port" bezelStyle="regularSquare" imagePosition="left" alignment="left" identifier="spsp" inset="2" id="J6b-iA-f7U">
-                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                            <font key="font" metaFont="system"/>
-                                        </buttonCell>
-                                        <connections>
-                                            <action selector="SPHandleCommand:" target="bPf-dx-zLs" id="hKi-Kk-vVL"/>
-                                        </connections>
-                                    </button>
-                                    <button identifier="spts" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="oYN-fA-0yo">
-                                        <rect key="frame" x="-2" y="23" width="176" height="18"/>
-                                        <buttonCell key="cell" type="radio" title="Microvitec Touch Screen" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="1Wf-4A-xgz">
-                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                            <font key="font" metaFont="system"/>
-                                        </buttonCell>
-                                        <connections>
-                                            <action selector="SPHandleCommand:" target="bPf-dx-zLs" id="VEc-Al-PEr"/>
-                                        </connections>
-                                    </button>
-                                    <button identifier="spip" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="MhJ-WY-PmY">
-                                        <rect key="frame" x="-2" y="-1" width="38" height="18"/>
-                                        <buttonCell key="cell" type="radio" title="IP" bezelStyle="regularSquare" imagePosition="left" alignment="left" identifier="spip" inset="2" id="HAa-fQ-Ajd">
-                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                            <font key="font" metaFont="system"/>
-                                        </buttonCell>
-                                        <connections>
-                                            <action selector="SPHandleCommand:" target="bPf-dx-zLs" id="wM7-vy-gvi"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
-                                <visibilityPriorities>
-                                    <integer value="1000"/>
-                                    <integer value="1000"/>
-                                    <integer value="1000"/>
-                                </visibilityPriorities>
-                                <customSpacing>
-                                    <real value="3.4028234663852886e+38"/>
-                                    <real value="3.4028234663852886e+38"/>
-                                    <real value="3.4028234663852886e+38"/>
-                                </customSpacing>
+                                <rect key="frame" x="231" y="263" width="174" height="16"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             </stackView>
                             <stackView distribution="fill" orientation="horizontal" alignment="top" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" fixedFrame="YES" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="t30-lQ-1TR">
-                                <rect key="frame" x="334" y="20" width="109" height="20"/>
+                                <rect key="frame" x="259" y="222" width="109" height="20"/>
                                 <subviews>
                                     <button identifier="idcl" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="yAP-6T-CA6" userLabel="Cancel">
                                         <rect key="frame" x="-7" y="-7" width="76" height="32"/>
@@ -3428,21 +3309,141 @@ DQ
                                     <real value="3.4028234663852886e+38"/>
                                 </customSpacing>
                             </stackView>
-                            <textField identifier="ippt" verticalHuggingPriority="750" fixedFrame="YES" preferredMaxLayoutWidth="96" translatesAutoresizingMaskIntoConstraints="NO" id="LVL-2T-mwd">
-                                <rect key="frame" x="176" y="57" width="96" height="21"/>
+                            <button identifier="spts" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oYN-fA-0yo">
+                                <rect key="frame" x="18" y="189" width="176" height="18"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" placeholderString="IP port" drawsBackground="YES" id="yKN-uD-QNe">
+                                <buttonCell key="cell" type="radio" title="Microvitec Touch Screen" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="1Wf-4A-xgz">
+                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="system"/>
-                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="SPHandleCommand:" target="bPf-dx-zLs" id="VEc-Al-PEr"/>
+                                </connections>
+                            </button>
+                            <button identifier="spip" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MhJ-WY-PmY">
+                                <rect key="frame" x="18" y="167" width="38" height="18"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="radio" title="IP" bezelStyle="regularSquare" imagePosition="left" alignment="left" identifier="spip" inset="2" id="HAa-fQ-Ajd">
+                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="SPHandleCommand:" target="bPf-dx-zLs" id="wM7-vy-gvi"/>
+                                </connections>
+                            </button>
+                            <box fixedFrame="YES" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="LDc-fT-nmn">
+                                <rect key="frame" x="17" y="16" width="231" height="144"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <view key="contentView" id="pNf-F1-Qfs">
+                                    <rect key="frame" x="3" y="3" width="225" height="126"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <button identifier="iprc" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YXw-NH-1S8">
+                                            <rect key="frame" x="-2" y="43" width="140" height="18"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <buttonCell key="cell" type="check" title="IP232 Raw Comms" bezelStyle="regularSquare" imagePosition="left" inset="2" id="q0w-pS-3of">
+                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                            <connections>
+                                                <action selector="SPHandleCommand:" target="bPf-dx-zLs" id="MnH-Gq-s4M"/>
+                                            </connections>
+                                        </button>
+                                        <button identifier="iphs" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="e4S-PK-jhI">
+                                            <rect key="frame" x="-2" y="19" width="133" height="18"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <buttonCell key="cell" type="check" title="IP232 Handshake" bezelStyle="regularSquare" imagePosition="left" inset="2" id="kWk-Dn-XVX">
+                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                            <connections>
+                                                <action selector="SPHandleCommand:" target="bPf-dx-zLs" id="kXa-dK-Zna"/>
+                                            </connections>
+                                        </button>
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jAP-Yy-yr1">
+                                            <rect key="frame" x="-2" y="79" width="34" height="16"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" lineBreakMode="clipping" title="Port:" id="rYE-Dh-PCN">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                        <textField identifier="ipad" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OLN-rD-L16">
+                                            <rect key="frame" x="77" y="105" width="96" height="21"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" title="7890" drawsBackground="YES" id="oMc-Gc-ALP">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                        <textField identifier="ippt" verticalHuggingPriority="750" fixedFrame="YES" preferredMaxLayoutWidth="96" translatesAutoresizingMaskIntoConstraints="NO" id="LVL-2T-mwd">
+                                            <rect key="frame" x="77" y="79" width="96" height="21"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" placeholderString="IP port" drawsBackground="YES" id="yKN-uD-QNe">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Biz-0W-AA4">
+                                            <rect key="frame" x="-2" y="110" width="73" height="16"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" lineBreakMode="clipping" title="IP Address:" id="sZz-5s-wma">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                    </subviews>
+                                </view>
+                            </box>
+                            <button identifier="spsp" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ivJ-dD-k6C">
+                                <rect key="frame" x="18" y="210" width="89" height="18"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="radio" title="Serial Port" bezelStyle="regularSquare" imagePosition="left" alignment="left" identifier="spsp" inset="2" id="J6b-iA-f7U">
+                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="SPHandleCommand:" target="bPf-dx-zLs" id="hKi-Kk-vVL"/>
+                                </connections>
+                            </button>
+                            <box fixedFrame="YES" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="KAQ-C7-wdd">
+                                <rect key="frame" x="17" y="231" width="177" height="56"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <view key="contentView" id="FBw-xe-OyD">
+                                    <rect key="frame" x="3" y="3" width="171" height="38"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="N6Q-sR-JCJ">
+                                            <rect key="frame" x="-2" y="17" width="34" height="16"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" lineBreakMode="clipping" title="Port:" id="tXq-Ti-f5q">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                        <textField identifier="sprt" verticalHuggingPriority="750" fixedFrame="YES" preferredMaxLayoutWidth="96" translatesAutoresizingMaskIntoConstraints="NO" id="CDH-dh-2RV">
+                                            <rect key="frame" x="38" y="14" width="70" height="21"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" placeholderString="serial port" drawsBackground="YES" id="jkj-hh-GEU">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                    </subviews>
+                                </view>
+                            </box>
                         </subviews>
                     </view>
                 </viewController>
                 <customObject id="bPf-dx-zLs" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1537" y="754"/>
+            <point key="canvasLocation" x="-1583" y="784"/>
         </scene>
         <!--Teletext View Controller-->
         <scene sceneID="KbS-xg-7Kc">

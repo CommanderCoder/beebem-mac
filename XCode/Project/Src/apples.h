@@ -409,6 +409,10 @@ extern "C" int swift_ModifyMenu(unsigned int cmd, unsigned int newitem, const ch
 extern "C" bool swift_SetDlgCheck(unsigned short dlg, unsigned int cmd, char check);
 extern "C" bool swift_GetDlgCheck(unsigned short dlg, unsigned int cmd);
 
+extern "C" bool swift_SetDlgItem(unsigned short dlg, unsigned int cmd, bool enabled);
+
+
+
 extern "C" bool swift_SetDlgItemText(unsigned short dlg, unsigned int cmd, const char* text);
 extern "C" bool swift_GetDlgItemText(unsigned short dlg, unsigned int cmd, const char* text, int len);
 
@@ -648,6 +652,9 @@ HWND GetDlgItem(
   HWND hDlg,
   int  nIDDlgItem
 );
+
+
+DWORD EnableDlgItem(HWND hwnd, UINT nIDDlgItem, bool Enable);
 
 HWND GetFocus();
 

@@ -191,6 +191,28 @@ public func swift_GetDlgItemText(_ dlg: Dialogs, _ cmd: UInt32, _ text : UnsafeM
 	return false
 }
 
+
+@_cdecl("swift_SetDlgItem")
+public func swift_SetDlgItem(_ dlg: Dialogs, _ cmd: UInt32, _ enabled: Bool) -> Bool
+{
+	guard let dlgView : NSViewController = allViews[dlg] else {
+		return false
+	}
+
+	let cmdSTR =  conv(cmd)
+	if let t = dlgItemTextByIdentifier(cmdSTR, dlgView)
+	{
+		t.isEnabled = enabled ? true : false
+	}
+	if let b = dlgItemByIdentifier(cmdSTR, dlgView)
+	{
+		b.isEnabled = enabled ? true : false
+	}
+
+	return false
+}
+
+
 // need to have given the controller an identified (StoryboardID)
 let keyboardLinksWindow: NSWindowController = GetWindowCtrl(for: Dialogs.keyboardLinks)
 

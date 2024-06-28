@@ -69,10 +69,6 @@ void TapeControlUpdateCounter(int tape_time)
 
 }
 
-static void EnableDlgItem(HWND hDlg, UINT nIDDlgItem, bool Enable)
-{
-//	EnableWindow(GetDlgItem(hDlg, nIDDlgItem), Enable);
-}
 
 static bool IsDlgItemChecked(HWND hDlg, UINT nIDDlgItem)
 {

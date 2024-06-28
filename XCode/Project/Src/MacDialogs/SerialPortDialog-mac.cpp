@@ -48,15 +48,6 @@ SerialPortDialog::SerialPortDialog(HINSTANCE hInstance,
 
 
 
-static void EnableDlgItem(UINT nIDDlgItem, bool Enable)
-{
-#ifndef __APPLE__
-	EnableWindow(GetDlgItem(hDlg, nIDDlgItem), Enable);
-#endif
-	printf("EnableDlgItem %d %d", nIDDlgItem, Enable);
-
-}
-
 
 static void SetDlgItemFocus(int nID)
 {
