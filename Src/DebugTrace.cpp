@@ -40,7 +40,11 @@ void DebugTrace(const char *format, ...)
 	if (buffer != nullptr)
 	{
 		vsprintf(buffer, format, args);
+#ifndef __APPLE__
 		OutputDebugString(buffer);
+#else
+		fprintf(stderr,"%s",buffer);
+#endif
 		free(buffer);
 	}
 

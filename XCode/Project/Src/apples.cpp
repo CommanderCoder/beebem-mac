@@ -18,6 +18,7 @@
 
 #include "BeebWin.h"
 #include "Main.h"
+#include "Thread.h"
 
 int __argc;
 char** __argv;
@@ -313,10 +314,6 @@ DWORD GetModuleFileNameA(
 	// return the length of the string
 	return 0;
 }
-int connect(int a, SOCKADDR *b, int c)
-{
-	return 0;
-}
 
 
 int WSAGetLastError()
@@ -397,7 +394,6 @@ void SetMenu(HWND w, bool s)
 {
 	
 }
-
 
 
 DWORD CheckMenuItem( HMENU hMenu,  UINT  uIDCheckItem,UINT  uCheck)
@@ -539,7 +535,7 @@ HWND GetDlgItem(
   int  nIDDlgItem
 )
 {
-	return 0;
+	return hDlg;
 }
 
 
@@ -667,4 +663,11 @@ MMRESULT joyGetDevCaps(int jid, JOYCAPS* jc, int l)
 	jc->wXmax = 65536;
 	jc->wYmax = 65536;
 	return JOYERR_NOERROR;
+}
+
+void* std_ThreadFunc(void* parameter)
+{
+	Thread* pThread = reinterpret_cast<Thread*>(parameter);
+	long res = (long)pThread->ThreadFunc();
+	return (void *)res;
 }

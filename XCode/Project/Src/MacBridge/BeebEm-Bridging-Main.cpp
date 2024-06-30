@@ -69,3 +69,27 @@ extern "C" void beeb_HandleCommand(unsigned int cmdID)
 {
 	mainWin->HandleCommand(ConvID2RC(cmdID));
 }
+
+#include <queue>
+#include <mutex>
+
+std::queue<int> buffer;
+std::mutex mtx;
+
+void produce(UINT nMessage)
+{
+	auto i = nMessage;
+	std::lock_guard<std::mutex> lock(mtx);
+	buffer.push(i);
+}
+
+extern "C" void beeb_consumer() {
+  std::unique_lock<std::mutex> lock(mtx);
+  if (buffer.empty()) {return;}
+  int data = buffer.front();
+  buffer.pop();
+   
+  mainWin->AppProc(data, 1,1);
+   
+  lock.unlock();
+}

@@ -15,6 +15,14 @@ class AppDelegate: NSObject, NSApplicationDelegate
 {
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         // Insert code here to initialize your application
+		
+		let timer = Timer.scheduledTimer(withTimeInterval: 1.0/10, repeats: true)
+		{ _ in
+			// update the event consumer
+			beeb_consumer()
+		}
+
+		RunLoop.current.add(timer, forMode: .common)
     }
 
 	func applicationWillFinishLaunching(_ notification: Notification) {

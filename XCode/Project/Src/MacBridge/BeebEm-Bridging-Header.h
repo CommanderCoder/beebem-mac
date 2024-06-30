@@ -9,6 +9,8 @@
 void beeb_HandleCommand(unsigned int cmdID);
 void beeb_Destroy();
 
+void beeb_consumer();
+
 
 // Exposed to BeebSKView
 void beeb_handlekeys(long message, long wParam, long lParam); // long eventkind, unsigned long keycode, char charCode

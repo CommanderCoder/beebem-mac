@@ -66,7 +66,10 @@ bool Thread::Start()
 
 	return bSuccess;
 #else
-	return false;
+	m_thread = std::thread(std_ThreadFunc, this);
+	m_thread.detach();
+
+	return true;
 #endif
 }
 

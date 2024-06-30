@@ -101,18 +101,6 @@ TeletextDialog::TeletextDialog(HINSTANCE hInstance,
 }
 
 
-#ifndef __APPLE__
-static void SetDlgItemText(HWND hDlg, int nID, const char* str)
-{
-	printf("tapecontrol text %d %s", nID, str);
-}
-
-static bool IsDlgItemChecked(HWND hDlg, UINT nIDDlgItem)
-{
-	return SendDlgItemMessage(hDlg, nIDDlgItem, BM_GETCHECK, 0, 0) == BST_CHECKED;
-}
-#endif
-
 
 static void SetDlgItemFocus(int nID)
 {

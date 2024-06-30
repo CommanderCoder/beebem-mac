@@ -77,6 +77,12 @@ public func swift_sleepCPU( microseconds: Int)
 	CBridge.nextCPU += microseconds
 }
 
+@_cdecl("swift_sleepThread")
+public func swift_sleepThread( microseconds: Int)
+{
+	Thread.sleep(forTimeInterval: Double(microseconds)/1000.0);
+}
+
 
 @_cdecl("swift_SetLED")
 public func swift_SetLED(_ led: KB_LEDs, _ value: Bool)

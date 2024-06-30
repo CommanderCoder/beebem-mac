@@ -288,7 +288,6 @@ typedef struct in_addr IN_ADDR;
 
 int WSAGetLastError();
 
-int connect(int a, SOCKADDR *b, int c);
 
 #define BYTE __uint8_t
 #define WORD __uint16_t
@@ -455,10 +454,6 @@ extern "C" int swift_DoModal(Modals mod, void* dialogClass);
 extern "C" int swift_EndModal(bool ok);
 
 
-// delay the next update of the cpu (i.e. Exec6502Instruction) by this accumulation of
-// this time
-extern "C" void swift_sleepCPU(unsigned long microseconds);
-
 extern "C" void swift_UKSetAssignedTo(const char* title);
 extern "C" void swift_buttonSetControlValue(unsigned int cmd, int state);
 
@@ -474,7 +469,7 @@ int beebwin_KeyUpDown(long, long,long);
 #define WS_POPUP -1
 #define WS_OVERLAPPEDWINDOW -1
 #define WIN_STYLE -1
-#define WM_CLOSE -1
+#define WM_CLOSE 0x0010
 #define SW_MAXIMIZE -1
 #define SW_RESTORE -1
 #define SW_SHOWNORMAL -1
@@ -500,8 +495,11 @@ void ShellExecute(HWND m_hWnd, void* a, char* p, void* b, void* c, int f);
 int SHCreateDirectoryEx(void* a, const char* f, void *b);
 
 
+// delay the next update of the cpu (i.e. Exec6502Instruction) by this accumulation of
+// this time
 extern "C" void swift_sleepCPU(unsigned long microseconds);
 #define Sleep swift_sleepCPU
+extern "C" void swift_sleepThread(unsigned long microseconds);
 
 
 extern "C" int swift_GetFilesWithPreview (const char *path, int bytes, const char* directory, bool multiFiles, const char *filter);
@@ -737,5 +735,7 @@ extern "C" void swift_SubmitStream(int outputType, BYTE* buffer, int size);
 #define MK_LBUTTON 0x001
 #define MK_RBUTTON 0x002
 #define MK_MBUTTON 0x010
+
+void* std_ThreadFunc(void* parameter);
 
 #endif /* apples_h */

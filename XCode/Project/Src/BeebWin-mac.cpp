@@ -10,6 +10,7 @@
 #include <stdio.h>
 
 #include "BeebWin.h"
+#include "Main.h"
 #include "SysVia.h"
 #include "UserVia.h"
 
@@ -114,7 +115,15 @@ LRESULT BeebWin::AppProc(UINT nMessage, WPARAM wParam, LPARAM lParam)
 		   SetMousestickButton(1, (wParam & MK_RBUTTON) != 0);
 		   AMXButtons &= ~AMX_RIGHT_BUTTON;
 		   break;
-
+		case WM_CLOSE: // using for SERIAL CLOSE on Apple
+			if (wParam==1 && lParam==1) // no significance to these; see IP232.cpp
+			{
+				mainWin->UpdateSerialMenu();
+				mainWin->Report(MessageType::Error,
+								"Lost connection. Serial port has been disabled");
+			}
+			break;
+			
 	}
 	return 0;
 

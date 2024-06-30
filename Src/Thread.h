@@ -24,6 +24,11 @@ Boston, MA  02110-1301, USA.
 #ifdef __APPLE__
 #define __stdcall
 #endif
+
+#ifdef __APPLE__
+#include <thread>
+#endif
+
 class Thread
 {
 	public:
@@ -46,6 +51,10 @@ class Thread
 	private:
 		HANDLE m_hThread;
 		HANDLE m_hStartEvent;
+
+#ifdef __APPLE__
+		std::thread m_thread;
+#endif
 };
 
 #endif

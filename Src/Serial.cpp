@@ -57,6 +57,11 @@ Boston, MA  02110-1301, USA.
 #else
 #include "UefState.h"
 #endif
+#ifdef __APPLE__
+#undef Sleep
+#define Sleep swift_sleepThread
+#endif
+
 
 // MC6850 control register bits
 constexpr unsigned char MC6850_CONTROL_COUNTER_DIVIDE   = 0x03;
@@ -169,8 +174,6 @@ class Win32SerialPort
 
 static Win32SerialPort SerialPort;
 
-static void InitSerialPort();
-
 #else
 
 #define OVERLAPPED char*
@@ -199,8 +202,12 @@ class AppleSerialPort
 		volatile bool bWaitingForStat;
 		volatile bool bCharReady;
 };
+
 static AppleSerialPort SerialPort;
+
 #endif
+
+static void InitSerialPort();
 
 SerialACIAType SerialACIA;
 
@@ -984,9 +991,9 @@ static void InitThreads()
 	    SerialDestination == SerialType::SerialPort &&
 	    SerialPortName[0] != '\0')
 	{
-#ifndef __APPLE__
 		InitSerialPort(); // Set up the serial port if its enabled.
 
+#ifndef __APPLE__
 		if (SerialPort.olSerialPort.hEvent)
 		{
 			CloseHandle(SerialPort.olSerialPort.hEvent);
@@ -1129,7 +1136,6 @@ unsigned int SerialPortReadThread::ThreadFunc()
 
 /*--------------------------------------------------------------------------*/
 
-#ifndef __APPLE__
 static void InitSerialPort()
 {
 	// Initialise COM port
@@ -1146,7 +1152,6 @@ static void InitSerialPort()
 		}
 	}
 }
-#endif
 
 /*--------------------------------------------------------------------------*/
 

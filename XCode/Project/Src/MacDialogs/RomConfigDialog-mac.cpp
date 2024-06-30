@@ -178,7 +178,7 @@ void RomConfigDialog::UpdateROMField(int Row)
 void RomConfigDialog::FillModelList()
 {
 	HWND hWndModel = GetDlgItem(m_hwnd, IDC_MODEL);
-	hWndModel = (uint*)&m_DialogID;
+	hWndModel = (HWND)&m_DialogID;
 
 	for (int i = 0; i < MODEL_COUNT; i++)
 	{

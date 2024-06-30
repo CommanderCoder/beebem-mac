@@ -41,6 +41,11 @@ Boston, MA  02110-1301, USA.
 #include "RingBuffer.h"
 #include "Serial.h"
 #include "Thread.h"
+#ifdef __APPLE__
+#undef Sleep // sleep should sleep the thread, not the beeb cpu
+#define Sleep swift_sleepThread
+void produce(UINT nMessage);
+#endif
 
 constexpr int IP232_CONNECTION_DELAY = 8192; // Cycles to wait after connection
 
@@ -298,10 +303,16 @@ unsigned int EthernetPortReadThread::ThreadFunc()
 						// mEthernetPortReadTaskID = NULL;
 						bSerialStateChanged = true;
 						SerialPortEnabled = false;
+#ifndef __APPLE__
 						mainWin->UpdateSerialMenu();
 						IP232Close();
 						mainWin->Report(MessageType::Error,
 						                "Lost connection. Serial port has been disabled");
+#else
+						// Do not change UI from this serial port thread.  Notify the UI instead.
+						produce(WM_CLOSE);
+						IP232Close();
+#endif
 						return 0;
 					}
 				}
@@ -359,11 +370,18 @@ unsigned int EthernetPortReadThread::ThreadFunc()
 							DebugDisplayTrace(DebugType::RemoteServer, true, "IP232: Send Error");
 						bSerialStateChanged = true;
 						SerialPortEnabled = false;
+#ifndef __APPLE__
 						mainWin->UpdateSerialMenu();
 
 						IP232Close();
 						mainWin->Report(MessageType::Error,
 						                "Lost connection. Serial port has been disabled");
+						
+#else
+						// Do not change UI from this serial port thread.  Notify the UI instead.
+						produce(WM_CLOSE);
+						IP232Close();
+#endif
 					}
 				}
 			}
