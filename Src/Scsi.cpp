@@ -69,25 +69,21 @@ static bool DiscVerify(unsigned char *buf);
 static void Verify();
 static void Translate();
 
-#ifdef __APPLE__
-// fix the name class with read & write from unistd.h
-#define read read_scsi
-#define write write_scsi
-#endif
-
-enum phase_t {
-	busfree,
-	selection,
-	command,
-	execute,
-	read,
-	write,
-	status,
-	message
+enum class Phase
+{
+	BusFree,
+	Selection,
+	Command,
+	Execute,
+	Read,
+	Write,
+	Status,
+	Message
 };
 
-struct scsi_t {
-	phase_t phase;
+struct scsi_t
+{
+	Phase phase;
 	bool sel;
 	bool msg;
 	bool cd;
@@ -263,19 +259,19 @@ static unsigned char ReadData()
 
 	switch (scsi.phase)
 	{
-		case status:
+		case Phase::Status:
 			data = (unsigned char)scsi.status;
 			scsi.req = false;
 			Message();
 			return data;
 
-		case message:
+		case Phase::Message:
 			data = scsi.message;
 			scsi.req = false;
 			BusFree();
 			return data;
 
-		case read:
+		case Phase::Read:
 			data = scsi.buffer[scsi.offset];
 			scsi.offset++;
 			scsi.length--;
@@ -300,7 +296,7 @@ static unsigned char ReadData()
 			}
 			return data;
 
-		case busfree:
+		case Phase::BusFree:
 			return scsi.lastwrite;
 
 		default:
@@ -315,20 +311,20 @@ static void WriteData(unsigned char data)
 
 	switch (scsi.phase)
 	{
-		case busfree:
+		case Phase::BusFree:
 			if (scsi.sel) {
 				Selection(data);
 			}
 			return;
 
-		case selection:
+		case Phase::Selection:
 			if (!scsi.sel) {
 				Command();
 				return;
 			}
 			break;
 
-		case command:
+		case Phase::Command:
 			scsi.cmd[scsi.offset] = data;
 			if (scsi.offset == 0) {
 				if ((data >= 0x20) && (data <= 0x3f)) {
@@ -345,13 +341,7 @@ static void WriteData(unsigned char data)
 			}
 			return;
 
-#ifdef __APPLE__
-		case execute:
-			break;
-		case read:
-			break;
-#endif
-		case write:
+		case Phase::Write:
 			scsi.buffer[scsi.offset] = data;
 			scsi.offset++;
 			scsi.length--;
@@ -418,7 +408,7 @@ static void BusFree()
 	scsi.req = false;
 	scsi.irq = false;
 
-	scsi.phase = busfree;
+	scsi.phase = Phase::BusFree;
 
 	LEDs.HDisc[0] = false;
 	LEDs.HDisc[1] = false;
@@ -429,12 +419,12 @@ static void BusFree()
 static void Selection(int /* data */)
 {
 	scsi.bsy = true;
-	scsi.phase = selection;
+	scsi.phase = Phase::Selection;
 }
 
 static void Command(void)
 {
-	scsi.phase = command;
+	scsi.phase = Phase::Command;
 
 	scsi.io = false;
 	scsi.cd = true;
@@ -446,7 +436,7 @@ static void Command(void)
 
 static void Execute(void)
 {
-	scsi.phase = execute;
+	scsi.phase = Phase::Execute;
 
 	// if (scsi.cmd[0] <= 0x1f) {
 	// 		WriteLog("Execute 0x%02x, Param 1=0x%02x, Param 2=0x%02x, Param 3=0x%02x, Param 4=0x%02x, Param 5=0x%02x, Phase = %d, PC = 0x%04x\n",
@@ -510,7 +500,7 @@ static void Execute(void)
 
 static void Status()
 {
-	scsi.phase = status;
+	scsi.phase = Phase::Status;
 
 	scsi.io = true;
 	scsi.cd = true;
@@ -519,7 +509,7 @@ static void Status()
 
 static void Message()
 {
-	scsi.phase = message;
+	scsi.phase = Phase::Message;
 
 	scsi.msg = true;
 	scsi.req = true;
@@ -574,10 +564,11 @@ static void RequestSense()
 {
 	scsi.length = DiscRequestSense(scsi.cmd, scsi.buffer);
 
-	if (scsi.length > 0) {
+	if (scsi.length > 0)
+	{
 		scsi.offset = 0;
 		scsi.blocks = 1;
-		scsi.phase = read;
+		scsi.phase = Phase::Read;
 		scsi.io = true;
 		scsi.cd = false;
 
@@ -648,7 +639,7 @@ static void Read6()
 	scsi.offset = 0;
 	scsi.next = record + 1;
 
-	scsi.phase = read;
+	scsi.phase = Phase::Read;
 	scsi.io = true;
 	scsi.cd = false;
 
@@ -696,7 +687,7 @@ static void Write6()
 	scsi.next = record + 1;
 	scsi.offset = 0;
 
-	scsi.phase = write;
+	scsi.phase = Phase::Write;
 	scsi.cd = false;
 
 	scsi.req = true;
@@ -706,10 +697,11 @@ static void ModeSense()
 {
 	scsi.length = DiscModeSense(scsi.cmd, scsi.buffer);
 
-	if (scsi.length > 0) {
+	if (scsi.length > 0)
+	{
 		scsi.offset = 0;
 		scsi.blocks = 1;
-		scsi.phase = read;
+		scsi.phase = Phase::Read;
 		scsi.io = true;
 		scsi.cd = false;
 
@@ -765,7 +757,7 @@ static void ModeSelect()
 	scsi.next = 0;
 	scsi.offset = 0;
 
-	scsi.phase = write;
+	scsi.phase = Phase::Write;
 	scsi.cd = false;
 
 	scsi.req = true;
@@ -893,7 +885,7 @@ static void Translate()
 
 	scsi.offset = 0;
 	scsi.blocks = 1;
-	scsi.phase = read;
+	scsi.phase = Phase::Read;
 	scsi.io = true;
 	scsi.cd = false;
 

@@ -49,7 +49,6 @@ public:
 		void EnableDlgItem(int nID, bool bEnable);
 
 	private:
-//		void CenterDialog();
 
 	protected:
 		HINSTANCE m_hInstance;
@@ -57,4 +56,7 @@ public:
 		int m_DialogID;
 		HWND m_hwnd;
 };
+
+void CenterDialog(HWND hWndParent, HWND hWnd);
+
 #endif /* Dialog_mac_hpp */

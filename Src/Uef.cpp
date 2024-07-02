@@ -319,12 +319,7 @@ UEFResult UEFFileReader::LoadData(const char *FileName)
 		return UEFResult::NotUEF;
 	}
 
-#ifndef __APPLE__
-	const int ver = gzget16(InputFile);
-#else
-	//const int ver =
-		gzget16(InputFile);
-#endif
+	/* const int Version = */gzget16(InputFile);
 
 	m_Chunks.clear();
 

@@ -67,25 +67,20 @@ static void SASIRamDiagnostics();
 static void SASIControllerDiagnostics();
 static void SASISeek();
 
-#ifdef __APPLE__
-// fix the name class with read & write from unistd.h
-#define read read_sasi
-#define write write_sasi
-#endif
-
-enum phase_s {
-	busfree,
-	selection,
-	command,
-	execute,
-	read,
-	write,
-	status,
-	message
+enum class Phase
+{
+	BusFree,
+	Selection,
+	Command,
+	Execute,
+	Read,
+	Write,
+	Status,
+	Message
 };
 
 struct sasi_t {
-	phase_s phase;
+	Phase phase;
 	bool sel;
 	bool msg;
 	bool cd;
@@ -229,19 +224,19 @@ static unsigned char SASIReadData()
 
 	switch (sasi.phase)
 	{
-		case status:
+		case Phase::Status:
 			data = (unsigned char)sasi.status;
 			sasi.req = false;
 			SASIMessage();
 			return data;
 
-		case message:
+		case Phase::Message:
 			data = sasi.message;
 			sasi.req = false;
 			SASIBusFree();
 			return data;
 
-		case read:
+		case Phase::Read:
 			data = sasi.buffer[sasi.offset];
 			sasi.offset++;
 			sasi.length--;
@@ -266,7 +261,7 @@ static unsigned char SASIReadData()
 			}
 			return data;
 
-		case busfree:
+		case Phase::BusFree:
 			return sasi.lastwrite;
 
 		default:
@@ -281,20 +276,20 @@ static void SASIWriteData(unsigned char data)
 
 	switch (sasi.phase)
 	{
-		case busfree:
+		case Phase::BusFree:
 			if (sasi.sel) {
 				SASISelection(data);
 			}
 			return;
 
-		case selection:
+		case Phase::Selection:
 			if (!sasi.sel) {
 				SASICommand();
 				return;
 			}
 			break;
 
-		case command:
+		case Phase::Command:
 			sasi.cmd[sasi.offset] = data;
 			sasi.offset++;
 			sasi.length--;
@@ -306,13 +301,7 @@ static void SASIWriteData(unsigned char data)
 			}
 			return;
 
-#ifdef __APPLE__
-		case execute:
-			break;
-		case read:
-			break;
-#endif
-		case write:
+		case Phase::Write:
 			sasi.buffer[sasi.offset] = data;
 			sasi.offset++;
 			sasi.length--;
@@ -376,7 +365,7 @@ static void SASIBusFree()
 	sasi.req = false;
 	sasi.irq = false;
 
-	sasi.phase = busfree;
+	sasi.phase = Phase::BusFree;
 
 	LEDs.HDisc[0] = 0;
 	LEDs.HDisc[1] = 0;
@@ -387,12 +376,12 @@ static void SASIBusFree()
 static void SASISelection(int /* data */)
 {
 	sasi.bsy = true;
-	sasi.phase = selection;
+	sasi.phase = Phase::Selection;
 }
 
 static void SASICommand()
 {
-	sasi.phase = command;
+	sasi.phase = Phase::Command;
 
 	sasi.io = false;
 	sasi.cd = true;
@@ -404,7 +393,7 @@ static void SASICommand()
 
 static void SASIExecute()
 {
-	sasi.phase = execute;
+	sasi.phase = Phase::Execute;
 
 	// WriteLog("Execute 0x%02x, Param 1=0x%02x, Param 2=0x%02x, Param 3=0x%02x, Param 4=0x%02x, Param 5=0x%02x, Phase = %d, PC = 0x%04x\n",
 	//     sasi.cmd[0], sasi.cmd[1], sasi.cmd[2], sasi.cmd[3], sasi.cmd[4], sasi.cmd[5], sasi.phase, ProgramCounter);
@@ -470,7 +459,7 @@ static void SASIExecute()
 
 static void SASIStatus()
 {
-	sasi.phase = status;
+	sasi.phase = Phase::Status;
 
 	sasi.io = true;
 	sasi.cd = true;
@@ -480,7 +469,7 @@ static void SASIStatus()
 
 static void SASIMessage()
 {
-	sasi.phase = message;
+	sasi.phase = Phase::Message;
 
 	sasi.io = true;
 	sasi.cd = true;
@@ -497,10 +486,13 @@ static void SASITestUnitReady()
 {
 	bool status = SASIDiscTestUnitReady(sasi.cmd);
 
-	if (status) {
+	if (status)
+	{
 		sasi.status = 0x00;
 		sasi.message = 0x00;
-	} else {
+	}
+	else
+	{
 		sasi.status = (sasi.lun << 5) | 0x02;
 		sasi.message = 0x00;
 	}
@@ -512,10 +504,11 @@ static void SASIRequestSense()
 {
 	sasi.length = SASIDiscRequestSense(sasi.cmd, sasi.buffer);
 
-	if (sasi.length > 0) {
+	if (sasi.length > 0)
+	{
 		sasi.offset = 0;
 		sasi.blocks = 1;
-		sasi.phase = read;
+		sasi.phase = Phase::Read;
 		sasi.io = true;
 		sasi.cd = false;
 		sasi.msg = false;
@@ -539,7 +532,8 @@ static int SASIDiscRequestSense(unsigned char *cdb, unsigned char *buf)
 	if (size == 0)
 		size = 4;
 
-	switch (sasi.code) {
+	switch (sasi.code)
+	{
 		case 0x00:
 			buf[0] = 0x00;
 			buf[1] = 0x00;
@@ -591,7 +585,7 @@ static void SASIRead()
 	sasi.offset = 0;
 	sasi.next = record + 1;
 
-	sasi.phase = read;
+	sasi.phase = Phase::Read;
 	sasi.io = true;
 	sasi.cd = false;
 	sasi.msg = false;
@@ -644,7 +638,7 @@ static void SASIWrite()
 	sasi.next = record + 1;
 	sasi.offset = 0;
 
-	sasi.phase = write;
+	sasi.phase = Phase::Write;
 	sasi.io = false;
 	sasi.cd = false;
 	sasi.msg = false;
@@ -663,7 +657,7 @@ static void SASISetGeometory()
 	sasi.next = 0;
 	sasi.offset = 0;
 
-	sasi.phase = write;
+	sasi.phase = Phase::Write;
 	sasi.io = false;
 	sasi.cd = false;
 	sasi.msg = false;

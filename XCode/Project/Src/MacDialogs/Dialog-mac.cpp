@@ -134,11 +134,11 @@ void Dialog::EnableDlgItem(int nID, bool bEnable)
 	printf("SetDlgItem %d %d", nID, bEnable);
 	swift_SetDlgItem((Dialogs)*m_hwnd, ConvRC2ID(nID), bEnable);
 }
-//
-///****************************************************************************/
-//
-//void Dialog::CenterDialog()
-//{
+
+/****************************************************************************/
+
+void CenterDialog(HWND hWndParent, HWND hWnd)
+{
 //	RECT rcOwner;
 //	GetWindowRect(m_hwndParent, &rcOwner);
 //
@@ -165,4 +165,4 @@ void Dialog::EnableDlgItem(int nID, bool bEnable)
 //				 rcOwner.top + (rc.bottom / 2),
 //				 0, 0, // Ignores size arguments.
 //				 SWP_NOSIZE);
-//}
+}

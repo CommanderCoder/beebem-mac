@@ -62,7 +62,30 @@ typedef long WPARAM; //
 typedef uint32_t* HGDIOBJ; //
 typedef uint32_t* HMENU; //
 typedef uint32_t* HBITMAP; //
+typedef HANDLE HHOOK;
 
+#define CALLBACK /**/
+int GetCurrentThreadId();
+#define WH_CBT 5
+#define HCBT_ACTIVATE 5
+typedef LRESULT (*HOOKPROC)(int nCode, WPARAM wParam, LPARAM lParam);
+
+HHOOK SetWindowsHookEx(
+  int       idHook,
+  HOOKPROC  lpfn,
+  HINSTANCE hmod,
+  DWORD     dwThreadId
+);
+
+BOOL UnhookWindowsHookEx(
+  HHOOK hhk
+);
+LRESULT CallNextHookEx(
+   HHOOK  hhk,
+   int    nCode,
+   WPARAM wParam,
+   LPARAM lParam
+);
 typedef struct tagPOINT {
   LONG x;
   LONG y;

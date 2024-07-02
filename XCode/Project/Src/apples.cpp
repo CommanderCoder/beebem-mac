@@ -699,3 +699,31 @@ void InitializeCriticalSection(int*){}
 void EnterCriticalSection(int*){}
 void LeaveCriticalSection(int*){}
 void DeleteCriticalSection(int*){}
+
+int GetCurrentThreadId() {return 0;}
+
+HHOOK SetWindowsHookEx(
+  int       idHook,
+  HOOKPROC  lpfn,
+  HINSTANCE hmod,
+  DWORD     dwThreadId
+)
+{
+	return 0;
+}
+BOOL UnhookWindowsHookEx(
+  HHOOK hhk
+)
+{
+	return 0;
+}
+
+LRESULT CallNextHookEx(
+   HHOOK  hhk,
+   int    nCode,
+   WPARAM wParam,
+   LPARAM lParam
+)
+{
+	return 0;
+}
