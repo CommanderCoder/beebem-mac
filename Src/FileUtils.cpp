@@ -20,7 +20,16 @@ Boston, MA  02110-1301, USA.
 
 #include <windows.h>
 
+#include <stdarg.h>
+
 #include "FileUtils.h"
+
+/****************************************************************************/
+#ifndef __APPLE__
+const char DIR_SEPARATOR = '\\';
+#else
+const char DIR_SEPARATOR = '/';
+#endif
 
 /****************************************************************************/
 
@@ -66,11 +75,7 @@ std::string AppendPath(const std::string& BasePath, const std::string& Path)
 
 		if (LastChar != '\\' && LastChar != '/')
 		{
-#ifndef __APPLE__
-			PathName.append(1, '\\');
-#else
-			PathName.append(1, '/');
-#endif
+			PathName.append(1, DIR_SEPARATOR);
 		}
 	}
 
@@ -106,6 +111,60 @@ std::string ReplaceFileExt(const std::string& FileName, const char* Ext)
 	NewFileName += Ext;
 
 	return NewFileName;
+}
+
+/****************************************************************************/
+
+void GetPathFromFileName(const char* FileName, char* Path, size_t Size)
+{
+	Path[0] = '\0';
+
+	const char* Pos = strrchr(FileName, DIR_SEPARATOR);
+
+	if (Pos != nullptr)
+	{
+		size_t PathLength = Pos - FileName;
+
+		if (PathLength < Size)
+		{
+			strncpy(Path, FileName, PathLength);
+			Path[PathLength] = '\0';
+		}
+	}
+}
+
+/****************************************************************************/
+
+void MakeFileName(char* Path, size_t /* Size */, const char* DirName, const char* FileName, ...)
+{
+	va_list args;
+	va_start(args, FileName);
+
+	strcpy(Path, DirName);
+
+	size_t Len = strlen(Path);
+
+	if (Path[Len] != DIR_SEPARATOR)
+	{
+		Path[Len++] = DIR_SEPARATOR;
+	}
+
+	vsprintf(&Path[Len], FileName, args);
+
+	va_end(args);
+}
+
+/****************************************************************************/
+
+void MakePreferredPath(char* PathName)
+{
+	for (size_t i = 0; i < strlen(PathName); ++i)
+	{
+		if (PathName[i] == '/')
+		{
+			PathName[i] = DIR_SEPARATOR;
+		}
+	}
 }
 
 /****************************************************************************/

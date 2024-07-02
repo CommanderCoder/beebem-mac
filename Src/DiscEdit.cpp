@@ -417,13 +417,8 @@ bool dfs_import_file(const char *szDiscFile,
 		{
 			char c = static_cast<char>(toupper(szFile[j]));
 
-#ifndef __APPLE__
-			if (c >= 'A' && c <= 'Z' ||
-			    c >= '0' && c <= '9' ||
-#else
 			if ((c >= 'A' && c <= 'Z') ||
-				(c >= '0' && c <= '9') ||
-#endif
+			    (c >= '0' && c <= '9') ||
 			    c == '!' || c == '$' || c == '%' || c == '^' || c == '&' || c == '(' || c == ')' ||
 			    c == '_' || c == '-' || c == '=' || c == '+' || c == '[' || c == ']' || c == '{' ||
 			    c == '}' || c == '@' || c == '#' || c == '~' || c == ',')
@@ -491,13 +486,8 @@ bool dfs_import_file(const char *szDiscFile,
 	if (success)
 	{
 		// Check for space in the catalogue
-#ifndef __APPLE__
-		if (dfsCat->watford62 && dfsCat->numFiles >= 62 ||
-			!dfsCat->watford62 && dfsCat->numFiles >= 31)
-#else
 		if ((dfsCat->watford62 && dfsCat->numFiles >= 62) ||
-			(!dfsCat->watford62 && dfsCat->numFiles >= 31))
-#endif
+		    (!dfsCat->watford62 && dfsCat->numFiles >= 31))
 		{
 			sprintf(szErrStr, "Catalogue full, cannot import %s", szFile);
 			success = false;

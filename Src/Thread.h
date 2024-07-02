@@ -41,6 +41,10 @@ class Thread
 	public:
 		bool Start();
 		bool IsStarted() const;
+		void Join();
+
+	protected:
+		bool ShouldQuit() const;
 
 	public:
 		virtual unsigned int ThreadFunc() = 0;
@@ -51,6 +55,7 @@ class Thread
 	private:
 		HANDLE m_hThread;
 		HANDLE m_hStartEvent;
+		bool m_bQuit;
 
 #ifdef __APPLE__
 		std::thread m_thread;

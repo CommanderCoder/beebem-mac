@@ -37,6 +37,7 @@ Offset  Description                 Access
 #include "6502core.h"
 #include "BeebMem.h"
 #include "DebugTrace.h"
+#include "FileUtils.h"
 #include "Log.h"
 #include "Main.h"
 
@@ -116,8 +117,6 @@ bool SCSIDriveEnabled = false;
 
 void SCSIReset()
 {
-	char buff[256];
-
 	scsi.code = 0x00;
 	scsi.sector = 0x00;
 
@@ -130,39 +129,37 @@ void SCSIReset()
 
 	for (int i = 0; i < 4; ++i)
 	{
-#ifndef __APPLE__
-		sprintf(buff, "%s\\scsi%d.dat", HardDrivePath, i);
-#else
-		sprintf(buff, "%s/scsi%d.dat", HardDrivePath, i);
-#endif
+		char FileName[MAX_PATH];
+		MakeFileName(FileName, MAX_PATH, HardDrivePath, "scsi%d.dat", i);
 
-		SCSIDisc[i] = fopen(buff, "rb+");
+		SCSIDisc[i] = fopen(FileName, "rb+");
 
 		if (SCSIDisc[i] == nullptr)
 		{
-			char *error = _strerror(nullptr);
-			error[strlen(error) - 1] = '\0'; // Remove trailing '\n'
+			char* Error = _strerror(nullptr);
+			Error[strlen(Error) - 1] = '\0'; // Remove trailing '\n'
 
 			mainWin->Report(MessageType::Error,
-			                "Could not open SCSI disc image:\n  %s\n\n%s", buff, error);
+			                "Could not open SCSI disc image:\n  %s\n\n%s", FileName, Error);
 		}
 
 		SCSISize[i] = 0;
 
 		if (SCSIDisc[i] != nullptr)
 		{
-			sprintf(buff, "%s/scsi%d.dsc", HardDrivePath, i);
+			MakeFileName(FileName, MAX_PATH, HardDrivePath, "scsi%d.dsc", i);
 
-			FILE *f = fopen(buff, "rb");
+			FILE *f = fopen(FileName, "rb");
 
 			if (f != nullptr)
 			{
+				unsigned char buff[22];
 				fread(buff, 1, 22, f);
 
 				// heads = buf[15];
 				// cyl   = buf[13] * 256 + buf[14];
 
-				SCSISize[i] = buff[15] * (buff[13] * 256 + buff[14]) * 33;		// Number of sectors on disk = heads * cyls * 33
+				SCSISize[i] = buff[15] * (buff[13] * 256 + buff[14]) * 33; // Number of sectors on disk = heads * cyls * 33
 
 				fclose(f);
 			}
@@ -404,12 +401,9 @@ static void WriteData(unsigned char data)
 			scsi.next++;
 			scsi.offset = 0;
 			return;
-#ifdef __APPLE__
-		case status:
+
+		default:
 			break;
-		case message:
-			break;
-#endif
 	}
 
 	BusFree();
@@ -736,12 +730,12 @@ static int DiscModeSense(unsigned char *cdb, unsigned char *buf)
 {
 	if (SCSIDisc[scsi.lun] == NULL) return 0;
 
-	char buff[256];
-	sprintf(buff, "%s/scsi%d.dsc", HardDrivePath, scsi.lun);
+	char FileName[MAX_PATH];
+	MakeFileName(FileName, MAX_PATH, HardDrivePath, "scsi%d.dsc", scsi.lun);
 
-	FILE *f = fopen(buff, "rb");
+	FILE *f = fopen(FileName, "rb");
 
-	if (f == NULL) return 0;
+	if (f == nullptr) return 0;
 
 	int size = cdb[4];
 	if (size == 0)
@@ -781,12 +775,12 @@ static bool WriteGeometory(unsigned char *buf)
 {
 	if (SCSIDisc[scsi.lun] == NULL) return false;
 
-	char buff[256];
-	sprintf(buff, "%s/scsi%d.dsc", HardDrivePath, scsi.lun);
+	char FileName[MAX_PATH];
+	MakeFileName(FileName, MAX_PATH, HardDrivePath, "scsi%d.dsc", scsi.lun);
 
-	FILE *f = fopen(buff, "wb");
+	FILE *f = fopen(FileName, "wb");
 
-	if (f == NULL) return false;
+	if (f == nullptr) return false;
 
 	fwrite(buf, 22, 1, f);
 
@@ -799,26 +793,27 @@ static bool DiscFormat(unsigned char * /* buf */)
 {
 	// Ignore defect list
 
-	if (SCSIDisc[scsi.lun] != NULL) {
+	if (SCSIDisc[scsi.lun] != nullptr) {
 		fclose(SCSIDisc[scsi.lun]);
-		SCSIDisc[scsi.lun]=NULL;
+		SCSIDisc[scsi.lun] = nullptr;
 	}
 
-	char buff[256];
-	sprintf(buff, "%s/scsi%d.dat", HardDrivePath, scsi.lun);
+	char FileName[MAX_PATH];
+	MakeFileName(FileName, MAX_PATH, HardDrivePath, "scsi%d.dat", scsi.lun);
 
-	SCSIDisc[scsi.lun] = fopen(buff, "wb");
-	if (SCSIDisc[scsi.lun] != NULL) fclose(SCSIDisc[scsi.lun]);
-	SCSIDisc[scsi.lun] = fopen(buff, "rb+");
+	SCSIDisc[scsi.lun] = fopen(FileName, "wb");
+	if (SCSIDisc[scsi.lun] != nullptr) fclose(SCSIDisc[scsi.lun]);
+	SCSIDisc[scsi.lun] = fopen(FileName, "rb+");
 
-	if (SCSIDisc[scsi.lun] == NULL) return false;
+	if (SCSIDisc[scsi.lun] == nullptr) return false;
 
-	sprintf(buff, "%s/scsi%d.dsc", HardDrivePath, scsi.lun);
+	MakeFileName(FileName, MAX_PATH, HardDrivePath, "scsi%d.dsc", scsi.lun);
 
-	FILE *f = fopen(buff, "rb");
+	FILE *f = fopen(FileName, "rb");
 
-	if (f != NULL)
+	if (f != nullptr)
 	{
+		unsigned char buff[22];
 		fread(buff, 1, 22, f);
 
 		// heads = buf[15];

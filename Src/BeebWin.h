@@ -36,7 +36,7 @@ Boston, MA  02110-1301, USA.
 #include <vector>
 
 #include <windows.h>
-#include <d3dx9.h>
+#include <d3d9.h>
 #include <ddraw.h>
 #include <sapi.h>
 
@@ -45,6 +45,7 @@ Boston, MA  02110-1301, USA.
 #include "Model.h"
 #include "Port.h"
 #include "Preferences.h"
+#include "Tube.h"
 #include "Video.h"
 
 // Registry defs for disabling windows keys
@@ -84,7 +85,8 @@ struct LEDType
 
 extern LEDType LEDs;
 
-enum class LEDColour {
+enum class LEDColour
+{
 	Red,
 	Green
 };
@@ -112,15 +114,17 @@ struct TextToSpeechVoice
 // A structure for our custom vertex type. We added texture coordinates
 struct CUSTOMVERTEX
 {
-	D3DXVECTOR3 position; // The position
-	D3DCOLOR	color;	  // The color
-	FLOAT		tu, tv;	  // The texture coordinates
+	D3DVECTOR position; // The position
+	D3DCOLOR color; // The colour
+	FLOAT tu; // The texture coordinates
+	FLOAT tv;
 };
 
 // Our custom FVF, which describes our custom vertex structure
 #define D3DFVF_CUSTOMVERTEX (D3DFVF_XYZ|D3DFVF_DIFFUSE|D3DFVF_TEX1)
 
-enum class MessageType {
+enum class MessageType
+{
 	Error,
 	Warning,
 	Info,
@@ -128,7 +132,8 @@ enum class MessageType {
 	Confirm
 };
 
-enum class MessageResult {
+enum class MessageResult
+{
 	None,
 	Yes,
 	No,
@@ -136,64 +141,74 @@ enum class MessageResult {
 	Cancel
 };
 
-enum class PaletteType : char {
+enum class MonitorType
+{
 	RGB,
 	BW,
 	Amber,
 	Green
 };
 
-enum class DisplayRendererType {
+enum class DisplayRendererType
+{
 	GDI,
 	DirectDraw,
 	DirectX9
 };
 
-enum class SoundStreamerType {
+enum class SoundStreamerType
+{
 	XAudio2,
 	DirectSound
 };
 
-enum class JoystickOption {
+enum class JoystickOption
+{
 	Disabled,
 	Joystick,
 	AnalogueMouseStick,
 	DigitalMouseStick
 };
 
-enum class BitmapCaptureFormat {
+enum class BitmapCaptureFormat
+{
 	Bmp,
 	Jpeg,
 	Gif,
 	Png
 };
 
-enum class BitmapCaptureResolution {
+enum class BitmapCaptureResolution
+{
 	Display,
 	_1280x1024,
 	_640x512,
 	_320x256
 };
 
-enum class VideoCaptureResolution {
+enum class VideoCaptureResolution
+{
 	Display,
 	_640x512,
 	_320x256
 };
 
-enum class KeyboardMappingType {
+enum class KeyboardMappingType
+{
 	User,
 	Default,
 	Logical
 };
 
-enum class AMXSizeType {
+enum class AMXSizeType
+{
 	_160x256,
 	_320x256,
 	_640x256
 };
 
-enum class PrinterPortType {
+enum class PrinterPortType
+{
 	File,
 	Clipboard,
 	Lpt1,
@@ -202,12 +217,14 @@ enum class PrinterPortType {
 	Lpt4
 };
 
-enum class TimingType {
+enum class TimingType
+{
 	FixedSpeed,
 	FixedFPS
 };
 
-enum class DirectXFullScreenMode {
+enum class DirectXFullScreenMode
+{
 	ScreenResolution,
 	_640x480,
 	_720x576,
@@ -254,6 +271,7 @@ public:
 	void SetTapeSpeedMenu();
 	void SetUnlockTape(bool Unlock);
 	void SetRomMenu(); // LRW  Added for individual ROM/RAM
+	void SelectTube(TubeDevice Device);
 	void UpdateTubeMenu();
 	void SelectFDC();
 #ifdef __APPLE__
@@ -326,6 +344,7 @@ public:
 
 	HWND GethWnd() { return m_hWnd; }
 
+	void SetModel(Model NewModelType);
 	void ResetBeebSystem(Model NewModelType, bool LoadRoms);
 	void Break();
 
@@ -409,19 +428,27 @@ public:
 	void LoadEmuUEF(FILE *SUEF,int Version);
 
 	bool InitClass();
-	void UpdateOptiMenu();
+	void UpdateOptionsMenu();
 	void CreateBeebWindow(void);
 	void DisableRoundedCorners(HWND hWnd);
 	void FlashWindow();
 	void CreateBitmap(void);
 	void InitMenu();
+	void SetMonitorType(MonitorType Type);
 	void UpdateMonitorMenu();
+
+	void ToggleSerial();
 	void DisableSerial();
+	void ConfigureSerial();
 	void SelectSerialPort(const char *PortName);
 	void UpdateSerialMenu();
+	void OnIP232Error(int Error);
+
 	void UpdateEconetMenu();
 
 	void UpdateSFXMenu();
+
+	void DisableWindowsKeys();
 	void UpdateDisableKeysMenu();
 
 	void SetDisplayRenderer(DisplayRendererType DisplayRenderer);
@@ -430,15 +457,15 @@ public:
 	void SetSoundStreamer(SoundStreamerType StreamerType);
 	void UpdateSoundStreamerMenu();
 
-	void SetSoundSampleRate(int SampleRate);
+	void SetSoundSampleRate(unsigned int SampleRate);
 	void UpdateSoundSampleRateMenu();
 
 	void SetSoundVolume(int Volume);
 	void UpdateSoundVolumeMenu();
 
-	void CheckMenuItem(UINT id, bool checked);
+	void CheckMenuItem(UINT id, bool Checked);
 	void CheckMenuRadioItem(UINT FirstID, UINT LastID, UINT SelectedID);
-	void EnableMenuItem(UINT id, bool enabled);
+	void EnableMenuItem(UINT id, bool Enabled);
 
 	// DirectX - calls DDraw or DX9 fn
 	void InitDX();
@@ -605,6 +632,8 @@ public:
 	void LoadUserPortBreakoutPreferences();
 	void SavePreferences(bool saveAll);
 
+	int FindEnum(const std::string& Value, const char* const* Names, int Default);
+
 	// Timers
 	const int TIMER_KEYBOARD       = 1;
 	const int TIMER_AUTOBOOT_DELAY = 2;
@@ -668,7 +697,7 @@ public:
 	HDC m_hDCBitmap;
 	HGDIOBJ m_hBitmap;
 	bmiData m_bmi;
-	PaletteType m_PaletteType;
+	MonitorType m_MonitorType;
 	char* m_screen;
 	char* m_screen_blur;
 	int m_LastStartY;
@@ -706,13 +735,9 @@ public:
 	LPDIRECT3DDEVICE9 m_pd3dDevice;
 	LPDIRECT3DVERTEXBUFFER9 m_pVB;
 	LPDIRECT3DTEXTURE9 m_pTexture;
-	D3DXMATRIX m_TextureMatrix;
+	D3DMATRIX m_TextureMatrix;
 #endif
-
-	// Audio
-	int m_SampleRate;
-	int m_SoundVolume;
-
+    
 	// Joystick input
 	bool m_JoystickCaptured;
 	JOYCAPS m_JoystickCaps;
@@ -778,6 +803,10 @@ public:
 	char m_CommandLineFileName2[_MAX_PATH];
 	std::string m_DebugScriptFileName;
 	std::string m_DebugLabelsFileName;
+	bool m_HasCommandLineModel;
+	Model m_CommandLineModel;
+	bool m_HasCommandLineTube;
+	TubeDevice m_CommandLineTube;
 
 	// Startup key sequence
 	std::string m_KbdCmd;
@@ -851,5 +880,8 @@ extern CArm *arm;
 extern CSprowCoPro *sprow;
 
 extern const char DefaultBlurIntensities[8];
+
+extern const char* const MachineTypeStr[];
+extern const char* const TubeDeviceStr[];
 
 #endif

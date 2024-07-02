@@ -320,7 +320,7 @@
 		DC0997992BBAA51200A109A5 /* beebemrcids.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = beebemrcids.h; sourceTree = "<group>"; };
 		DC09979D2BBAA51300A109A5 /* beebemrcids.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = beebemrcids.cpp; sourceTree = "<group>"; };
 		DC0997A52BBAA5D500A109A5 /* windows.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = windows.h; path = Src/windows_stubs/windows.h; sourceTree = SOURCE_ROOT; };
-		DC0997A72BBAA68600A109A5 /* d3dx9.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = d3dx9.h; sourceTree = "<group>"; };
+		DC0997A72BBAA68600A109A5 /* d3d9.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = d3d9.h; sourceTree = "<group>"; };
 		DC0997A82BBAA6A300A109A5 /* ddraw.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ddraw.h; sourceTree = "<group>"; };
 		DC0997A92BBAA6C200A109A5 /* sapi.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sapi.h; sourceTree = "<group>"; };
 		DC0997AB2BBAA8D100A109A5 /* armmem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = armmem.c; sourceTree = "<group>"; };
@@ -687,7 +687,7 @@
 		DC0997A62BBAA65E00A109A5 /* windows_stubs */ = {
 			isa = PBXGroup;
 			children = (
-				DC0997A72BBAA68600A109A5 /* d3dx9.h */,
+				DC0997A72BBAA68600A109A5 /* d3d9.h */,
 				DC0997A82BBAA6A300A109A5 /* ddraw.h */,
 				DC0997A52BBAA5D500A109A5 /* windows.h */,
 				DC0997A92BBAA6C200A109A5 /* sapi.h */,

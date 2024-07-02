@@ -36,6 +36,7 @@ Offset  Description                 Access
 #include "Sasi.h"
 #include "6502core.h"
 #include "BeebMem.h"
+#include "FileUtils.h"
 #include "Log.h"
 #include "Main.h"
 
@@ -113,37 +114,32 @@ extern bool SCSIDriveEnabled;
 
 void SASIReset()
 {
-	char buff[256];
-
 	sasi.code = 0x00;
 	sasi.sector = 0x00;
 
 	for (int i = 0; i < 1; ++i) // only one drive allowed under Torch Z80 ?
 	{
-#ifndef __APPLE__
-		sprintf(buff, "%s\\sasi%d.dat", HardDrivePath, i);
-#else
-		sprintf(buff, "%s/sasi%d.dat", HardDrivePath, i);
-#endif
-
-		if (SASIDisc[i] != NULL)
+		if (SASIDisc[i] != nullptr)
 		{
 			fclose(SASIDisc[i]);
-			SASIDisc[i]=NULL;
+			SASIDisc[i] = nullptr;
 		}
 
 		if (!SCSIDriveEnabled)
 			continue;
 
-		SASIDisc[i] = fopen(buff, "rb+");
+		char FileName[MAX_PATH];
+		MakeFileName(FileName, MAX_PATH, HardDrivePath, "sasi%d.dat", i);
+
+		SASIDisc[i] = fopen(FileName, "rb+");
 
 		if (SASIDisc[i] == nullptr)
 		{
-			char *error = _strerror(nullptr);
-			error[strlen(error) - 1] = '\0'; // Remove trailing '\n'
+			char* Error = _strerror(nullptr);
+			Error[strlen(Error) - 1] = '\0'; // Remove trailing '\n'
 
 			mainWin->Report(MessageType::Error,
-			                "Could not open Torch Z80 SASI disc image:\n  %s\n\n%s", buff, error);
+			                "Could not open Torch Z80 SASI disc image:\n  %s\n\n%s", FileName, Error);
 		}
 	}
 
@@ -363,12 +359,9 @@ static void SASIWriteData(unsigned char data)
 			sasi.next++;
 			sasi.offset = 0;
 			return;
-#ifdef __APPLE__
-		case status:
+
+		default:
 			break;
-		case message:
-			break;
-#endif
 	}
 
 	SASIBusFree();
@@ -690,9 +683,9 @@ static bool SASIWriteGeometory(unsigned char * /* buf */)
 
 static bool SASIDiscFormat(unsigned char *buf)
 {
-	if (SASIDisc[sasi.lun] != NULL) {
+	if (SASIDisc[sasi.lun] != nullptr) {
 		fclose(SASIDisc[sasi.lun]);
-		SASIDisc[sasi.lun]=NULL;
+		SASIDisc[sasi.lun] = nullptr;
 	}
 
 	int record = buf[1] & 0x1f;
@@ -701,12 +694,12 @@ static bool SASIDiscFormat(unsigned char *buf)
 	record <<= 8;
 	record |= buf[3];
 
-	char buff[256];
-	sprintf(buff, "%s/sasi%d.dat", HardDrivePath, sasi.lun);
+	char FileName[MAX_PATH];
+	MakeFileName(FileName, MAX_PATH, HardDrivePath, "sasi%d.dat", sasi.lun);
 
-	SASIDisc[sasi.lun] = fopen(buff, "wb");
-	if (SASIDisc[sasi.lun] != NULL) fclose(SASIDisc[sasi.lun]);
-	SASIDisc[sasi.lun] = fopen(buff, "rb+");
+	SASIDisc[sasi.lun] = fopen(FileName, "wb");
+	if (SASIDisc[sasi.lun] != nullptr) fclose(SASIDisc[sasi.lun]);
+	SASIDisc[sasi.lun] = fopen(FileName, "rb+");
 
 	if (SASIDisc[sasi.lun] == NULL) return false;
 

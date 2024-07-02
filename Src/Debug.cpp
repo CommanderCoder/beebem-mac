@@ -134,24 +134,24 @@ static void DebugSetCommandString(const char* str);
 static void DebugChompString(char* str);
 
 // Command handlers
-static bool DebugCmdBreakContinue(char* args);
-static bool DebugCmdToggleBreak(char* args);
-static bool DebugCmdLabels(char* args);
-static bool DebugCmdHelp(char* args);
-static bool DebugCmdSet(char* args);
-static bool DebugCmdNext(char* args);
-static bool DebugCmdOver(char* args);
-static bool DebugCmdPeek(char* args);
-static bool DebugCmdCode(char* args);
-static bool DebugCmdWatch(char* args);
-static bool DebugCmdState(char* args);
-static bool DebugCmdSave(char* args);
-static bool DebugCmdPoke(char* args);
-static bool DebugCmdGoto(char* args);
-static bool DebugCmdFile(char* args);
-static bool DebugCmdEcho(char* args);
-static bool DebugCmdScript(char *args);
-static bool DebugCmdClear(char *args);
+static bool DebugCmdBreakContinue(const char* args);
+static bool DebugCmdToggleBreak(const char* args);
+static bool DebugCmdLabels(const char* args);
+static bool DebugCmdHelp(const char* args);
+static bool DebugCmdSet(const char* args);
+static bool DebugCmdNext(const char* args);
+static bool DebugCmdOver(const char* args);
+static bool DebugCmdPeek(const char* args);
+static bool DebugCmdCode(const char* args);
+static bool DebugCmdWatch(const char* args);
+static bool DebugCmdState(const char* args);
+static bool DebugCmdSave(const char* args);
+static bool DebugCmdPoke(const char* args);
+static bool DebugCmdGoto(const char* args);
+static bool DebugCmdFile(const char* args);
+static bool DebugCmdEcho(const char* args);
+static bool DebugCmdScript(const char* args);
+static bool DebugCmdClear(const char* args);
 
 // Debugger commands go here. Format is COMMAND, HANDLER, ARGSPEC, HELPSTRING
 // Aliases are supported, put these below the command they reference and leave argspec/help
@@ -1639,7 +1639,7 @@ bool DebugDisassembler(int addr,
 		return true;
 	}
 
-	if ((TubeType == Tube::AcornZ80 || TubeType == Tube::TorchZ80) && !host)
+	if ((TubeType == TubeDevice::AcornZ80 || TubeType == TubeDevice::TorchZ80) && !host)
 	{
 		if (!DebugOS && addr >= 0xf800 && addr <= 0xffff)
 		{
@@ -1728,7 +1728,7 @@ bool DebugDisassembler(int addr,
 	char str[150];
 
 	// Parasite instructions:
-	if ((TubeType == Tube::AcornZ80 || TubeType == Tube::TorchZ80) && !host)
+	if ((TubeType == TubeDevice::AcornZ80 || TubeType == TubeDevice::TorchZ80) && !host)
 	{
 		char buff[128];
 		Z80_Disassemble(addr, buff);
@@ -2037,7 +2037,7 @@ bool DebugLoadMemoryMap(const char* filename, int bank)
 	return true;
 }
 
-void DebugLoadLabels(char *filename)
+void DebugLoadLabels(const char* filename)
 {
 	FILE *infile = fopen(filename, "r");
 	if (infile == NULL)
@@ -2075,7 +2075,7 @@ void DebugLoadLabels(char *filename)
 	}
 }
 
-void DebugRunScript(const char *filename)
+void DebugRunScript(const char* filename)
 {
 	FILE *infile = fopen(filename,"r");
 	if (infile == NULL)
@@ -2361,13 +2361,13 @@ static void DebugParseCommand(char *command)
  * Start of debugger command handlers                         *
  **************************************************************/
 
-static bool DebugCmdEcho(char* args)
+static bool DebugCmdEcho(const char* args)
 {
 	DebugDisplayInfo(args);
 	return true;
 }
 
-static bool DebugCmdGoto(char* args)
+static bool DebugCmdGoto(const char* args)
 {
 	bool host = true;
 	int addr = 0;
@@ -2392,10 +2392,9 @@ static bool DebugCmdGoto(char* args)
 	return false;
 }
 
-static bool DebugCmdFile(char* args)
+static bool DebugCmdFile(const char* args)
 {
 	char mode;
-	int i = 0;
 	int addr = 0;
 	unsigned char buffer[MAX_BUFFER];
 	int count = MAX_BUFFER;
@@ -2452,7 +2451,7 @@ static bool DebugCmdFile(char* args)
 				count = (int)fread(buffer, 1, count, fd);
 				fclose(fd);
 
-				for (i = 0; i < count; ++i)
+				for (int i = 0; i < count; ++i)
 					BeebWriteMem((addr + i) & 0xffff, buffer[i] & 0xff);
 
 				DebugDisplayInfoF("Read %d bytes from %s to address 0x%04X", count,filename, addr);
@@ -2477,7 +2476,7 @@ static bool DebugCmdFile(char* args)
 					count = MAX_BUFFER - addr;
 				}
 
-				for (i = 0; i < count; ++i)
+				for (int i = 0; i < count; ++i)
 					buffer[i] = DebugReadMem((addr + i) & 0xffff, true);
 
 				count = (int)fwrite(buffer, 1, count, fd);
@@ -2496,7 +2495,7 @@ static bool DebugCmdFile(char* args)
 	return false;
 }
 
-static bool DebugCmdPoke(char* args)
+static bool DebugCmdPoke(const char* args)
 {
 	int addr, data;
 	int i = 0;
@@ -2545,12 +2544,12 @@ static bool DebugCmdPoke(char* args)
 		return false;
 }
 
-static bool DebugCmdSave(char* args)
+static bool DebugCmdSave(const char* args)
 {
 	int count = 0;
-	char filename[MAX_PATH];
 	char* info = NULL;
 	int infoSize = 0;
+	char filename[MAX_PATH];
 	memset(filename, 0, MAX_PATH);
 
 	int result = sscanf(args, "%u %259c", &count, filename);
@@ -2620,7 +2619,7 @@ static bool DebugCmdSave(char* args)
 	return false;
 }
 
-static bool DebugCmdState(char* args)
+static bool DebugCmdState(const char* args)
 {
 	switch (tolower(args[0]))
 	{
@@ -2693,7 +2692,7 @@ static bool DebugCmdState(char* args)
 	return true;
 }
 
-static bool DebugCmdCode(char* args)
+static bool DebugCmdCode(const char* args)
 {
 	bool host = true;
 	int count = LINES_IN_INFO;
@@ -2713,7 +2712,7 @@ static bool DebugCmdCode(char* args)
 	return true;
 }
 
-static bool DebugCmdPeek(char* args)
+static bool DebugCmdPeek(const char* args)
 {
 	int count = 256;
 	bool host = true;
@@ -2733,7 +2732,7 @@ static bool DebugCmdPeek(char* args)
 	return true;
 }
 
-static bool DebugCmdNext(char* args)
+static bool DebugCmdNext(const char* args)
 {
 	int count = 1;
 	if(args[0] != '\0' && sscanf(args, "%u", &count) == 0)
@@ -2747,7 +2746,7 @@ static bool DebugCmdNext(char* args)
 
 // TODO: currently host only, enable for Tube debugging
 
-static bool DebugCmdOver(char* args)
+static bool DebugCmdOver(const char* args)
 {
 	// If current instruction is JSR, run to the following instruction,
 	// otherwise do a regular 'Next'
@@ -2774,7 +2773,7 @@ static bool DebugCmdOver(char* args)
 	return true;
 }
 
-static bool DebugCmdSet(char* args)
+static bool DebugCmdSet(const char* args)
 {
 	char name[20];
 	char state[4];
@@ -2838,14 +2837,14 @@ static bool DebugCmdSet(char* args)
 		return false;
 }
 
-static bool DebugCmdBreakContinue(char* /* args */)
+static bool DebugCmdBreakContinue(const char* /* args */)
 {
 	DebugToggleRun();
 	DebugSetCommandString(".");
 	return true;
 }
 
-static bool DebugCmdHelp(char* args)
+static bool DebugCmdHelp(const char* args)
 {
 	int addr;
 	int li = 0;
@@ -2956,7 +2955,7 @@ static bool DebugCmdHelp(char* args)
 	return true;
 }
 
-static bool DebugCmdScript(char *args)
+static bool DebugCmdScript(const char* args)
 {
 	char filename[MAX_PATH];
 	memset(filename, 0, sizeof(filename));
@@ -2983,7 +2982,7 @@ static bool DebugCmdScript(char *args)
 	return true;
 }
 
-static bool DebugCmdClear(char * /* args */)
+static bool DebugCmdClear(const char* /* args */)
 {
 	LinesDisplayed = 0;
 	SendMessage(hwndInfo, LB_RESETCONTENT, 0, 0);
@@ -3007,7 +3006,7 @@ static void DebugShowLabels()
 	}
 }
 
-static bool DebugCmdLabels(char *args)
+static bool DebugCmdLabels(const char* args)
 {
 	if (stricmp(args, "show") == 0)
 	{
@@ -3043,7 +3042,7 @@ static bool DebugCmdLabels(char *args)
 	return true;
 }
 
-static bool DebugCmdWatch(char *args)
+static bool DebugCmdWatch(const char* args)
 {
 	Watch w;
 	char info[64];
@@ -3115,7 +3114,7 @@ static bool DebugCmdWatch(char *args)
 	return true;
 }
 
-static bool DebugCmdToggleBreak(char *args)
+static bool DebugCmdToggleBreak(const char* args)
 {
 	Breakpoint bp;
 	bp.start = bp.end = -1;
@@ -3195,7 +3194,7 @@ unsigned char DebugReadMem(int addr, bool host)
 	if (host)
 		return BeebReadMem(addr);
 
-	if (TubeType == Tube::AcornZ80 || TubeType == Tube::TorchZ80)
+	if (TubeType == TubeDevice::AcornZ80 || TubeType == TubeDevice::TorchZ80)
 		return ReadZ80Mem(addr);
 
 	return TubeReadMem(addr);
@@ -3206,7 +3205,7 @@ static void DebugWriteMem(int addr, bool host, unsigned char data)
 	if (host)
 		BeebWriteMem(addr, data);
 
-	if (TubeType == Tube::AcornZ80 || TubeType == Tube::TorchZ80)
+	if (TubeType == TubeDevice::AcornZ80 || TubeType == TubeDevice::TorchZ80)
 		WriteZ80Mem(addr, data);
 
 	TubeWriteMem(addr, data);
@@ -3386,7 +3385,7 @@ static int DebugDisassembleCommand(int addr, int count, bool host)
 
 	while (count > 0 && addr <= 0xffff)
 	{
-		if ((TubeType == Tube::AcornZ80 || TubeType == Tube::TorchZ80) && !host)
+		if ((TubeType == TubeDevice::AcornZ80 || TubeType == TubeDevice::TorchZ80) && !host)
 		{
 			char buff[64];
 			int Len = Z80_Disassemble(addr, buff);
@@ -3452,7 +3451,7 @@ static void DebugMemoryDump(int addr, int count, bool host)
 		{
 			for (int b = 0; b < 16; ++b)
 			{
-				if (!host && (a+b) >= 0xfef8 && (a+b) < 0xff00 && !(TubeType == Tube::AcornZ80 || TubeType == Tube::TorchZ80))
+				if (!host && (a+b) >= 0xfef8 && (a+b) < 0xff00 && !(TubeType == TubeDevice::AcornZ80 || TubeType == TubeDevice::TorchZ80))
 					p += sprintf(p, "IO ");
 				else
 					p += sprintf(p, "%02X ", DebugReadMem(a+b, host));

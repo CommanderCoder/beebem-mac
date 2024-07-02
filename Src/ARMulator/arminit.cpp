@@ -52,11 +52,7 @@ ARMul_EmulateInit (void)
 
     for (i = 0; i < 4096; i++)
     {				/* the values of 12 bit dp rhs's */
-#ifndef __APPLE__
-		ARMul_ImmedTable[i] = ROTATER (i & 0xffL, (i >> 7L) & 0x1eL);
-#else
-		ARMul_ImmedTable[i] = (ARMword)(ROTATER (i & 0xffL, (i >> 7L) & 0x1eL));
-#endif
+        ARMul_ImmedTable[i] = (ARMword)(ROTATER (i & 0xffL, (i >> 7L) & 0x1eL));
     }
 
     for (i = 0; i < 256; ARMul_BitList[i++] = 0);	/* how many bits in LSM */
@@ -220,12 +216,7 @@ ARMul_Reset (ARMul_State * state)
     state->NumFcycles = 0;
     state->remapControlRegister = 0;
     state->romSelectRegister = 1;
-#ifdef ASIM
-    (void) ARMul_MemoryInit ();
-    ARMul_OSInit (state);
-#endif
 }
-
 
 /***************************************************************************\
 * Emulate the execution of an entire program.  Start the correct emulator   *

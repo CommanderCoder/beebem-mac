@@ -192,7 +192,7 @@ BeebWin::BeebWin()
 	m_hDCBitmap = nullptr;
 	m_hBitmap = nullptr;
 	ZeroMemory(&m_bmi, sizeof(m_bmi));
-	m_PaletteType = PaletteType::RGB;
+	m_MonitorType = MonitorType::RGB;
 	m_screen = nullptr;
 	m_screen_blur = nullptr;
 	m_LastStartY = 0;
@@ -230,11 +230,7 @@ BeebWin::BeebWin()
 	m_pTexture = nullptr;
 	ZeroMemory(&m_TextureMatrix, sizeof(m_TextureMatrix));
 #endif
-	
-	// Audio
-	m_SampleRate = 44100;
-	m_SoundVolume = 100;
-
+    
 	// Joystick input
 	m_JoystickCaptured = false;
 	ZeroMemory(&m_JoystickCaps, sizeof(m_JoystickCaps));
@@ -332,6 +328,10 @@ BeebWin::BeebWin()
 	// Command line
 	ZeroMemory(m_CommandLineFileName1, sizeof(m_CommandLineFileName1));
 	ZeroMemory(m_CommandLineFileName2, sizeof(m_CommandLineFileName2));
+	m_HasCommandLineModel = false;
+	m_CommandLineModel = Model::B;
+	m_HasCommandLineTube = false;
+	m_CommandLineTube = TubeDevice::None;
 
 	// Startup key sequence
 	m_KbdCmdPos = -1;
@@ -389,6 +389,7 @@ BeebWin::BeebWin()
 }
 
 /****************************************************************************/
+
 bool BeebWin::Initialise()
 {
 	// Parse command line
@@ -426,6 +427,17 @@ bool BeebWin::Initialise()
 		m_FullScreen = true;
 	}
 
+	// Was model or tube type set on the command line?
+	if (m_HasCommandLineModel)
+	{
+		MachineType = m_CommandLineModel;
+	}
+
+	if (m_HasCommandLineTube)
+	{
+		TubeType = m_CommandLineTube;
+	}
+    
 #ifndef __APPLE__
 	if (FAILED(CoInitialize(NULL)))
 	{
@@ -506,6 +518,7 @@ bool BeebWin::Initialise()
 }
 
 /****************************************************************************/
+
 void BeebWin::ApplyPrefs()
 {
 	// Set up paths
@@ -602,7 +615,6 @@ void BeebWin::ApplyPrefs()
 		{
 			if (!IP232Open())
 			{
-				bSerialStateChanged = true;
 				SerialPortEnabled = false;
 				UpdateSerialMenu();
 			}
@@ -647,6 +659,7 @@ BeebWin::~BeebWin()
 }
 
 /****************************************************************************/
+
 void BeebWin::Shutdown()
 {
 	EndVideo();
@@ -684,7 +697,18 @@ void BeebWin::Shutdown()
 	DestroyArmCoPro();
 	DestroySprowCoPro();
 
-	TubeType = Tube::None;
+	TubeType = TubeDevice::None;
+}
+
+/****************************************************************************/
+
+void BeebWin::SetModel(Model NewModelType)
+{
+	if (MachineType != NewModelType)
+	{
+		ResetBeebSystem(NewModelType, true);
+		UpdateModelMenu();
+	}
 }
 
 /****************************************************************************/
@@ -692,8 +716,11 @@ void BeebWin::Shutdown()
 void BeebWin::ResetBeebSystem(Model NewModelType, bool LoadRoms)
 {
 	SoundReset();
+
 	if (SoundDefault)
+	{
 		SoundInit();
+	}
 
 	#if ENABLE_SPEECH
 
@@ -712,36 +739,49 @@ void BeebWin::ResetBeebSystem(Model NewModelType, bool LoadRoms)
 
 	SwitchOnSound();
 	Music5000Reset();
-	if ((Music5000Enabled) && MachineType != Model::MasterET)
-		Music5000Init();
-	MachineType=NewModelType;
+
+	MachineType = NewModelType;
+
+	if (MachineType == Model::MasterET)
+	{
+		Music5000Enabled = false;
+		SetSoundMenu();
+	}
+	else
+	{
+		if (Music5000Enabled)
+		{
+			Music5000Init();
+		}
+	}
+
 	BeebMemInit(LoadRoms, m_ShiftBooted);
 	Init6502core();
 
 	RTCInit();
 
-	if (TubeType == Tube::Acorn65C02)
+	if (TubeType == TubeDevice::Acorn65C02)
 	{
 		Init65C02core();
 	}
-	else if (TubeType == Tube::Master512CoPro)
+	else if (TubeType == TubeDevice::Master512CoPro)
 	{
 		master512CoPro.Reset();
 	}
-	else if (TubeType == Tube::TorchZ80 || TubeType == Tube::AcornZ80)
+	else if (TubeType == TubeDevice::TorchZ80 || TubeType == TubeDevice::AcornZ80)
 	{
 		R1Status = 0;
 		ResetTube();
 		init_z80();
 	}
-	else if (TubeType == Tube::AcornArm)
+	else if (TubeType == TubeDevice::AcornArm)
 	{
 		R1Status = 0;
 		ResetTube();
 		DestroyArmCoPro();
 		CreateArmCoPro();
 	}
-	else if (TubeType == Tube::SprowArm)
+	else if (TubeType == TubeDevice::SprowArm)
 	{
 		R1Status = 0;
 		ResetTube();
@@ -771,12 +811,34 @@ void BeebWin::ResetBeebSystem(Model NewModelType, bool LoadRoms)
 	EjectDiscImage(0);
 	EjectDiscImage(1);
 
-	if (MachineType != Model::MasterET)
+	SCSIClose();
+	SASIClose();
+	IDEClose();
+
+	if (MachineType == Model::MasterET)
+	{
+		SCSIDriveEnabled = false;
+		IDEDriveEnabled = false;
+
+		CheckMenuItem(IDM_SCSI_HARD_DRIVE, SCSIDriveEnabled);
+		CheckMenuItem(IDM_IDE_HARD_DRIVE, IDEDriveEnabled);
+	}
+	else
 	{
 		if (SCSIDriveEnabled) SCSIReset();
 		if (SCSIDriveEnabled) SASIReset();
-		if (IDEDriveEnabled)  IDEReset();
+		if (IDEDriveEnabled) IDEReset();
+	}
 
+	TeletextClose();
+
+	if (MachineType == Model::MasterET)
+	{
+		TeletextAdapterEnabled = false;
+		CheckMenuItem(IDM_TELETEXT, TeletextAdapterEnabled);
+	}
+	else
+	{
 		TeletextInit();
 	}
 
@@ -839,28 +901,28 @@ void BeebWin::Break()
 	// Must do a reset!
 	Init6502core();
 
-	if (TubeType == Tube::Acorn65C02)
+	if (TubeType == TubeDevice::Acorn65C02)
 	{
 		Init65C02core();
 	}
-	else if (TubeType == Tube::Master512CoPro)
+	else if (TubeType == TubeDevice::Master512CoPro)
 	{
 		master512CoPro.Reset();
 	}
-	else if (TubeType == Tube::AcornZ80 || TubeType == Tube::TorchZ80)
+	else if (TubeType == TubeDevice::AcornZ80 || TubeType == TubeDevice::TorchZ80)
 	{
 		R1Status = 0;
 		ResetTube();
 		init_z80();
 	}
-	else if (TubeType == Tube::AcornArm)
+	else if (TubeType == TubeDevice::AcornArm)
 	{
 		R1Status = 0;
 		ResetTube();
 		DestroyArmCoPro();
 		CreateArmCoPro();
 	}
-	else if (TubeType == Tube::SprowArm)
+	else if (TubeType == TubeDevice::SprowArm)
 	{
 		R1Status = 0;
 		ResetTube();
@@ -928,7 +990,7 @@ void BeebWin::CreateArmCoPro()
 
 			DestroyArmCoPro();
 
-			TubeType = Tube::None;
+			TubeType = TubeDevice::None;
 			UpdateTubeMenu();
 			break;
 
@@ -963,7 +1025,7 @@ void BeebWin::CreateSprowCoPro()
 
 			DestroySprowCoPro();
 
-			TubeType = Tube::None;
+			TubeType = TubeDevice::None;
 			UpdateTubeMenu();
 			break;
 
@@ -1023,28 +1085,26 @@ void BeebWin::CreateBitmap()
 		float g = (float)((i & 2) != 0);
 		float b = (float)((i & 4) != 0);
 
-		if (m_PaletteType != PaletteType::RGB)
+		if (m_MonitorType != MonitorType::RGB)
 		{
-			r = g = b = (float) (0.299 * r + 0.587 * g + 0.114 * b);
-
-			switch (m_PaletteType)
+			switch (m_MonitorType)
 			{
-#ifdef __APPLE__
-			case PaletteType::RGB:
-				break;
-			case PaletteType::BW:
-				break;
-#endif
-			case PaletteType::Amber:
-				r *= (float) 1.0;
-				g *= (float) 0.8;
-				b *= (float) 0.1;
-				break;
-			case PaletteType::Green:
-				r *= (float) 0.2;
-				g *= (float) 0.9;
-				b *= (float) 0.1;
-				break;
+				case MonitorType::BW:
+				default:
+					r = g = b = (float) (0.299 * r + 0.587 * g + 0.114 * b);
+					break;
+
+				case MonitorType::Amber:
+					r *= 1.0f;
+					g *= 0.8f;
+					b *= 0.1f;
+					break;
+
+				case MonitorType::Green:
+					r *= 0.2f;
+					g *= 0.9f;
+					b *= 0.1f;
+					break;
 			}
 		}
 
@@ -1252,9 +1312,9 @@ void BeebWin::TrackPopupMenu(int x, int y)
 
 /****************************************************************************/
 
-void BeebWin::CheckMenuItem(UINT id, bool checked)
+void BeebWin::CheckMenuItem(UINT id, bool Checked)
 {
-	::CheckMenuItem(m_hMenu, id, checked ? MF_CHECKED : MF_UNCHECKED);
+	::CheckMenuItem(m_hMenu, id, Checked ? MF_CHECKED : MF_UNCHECKED);
 }
 
 void BeebWin::CheckMenuRadioItem(UINT FirstID, UINT LastID, UINT SelectedID)
@@ -1262,9 +1322,9 @@ void BeebWin::CheckMenuRadioItem(UINT FirstID, UINT LastID, UINT SelectedID)
 	::CheckMenuRadioItem(m_hMenu, FirstID, LastID, SelectedID, MF_BYCOMMAND);
 }
 
-void BeebWin::EnableMenuItem(UINT id, bool enabled)
+void BeebWin::EnableMenuItem(UINT id, bool Enabled)
 {
-	::EnableMenuItem(m_hMenu, id, enabled ? MF_ENABLED : MF_GRAYED);
+	::EnableMenuItem(m_hMenu, id, Enabled ? MF_ENABLED : MF_GRAYED);
 }
 
 void BeebWin::InitMenu(void)
@@ -1374,7 +1434,7 @@ void BeebWin::InitMenu(void)
 
 	SetRomMenu();
 	CheckMenuItem(IDM_SWRAMBOARD, SWRAMBoardEnabled);
-	UpdateOptiMenu();
+	UpdateOptionsMenu();
 	UpdateEconetMenu();
 	CheckMenuItem(IDM_TELETEXT, TeletextAdapterEnabled);
 	CheckMenuItem(IDM_FLOPPY_DRIVE, Disc8271Enabled);
@@ -1451,7 +1511,7 @@ void BeebWin::SetSoundStreamer(SoundStreamerType StreamerType)
 		SoundInit();
 	}
 
-	if (Music5000Enabled && MachineType != Model::MasterET)
+	if (Music5000Enabled)
 	{
 		Music5000Reset();
 		Music5000Init();
@@ -1481,11 +1541,11 @@ void BeebWin::UpdateSoundStreamerMenu()
 
 /****************************************************************************/
 
-void BeebWin::SetSoundSampleRate(int SampleRate)
+void BeebWin::SetSoundSampleRate(unsigned int SampleRate)
 {
-	if (SampleRate != m_SampleRate)
+	if (SampleRate != SoundSampleRate)
 	{
-		m_SampleRate = SampleRate;
+		SoundSampleRate = SampleRate;
 
 		UpdateSoundSampleRateMenu();
 
@@ -1509,7 +1569,7 @@ void BeebWin::SetSoundSampleRate(int SampleRate)
 
 void BeebWin::UpdateSoundSampleRateMenu()
 {
-	static const struct { UINT ID; int SampleRate; } MenuItems[] =
+	static const struct { UINT ID; unsigned int SampleRate; } MenuItems[] =
 	{
 		{ IDM_44100KHZ, 44100 },
 		{ IDM_22050KHZ, 22050 },
@@ -1520,7 +1580,7 @@ void BeebWin::UpdateSoundSampleRateMenu()
 
 	for (int i = 0; i < _countof(MenuItems); i++)
 	{
-		if (m_SampleRate == MenuItems[i].SampleRate)
+		if (SoundSampleRate == MenuItems[i].SampleRate)
 		{
 			SelectedMenuItemID = MenuItems[i].ID;
 			break;
@@ -1534,9 +1594,9 @@ void BeebWin::UpdateSoundSampleRateMenu()
 
 void BeebWin::SetSoundVolume(int Volume)
 {
-	if (Volume != m_SoundVolume)
+	if (Volume != SoundVolume)
 	{
-		m_SoundVolume = Volume;
+		SoundVolume = Volume;
 
 		UpdateSoundVolumeMenu();
 	}
@@ -1556,7 +1616,7 @@ void BeebWin::UpdateSoundVolumeMenu()
 
 	for (int i = 0; i < _countof(MenuItems); i++)
 	{
-		if (m_SoundVolume == MenuItems[i].Volume)
+		if (SoundVolume == MenuItems[i].Volume)
 		{
 			SelectedMenuItemID = MenuItems[i].ID;
 			break;
@@ -1568,21 +1628,31 @@ void BeebWin::UpdateSoundVolumeMenu()
 
 /****************************************************************************/
 
+void BeebWin::SetMonitorType(MonitorType Type)
+{
+	m_MonitorType = Type;
+	CreateBitmap();
+
+	UpdateMonitorMenu();
+}
+
+/****************************************************************************/
+
 void BeebWin::UpdateMonitorMenu()
 {
-	static const struct { UINT ID; PaletteType Type; } MenuItems[] =
+	static const struct { UINT ID; MonitorType Type; } MenuItems[] =
 	{
-		{ IDM_MONITOR_RGB,   PaletteType::RGB   },
-		{ IDM_MONITOR_BW,    PaletteType::BW    },
-		{ IDM_MONITOR_AMBER, PaletteType::Amber },
-		{ IDM_MONITOR_GREEN, PaletteType::Green }
+		{ IDM_MONITOR_RGB,   MonitorType::RGB   },
+		{ IDM_MONITOR_BW,    MonitorType::BW    },
+		{ IDM_MONITOR_AMBER, MonitorType::Amber },
+		{ IDM_MONITOR_GREEN, MonitorType::Green }
 	};
 
 	UINT SelectedMenuItemID = 0;
 
 	for (int i = 0; i < _countof(MenuItems); i++)
 	{
-		if (m_PaletteType == MenuItems[i].Type)
+		if (m_MonitorType == MenuItems[i].Type)
 		{
 			SelectedMenuItemID = MenuItems[i].ID;
 			break;
@@ -1734,6 +1804,60 @@ void BeebWin::UpdateSFXMenu()
 	CheckMenuItem(IDM_SFX_DISCDRIVES, DiscDriveSoundEnabled);
 }
 
+/****************************************************************************/
+
+void BeebWin::DisableWindowsKeys()
+{
+#ifndef __APPLE__
+	bool Reboot = false;
+
+	m_DisableKeysWindows = !m_DisableKeysWindows;
+	UpdateDisableKeysMenu();
+
+	if (m_DisableKeysWindows)
+	{
+		// Give user warning
+		if (Report(MessageType::Question,
+		           "Disabling the Windows keys will affect the whole PC.\n"
+		           "Go ahead and disable the Windows keys?") == MessageResult::Yes)
+		{
+			int BinSize = sizeof(CFG_DISABLE_WINDOWS_KEYS);
+
+			RegSetBinaryValue(HKEY_LOCAL_MACHINE, CFG_KEYBOARD_LAYOUT,
+			                  CFG_SCANCODE_MAP, CFG_DISABLE_WINDOWS_KEYS, &BinSize);
+
+			Reboot = true;
+		}
+		else
+		{
+			m_DisableKeysWindows = false;
+			UpdateDisableKeysMenu();
+		}
+	}
+	else
+	{
+		int BinSize = 0;
+
+		RegSetBinaryValue(HKEY_LOCAL_MACHINE, CFG_KEYBOARD_LAYOUT,
+		                  CFG_SCANCODE_MAP, CFG_DISABLE_WINDOWS_KEYS, &BinSize);
+
+		Reboot = true;
+	}
+
+	if (Reboot)
+	{
+		// Ask user for reboot
+		if (Report(MessageType::Question,
+		           "Reboot required for key change to\ntake effect. Reboot now?") == MessageResult::Yes)
+		{
+			RebootSystem();
+		}
+	}
+#endif
+}
+
+/****************************************************************************/
+
 void BeebWin::UpdateDisableKeysMenu()
 {
 	CheckMenuItem(IDM_DISABLEKEYSWINDOWS, m_DisableKeysWindows);
@@ -1744,24 +1868,36 @@ void BeebWin::UpdateDisableKeysMenu()
 
 /****************************************************************************/
 
+void BeebWin::SelectTube(TubeDevice Device)
+{
+	if (TubeType != Device)
+	{
+		TubeType = Device;
+		UpdateTubeMenu();
+		ResetBeebSystem(MachineType, false);
+	}
+}
+
+/****************************************************************************/
+
 void BeebWin::UpdateTubeMenu()
 {
-	static const struct { UINT ID; Tube Type; } MenuItems[] =
+	static const struct { UINT ID; TubeDevice Device; } MenuItems[] =
 	{
-		{ IDM_TUBE_NONE,       Tube::None },
-		{ IDM_TUBE_ACORN65C02, Tube::Acorn65C02 },
-		{ IDM_TUBE_MASTER512,  Tube::Master512CoPro },
-		{ IDM_TUBE_ACORNZ80,   Tube::AcornZ80 },
-		{ IDM_TUBE_TORCHZ80,   Tube::TorchZ80 },
-		{ IDM_TUBE_ACORNARM,   Tube::AcornArm },
-		{ IDM_TUBE_SPROWARM,   Tube::SprowArm }
+		{ IDM_TUBE_NONE,       TubeDevice::None },
+		{ IDM_TUBE_ACORN65C02, TubeDevice::Acorn65C02 },
+		{ IDM_TUBE_MASTER512,  TubeDevice::Master512CoPro },
+		{ IDM_TUBE_ACORNZ80,   TubeDevice::AcornZ80 },
+		{ IDM_TUBE_TORCHZ80,   TubeDevice::TorchZ80 },
+		{ IDM_TUBE_ACORNARM,   TubeDevice::AcornArm },
+		{ IDM_TUBE_SPROWARM,   TubeDevice::SprowArm }
 	};
 
 	UINT SelectedMenuItemID = 0;
 
 	for (int i = 0; i < _countof(MenuItems); i++)
 	{
-		if (TubeType == MenuItems[i].Type)
+		if (TubeType == MenuItems[i].Device)
 		{
 			SelectedMenuItemID = MenuItems[i].ID;
 			break;
@@ -2433,7 +2569,11 @@ LRESULT BeebWin::WndProc(UINT nMessage, WPARAM wParam, LPARAM lParam)
 			OnDeviceLost();
 			break;
 
-		default: // Passes it on if unproccessed
+		case WM_IP232_ERROR:
+			OnIP232Error((int)wParam);
+			break;
+
+		default: // Passes it on if unprocessed
 			return DefWindowProc(m_hWnd, nMessage, wParam, lParam);
 	}
 
@@ -3421,6 +3561,94 @@ void BeebWin::UpdateAMXAdjustMenu()
 	);
 }
 
+/****************************************************************************/
+
+void BeebWin::ToggleSerial()
+{
+	if (SerialPortEnabled) // so disabling..
+	{
+		DisableSerial();
+	}
+
+	SerialPortEnabled = !SerialPortEnabled;
+
+	if (SerialPortEnabled && SerialDestination == SerialType::IP232)
+	{
+		if (!IP232Open())
+		{
+			SerialPortEnabled = false;
+			UpdateSerialMenu();
+		}
+	}
+
+	if (SerialDestination == SerialType::SerialPort)
+	{
+		bSerialStateChanged = true;
+	}
+
+	UpdateSerialMenu();
+}
+
+void BeebWin::ConfigureSerial()
+{
+	SerialPortDialog Dialog(hInst,
+	                        m_hWnd,
+	                        SerialDestination,
+	                        SerialPortName,
+	                        IP232Address,
+	                        IP232Port,
+	                        IP232Raw,
+	                        IP232Handshake);
+
+	if (Dialog.DoModal())
+	{
+		bool WasEnabled = SerialPortEnabled;
+
+		DisableSerial();
+
+		SerialDestination = Dialog.GetDestination();
+
+		if (SerialDestination == SerialType::SerialPort)
+		{
+			SelectSerialPort(Dialog.GetSerialPortName().c_str());
+		}
+		else if (SerialDestination == SerialType::IP232)
+		{
+			strcpy(IP232Address, Dialog.GetIPAddress().c_str());
+			IP232Port = Dialog.GetIPPort();
+			IP232Raw = Dialog.GetIP232RawComms();
+			IP232Handshake = Dialog.GetIP232Handshake();
+		}
+
+		if (WasEnabled)
+		{
+			if (SerialDestination == SerialType::SerialPort)
+			{
+				SerialPortEnabled = true;
+			}
+			else if (SerialDestination == SerialType::TouchScreen)
+			{
+				// Also switch on analogue mousestick (touch screen uses
+				// mousestick position)
+				if (m_JoystickOption != JoystickOption::AnalogueMouseStick)
+				{
+					HandleCommand(IDM_ANALOGUE_MOUSESTICK);
+				}
+
+				TouchScreenOpen();
+
+				SerialPortEnabled = true;
+			}
+			else if (SerialDestination == SerialType::IP232)
+			{
+				SerialPortEnabled = IP232Open();
+			}
+		}
+
+		UpdateSerialMenu();
+	}
+}
+
 void BeebWin::DisableSerial()
 {
 	/* if (SerialDestination == SerialType::SerialPort)
@@ -3441,14 +3669,29 @@ void BeebWin::SelectSerialPort(const char* PortName)
 {
 	// DisableSerial();
 	strcpy(SerialPortName, PortName);
-	bSerialStateChanged = true;
 	SerialDestination = SerialType::SerialPort;
+	bSerialStateChanged = true;
+
 	UpdateSerialMenu();
 }
 
 void BeebWin::UpdateSerialMenu()
 {
 	CheckMenuItem(IDM_SERIAL, SerialPortEnabled);
+}
+
+void BeebWin::OnIP232Error(int Error)
+{
+	if (DebugEnabled)
+		DebugDisplayTraceF(DebugType::RemoteServer, true, "IP232: Remote session disconnected (%d)", Error);
+
+	IP232Close();
+
+	SerialPortEnabled = false;
+	UpdateSerialMenu();
+
+	Report(MessageType::Error,
+	       "Lost connection. Serial port has been disabled");
 }
 
 //Rob
@@ -3469,7 +3712,7 @@ void BeebWin::UpdateLEDMenu()
 	CheckMenuItem(IDM_SHOW_DISCLEDS, LEDs.ShowDisc);
 }
 
-void BeebWin::UpdateOptiMenu()
+void BeebWin::UpdateOptionsMenu()
 {
 	CheckMenuItem(IDM_BASIC_HARDWARE_ONLY, BasicHardwareOnly);
 	CheckMenuItem(IDM_TELETEXTHALFMODE, TeletextHalfMode);
@@ -3477,10 +3720,10 @@ void BeebWin::UpdateOptiMenu()
 }
 
 /***************************************************************************/
+
 void BeebWin::HandleCommand(UINT MenuID)
 {
 	char TmpPath[256];
-	PaletteType PrevPaletteType = m_PaletteType;
 
 	SetSound(SoundState::Muted);
 	bool StayMuted = false;
@@ -3609,85 +3852,12 @@ void BeebWin::HandleCommand(UINT MenuID)
 		break;
 
 	case IDM_SERIAL:
-		if (SerialPortEnabled) // so disabling..
-		{
-			DisableSerial();
-		}
-
-		SerialPortEnabled = !SerialPortEnabled;
-
-		if (SerialPortEnabled && SerialDestination == SerialType::IP232)
-		{
-			if (!IP232Open())
-			{
-				bSerialStateChanged = true;
-				UpdateSerialMenu();
-				SerialPortEnabled = false;
-			}
-		}
-
-		bSerialStateChanged = true;
-		UpdateSerialMenu();
+		ToggleSerial();
 		break;
 
-	case IDM_SELECT_SERIAL_DESTINATION: {
-		SerialPortDialog Dialog(hInst,
-		                        m_hWnd,
-		                        SerialDestination,
-		                        SerialPortName,
-		                        IP232Address,
-		                        IP232Port,
-		                        IP232Raw,
-		                        IP232Mode);
-
-		if (Dialog.DoModal())
-		{
-			DisableSerial();
-
-			SerialDestination = Dialog.GetDestination();
-
-			if (SerialDestination == SerialType::SerialPort)
-			{
-				SelectSerialPort(Dialog.GetSerialPortName().c_str());
-			}
-			else if (SerialDestination == SerialType::IP232)
-			{
-				strcpy(IP232Address, Dialog.GetIPAddress().c_str());
-				IP232Port = Dialog.GetIPPort();
-				IP232Raw = Dialog.GetIP232RawComms();
-				IP232Mode = Dialog.GetIP232Handshake();
-			}
-
-			if (SerialPortEnabled)
-			{
-				if (SerialDestination == SerialType::SerialPort)
-				{
-				}
-				else if (SerialDestination == SerialType::TouchScreen)
-				{
-					// Also switch on analogue mousestick (touch screen uses
-					// mousestick position)
-					if (m_JoystickOption != JoystickOption::AnalogueMouseStick)
-					{
-						HandleCommand(IDM_ANALOGUE_MOUSESTICK);
-					}
-
-					TouchScreenOpen();
-				}
-				else if (SerialDestination == SerialType::IP232)
-				{
-					if (!IP232Open())
-					{
-						bSerialStateChanged = true;
-						SerialPortEnabled = false;
-					}
-				}
-			}
-
-			UpdateSerialMenu();
-		}
+	case IDM_SELECT_SERIAL_DESTINATION:
+		ConfigureSerial();
 		break;
-	}
 
 	//Rob
 	case IDM_ECONET:
@@ -4240,86 +4410,47 @@ void BeebWin::HandleCommand(UINT MenuID)
 		break;
 
 	case IDM_MONITOR_RGB:
-		m_PaletteType = PaletteType::RGB;
-		CreateBitmap();
+		SetMonitorType(MonitorType::RGB);
 		break;
 
 	case IDM_MONITOR_BW:
-		m_PaletteType = PaletteType::BW;
-		CreateBitmap();
+		SetMonitorType(MonitorType::BW);
 		break;
 
 	case IDM_MONITOR_GREEN:
-		m_PaletteType = PaletteType::Green;
-		CreateBitmap();
+		SetMonitorType(MonitorType::Green);
 		break;
 
 	case IDM_MONITOR_AMBER:
-		m_PaletteType = PaletteType::Amber;
-		CreateBitmap();
+		SetMonitorType(MonitorType::Amber);
 		break;
 
 	case IDM_TUBE_NONE:
-		if (TubeType != Tube::None)
-		{
-			TubeType = Tube::None;
-			UpdateTubeMenu();
-			ResetBeebSystem(MachineType, false);
-		}
+		SelectTube(TubeDevice::None);
 		break;
 
 	case IDM_TUBE_ACORN65C02:
-		if (TubeType != Tube::Acorn65C02)
-		{
-			TubeType = Tube::Acorn65C02;
-			UpdateTubeMenu();
-			ResetBeebSystem(MachineType, false);
-		}
+		SelectTube(TubeDevice::Acorn65C02);
 		break;
 
 	case IDM_TUBE_MASTER512:
-		if (TubeType != Tube::Master512CoPro)
-		{
-			TubeType = Tube::Master512CoPro;
-			UpdateTubeMenu();
-			ResetBeebSystem(MachineType, false);
-		}
+		SelectTube(TubeDevice::Master512CoPro);
 		break;
 
 	case IDM_TUBE_ACORNZ80:
-		if (TubeType != Tube::AcornZ80)
-		{
-			TubeType = Tube::AcornZ80;
-			UpdateTubeMenu();
-			ResetBeebSystem(MachineType, false);
-		}
+		SelectTube(TubeDevice::AcornZ80);
 		break;
 
 	case IDM_TUBE_TORCHZ80:
-		if (TubeType != Tube::TorchZ80)
-		{
-			TubeType = Tube::TorchZ80;
-			UpdateTubeMenu();
-			ResetBeebSystem(MachineType, false);
-		}
+		SelectTube(TubeDevice::TorchZ80);
 		break;
 
 	case IDM_TUBE_ACORNARM:
-		if (TubeType != Tube::AcornArm)
-		{
-			TubeType = Tube::AcornArm;
-			UpdateTubeMenu();
-			ResetBeebSystem(MachineType, false);
-		}
+		SelectTube(TubeDevice::AcornArm);
 		break;
 
 	case IDM_TUBE_SPROWARM:
-		if (TubeType != Tube::SprowArm)
-		{
-			TubeType = Tube::SprowArm;
-			UpdateTubeMenu();
-			ResetBeebSystem(MachineType, false);
-		}
+		SelectTube(TubeDevice::SprowArm);
 		break;
 
 	case IDM_FILE_RESET:
@@ -4327,43 +4458,23 @@ void BeebWin::HandleCommand(UINT MenuID)
 		break;
 
 	case IDM_MODELB:
-		if (MachineType != Model::B)
-		{
-			ResetBeebSystem(Model::B, true);
-			UpdateModelMenu();
-		}
+		SetModel(Model::B);
 		break;
 
 	case IDM_MODELBINT:
-		if (MachineType != Model::IntegraB)
-		{
-			ResetBeebSystem(Model::IntegraB, true);
-			UpdateModelMenu();
-		}
+		SetModel(Model::IntegraB);
 		break;
 
 	case IDM_MODELBPLUS:
-		if (MachineType != Model::BPlus)
-		{
-			ResetBeebSystem(Model::BPlus, true);
-			UpdateModelMenu();
-		}
+		SetModel(Model::BPlus);
 		break;
 
 	case IDM_MASTER128:
-		if (MachineType != Model::Master128)
-		{
-			ResetBeebSystem(Model::Master128, true);
-			UpdateModelMenu();
-		}
+		SetModel(Model::Master128);
 		break;
 
 	case IDM_MASTER_ET:
-		if (MachineType != Model::MasterET)
-		{
-			ResetBeebSystem(Model::MasterET, true);
-			UpdateModelMenu();
-		}
+		SetModel(Model::MasterET);
 		break;
 
 	case IDM_REWINDTAPE:
@@ -4491,17 +4602,17 @@ void BeebWin::HandleCommand(UINT MenuID)
 
 	case IDM_TELETEXTHALFMODE:
 		TeletextHalfMode = !TeletextHalfMode;
-		UpdateOptiMenu();
+		UpdateOptionsMenu();
 		break;
 
 	case IDM_BASIC_HARDWARE_ONLY:
 		BasicHardwareOnly = !BasicHardwareOnly;
-		UpdateOptiMenu();
+		UpdateOptionsMenu();
 		break;
 
 	case IDM_PART_SAMPLES:
 		PartSamples = !PartSamples;
-		UpdateOptiMenu();
+		UpdateOptionsMenu();
 		break;
 
 	case IDM_EXPVOLUME:
@@ -4773,51 +4884,8 @@ void BeebWin::HandleCommand(UINT MenuID)
 		break;
 
 	case IDM_DISABLEKEYSWINDOWS:
-	{
-		bool reboot = false;
-		m_DisableKeysWindows = !m_DisableKeysWindows;
-		UpdateDisableKeysMenu();
-		if (m_DisableKeysWindows)
-		{
-			// Give user warning
-			if (Report(MessageType::Question,
-			           "Disabling the Windows keys will affect the whole PC.\n"
-			           "Go ahead and disable the Windows keys?") == MessageResult::Yes)
-			{
-#ifndef __APPLE__
-				int binsize=sizeof(CFG_DISABLE_WINDOWS_KEYS);
-				RegSetBinaryValue(HKEY_LOCAL_MACHINE, CFG_KEYBOARD_LAYOUT,
-				                  CFG_SCANCODE_MAP, CFG_DISABLE_WINDOWS_KEYS, &binsize);
-#endif
-				reboot = true;
-			}
-			else
-			{
-				m_DisableKeysWindows = false;
-				UpdateDisableKeysMenu();
-			}
-		}
-		else
-		{
-#ifndef __APPLE__
-			int binsize=0;
-			RegSetBinaryValue(HKEY_LOCAL_MACHINE, CFG_KEYBOARD_LAYOUT,
-			                  CFG_SCANCODE_MAP, CFG_DISABLE_WINDOWS_KEYS, &binsize);
-#endif
-			reboot = true;
-		}
-
-		if (reboot)
-		{
-			// Ask user for reboot
-			if (Report(MessageType::Question,
-			           "Reboot required for key change to\ntake effect. Reboot now?") == MessageResult::Yes)
-			{
-				RebootSystem();
-			}
-		}
+		DisableWindowsKeys();
 		break;
-	}
 
 	case IDM_DISABLEKEYSBREAK:
 		m_DisableKeysBreak = !m_DisableKeysBreak;
@@ -4859,12 +4927,6 @@ void BeebWin::HandleCommand(UINT MenuID)
 	if (!StayMuted)
 	{
 		SetSound(SoundState::Unmuted);
-	}
-
-	if (m_PaletteType != PrevPaletteType)
-	{
-		CreateBitmap();
-		UpdateMonitorMenu();
 	}
 }
 
@@ -5201,6 +5263,16 @@ void BeebWin::ParseCommandLine()
 					invalid = true;
 				else
 					m_AutoBootDelay = a;
+			}
+			else if (_stricmp(__argv[i], "-Model") == 0)
+			{
+				m_CommandLineModel = static_cast<Model>(FindEnum(__argv[++i], MachineTypeStr, 0));
+				m_HasCommandLineModel = true;
+			}
+			else if (_stricmp(__argv[i], "-Tube") == 0)
+			{
+				m_HasCommandLineTube = true;
+				m_CommandLineTube = static_cast<TubeDevice>(FindEnum(__argv[++i], TubeDeviceStr, 0));
 			}
 			else if (__argv[i][0] == '-')
 			{
@@ -5584,13 +5656,9 @@ bool BeebWin::CheckUserDataPath(bool Persist)
 	bool store_user_data_path = false;
 	char path[_MAX_PATH];
 
-#ifndef __APPLE__
 	// Change all '/' to '\'
-	for (size_t i = 0; i < strlen(m_UserDataPath); ++i)
-		if (m_UserDataPath[i] == '/')
-			m_UserDataPath[i] = '\\';
-#endif
-
+	MakePreferredPath(m_UserDataPath);
+    
 	// Check that the folder exists
 	if (!FolderExists(m_UserDataPath))
 	{
@@ -5788,10 +5856,6 @@ void BeebWin::SelectUserDataPath()
 	FolderSelectDialog::Result result = Dialog.DoModal();
 
 	switch (result) {
-#ifdef __APPLE__
-		case FolderSelectDialog::Result::Cancel:
-			break;
-#endif
 		case FolderSelectDialog::Result::OK:
 			PathBackup = m_UserDataPath;
 			strcpy(m_UserDataPath, Dialog.GetFolder().c_str());
@@ -5820,6 +5884,10 @@ void BeebWin::SelectUserDataPath()
 
 		case FolderSelectDialog::Result::InvalidFolder:
 			Report(MessageType::Warning, "Invalid folder selected");
+			break;
+
+		case FolderSelectDialog::Result::Cancel:
+		default:
 			break;
 	}
 }

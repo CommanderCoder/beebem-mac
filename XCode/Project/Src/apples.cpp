@@ -19,6 +19,7 @@
 #include "BeebWin.h"
 #include "Main.h"
 #include "Thread.h"
+#include "Messages.h"
 
 int __argc;
 char** __argv;
@@ -583,7 +584,28 @@ void ShowWindow(HWND m_hWnd, int x){}
 void RemoveMenu(HWND w, int a, int b){}
 
 
-void PostMessage(HWND wnd, int s, int t, long l){}
+#include <queue>
+#include <mutex>
+
+
+extern std::queue< std::tuple<UINT,int,long> > buffer;
+extern std::mutex mtx;
+
+void PostMessage(HWND wnd, int s, int t, long l)
+{
+	switch (s)
+	{
+		case WM_IP232_ERROR:
+		{
+			auto i = std::tuple<UINT,int,long>{s,t,l};
+			std::lock_guard<std::mutex> lock(mtx);
+			buffer.push(i);
+		}
+			break;
+		default:
+			break;
+	}
+}
 void ShellExecute(HWND m_hWnd, void* a, char* p, void* b, void* c, int f){}
 
 
@@ -671,3 +693,9 @@ void* std_ThreadFunc(void* parameter)
 	long res = (long)pThread->ThreadFunc();
 	return (void *)res;
 }
+
+
+void InitializeCriticalSection(int*){}
+void EnterCriticalSection(int*){}
+void LeaveCriticalSection(int*){}
+void DeleteCriticalSection(int*){}

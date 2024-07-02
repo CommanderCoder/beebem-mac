@@ -52,23 +52,12 @@ Boston, MA  02110-1301, USA.
 #include "Thread.h"
 #include "TouchScreen.h"
 #include "Uef.h"
-#ifndef __APPLE__
-#include "UEFState.h"
-#else
 #include "UefState.h"
-#endif
+
 #ifdef __APPLE__
 #undef Sleep
 #define Sleep swift_sleepThread
 #endif
-
-
-// MC6850 control register bits
-constexpr unsigned char MC6850_CONTROL_COUNTER_DIVIDE   = 0x03;
-constexpr unsigned char MC6850_CONTROL_MASTER_RESET     = 0x03;
-constexpr unsigned char MC6850_CONTROL_WORD_SELECT      = 0x1c;
-constexpr unsigned char MC6850_CONTROL_TRANSMIT_CONTROL = 0x60;
-constexpr unsigned char MC6850_CONTROL_RIE              = 0x80;
 
 SerialType SerialDestination;
 
@@ -248,15 +237,15 @@ bool Win32SerialPort::Init(const char* PortName)
 	char FileName[_MAX_PATH];
 	sprintf(FileName, "\\\\.\\%s", PortName);
 
-	SerialPort.hSerialPort = CreateFile(FileName,
-	                                    GENERIC_READ | GENERIC_WRITE,
-	                                    0, // dwShareMode
-	                                    nullptr, // lpSecurityAttributes
-	                                    OPEN_EXISTING,
-	                                    FILE_FLAG_OVERLAPPED,
-	                                    nullptr); // hTemplateFile
+	hSerialPort = CreateFile(FileName,
+	                         GENERIC_READ | GENERIC_WRITE,
+	                         0, // dwShareMode
+	                         nullptr, // lpSecurityAttributes
+	                         OPEN_EXISTING,
+	                         FILE_FLAG_OVERLAPPED,
+	                         nullptr); // hTemplateFile
 
-	if (SerialPort.hSerialPort == INVALID_HANDLE_VALUE)
+	if (hSerialPort == INVALID_HANDLE_VALUE)
 	{
 		return false;
 	}
@@ -350,6 +339,28 @@ void Win32SerialPort::SetRTS(bool RTS)
 
 /*--------------------------------------------------------------------------*/
 
+// mm
+static void SerialUpdateACIAInterruptStatus()
+{
+	if (SerialULA.RS423)
+	{
+		// irq = (tie && tdre && !ncts) || (rie && (rdrf || ovr || ndcd))
+		if ((SerialACIA.TIE && ((SerialACIA.Status & (MC6850_STATUS_CTS | MC6850_STATUS_TDRE)) ^ MC6850_STATUS_CTS)) ||
+		    (SerialACIA.RIE && (SerialACIA.Status & (MC6850_STATUS_OVRN | MC6850_STATUS_DCD | MC6850_STATUS_RDRF))))
+		{
+			intStatus |= 1 << serial;
+			SerialACIA.Status |= MC6850_STATUS_IRQ;
+		}
+		else
+		{
+			intStatus &= ~(1 << serial);
+			SerialACIA.Status &= ~MC6850_STATUS_IRQ;
+		}
+	}
+}
+
+/*--------------------------------------------------------------------------*/
+
 void SerialACIAWriteControl(unsigned char Value)
 {
 	if (DebugEnabled)
@@ -377,6 +388,11 @@ void SerialACIAWriteControl(unsigned char Value)
 			SerialACIA.Status |= MC6850_STATUS_CTS;
 			FirstReset = false;
 			SerialACIA.RTS = true;
+
+			if (SerialDestination == SerialType::IP232)
+			{
+				IP232SetRTS(SerialACIA.RTS);
+			}
 		}
 
 		SerialACIA.TxD = 0;
@@ -408,13 +424,72 @@ void SerialACIAWriteControl(unsigned char Value)
 	}
 
 	// Change serial port settings
-	if (SerialULA.RS423 && SerialDestination == SerialType::SerialPort)
+	if (SerialULA.RS423)
 	{
-		SerialPort.Configure(SerialACIA.DataBits, SerialACIA.StopBits, SerialACIA.Parity);
+		if (SerialDestination == SerialType::SerialPort)
+		{
+			SerialPort.Configure(SerialACIA.DataBits, SerialACIA.StopBits, SerialACIA.Parity);
 
-		// Check RTS
-		SerialPort.SetRTS(SerialACIA.RTS);
+			// Check RTS
+			SerialPort.SetRTS(SerialACIA.RTS);
+		}
+		else if (SerialDestination == SerialType::IP232)
+		{
+			IP232SetRTS(SerialACIA.RTS);
+		}
 	}
+
+	SerialUpdateACIAInterruptStatus();
+}
+
+/*--------------------------------------------------------------------------*/
+
+static void HandleTXData(unsigned char Data)
+{
+	/* TxD  TDR    TDSR
+	   0    EMPTY  EMPTY
+	   1    EMPTY  FULL
+	   2    FULL   FULL */
+
+	if (SerialACIA.TxD++ == 0)
+	{
+		// TDSR empty
+		SerialACIA.TDSR = Data;
+		SerialACIA.Status |= MC6850_STATUS_TDRE;
+
+		if (SerialDestination == SerialType::TouchScreen)
+		{
+			TouchScreenWrite(SerialACIA.TDSR);
+		}
+		else if (SerialDestination == SerialType::IP232)
+		{
+			DebugTrace("SerialTX: %02X\n", SerialACIA.TDSR);
+
+			IP232Write(SerialACIA.TDSR);
+			if (!IP232Raw && SerialACIA.TDSR == 255) IP232Write(SerialACIA.TDSR);
+		}
+		else
+		{
+			SerialPort.SerialWriteBuffer = SerialACIA.TDSR;
+
+#ifndef __APPLE__
+			WriteFile(SerialPort.hSerialPort, &SerialPort.SerialWriteBuffer, 1, &SerialPort.BytesOut, &SerialPort.olSerialWrite);
+#endif
+		}
+
+		//WriteLog("Serial: TX TDR=%02X, TDSR=%02x TxD=%d Status=%02x Tx_Rate=%d\n", TDR, TDSR, TxD, SerialACIA.Status, Tx_Rate);
+
+		int Baud = SerialACIA.TxRate; // *((Clk_Divide == 1) ? 64 : (Clk_Divide == 64) ? 1 : 4);
+		TapeTrigger = TotalCycles + 2000000 / (Baud / 10) * TapeState.ClockSpeed / 5600;
+	}
+	else
+	{
+		// TDSR full
+		SerialACIA.TDR = Data;
+		SerialACIA.Status &= ~MC6850_STATUS_TDRE;
+	}
+
+	SerialUpdateACIAInterruptStatus();
 }
 
 /*--------------------------------------------------------------------------*/
@@ -450,30 +525,7 @@ void SerialACIAWriteTxData(unsigned char Data)
 	{
 		if (SerialACIA.Status & MC6850_STATUS_TDRE)
 		{
-			SerialACIA.Status &= ~MC6850_STATUS_TDRE;
-			SerialPort.SerialWriteBuffer = Data;
-
-			if (SerialDestination == SerialType::TouchScreen)
-			{
-				TouchScreenWrite(Data);
-			}
-			else if (SerialDestination == SerialType::IP232)
-			{
-				// if (Data_Bits == 7) {
-				//	IP232Write(Data & 127);
-				// } else {
-					IP232Write(Data);
-					if (!IP232Raw && Data == 255) IP232Write(Data);
-				// }
-			}
-#ifndef __APPLE__
-			else
-			{
-				WriteFile(SerialPort.hSerialPort, &SerialPort.SerialWriteBuffer, 1, &SerialPort.BytesOut, &SerialPort.olSerialWrite);
-			}
-#endif
-
-			SerialACIA.Status |= MC6850_STATUS_TDRE;
+			HandleTXData(Data);
 		}
 	}
 }
@@ -541,6 +593,7 @@ unsigned char SerialULARead()
 		                   "Serial: Read serial ULA %02X", (int)SerialULA.Control);
 	}
 
+	// See https://github.com/stardot/beebem-windows/issues/47
 	return SerialULA.Control;
 }
 
@@ -554,9 +607,8 @@ unsigned char SerialACIAReadStatus()
 		                   "Serial: Read ACIA status %02X", (int)SerialACIA.Status);
 	}
 
-	// WriteLog("Serial: Read ACIA status %02X\n", (int)ACIA_Status);
+	// WriteLog("Serial: Read ACIA status %02X\n", (int)SerialACIA.Status);
 
-	// See https://github.com/stardot/beebem-windows/issues/47
 	return SerialACIA.Status;
 }
 
@@ -593,6 +645,9 @@ static void HandleData(unsigned char Data)
 		SerialACIA.Status |= MC6850_STATUS_IRQ;
 		intStatus |= 1 << serial;
 	}
+
+	SerialUpdateACIAInterruptStatus();
+	//WriteLog("HandleData: Data=%02x Status=%02x RxD=%d\n", AData, SerialACIA.Status, RxD);
 }
 
 /*--------------------------------------------------------------------------*/
@@ -635,7 +690,10 @@ unsigned char SerialACIAReadRxData()
 		                   "Serial: Read ACIA Rx %02X", (int)Data);
 	}
 
-	// WriteLog("Serial: Read ACIA Rx %02X, ACIA_Status = %02x\n", (int)Data, (int)ACIA_Status);
+	// WriteLog("Serial: Read ACIA Rx %02X, SerialACIA.Status = %02x\n", (int)Data, (int)SerialACIA.Status);
+
+	SerialUpdateACIAInterruptStatus();
+	// WriteLog("Read_ACIA_Rx_Data: Data = %02x Status=%02x RxD=%d\n", TData, SerialACIA.Status, RxD);
 
 	return Data;
 }
@@ -871,10 +929,9 @@ void SerialPoll(int Cycles)
 									TapeAudio.ByteCount  = 3;
 								}
 								break;
-#ifdef __APPLE__
-							case CSWState::Undefined:
+
+							default:
 								break;
-#endif
 						}
 					}
 
@@ -917,6 +974,18 @@ void SerialPoll(int Cycles)
 	}
 	else if (SerialULA.RS423 && SerialPortEnabled)
 	{
+		// MM
+		if (SerialACIA.TxD > 0 && TotalCycles >= TapeTrigger)
+		{
+			//WriteLog("Serial: Send Tx TDSR=%02X  TIE=%d\n", TDSR, TIE);
+
+			if (SerialACIA.TxD-- == 2) {
+				// TDR full
+				SerialACIA.TxD = 0;
+				HandleTXData(SerialACIA.TDR);
+			}
+		}
+
 		if (SerialDestination == SerialType::TouchScreen)
 		{
 			if (TouchScreenPoll())
@@ -933,7 +1002,39 @@ void SerialPoll(int Cycles)
 			{
 				if (SerialACIA.RxD < 2)
 				{
+					// if ((SerialACIA.Control & 0x60) != 0x40) // if nrts = 0
 					HandleData(IP232Read());
+				}
+			}
+
+			if (IP232PollStatus())
+			{
+				unsigned char Status = IP232ReadStatus();
+
+				switch (Status)
+				{
+					case IP232_DTR_HIGH:
+						DebugTrace("IP232_DTR_HIGH\n");
+
+						if (DebugEnabled)
+							DebugDisplayTrace(DebugType::RemoteServer, true, "Flag,1 DCD True, CTS");
+
+						SerialACIA.Status &= ~MC6850_STATUS_CTS; // CTS goes active low
+						SerialACIA.Status |= MC6850_STATUS_TDRE; // so TDRE goes high ??
+						break;
+
+					case IP232_DTR_LOW:
+						DebugTrace("IP232_DTR_LOW\n");
+
+						if (DebugEnabled)
+							DebugDisplayTrace(DebugType::RemoteServer, true, "Flag,0 DCD False, clear CTS");
+
+						SerialACIA.Status |= MC6850_STATUS_CTS; // CTS goes inactive high
+						SerialACIA.Status &= ~MC6850_STATUS_TDRE; // so TDRE goes low
+						break;
+
+					default:
+						break;
 				}
 			}
 		}
@@ -1484,40 +1585,40 @@ int SerialGetTapeClock()
 
 void SaveSerialUEF(FILE *SUEF)
 {
-	fputc(SerialULA.RS423, SUEF);
-	fputstring(TapeFileName, SUEF);
-	fputc(SerialULA.CassetteRelay, SUEF);
-	fput32(SerialACIA.TxRate, SUEF);
-	fput32(SerialACIA.RxRate, SUEF);
-	fputc(SerialACIA.ClkDivide, SUEF);
-	fputc(SerialACIA.Parity, SUEF);
-	fputc(SerialACIA.StopBits, SUEF);
-	fputc(SerialACIA.DataBits, SUEF);
-	fputc(SerialACIA.RIE, SUEF);
-	fputc(SerialACIA.TIE, SUEF);
-	fputc(SerialACIA.TxD, SUEF);
-	fputc(SerialACIA.RxD, SUEF);
-	fputc(SerialACIA.RDR, SUEF);
-	fputc(SerialACIA.TDR, SUEF);
-	fputc(SerialACIA.RDSR, SUEF);
-	fputc(SerialACIA.TDSR, SUEF);
-	fputc(SerialACIA.Status, SUEF);
-	fputc(SerialACIA.Control, SUEF);
-	fputc(SerialULA.Control, SUEF);
-	fputc(0, SUEF); // DCD
-	fputc(0, SUEF); // DCDI
-	fputc(0, SUEF); // ODCDI
-	fputc(0, SUEF); // DCDClear
-	fput32(TapeState.Clock, SUEF);
-	fput32(TapeState.ClockSpeed, SUEF);
-	fputc(SerialULA.TapeCarrier, SUEF);
-	fput32(SerialULA.CarrierCycleCount, SUEF);
-	fputc(TapeState.Playing, SUEF);
-	fputc(TapeState.Recording, SUEF);
-	fputc(TapeState.Unlock, SUEF);
-	fput32(TapeState.UEFBuf, SUEF);
-	fput32(TapeState.OldUEFBuf, SUEF);
-	fput32(TapeState.OldClock, SUEF);
+	UEFWrite8(SerialULA.RS423, SUEF);
+	UEFWriteString(TapeFileName, SUEF);
+	UEFWrite8(SerialULA.CassetteRelay, SUEF);
+	UEFWrite32(SerialACIA.TxRate, SUEF);
+	UEFWrite32(SerialACIA.RxRate, SUEF);
+	UEFWrite8(SerialACIA.ClkDivide, SUEF);
+	UEFWrite8(SerialACIA.Parity, SUEF);
+	UEFWrite8(SerialACIA.StopBits, SUEF);
+	UEFWrite8(SerialACIA.DataBits, SUEF);
+	UEFWrite8(SerialACIA.RIE, SUEF);
+	UEFWrite8(SerialACIA.TIE, SUEF);
+	UEFWrite8(SerialACIA.TxD, SUEF);
+	UEFWrite8(SerialACIA.RxD, SUEF);
+	UEFWrite8(SerialACIA.RDR, SUEF);
+	UEFWrite8(SerialACIA.TDR, SUEF);
+	UEFWrite8(SerialACIA.RDSR, SUEF);
+	UEFWrite8(SerialACIA.TDSR, SUEF);
+	UEFWrite8(SerialACIA.Status, SUEF);
+	UEFWrite8(SerialACIA.Control, SUEF);
+	UEFWrite8(SerialULA.Control, SUEF);
+	UEFWrite8(0, SUEF); // DCD
+	UEFWrite8(0, SUEF); // DCDI
+	UEFWrite8(0, SUEF); // ODCDI
+	UEFWrite8(0, SUEF); // DCDClear
+	UEFWrite32(TapeState.Clock, SUEF);
+	UEFWrite32(TapeState.ClockSpeed, SUEF);
+	UEFWrite8(SerialULA.TapeCarrier, SUEF);
+	UEFWrite32(SerialULA.CarrierCycleCount, SUEF);
+	UEFWrite8(TapeState.Playing, SUEF);
+	UEFWrite8(TapeState.Recording, SUEF);
+	UEFWrite8(TapeState.Unlock, SUEF);
+	UEFWrite32(TapeState.UEFBuf, SUEF);
+	UEFWrite32(TapeState.OldUEFBuf, SUEF);
+	UEFWrite32(TapeState.OldClock, SUEF);
 
 	if (CSWFileOpen)
 	{
@@ -1531,49 +1632,50 @@ void LoadSerialUEF(FILE *SUEF, int Version)
 {
 	CloseTape();
 
-	SerialULA.RS423 = fgetbool(SUEF);
+	SerialULA.RS423 = UEFReadBool(SUEF);
 
 	char FileName[256];
 	memset(FileName, 0, sizeof(FileName));
 
 	if (Version >= 14)
 	{
-		fgetstring(FileName, sizeof(FileName), SUEF);
+		UEFReadString(FileName, sizeof(FileName), SUEF);
 	}
 	else
 	{
-		fread(FileName, 1, 256, SUEF);
+		UEFReadBuf(FileName, 256, SUEF);
 	}
 
 	if (FileName[0])
 	{
 		mainWin->LoadTape(FileName);
 
-		SerialULA.CassetteRelay = fgetbool(SUEF);
-		SerialACIA.TxRate = fget32(SUEF);
-		SerialACIA.RxRate = fget32(SUEF);
-		SerialACIA.ClkDivide = fget8(SUEF);
-		SerialACIA.Parity = fget8(SUEF);
-		SerialACIA.StopBits = fget8(SUEF);
-		SerialACIA.DataBits = fget8(SUEF);
-		SerialACIA.RIE = fgetbool(SUEF);
-		SerialACIA.TIE = fgetbool(SUEF);
-		SerialACIA.TxD = fget8(SUEF);
-		SerialACIA.RxD = fget8(SUEF);
-		SerialACIA.RDR = fget8(SUEF);
-		SerialACIA.TDR = fget8(SUEF);
-		SerialACIA.RDSR = fget8(SUEF);
-		SerialACIA.TDSR = fget8(SUEF);
-		SerialACIA.Status = fget8(SUEF);
-		SerialACIA.Control = fget8(SUEF);
-		SerialULA.Control = fget8(SUEF);
-		fgetbool(SUEF); // DCD
-		fgetbool(SUEF); // DCDI
-		fgetbool(SUEF); // ODCDI
-		fget8(SUEF); // DCDClear
-		TapeState.Clock = fget32(SUEF);
+		SerialULA.CassetteRelay = UEFReadBool(SUEF);
+		SerialACIA.TxRate = UEFRead32(SUEF);
+		SerialACIA.RxRate = UEFRead32(SUEF);
+		SerialACIA.ClkDivide = UEFRead8(SUEF);
+		SerialACIA.Parity = UEFRead8(SUEF);
+		SerialACIA.StopBits = UEFRead8(SUEF);
+		SerialACIA.DataBits = UEFRead8(SUEF);
+		SerialACIA.RIE = UEFReadBool(SUEF);
+		SerialACIA.TIE = UEFReadBool(SUEF);
+		SerialACIA.TxD = UEFRead8(SUEF);
+		SerialACIA.RxD = UEFRead8(SUEF);
+		SerialACIA.RDR = UEFRead8(SUEF);
+		SerialACIA.TDR = UEFRead8(SUEF);
+		SerialACIA.RDSR = UEFRead8(SUEF);
+		SerialACIA.TDSR = UEFRead8(SUEF);
+		SerialACIA.Status = UEFRead8(SUEF);
+		SerialACIA.Control = UEFRead8(SUEF);
+		SerialULA.Control = UEFRead8(SUEF);
+		UEFReadBool(SUEF); // DCD
+		UEFReadBool(SUEF); // DCDI
+		UEFReadBool(SUEF); // ODCDI
+		UEFRead8(SUEF); // DCDClear
+		TapeState.Clock = UEFRead32(SUEF);
 
-		int Speed = fget32(SUEF);
+		int Speed = UEFRead32(SUEF);
+
 		if (Speed != TapeState.ClockSpeed)
 		{
 			TapeState.Clock = (int)((double)TapeState.Clock * ((double)TapeState.ClockSpeed / Speed));
@@ -1583,15 +1685,15 @@ void LoadSerialUEF(FILE *SUEF, int Version)
 		{
 			// These replace DCD, DCDI, ODCDI, DCDClear from
 			// previous BeebEm versions.
-			SerialULA.TapeCarrier = fgetbool(SUEF);
-			SerialULA.CarrierCycleCount = fget32(SUEF);
+			SerialULA.TapeCarrier = UEFReadBool(SUEF);
+			SerialULA.CarrierCycleCount = UEFRead32(SUEF);
 
-			TapeState.Playing = fgetbool(SUEF);
-			TapeState.Recording = fgetbool(SUEF);
-			bool Unlock = fgetbool(SUEF);
-			TapeState.UEFBuf = fget32(SUEF);
-			TapeState.OldUEFBuf = fget32(SUEF);
-			TapeState.OldClock = fget32(SUEF);
+			TapeState.Playing = UEFReadBool(SUEF);
+			TapeState.Recording = UEFReadBool(SUEF);
+			bool Unlock = UEFReadBool(SUEF);
+			TapeState.UEFBuf = UEFRead32(SUEF);
+			TapeState.OldUEFBuf = UEFRead32(SUEF);
+			TapeState.OldClock = UEFRead32(SUEF);
 
 			// Read CSW state
 			if (CSWFileOpen)

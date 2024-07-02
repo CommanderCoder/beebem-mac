@@ -71,6 +71,12 @@ typedef struct tagPOINT {
 #define CSIDL_PERSONAL -1
 #define SHGFP_TYPE_CURRENT -1
 
+typedef int CRITICAL_SECTION;
+extern void InitializeCriticalSection(int*);
+extern void EnterCriticalSection(int*);
+extern void LeaveCriticalSection(int*);
+extern void DeleteCriticalSection(int*);
+
 #define HKEY_CURRENT_USER NULL
 #define CFG_REG_KEY NULL
 #define NOERROR 0

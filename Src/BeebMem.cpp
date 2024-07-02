@@ -592,7 +592,7 @@ unsigned char BeebReadMem(int Address) {
 
 	if ((Address & ~0x1f)==0xfee0)
 	{
-		if (TubeType == Tube::TorchZ80)
+		if (TubeType == TubeDevice::TorchZ80)
 			return ReadTorchTubeFromHostSide(Address & 0x1f); // Read From Torch Tube
 		else
 			return ReadTubeFromHostSide(Address & 7); // Read From Tube
@@ -663,16 +663,20 @@ void DebugMemoryState()
 	switch (MachineType)
 	{
 		case Model::B:
+		default:
 			break;
+
 		case Model::IntegraB:
 			DebugDisplayInfoF("Shadow RAM: %s, %s",ShEn ? "enabled" : "disabled", !MemSel && ShEn ? "selected" : "not selected");
 			DebugDisplayInfoF("Private areas: %s; 1K %s, 4K %s, 8K %s",PrvEn ? "enabled" : "disabled", Prvs1 ? "on" : "off", Prvs4 ? "on" : "off", Prvs8 ? "on" : "off");
 			DebugDisplayInfoF("Hidden area address: 0x%01X", HidAdd);
 			break;
+
 		case Model::BPlus:
 			DebugDisplayInfoF("Shadow RAM: %s, %s", Sh_Display ? "enabled" : "disabled", Sh_Display && ((PrePC >= 0xC000 && PrePC < 0xE000) || (MemSel && PrePC >= 0xA000 && PrePC < 0xB000)) ? "selected" : "not selected");
 			DebugDisplayInfoF("Private RAM: %s", MemSel ? "enabled" : "disabled");
 			break;
+
 		case Model::Master128:
 		case Model::MasterET:
 			DebugDisplayInfoF("ACCCON: IRR:%s TST:%s IFJ:%s ITU:%s Y:%s X:%s E:%s D:%s",
@@ -685,10 +689,6 @@ void DebugMemoryState()
 				(ACCCON & 0x02) != 0 ? "on" : "off",
 				(ACCCON & 0x01) != 0 ? "on" : "off");
 			break;
-#ifdef __APPLE__
-		default: // display nothing
-			break;
-#endif
 	}
 }
 
@@ -1036,7 +1036,7 @@ void BeebWriteMem(int Address, unsigned char Value)
 
 	if ((Address&~0xf)==0xfee0)
 	{
-		if (TubeType == Tube::TorchZ80)
+		if (TubeType == TubeDevice::TorchZ80)
 			WriteTorchTubeFromHostSide(Address & 0xf, Value);
 		else
 			WriteTubeFromHostSide(Address & 7, Value);
@@ -1397,248 +1397,264 @@ void BeebMemInit(bool LoadRoms, bool SkipIntegraBConfig)
 
 void SaveMemUEF(FILE *SUEF)
 {
-	switch (MachineType) {
-	case Model::B:
-	case Model::Master128:
-	case Model::MasterET:
-		fput16(0x0461,SUEF); // Memory Control State
-		fput32(2,SUEF);
-		fputc(PagedRomReg,SUEF);
-		fputc(ACCCON,SUEF);
-		break;
+	switch (MachineType)
+	{
+		case Model::B:
+		case Model::Master128:
+		case Model::MasterET:
+		default:
+			UEFWrite16(0x0461, SUEF); // Memory Control State
+			UEFWrite32(2, SUEF);
+			UEFWrite8(PagedRomReg, SUEF);
+			UEFWrite8(ACCCON, SUEF);
+			break;
 
-	case Model::IntegraB:
-		fput16(0x0461,SUEF); // Memory Control State
-		fput32(3,SUEF);
-		fputc(PagedRomReg | (static_cast<int>(MemSel) << 7) | (static_cast<int>(PrvEn) << 6), SUEF);
-		fputc((static_cast<int>(ShEn) << 7) | (static_cast<int>(Prvs8) << 6) |
-		      (static_cast<int>(Prvs4) << 5) | (static_cast<int>(Prvs1) << 4), SUEF);
-		fputc(HidAdd,SUEF);
-		break;
+		case Model::IntegraB:
+			UEFWrite16(0x0461, SUEF); // Memory Control State
+			UEFWrite32(3, SUEF);
+			UEFWrite8(PagedRomReg | (static_cast<int>(MemSel) << 7) | (static_cast<int>(PrvEn) << 6), SUEF);
+			UEFWrite8((static_cast<int>(ShEn) << 7) | (static_cast<int>(Prvs8) << 6) |
+			          (static_cast<int>(Prvs4) << 5) | (static_cast<int>(Prvs1) << 4), SUEF);
+			UEFWrite8(HidAdd, SUEF);
+			break;
 
-	case Model::BPlus:
-		fput16(0x0461,SUEF); // Memory Control State
-		fput32(2,SUEF);
-		fputc(PagedRomReg | (static_cast<int>(MemSel) << 7), SUEF);
-		fputc((static_cast<int>(Sh_Display) << 7), SUEF);
-		break;
-#ifdef __APPLE__
-	default:
-		break;
-#endif
+		case Model::BPlus:
+			UEFWrite16(0x0461, SUEF); // Memory Control State
+			UEFWrite32(2, SUEF);
+			UEFWrite8(PagedRomReg | (static_cast<int>(MemSel) << 7), SUEF);
+			UEFWrite8((static_cast<int>(Sh_Display) << 7), SUEF);
+			break;
 	}
 
-	fput16(0x0462,SUEF); // Main Memory
-	fput32(32768,SUEF);
-	fwrite(WholeRam,1,32768,SUEF);
+	UEFWrite16(0x0462,SUEF); // Main Memory
+	UEFWrite32(32768, SUEF);
+	UEFWriteBuf(WholeRam, 32768, SUEF);
 
-	switch (MachineType) {
-	case Model::IntegraB:
-		fput16(0x0463,SUEF); // Shadow RAM
-		fput32(20480,SUEF);
-		fwrite(ShadowRam,1,20480,SUEF);
-		fput16(0x0464,SUEF); // Private RAM
-		fput32(12288,SUEF);
-		fwrite(Private,1,12288,SUEF);
-		fput16(0x046D,SUEF); // IntegraB Hidden RAM
-		fput32(256,SUEF);
-		fwrite(Hidden,1,256,SUEF);
-		break;
+	switch (MachineType)
+	{
+		case Model::B:
+		default:
+			break;
 
-	case Model::BPlus:
-		fput16(0x0463,SUEF); // Shadow RAM
-		fput32(32768,SUEF);
-		fwrite(ShadowRAM,1,32768,SUEF);
-		fput16(0x0464,SUEF); // Private RAM
-		fput32(12288,SUEF);
-		fwrite(Private,1,12288,SUEF);
-		break;
+		case Model::IntegraB:
+			UEFWrite16(0x0463, SUEF); // Shadow RAM
+			UEFWrite32(20480, SUEF);
+			UEFWriteBuf(ShadowRam, 20480, SUEF);
+			UEFWrite16(0x0464, SUEF); // Private RAM
+			UEFWrite32(12288, SUEF);
+			UEFWriteBuf(Private, 12288, SUEF);
+			UEFWrite16(0x046D, SUEF); // IntegraB Hidden RAM
+			UEFWrite32(256, SUEF);
+			UEFWriteBuf(Hidden, 256, SUEF);
+			break;
 
-	case Model::Master128:
-	case Model::MasterET:
-		fput16(0x0463,SUEF); // Shadow RAM
-		fput32(32770,SUEF);
-		fput16(0,SUEF);
-		fwrite(ShadowRAM,1,32768,SUEF);
-		fput16(0x0464,SUEF); // Private RAM
-		fput32(4096,SUEF);
-		fwrite(PrivateRAM,1,4096,SUEF);
-		fput16(0x0465,SUEF); // Filing System RAM
-		fput32(8192,SUEF);
-		fwrite(FSRam,1,8192,SUEF);
-		break;
-#ifdef __APPLE__
-	default:
-		break;
-#endif
+		case Model::BPlus:
+			UEFWrite16(0x0463, SUEF); // Shadow RAM
+			UEFWrite32(32768, SUEF);
+			UEFWriteBuf(ShadowRAM, 32768, SUEF);
+			UEFWrite16(0x0464, SUEF); // Private RAM
+			UEFWrite32(12288, SUEF);
+			UEFWriteBuf(Private, 12288, SUEF);
+			break;
+
+		case Model::Master128:
+		case Model::MasterET:
+			UEFWrite16(0x0463, SUEF); // Shadow RAM
+			UEFWrite32(32770, SUEF);
+			UEFWrite16(0, SUEF);
+			UEFWriteBuf(ShadowRAM, 32768, SUEF);
+			UEFWrite16(0x0464, SUEF); // Private RAM
+			UEFWrite32(4096, SUEF);
+			UEFWriteBuf(PrivateRAM, 4096, SUEF);
+			UEFWrite16(0x0465, SUEF); // Filing System RAM
+			UEFWrite32(8192, SUEF);
+			UEFWriteBuf(FSRam, 8192, SUEF);
+			break;
 	}
 
 	for (int bank = 0; bank < ROM_BANK_COUNT; bank++)
 	{
 		switch (RomBankType[bank])
 		{
-		case BankType::Ram:
-			fput16(0x0466,SUEF); // RAM bank
-			fput32(16385,SUEF);
-			fputc(bank,SUEF);
-			fwrite(Roms[bank], 1, MAX_ROM_SIZE, SUEF);
-			break;
-		case BankType::Rom:
-			if (PALRom[bank].Type == PALRomType::none)
-			{
-				fput16(0x0475, SUEF); // ROM bank
-				fput32(MAX_ROM_SIZE + 2, SUEF);
-				fputc(bank, SUEF);
-				fputc(static_cast<int>(BankType::Rom), SUEF);
-				fwrite(Roms[bank], 1, MAX_ROM_SIZE, SUEF);
-			}
-			else
-			{
-				fput16(0x047C, SUEF); // PAL ROM bank
-				fput32(MAX_PALROM_SIZE + 4, SUEF);
-				fputc(bank, SUEF);
-				fputc(static_cast<int>(BankType::Rom), SUEF);
-				fputc(static_cast<int>(PALRom[bank].Type), SUEF);
-				fputc(PALRom[bank].Bank, SUEF);
-				fwrite(PALRom[bank].Rom, 1, MAX_PALROM_SIZE, SUEF);
-			}
-			break;
-		case BankType::Empty:
-			fput16(0x0475,SUEF); // ROM bank
-			fput32(2,SUEF);
-			fputc(bank,SUEF);
-			fputc(static_cast<int>(BankType::Empty),SUEF);
-			break;
-#ifdef __APPLE__
-		default:// RAM
-			break;
-#endif
+			case BankType::Ram:
+				UEFWrite16(0x0466, SUEF); // RAM bank
+				UEFWrite32(16385, SUEF);
+				UEFWrite8(bank, SUEF);
+				UEFWriteBuf(Roms[bank], MAX_ROM_SIZE, SUEF);
+				break;
+
+			case BankType::Rom:
+				if (PALRom[bank].Type == PALRomType::none)
+				{
+					UEFWrite16(0x0475, SUEF); // ROM bank
+					UEFWrite32(MAX_ROM_SIZE + 2, SUEF);
+					UEFWrite8(bank, SUEF);
+					UEFWrite8(static_cast<int>(BankType::Rom), SUEF);
+					UEFWriteBuf(Roms[bank], MAX_ROM_SIZE, SUEF);
+				}
+				else
+				{
+					UEFWrite16(0x047C, SUEF); // PAL ROM bank
+					UEFWrite32(MAX_PALROM_SIZE + 4, SUEF);
+					UEFWrite8(bank, SUEF);
+					UEFWrite8(static_cast<int>(BankType::Rom), SUEF);
+					UEFWrite8(static_cast<int>(PALRom[bank].Type), SUEF);
+					UEFWrite8(PALRom[bank].Bank, SUEF);
+					UEFWriteBuf(PALRom[bank].Rom, MAX_PALROM_SIZE, SUEF);
+				}
+				break;
+
+			case BankType::Empty:
+			default:
+				UEFWrite16(0x0475, SUEF); // ROM bank
+				UEFWrite32(2, SUEF);
+				UEFWrite8(bank, SUEF);
+				UEFWrite8(static_cast<int>(BankType::Empty), SUEF);
+				break;
 		}
 	}
 }
 
-void LoadRomRegsUEF(FILE *SUEF) {
-	PagedRomReg = fget8(SUEF);
+void LoadRomRegsUEF(FILE *SUEF)
+{
+	PagedRomReg = UEFRead8(SUEF);
 	ROMSEL = PagedRomReg & 0xf;
-	ACCCON = fget8(SUEF);
-	switch (MachineType) {
-	case Model::IntegraB:
-		MemSel = (PagedRomReg & 0x80) != 0;
-		PrvEn = (PagedRomReg & 0x40) != 0;
-		PagedRomReg &= 0xf;
-		ShEn = (ACCCON & 0x80) != 0;
-		Prvs8 = (ACCCON & 0x40) != 0;
-		Prvs4 = (ACCCON & 0x20) != 0;
-		Prvs1 = (ACCCON & 0x10) != 0;
-		HidAdd = fget8(SUEF);
-		break;
+	ACCCON = UEFRead8(SUEF);
 
-	case Model::BPlus:
-		MemSel = (PagedRomReg & 0x80) != 0;
-		PagedRomReg &= 0xf;
-		Sh_Display = (ACCCON & 0x80) != 0;
-		break;
+	switch (MachineType)
+	{
+		case Model::B:
+		default:
+			break;
 
-	case Model::Master128:
-	case Model::MasterET:
-		PrivateRAMSelect = (PagedRomReg & 0x80) != 0;
-		Sh_Display = (ACCCON & 1) != 0;
-		Sh_CPUX = (ACCCON & 4) != 0;
-		Sh_CPUE = (ACCCON & 2) != 0;
-		FSRAMSelect = (ACCCON & 8) != 0;
-		break;
-#ifdef __APPLE__
-	default:
-		break;
-#endif
+		case Model::IntegraB:
+			MemSel = (PagedRomReg & 0x80) != 0;
+			PrvEn = (PagedRomReg & 0x40) != 0;
+			PagedRomReg &= 0xf;
+			ShEn = (ACCCON & 0x80) != 0;
+			Prvs8 = (ACCCON & 0x40) != 0;
+			Prvs4 = (ACCCON & 0x20) != 0;
+			Prvs1 = (ACCCON & 0x10) != 0;
+			HidAdd = UEFRead8(SUEF);
+			break;
+
+		case Model::BPlus:
+			MemSel = (PagedRomReg & 0x80) != 0;
+			PagedRomReg &= 0xf;
+			Sh_Display = (ACCCON & 0x80) != 0;
+			break;
+
+		case Model::Master128:
+		case Model::MasterET:
+			PrivateRAMSelect = (PagedRomReg & 0x80) != 0;
+			Sh_Display = (ACCCON & 1) != 0;
+			Sh_CPUX = (ACCCON & 4) != 0;
+			Sh_CPUE = (ACCCON & 2) != 0;
+			FSRAMSelect = (ACCCON & 8) != 0;
+			break;
 	}
 }
 
-void LoadMainMemUEF(FILE *SUEF) {
-	fread(WholeRam,1,32768,SUEF);
+void LoadMainMemUEF(FILE *SUEF)
+{
+	UEFReadBuf(WholeRam, 32768, SUEF);
 }
 
-void LoadShadMemUEF(FILE *SUEF) {
-	int SAddr;
-	switch (MachineType) {
-	case Model::IntegraB:
-		fread(ShadowRam,1,20480,SUEF);
-		break;
-	case Model::BPlus:
-		fread(ShadowRAM,1,32768,SUEF);
-		break;
-	case Model::Master128:
-	case Model::MasterET:
-		SAddr=fget16(SUEF);
-		fread(ShadowRAM+SAddr,1,32768,SUEF);
-		break;
-#ifdef __APPLE__
-	default:
-		break;
-#endif
+void LoadShadMemUEF(FILE *SUEF)
+{
+	switch (MachineType)
+	{
+		case Model::B:
+		default:
+			break;
+
+		case Model::IntegraB:
+			UEFReadBuf(ShadowRam, 20480, SUEF);
+			break;
+
+		case Model::BPlus:
+			UEFReadBuf(ShadowRAM, 32768, SUEF);
+			break;
+
+		case Model::Master128:
+		case Model::MasterET:
+			// Read and ignore SAddr. This was used to read to ShadowRAM + SAddr,
+			// but this is always set to 0 in SaveMemUEF()
+			UEFRead16(SUEF);
+			UEFReadBuf(ShadowRAM, 32768, SUEF);
+			break;
 	}
 }
 
-void LoadPrivMemUEF(FILE *SUEF) {
-	switch (MachineType) {
-	case Model::IntegraB:
-		fread(Private,1,12288,SUEF);
-		break;
-	case Model::BPlus:
-		fread(Private,1,12288,SUEF);
-		break;
-	case Model::Master128:
-	case Model::MasterET:
-		fread(PrivateRAM,1,4096,SUEF);
-		break;
-#ifdef __APPLE__
-	default:
-		break;
-#endif
+void LoadPrivMemUEF(FILE *SUEF)
+{
+	switch (MachineType)
+	{
+		case Model::B:
+		default:
+			break;
+
+		case Model::IntegraB:
+			UEFReadBuf(Private, 12288, SUEF);
+			break;
+
+		case Model::BPlus:
+			UEFReadBuf(Private, 12288, SUEF);
+			break;
+
+		case Model::Master128:
+		case Model::MasterET:
+			UEFReadBuf(PrivateRAM, 4096, SUEF);
+			break;
 	}
 }
 
-void LoadFileMemUEF(FILE *SUEF) {
-	fread(FSRam,1,8192,SUEF);
+void LoadFileMemUEF(FILE *SUEF)
+{
+	UEFReadBuf(FSRam, 8192, SUEF);
 }
 
-void LoadIntegraBHiddenMemUEF(FILE *SUEF) {
-	fread(Hidden,1,256,SUEF);
+void LoadIntegraBHiddenMemUEF(FILE *SUEF)
+{
+	UEFReadBuf(Hidden, 256, SUEF);
 }
 
-void LoadSWRamMemUEF(FILE *SUEF) {
-	int Rom = fgetc(SUEF);
+void LoadSWRamMemUEF(FILE *SUEF)
+{
+	int Rom = UEFRead8(SUEF);
 	RomWritable[Rom] = true;
 	RomBankType[Rom] = BankType::Ram;
-	fread(Roms[Rom], 1, MAX_ROM_SIZE, SUEF);
+	UEFReadBuf(Roms[Rom], MAX_ROM_SIZE, SUEF);
 }
 
-void LoadSWRomMemUEF(FILE *SUEF) {
-	int Rom = fgetc(SUEF);
-	RomBankType[Rom] = static_cast<BankType>(fgetc(SUEF));
+void LoadSWRomMemUEF(FILE *SUEF)
+{
+	int Rom = UEFRead8(SUEF);
+	RomBankType[Rom] = static_cast<BankType>(UEFRead8(SUEF));
 
 	switch (RomBankType[Rom])
 	{
-	case BankType::Rom:
-		RomWritable[Rom] = false;
-		fread(Roms[Rom], 1, MAX_ROM_SIZE, SUEF);
-		break;
-	case BankType::Empty:
-		memset(Roms[Rom], 0, MAX_ROM_SIZE);
-		break;
-#ifdef __APPLE__
-	default: // RAM
-		break;
-#endif
+		case BankType::Rom:
+			RomWritable[Rom] = false;
+			UEFReadBuf(Roms[Rom], MAX_ROM_SIZE, SUEF);
+			break;
+
+		case BankType::Empty:
+			memset(Roms[Rom], 0, MAX_ROM_SIZE);
+			break;
+
+		case BankType::Ram:
+		default:
+			break;
 	}
 }
 
 bool LoadPALRomEUF(FILE *SUEF, unsigned int ChunkLength)
 {
-	int Bank = fgetc(SUEF);
-	RomBankType[Bank] = static_cast<BankType>(fgetc(SUEF));
-	PALRom[Bank].Type = static_cast<PALRomType>(fgetc(SUEF));
-	PALRom[Bank].Bank = static_cast<uint8_t>(fgetc(SUEF));
+	int Bank = UEFRead8(SUEF);
+	RomBankType[Bank] = static_cast<BankType>(UEFRead8(SUEF));
+	PALRom[Bank].Type = static_cast<PALRomType>(UEFRead8(SUEF));
+	PALRom[Bank].Bank = static_cast<uint8_t>(UEFRead8(SUEF));
 
 	unsigned int Size = ChunkLength - 4;
 
@@ -1648,7 +1664,7 @@ bool LoadPALRomEUF(FILE *SUEF, unsigned int ChunkLength)
 		{
 			case BankType::Rom:
 				RomWritable[Bank] = false;
-				fread(PALRom[Bank].Rom, 1, MAX_PALROM_SIZE, SUEF);
+				UEFReadBuf(PALRom[Bank].Rom, MAX_PALROM_SIZE, SUEF);
 				memcpy(Roms[Bank], PALRom[Bank].Rom, MAX_ROM_SIZE);
 				break;
 
@@ -1658,10 +1674,10 @@ bool LoadPALRomEUF(FILE *SUEF, unsigned int ChunkLength)
 				PALRom[Bank].Type = PALRomType::none;
 				PALRom[Bank].Bank = 0;
 				break;
-#ifdef __APPLE__
-			default:// RAM
+
+			case BankType::Ram:
+			default:
 				break;
-#endif
 		}
 
 		return true;

@@ -480,28 +480,28 @@ extern "C" void beeb_handlekeys(long message, long wParam, long lParam)
 						// Must do a reset!
 						Init6502core();
 
-						if (TubeType == Tube::Acorn65C02)
+						if (TubeType == TubeDevice::Acorn65C02)
 						{
 							Init65C02core();
 						}
-						else if (TubeType == Tube::Master512CoPro)
+						else if (TubeType == TubeDevice::Master512CoPro)
 						{
 							master512CoPro.Reset();
 						}
-						else if (TubeType == Tube::AcornZ80 || TubeType == Tube::TorchZ80)
+						else if (TubeType == TubeDevice::AcornZ80 || TubeType == TubeDevice::TorchZ80)
 						{
 							R1Status = 0;
 							ResetTube();
 							init_z80();
 						}
-						else if (TubeType == Tube::AcornArm)
+						else if (TubeType == TubeDevice::AcornArm)
 						{
 							R1Status = 0;
 							ResetTube();
 							mainWin->DestroyArmCoPro();
 							mainWin->CreateArmCoPro();
 						}
-						else if (TubeType == Tube::SprowArm)
+						else if (TubeType == TubeDevice::SprowArm)
 						{
 							R1Status = 0;
 							ResetTube();

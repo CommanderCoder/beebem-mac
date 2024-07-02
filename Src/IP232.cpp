@@ -21,15 +21,19 @@ Boston, MA  02110-1301, USA.
 
 /*
  Remote serial port & IP232 support by Rob O'Donnell Mar 2009.
+
  . Raw mode connects and disconnects on RTS going up and down.
  . CTS reflects connection status.
  . IP232 mode maintains constant connection. CTS reflects DTR
  . on the modem; you would normally tie this to DCD depending
  . on your application.
+
+ Much taken from Mac version by Jon Welch
  */
 
 #include <windows.h>
 
+#include <assert.h>
 #include <stdio.h>
 
 #include "IP232.h"
@@ -38,13 +42,13 @@ Boston, MA  02110-1301, USA.
 #include "Debug.h"
 #include "DebugTrace.h"
 #include "Main.h"
+#include "Messages.h"
 #include "RingBuffer.h"
 #include "Serial.h"
 #include "Thread.h"
 #ifdef __APPLE__
 #undef Sleep // sleep should sleep the thread, not the beeb cpu
 #define Sleep swift_sleepThread
-void produce(UINT nMessage);
 #endif
 
 constexpr int IP232_CONNECTION_DELAY = 8192; // Cycles to wait after connection
@@ -55,44 +59,58 @@ class EthernetPortReadThread : public Thread
 		virtual unsigned int ThreadFunc();
 };
 
-class EthernetPortStatusThread : public Thread
-{
-	public:
-		virtual unsigned int ThreadFunc();
-};
+static CRITICAL_SECTION SharedBufferLock; // MM 26/11/21
 
 // IP232
 static SOCKET EthernetSocket = INVALID_SOCKET; // Listen socket
 
 static EthernetPortReadThread EthernetReadThread;
-static EthernetPortStatusThread EthernetStatusThread;
 
 // This bit is the Serial Port stuff
-bool IP232Mode;
-bool IP232Raw;
+bool IP232Handshake; // If true, RTS set by the emulated serial port
+bool IP232Raw; // If true, handling of DTR low/high messages is disabled (255 followed by 0 or 1)
 char IP232Address[256];
 int IP232Port;
 
-static bool ip232_flag_received = false;
-// static bool mStartAgain = false;
+static bool IP232FlagReceived = false;
+
+static bool IP232RTS = false;
 
 // IP232 routines use InputBuffer as data coming in from the modem,
 // and OutputBuffer for data to be sent out to the modem.
+// StatusBuffer is used for changes to the serial ACIA status
+// registers
 static RingBuffer InputBuffer;
 static RingBuffer OutputBuffer;
+static RingBuffer StatusBuffer;
 
-CycleCountT IP232RxTrigger=CycleCountTMax;
+CycleCountT IP232RxTrigger = CycleCountTMax;
 
 static void EthernetReceivedData(unsigned char* pData, int Length);
-static void EthernetPortStore(unsigned char data);
+static void EthernetPortStoreStatus(unsigned char Data);
+static void EthernetPortStore(unsigned char Data);
 static void DebugReceivedData(unsigned char* pData, int Length);
+
+/*--------------------------------------------------------------------------*/
 
 bool IP232Open()
 {
+	DebugTrace("IP232Open\n");
+
+	// Added this to prevent WSAECONNABORTED errors from recv()
+	// in EthernetPortReadThread on reconnecting after showing
+	// the serial port config dialog box.
+	Sleep(50);
+
+	InitializeCriticalSection(&SharedBufferLock); // MM 26/11/21
+
 	InputBuffer.Reset();
 	OutputBuffer.Reset();
+	StatusBuffer.Reset();
 
 	// Let's prepare some IP sockets
+
+	assert(EthernetSocket == INVALID_SOCKET);
 
 	EthernetSocket = socket(AF_INET, SOCK_STREAM, 0);
 
@@ -112,6 +130,8 @@ bool IP232Open()
 		DebugDisplayTrace(DebugType::RemoteServer, true, "IP232: socket created");
 
 	SetTrigger(IP232_CONNECTION_DELAY, IP232RxTrigger);
+
+	DebugTrace("Connecting to IP232 server %s port %d\n", IP232Address, IP232Port);
 
 	sockaddr_in Addr;
 	Addr.sin_family = AF_INET; // address family Internet
@@ -138,45 +158,23 @@ bool IP232Open()
 	if (DebugEnabled)
 		DebugDisplayTrace(DebugType::RemoteServer, true, "IP232: connected to server");
 
-	// TEMP!
-	SerialACIA.Status &= ~MC6850_STATUS_CTS;
-	SerialACIA.Status |= MC6850_STATUS_TDRE;
-
 	if (DebugEnabled)
 		DebugDisplayTrace(DebugType::RemoteServer, true, "IP232: Init, CTS low");
 
-	if (!EthernetReadThread.IsStarted())
-	{
-		EthernetReadThread.Start();
-		EthernetStatusThread.Start();
-	}
+	assert(!EthernetReadThread.IsStarted());
+
+	EthernetReadThread.Start();
+
+	SerialACIA.Status &= ~MC6850_STATUS_CTS; // CTS goes low
+	SerialACIA.Status |= MC6850_STATUS_TDRE; // so TDRE goes high
 
 	return true;
 }
 
+/*--------------------------------------------------------------------------*/
+
 bool IP232Poll()
 {
-//	fd_set	fds;
-//	timeval tv;
-//	int i;
-
-/*	if (mStartAgain == true)
-	{
-		DebugTrace("Closing Comms\n");
-		if (DebugEnabled)
-				DebugDisplayTrace(DEBUG_REMSER, true, "IP232: Comms Close");
-		// mStartAgain = false;
-		// mainWin->Report(MessageType::Error, "Could not connect to specified address");
-		bSerialStateChanged = true;
-		SerialPortEnabled = false;
-		mainWin->ExternUpdateSerialMenu();
-		
-		IP232Close();
-		// IP232Open();
-		return false;
-	}
-*/
-
 	if (TotalCycles > IP232RxTrigger && InputBuffer.HasData())
 	{
 		return true;
@@ -185,58 +183,78 @@ bool IP232Poll()
 	return false;
 }
 
+/*--------------------------------------------------------------------------*/
+
+bool IP232PollStatus()
+{
+	return StatusBuffer.HasData();
+}
+
+/*--------------------------------------------------------------------------*/
+
 void IP232Close()
 {
+	DebugTrace("IP232Close\n");
+
+	if (EthernetReadThread.IsStarted())
+	{
+		EthernetReadThread.Join();
+	}
+
+	DeleteCriticalSection(&SharedBufferLock); // MM 26/11/21
+
 	if (EthernetSocket != INVALID_SOCKET)
 	{
 		DebugTrace("Closing IP232 socket\n");
 
 		if (DebugEnabled)
-			DebugDisplayTrace(DebugType::RemoteServer, true, "IP232: Closing Sockets");
+			DebugDisplayTrace(DebugType::RemoteServer, true, "IP232: Closing socket");
 
-		closesocket(EthernetSocket);
+		int Result = closesocket(EthernetSocket);
+
+		if (Result == SOCKET_ERROR)
+		{
+			int Error = WSAGetLastError();
+#ifdef __APPLE__
+			Error = Error; // Error isn't used if NDEBUG is undefined
+#endif
+			DebugTrace("closesocket() returned error %d\n", Error);
+		}
+
 		EthernetSocket = INVALID_SOCKET;
 	}
-
-/*
-	if (mEthernetPortReadTaskID != NULL)
-	{
-		MPTerminateTask(mEthernetPortReadTaskID, 0);
-	}
-	if (mEthernetPortStatusTaskID != NULL)
-	{
-		MPTerminateTask(mEthernetPortStatusTaskID, 0);
-	}
-	
-	if (mListenTaskID != NULL)
-	{
-		MPTerminateTask(mListenTaskID, 0);
-	}
-
-	mListenHandle = NULL;
-	mEthernetPortStatusTaskID = NULL;
-	mEthernetPortReadTaskID = NULL;
-*/
 }
 
-void IP232Write(unsigned char data)
+/*--------------------------------------------------------------------------*/
+
+void IP232Write(unsigned char Data)
 {
-	if (!OutputBuffer.PutData(data))
+	EnterCriticalSection(&SharedBufferLock); // MM 26/11/21
+
+	DebugTrace("IP232Write %02X\n", Data);
+
+	if (!OutputBuffer.PutData(Data))
 	{
 		DebugTrace("IP232Write send buffer full\n");
 
 		if (DebugEnabled)
 			DebugDisplayTrace(DebugType::RemoteServer, true, "IP232: Write send Buffer Full");
 	}
+
+	LeaveCriticalSection(&SharedBufferLock); // MM 26/11/21
 }
+
+/*--------------------------------------------------------------------------*/
 
 unsigned char IP232Read()
 {
-	unsigned char data = 0;
+	unsigned char Data = 0;
+
+	EnterCriticalSection(&SharedBufferLock); // MM 26/11/21
 
 	if (InputBuffer.HasData())
 	{
-		data = InputBuffer.GetData();
+		Data = InputBuffer.GetData();
 
 		// Simulated baud rate delay between bytes..
 		SetTrigger(2000000 / (SerialACIA.RxRate / 9), IP232RxTrigger);
@@ -249,33 +267,79 @@ unsigned char IP232Read()
 			DebugDisplayTrace(DebugType::RemoteServer, true, "IP232: receive buffer empty");
 	}
 
-	return data;
+	LeaveCriticalSection(&SharedBufferLock); // MM 26/11/21
+
+	return Data;
 }
+
+/*--------------------------------------------------------------------------*/
+
+unsigned char IP232ReadStatus()
+{
+	unsigned char Data = 0;
+
+	EnterCriticalSection(&SharedBufferLock); // MM 26/11/21
+
+	Data = StatusBuffer.GetData();
+
+	LeaveCriticalSection(&SharedBufferLock); // MM 26/11/21
+
+	return Data;
+}
+
+/*--------------------------------------------------------------------------*/
+
+void IP232SetRTS(bool RTS)
+{
+	if (RTS != IP232RTS)
+	{
+		DebugTrace("IP232SetRTS: RTS=%d\n", (int)RTS);
+
+		if (IP232Handshake)
+		{
+			IP232Write(255);
+			IP232Write(static_cast<unsigned char>(RTS));
+		}
+
+		IP232RTS = RTS;
+	}
+}
+
+/*--------------------------------------------------------------------------*/
 
 unsigned int EthernetPortReadThread::ThreadFunc()
 {
-	// Much taken from Mac version by Jon Welch
-	fd_set fds;
-	timeval tv;
-	unsigned char Buffer[256];
-	int BufferLength;
+	DebugTrace("EthernetPortReadThread::ThreadFunc starts\n");
 
-	while (1)
+	bool Close = false;
+
+	while (!ShouldQuit())
 	{
-		if (EthernetSocket != INVALID_SOCKET)
+		if (!Close)
 		{
 			if (InputBuffer.GetSpace() > 256)
 			{
+				fd_set fds;
 				FD_ZERO(&fds);
-				tv.tv_sec = 0;
-				tv.tv_usec = 0;
-
+#ifndef __APPLE__
+				static const timeval TimeOut = {0, 0};
+#else
+				static timeval TimeOut = {0, 0};
+#endif
 				FD_SET(EthernetSocket, &fds);
 
-				int NumReady = select(32, &fds, NULL, NULL, &tv); // Read
+				int NumReady = select(32, &fds, nullptr, nullptr, &TimeOut); // Read
 
-				if (NumReady > 0)
+				if (NumReady == SOCKET_ERROR)
 				{
+					DebugTrace("Read Select Error %d\n", WSAGetLastError());
+
+					if (DebugEnabled)
+						DebugDisplayTrace(DebugType::RemoteServer, true, "IP232: Select error on read");
+				}
+				else if (NumReady > 0)
+				{
+					unsigned char Buffer[256];
 #ifndef __APPLE__
 					int BytesReceived = recv(EthernetSocket, (char *)Buffer, 256, 0);
 #else
@@ -289,53 +353,41 @@ unsigned int EthernetPortReadThread::ThreadFunc()
 					}
 					else
 					{
-						#ifndef NDEBUG
+						Close = true;
+
 						// Should really check what the error was ...
 						int Error = WSAGetLastError();
-						#endif
-
-						DebugTrace("Read error %d\n", Error);
-						DebugTrace("Remote session disconnected\n");
-
-						if (DebugEnabled)
-							DebugDisplayTrace(DebugType::RemoteServer, true, "IP232: Remote session disconnected");
-
-						// mEthernetPortReadTaskID = NULL;
-						bSerialStateChanged = true;
-						SerialPortEnabled = false;
-#ifndef __APPLE__
-						mainWin->UpdateSerialMenu();
-						IP232Close();
-						mainWin->Report(MessageType::Error,
-						                "Lost connection. Serial port has been disabled");
-#else
-						// Do not change UI from this serial port thread.  Notify the UI instead.
-						produce(WM_CLOSE);
-						IP232Close();
+#ifdef __APPLE__
+						Error = Error; // Error isn't used if NDEBUG is undefined
 #endif
-						return 0;
+
+						DebugTrace("Read error %d, remote session disconnected\n", Error);
+
+						PostMessage(mainWin->GethWnd(), WM_IP232_ERROR, Error, 0);
 					}
-				}
-				else
-				{
-					// DebugTrace("Nothing to read %d\n", i);
 				}
 			}
 
-			if (OutputBuffer.HasData() && EthernetSocket != INVALID_SOCKET)
+			if (OutputBuffer.HasData())
 			{
 				DebugTrace("Sending %d bytes to IP232 server\n", OutputBuffer.GetLength());
 
 				if (DebugEnabled)
 					DebugDisplayTrace(DebugType::RemoteServer, true, "IP232: Sending to remote server");
 
-				BufferLength = 0;
+				EnterCriticalSection(&SharedBufferLock); // MM 26/11/21
 
-				while (OutputBuffer.HasData())
+				unsigned char Buffer[256];
+				int BufferLength = 0;
+
+				while (OutputBuffer.HasData() && BufferLength < 256)
 				{
 					Buffer[BufferLength++] = OutputBuffer.GetData();
 				}
 
+				LeaveCriticalSection(&SharedBufferLock); // MM 26/11/21
+
+				fd_set fds;
 				FD_ZERO(&fds);
 #ifndef __APPLE__
 				static const timeval TimeOut = {0, 0};
@@ -347,41 +399,37 @@ unsigned int EthernetPortReadThread::ThreadFunc()
 
 				int NumReady = select(32, NULL, &fds, NULL, &TimeOut); // Write
 
-				if (NumReady <= 0)
+				if (NumReady == SOCKET_ERROR)
 				{
-					DebugTrace("Select Error %i\n", NumReady);
+					DebugTrace("Write Select Error %d\n", WSAGetLastError());
 
 					if (DebugEnabled)
-						DebugDisplayTrace(DebugType::RemoteServer, true, "IP232: Select error on send");
+						DebugDisplayTrace(DebugType::RemoteServer, true, "IP232: Select error on write");
 				}
-				else
+				else if (NumReady > 0)
 				{
 #ifndef __APPLE__
 					int BytesSent = send(EthernetSocket, (char *)Buffer, BufferLength, 0);
 #else
-					int BytesSent = (int)send(EthernetSocket, (char *)Buffer, BufferLength, 0);
+                    int BytesSent = (int)send(EthernetSocket, (char *)Buffer, BufferLength, 0);
 #endif
-					if (BytesSent < BufferLength)
+					if (BytesSent == SOCKET_ERROR)
 					{
+						Close = true;
+
 						// Should really check what the error was ...
-						DebugTrace("Send Error %i\n", BytesSent);
-
-						if (DebugEnabled)
-							DebugDisplayTrace(DebugType::RemoteServer, true, "IP232: Send Error");
-						bSerialStateChanged = true;
-						SerialPortEnabled = false;
-#ifndef __APPLE__
-						mainWin->UpdateSerialMenu();
-
-						IP232Close();
-						mainWin->Report(MessageType::Error,
-						                "Lost connection. Serial port has been disabled");
-						
-#else
-						// Do not change UI from this serial port thread.  Notify the UI instead.
-						produce(WM_CLOSE);
-						IP232Close();
+						int Error = WSAGetLastError();
+#ifdef __APPLE__
+						Error = Error; // Error isn't used if NDEBUG is undefined
 #endif
+
+						DebugTrace("Send Error %i, Error %d\n", BytesSent, Error);
+
+                        PostMessage(mainWin->GethWnd(), WM_IP232_ERROR, Error, 0);
+                    }
+					else
+					{
+						DebugTrace("Sent %d of %d bytes\n", BytesSent, BufferLength);
 					}
 				}
 			}
@@ -390,8 +438,12 @@ unsigned int EthernetPortReadThread::ThreadFunc()
 		Sleep(50); // Sleep for 50 msec
 	}
 
+	DebugTrace("EthernetPortReadThread::ThreadFunc exits\n");
+
 	return 0;
 }
+
+/*--------------------------------------------------------------------------*/
 
 static void EthernetReceivedData(unsigned char* pData, int Length)
 {
@@ -402,27 +454,19 @@ static void EthernetReceivedData(unsigned char* pData, int Length)
 
 	for (int i = 0; i < Length; i++)
 	{
-		if (ip232_flag_received)
+		if (IP232FlagReceived)
 		{
-			ip232_flag_received = false;
+			IP232FlagReceived = false;
 
 			if (pData[i] == 1)
 			{
-				if (DebugEnabled)
-					DebugDisplayTrace(DebugType::RemoteServer, true, "Flag,1 DCD True, CTS");
-
-				// dtr on modem high
-				SerialACIA.Status &= ~MC6850_STATUS_CTS; // CTS goes active low
-				SerialACIA.Status |= MC6850_STATUS_TDRE; // so TDRE goes high ??
+				// DTR on modem high
+				EthernetPortStoreStatus(IP232_DTR_HIGH);
 			}
 			else if (pData[i] == 0)
 			{
-				if (DebugEnabled)
-					DebugDisplayTrace(DebugType::RemoteServer, true, "Flag,0 DCD False, clear CTS");
-
-				// dtr on modem low
-				SerialACIA.Status |= MC6850_STATUS_CTS; // CTS goes inactive high
-				SerialACIA.Status &= ~MC6850_STATUS_TDRE; // so TDRE goes low
+				// DTR on modem low
+				EthernetPortStoreStatus(IP232_DTR_LOW);
 			}
 			else if (pData[i] == 255)
 			{
@@ -436,7 +480,9 @@ static void EthernetReceivedData(unsigned char* pData, int Length)
 		{
 			if (pData[i] == 255 && !IP232Raw)
 			{
-				ip232_flag_received = true;
+				// The next value received is the DCD state (0 or 1),
+				// or a 255 data value
+				IP232FlagReceived = true;
 			}
 			else
 			{
@@ -446,101 +492,41 @@ static void EthernetReceivedData(unsigned char* pData, int Length)
 	}
 }
 
-void EthernetPortStore(unsigned char data)
-{
-	// much taken from Mac version by Jon Welch
+/*--------------------------------------------------------------------------*/
 
-	if (!InputBuffer.PutData(data))
+static void EthernetPortStoreStatus(unsigned char Data)
+{
+	EnterCriticalSection(&SharedBufferLock);
+
+	if (!StatusBuffer.PutData((unsigned char)Data))
+	{
+		DebugTrace("EthernetPortStoreStatus buffer full\n");
+
+		if (DebugEnabled)
+			DebugDisplayTrace(DebugType::RemoteServer, true, "IP232: EthernetPortStoreStatus buffer full");
+	}
+
+	LeaveCriticalSection(&SharedBufferLock);
+}
+
+/*--------------------------------------------------------------------------*/
+
+static void EthernetPortStore(unsigned char Data)
+{
+	EnterCriticalSection(&SharedBufferLock); // MM 26/11/21
+
+	if (!InputBuffer.PutData(Data))
 	{
 		DebugTrace("EthernetPortStore output buffer full\n");
 
 		if (DebugEnabled)
 			DebugDisplayTrace(DebugType::RemoteServer, true, "IP232: EthernetPortStore output buffer full");
 	}
+
+	LeaveCriticalSection(&SharedBufferLock); // MM 26/11/21
 }
 
-unsigned int EthernetPortStatusThread::ThreadFunc()
-{
-	// much taken from Mac version by Jon Welch
-	int dcd = 0;
-	int odcd = 0;
-	int rts = 0;
-	int orts = 0;
-
-	// Put bits in here for DCD when got active IP connection
-
-	while (1)
-	{
-		if (!IP232Mode)
-		{
-			if (EthernetSocket != INVALID_SOCKET)
-			{
-				dcd = 1;
-			}
-			else
-			{
-				dcd = 0;
-			}
-
-			if (dcd == 1 && odcd == 0)
-			{
-				// RaiseDCD();
-				SerialACIA.Status &= ~MC6850_STATUS_CTS; // CTS goes low
-				SerialACIA.Status |= MC6850_STATUS_TDRE; // so TDRE goes high
-
-				if (DebugEnabled)
-					DebugDisplayTrace(DebugType::RemoteServer, true, "IP232: StatusThread DCD up, set CTS low");
-			}
-
-			if (dcd == 0 && odcd == 1)
-			{
-				// LowerDCD();
-				SerialACIA.Status |= MC6850_STATUS_CTS; // CTS goes high
-				SerialACIA.Status &= ~MC6850_STATUS_TDRE; // so TDRE goes low
-
-				if (DebugEnabled)
-					DebugDisplayTrace(DebugType::RemoteServer, true, "IP232: StatusThread lost DCD, set CTS high");
-			}
-		}
-		else // IP232mode == true
-		{
-			if ((SerialACIA.Control & 96) == 64)
-			{
-				rts = 1;
-			}
-			else
-			{
-				rts = 0;
-			}
-
-			if (rts != orts)
-			{
-				if (EthernetSocket != INVALID_SOCKET)
-				{
-					if (DebugEnabled)
-					{
-						DebugDisplayTraceF(DebugType::RemoteServer, true,
-						                   "IP232: Sending RTS status of %i", rts);
-					}
-					
-					IP232Write(255);
-					IP232Write(static_cast<unsigned char>(rts));
-				}
-
-				orts = rts;
-			}
-		}
-
-		if (dcd != odcd)
-			odcd = dcd;
-
-		Sleep(50); // sleep for 50 milliseconds
-	}
-
-	DebugTrace("Exited MySerialStatusThread\n");
-
-	return 0;
-}
+/*--------------------------------------------------------------------------*/
 
 static void DebugReceivedData(unsigned char* pData, int Length)
 {
@@ -562,3 +548,5 @@ static void DebugReceivedData(unsigned char* pData, int Length)
 
 	DebugDisplayTrace(DebugType::RemoteServer, true, info);
 }
+
+/*--------------------------------------------------------------------------*/

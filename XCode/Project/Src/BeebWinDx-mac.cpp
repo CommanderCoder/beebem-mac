@@ -46,22 +46,31 @@ void BeebWin::CloseDX9(){}
 
 void VideoAddLeds_Mac()
 {
-	// Swift LEDs here
 	swift_SetMachineType(MachineType);
-	if (MachineType == Model::Master128)
-		swift_SetLED(CASS,true);
-	else
-		swift_SetLED(CASS,LEDs.Motor);
 	
-	swift_SetLED(CAPS,LEDs.CapsLock);
-	swift_SetLED(SHIFT,LEDs.ShiftLock);
+	// Swift LEDs here
+	
+//	if (LEDs.ShowKB)
+	{
+		if (MachineType == Model::Master128 || MachineType == Model::MasterET) {
+			swift_SetLED(CASS,true);
+		}
+		else {
+			swift_SetLED(CASS,LEDs.Motor);
+		}
+		swift_SetLED(CAPS,LEDs.CapsLock);
+		swift_SetLED(SHIFT,LEDs.ShiftLock);
+	}
 
-	swift_SetLED(HD0,LEDs.HDisc[0]);
-	swift_SetLED(HD1,LEDs.HDisc[1]);
-	swift_SetLED(HD2,LEDs.HDisc[2]);
-	swift_SetLED(HD3,LEDs.HDisc[3]);
-	swift_SetLED(FD0,LEDs.FloppyDisc[0]);
-	swift_SetLED(FD1,LEDs.FloppyDisc[1]);
+//	if (LEDs.ShowDisc)
+	{
+		swift_SetLED(HD0,LEDs.HDisc[0]);
+		swift_SetLED(HD1,LEDs.HDisc[1]);
+		swift_SetLED(HD2,LEDs.HDisc[2]);
+		swift_SetLED(HD3,LEDs.HDisc[3]);
+		swift_SetLED(FD0,LEDs.FloppyDisc[0]);
+		swift_SetLED(FD1,LEDs.FloppyDisc[1]);
+	}
 }
 
 /****************************************************************************/

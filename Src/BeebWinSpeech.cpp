@@ -22,6 +22,10 @@ Boston, MA  02110-1301, USA.
 
 #include <windows.h>
 
+// If building for Windows 10, you get a C4996 warning from sphelper.h. But it's
+// an error! Even though warnings are not set to be errors.
+#pragma warning(push)
+#pragma warning(default: 4996)
 #define STRSAFE_NO_DEPRECATE
 
 // __VS2022__
@@ -29,7 +33,7 @@ Boston, MA  02110-1301, USA.
 // sphelper.h hasn't been keeping up with SDK 8.1 -> SDK 10
 // https://stackoverflow.com/questions/22303824/warning-c4996-getversionexw-was-declared-deprecated
 #include <sphelper.h>
-#pragma warning(default: 4996)
+#pragma warning(pop)
 
 #include <assert.h>
 #include <stdio.h>

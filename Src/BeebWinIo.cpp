@@ -68,11 +68,7 @@ using std::max;
 #include "Sound.h"
 #include "TapeControlDialog.h"
 #include "Tube.h"
-#ifndef __APPLE__
-#include "UEFState.h"
-#else
 #include "UefState.h"
-#endif
 #include "UserVia.h"
 #include "Version.h"
 
@@ -146,11 +142,10 @@ void BeebWin::EjectDiscImage(int Drive)
 
 bool BeebWin::ReadDisc(int Drive, bool bCheckForPrefs)
 {
-	char DefaultPath[_MAX_PATH];
 	char FileName[_MAX_PATH];
 	FileName[0] = '\0';
 
-	const char* filter =
+	const char* Filter =
 		"Auto (*.ssd;*.dsd;*.ad*;*.img;*.dos;*.fsd)\0*.ssd;*.dsd;*.adl;*.adf;*.img;*.dos;*.fsd\0"
 		"ADFS Disc (*.adl;*.adf)\0*.adl;*.adf\0"
 		"Single Sided Disc (*.ssd)\0*.ssd\0"
@@ -158,10 +153,13 @@ bool BeebWin::ReadDisc(int Drive, bool bCheckForPrefs)
 		"Single Sided Disc (*.*)\0*.*\0"
 		"Double Sided Disc (*.*)\0*.*\0";
 
+	char DefaultPath[_MAX_PATH];
+	DefaultPath[0] = '\0';
+
 	m_Preferences.GetStringValue(CFG_DISCS_PATH, DefaultPath);
 	GetDataPath(m_UserDataPath, DefaultPath);
 
-	FileDialog Dialog(m_hWnd, FileName, sizeof(FileName), DefaultPath, filter);
+	FileDialog Dialog(m_hWnd, FileName, sizeof(FileName), DefaultPath, Filter);
 
 	bool gotName = Dialog.Open();
 
@@ -175,13 +173,8 @@ bool BeebWin::ReadDisc(int Drive, bool bCheckForPrefs)
 
 		if (m_AutoSavePrefsFolders)
 		{
-#ifndef __APPLE__
-			unsigned int PathLength = (unsigned int)(strrchr(FileName, '\\') - FileName);
-#else
-			unsigned int PathLength = (unsigned int)(strrchr(FileName, '/') - FileName);
-#endif
-			strncpy(DefaultPath, FileName, PathLength);
-			DefaultPath[PathLength] = 0;
+			GetPathFromFileName(FileName, DefaultPath, sizeof(DefaultPath));
+
 			m_Preferences.SetStringValue(CFG_DISCS_PATH, DefaultPath);
 		}
 
@@ -383,30 +376,28 @@ bool BeebWin::Load8271DiscImage(const char *FileName, int Drive, int Tracks, Dis
 
 void BeebWin::LoadTape(void)
 {
-	char DefaultPath[_MAX_PATH];
 	char FileName[_MAX_PATH];
 	FileName[0] = '\0';
 
-	const char* filter =
+	const char* Filter =
 		"Auto (*.uef;*.csw)\0*.uef;*.csw\0"
 		"UEF Tape File (*.uef)\0*.uef\0"
 		"CSW Tape File (*.csw)\0*.csw\0";
 
+	char DefaultPath[_MAX_PATH];
+	DefaultPath[0] = '\0';
+
 	m_Preferences.GetStringValue(CFG_TAPES_PATH, DefaultPath);
 	GetDataPath(m_UserDataPath, DefaultPath);
 
-	FileDialog fileDialog(m_hWnd, FileName, sizeof(FileName), DefaultPath, filter);
-	if (fileDialog.Open())
+	FileDialog Dialog(m_hWnd, FileName, sizeof(FileName), DefaultPath, Filter);
+
+	if (Dialog.Open())
 	{
 		if (m_AutoSavePrefsFolders)
 		{
-#ifndef __APPLE__
-			unsigned int PathLength = (unsigned int)(strrchr(FileName, '\\') - FileName);
-#else
-			unsigned int PathLength = (unsigned int)(strrchr(FileName, '/') - FileName);
-#endif
-			strncpy(DefaultPath, FileName, PathLength);
-			DefaultPath[PathLength] = 0;
+			GetPathFromFileName(FileName, DefaultPath, sizeof(DefaultPath));
+
 			m_Preferences.SetStringValue(CFG_TAPES_PATH, DefaultPath);
 		}
 
@@ -533,17 +524,16 @@ void BeebWin::SelectFDC(int FDC = 0)
 /****************************************************************************/
 void BeebWin::NewDiscImage(int Drive)
 {
-	char DefaultPath[_MAX_PATH];
-	char FileName[_MAX_PATH];
-	FileName[0] = '\0';
-
-	const char* filter =
+	const char* Filter =
 		"Single Sided Disc (*.ssd)\0*.ssd\0"
 		"Double Sided Disc (*.dsd)\0*.dsd\0"
 		"Single Sided Disc (*.*)\0*.*\0"
 		"Double Sided Disc (*.*)\0*.*\0"
 		"ADFS M (80 Track) Disc (*.adf)\0*.adf\0"
 		"ADFS L (160 Track) Disc (*.adl)\0*.adl\0";
+
+	char DefaultPath[_MAX_PATH];
+	DefaultPath[0] = '\0';
 
 	m_Preferences.GetStringValue(CFG_DISCS_PATH, DefaultPath);
 	GetDataPath(m_UserDataPath, DefaultPath);
@@ -554,7 +544,10 @@ void BeebWin::NewDiscImage(int Drive)
 	if ((MachineType != Model::Master128 && MachineType != Model::MasterET) && NativeFDC && FilterIndex >= 5)
 		FilterIndex = 1;
 
-	FileDialog Dialog(m_hWnd, FileName, sizeof(FileName), DefaultPath, filter);
+	char FileName[_MAX_PATH];
+	FileName[0] = '\0';
+
+	FileDialog Dialog(m_hWnd, FileName, sizeof(FileName), DefaultPath, Filter);
 	Dialog.SetFilterIndex(FilterIndex);
 
 	if (Dialog.Save())
@@ -563,9 +556,8 @@ void BeebWin::NewDiscImage(int Drive)
 
 		if (m_AutoSavePrefsFolders)
 		{
-			unsigned int PathLength = (unsigned int)(strrchr(FileName, '\\') - FileName);
-			strncpy(DefaultPath, FileName, PathLength);
-			DefaultPath[PathLength] = 0;
+			GetPathFromFileName(FileName, DefaultPath, sizeof(DefaultPath));
+
 			m_Preferences.SetStringValue(CFG_DISCS_PATH, DefaultPath);
 			m_Preferences.SetDecimalValue(CFG_DISCS_FILTER, FilterIndex);
 		}
@@ -669,23 +661,25 @@ void BeebWin::CreateDFSDiscImage(const char *FileName, int Drive,
 /****************************************************************************/
 void BeebWin::SaveState()
 {
-	char DefaultPath[_MAX_PATH];
 	char FileName[_MAX_PATH];
 	FileName[0] = '\0';
 
-	const char* filter = "UEF State File (*.uefstate)\0*.uefstate\0";
+	const char* Filter = "UEF State File (*.uefstate)\0*.uefstate\0";
+
+	char DefaultPath[_MAX_PATH];
+	DefaultPath[0] = '\0';
 
 	m_Preferences.GetStringValue(CFG_STATES_PATH, DefaultPath);
 	GetDataPath(m_UserDataPath, DefaultPath);
 
-	FileDialog fileDialog(m_hWnd, FileName, sizeof(FileName), DefaultPath, filter);
-	if (fileDialog.Save())
+	FileDialog Dialog(m_hWnd, FileName, sizeof(FileName), DefaultPath, Filter);
+
+	if (Dialog.Save())
 	{
 		if (m_AutoSavePrefsFolders)
 		{
-			unsigned int PathLength = (unsigned int)(strrchr(FileName, '\\') - FileName);
-			strncpy(DefaultPath, FileName, PathLength);
-			DefaultPath[PathLength] = 0;
+			GetPathFromFileName(FileName, DefaultPath, sizeof(DefaultPath));
+
 			m_Preferences.SetStringValue(CFG_STATES_PATH, DefaultPath);
 		}
 
@@ -702,26 +696,28 @@ void BeebWin::SaveState()
 /****************************************************************************/
 void BeebWin::RestoreState()
 {
-	char DefaultPath[_MAX_PATH];
 	char FileName[_MAX_PATH];
 	FileName[0] = '\0';
 
 	const char* filter = "UEF State File (*.uefstate; *.uef)\0*.uefstate;*.uef\0";
 
+	char DefaultPath[_MAX_PATH];
+	DefaultPath[0] = '\0';
+
 	m_Preferences.GetStringValue(CFG_STATES_PATH, DefaultPath);
 	GetDataPath(m_UserDataPath, DefaultPath);
 
-	FileDialog fileDialog(m_hWnd, FileName, sizeof(FileName), DefaultPath, filter);
-	if (fileDialog.Open())
+	FileDialog Dialog(m_hWnd, FileName, sizeof(FileName), DefaultPath, filter);
+
+	if (Dialog.Open())
 	{
 		// Check for file specific preferences files
 		CheckForLocalPrefs(FileName, true);
 
 		if (m_AutoSavePrefsFolders)
 		{
-			unsigned int PathLength = (unsigned int)(strrchr(FileName, '\\') - FileName);
-			strncpy(DefaultPath, FileName, PathLength);
-			DefaultPath[PathLength] = 0;
+			GetPathFromFileName(FileName, DefaultPath, sizeof(DefaultPath));
+
 			m_Preferences.SetStringValue(CFG_STATES_PATH, DefaultPath);
 		}
 
@@ -1064,9 +1060,9 @@ void BeebWin::CaptureVideo()
 	m_Preferences.GetStringValue(CFG_AVI_PATH, DefaultPath);
 	GetDataPath(m_UserDataPath, DefaultPath);
 
-	FileDialog fileDialog(m_hWnd, FileName, sizeof(FileName), DefaultPath, filter);
+	FileDialog Dialog(m_hWnd, FileName, sizeof(FileName), DefaultPath, filter);
 
-	if (fileDialog.Save())
+	if (Dialog.Save())
 	{
 		// Add avi extension
 		if (!HasFileExt(FileName, ".avi"))
@@ -1076,9 +1072,8 @@ void BeebWin::CaptureVideo()
 
 		if (m_AutoSavePrefsFolders)
 		{
-			unsigned int PathLength = (unsigned int)(strrchr(FileName, '\\') - FileName);
-			strncpy(DefaultPath, FileName, PathLength);
-			DefaultPath[PathLength] = 0;
+			GetPathFromFileName(FileName, DefaultPath, sizeof(DefaultPath));
+
 			m_Preferences.SetStringValue(CFG_AVI_PATH, DefaultPath);
 		}
 
@@ -1283,10 +1278,12 @@ void BeebWin::LoadUEFState(const char *FileName)
 			Report(MessageType::Error, "Cannot open state file:\n  %s",
 			       FileName);
 			break;
-#ifdef __APPLE__
-		case UEFStateResult::WriteFailed:		
+
+		case UEFStateResult::ReadFailed:
+			Report(MessageType::Error, "Failed to read state file:\n  %s",
+			       FileName);
 			break;
-#endif
+
 		case UEFStateResult::InvalidUEFFile:
 			Report(MessageType::Error, "The file selected is not a UEF file:\n  %s",
 			       FileName);
@@ -1296,6 +1293,9 @@ void BeebWin::LoadUEFState(const char *FileName)
 			Report(MessageType::Error,
 			       "Cannot open state file:\n  %s\n\nPlease upgrade to the latest version of BeebEm",
 			       FileName);
+			break;
+
+		default:
 			break;
 	}
 }
@@ -1317,14 +1317,11 @@ void BeebWin::SaveUEFState(const char *FileName)
 #endif
 		case UEFStateResult::WriteFailed:
 			Report(MessageType::Error, "Failed to write state file:\n  %s",
-				   FileName);
+			       FileName);
 			break;
-#ifdef __APPLE__
-		case UEFStateResult::InvalidUEFFile:
+
+		default:
 			break;
-		case UEFStateResult::InvalidUEFVersion:
-			break;
-#endif
 	}
 }
 
@@ -1472,7 +1469,7 @@ void BeebWin::SaveBeebEmID(FILE *SUEF)
 	strcpy(EmuName, "BeebEm");
 	EmuName[14] = VERSION_MAJOR;
 	EmuName[15] = VERSION_MINOR;
-	fwrite(EmuName, 1, sizeof(EmuName), SUEF);
+	UEFWriteBuf(EmuName, sizeof(EmuName), SUEF);
 }
 
 void BeebWin::SaveEmuUEF(FILE *SUEF)
@@ -1480,28 +1477,28 @@ void BeebWin::SaveEmuUEF(FILE *SUEF)
 	// Emulator Specifics
 	// Note about this block: It should only be handled by beebem from uefstate.cpp if
 	// the UEF has been determined to be from BeebEm (Block 046C)
-	fputc(static_cast<unsigned char>(MachineType), SUEF);
-	fputc(NativeFDC ? 0 : 1, SUEF);
-	fputc(static_cast<unsigned char>(TubeType), SUEF);
-	fput16((int)m_KeyboardMapping, SUEF);
+	UEFWrite8(static_cast<unsigned char>(MachineType), SUEF);
+	UEFWrite8(NativeFDC ? 0 : 1, SUEF);
+	UEFWrite8(static_cast<unsigned char>(TubeType), SUEF);
+	UEFWrite16((int)m_KeyboardMapping, SUEF);
 	if (m_KeyboardMapping == KeyboardMappingType::User)
 	{
-		fputstring(m_UserKeyMapPath, SUEF);
+		UEFWriteString(m_UserKeyMapPath, SUEF);
 	}
 	else
 	{
 		char blank[256];
 		memset(blank, 0, sizeof(blank));
 
-		fwrite(blank, 1, sizeof(blank), SUEF);
+		UEFWriteBuf(blank, sizeof(blank), SUEF);
 	}
 
-	fputc(0,SUEF);
+	UEFWrite8(0, SUEF);
 }
 
 void BeebWin::LoadEmuUEF(FILE *SUEF, int Version)
 {
-	int Type = fgetc(SUEF);
+	int Type = UEFRead8(SUEF);
 
 	if (Version <= 8 && Type == 1)
 	{
@@ -1512,12 +1509,12 @@ void BeebWin::LoadEmuUEF(FILE *SUEF, int Version)
 		MachineType = static_cast<Model>(Type);
 	}
 
-	NativeFDC = fgetc(SUEF) == 0;
-	TubeType = static_cast<Tube>(fgetc(SUEF));
+	NativeFDC = UEFRead8(SUEF) == 0;
+	TubeType = static_cast<TubeDevice>(UEFRead8(SUEF));
 
 	if (Version >= 11)
 	{
-		int KeyboardMapping = fget16(SUEF);
+		int KeyboardMapping = UEFRead16(SUEF);
 
 		const int UEF_USER_KEYBOARD_MAPPING = 40060; // Was a menu item ID in BeebEm <= 4.19
 
@@ -1528,11 +1525,11 @@ void BeebWin::LoadEmuUEF(FILE *SUEF, int Version)
 
 			if (Version >= 14)
 			{
-				fgetstring(FileName, sizeof(FileName), SUEF);
+				UEFReadString(FileName, sizeof(FileName), SUEF);
 			}
 			else
 			{
-				fread(FileName, 1, sizeof(FileName), SUEF);
+				UEFReadBuf(FileName, sizeof(FileName), SUEF);
 			}
 
 			GetDataPath(m_UserDataPath, FileName);
@@ -1877,13 +1874,13 @@ void BeebWin::ImportDiscFiles(int menuId)
 	m_Preferences.GetStringValue(CFG_EXPORT_PATH, szExportPath);
 	GetDataPath(m_UserDataPath, szExportPath);
 
-	const char* filter = "INF files (*.inf)\0*.inf\0" "All files (*.*)\0*.*\0";
+	const char* Filter = "INF files (*.inf)\0*.inf\0" "All files (*.*)\0*.*\0";
 
-	FileDialog fileDialog(m_hWnd, fileSelection, sizeof(fileSelection), szExportPath, filter);
-	fileDialog.AllowMultiSelect();
-	fileDialog.SetTitle("Select files to import");
+	FileDialog Dialog(m_hWnd, fileSelection, sizeof(fileSelection), szExportPath, Filter);
+	Dialog.AllowMultiSelect();
+	Dialog.SetTitle("Select files to import");
 
-	if (!fileDialog.Open())
+	if (!Dialog.Open())
 	{
 		return;
 	}
@@ -2205,9 +2202,9 @@ bool BeebWin::GetImageFile(char *FileName, int Size)
 	char filter[200];
 	sprintf(filter, "Image File (*%s)%c*%s%c", fileExt, 0, fileExt, 0);
 
-	FileDialog fileDialog(m_hWnd, FileName, Size, DefaultPath, filter);
+	FileDialog Dialog(m_hWnd, FileName, Size, DefaultPath, filter);
 
-	if (fileDialog.Save())
+	if (Dialog.Save())
 	{
 		// Add extension
 		if (!HasFileExt(FileName, fileExt))
@@ -2217,9 +2214,8 @@ bool BeebWin::GetImageFile(char *FileName, int Size)
 
 		if (m_AutoSavePrefsFolders)
 		{
-			unsigned int PathLength = (unsigned int)(strrchr(FileName, '\\') - FileName);
-			strncpy(DefaultPath, FileName, PathLength);
-			DefaultPath[PathLength] = 0;
+			GetPathFromFileName(FileName, DefaultPath, sizeof(DefaultPath));
+
 			m_Preferences.SetStringValue(CFG_IMAGE_PATH, DefaultPath);
 		}
 
