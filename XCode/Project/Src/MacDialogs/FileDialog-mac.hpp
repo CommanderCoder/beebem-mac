@@ -119,7 +119,7 @@ public:
 
 	bool Save()
 	{
-		bool Result = swift_SaveFile(m_ofn.lpstrFile, 256, m_ofn.lpstrFilter);
+		bool Result = swift_SaveFile(m_ofn.lpstrFile, 256, m_ofn.lpstrFilter, m_ofn.lpstrInitialDir);
 
 		// lpstrFile will have changed value
 		m_ofn.nFilterIndex = SelectFilterFromExt(m_ofn.lpstrFile);

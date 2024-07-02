@@ -308,7 +308,7 @@ var fileTypes : [String] = []
 
 class SaveDocument: NSDocument {
 	
-	internal init(filterString f : String?)
+	internal init(filterString f : String?, initialDirectory d : String?)
 	{
 		(dictionary,names) = GetContentDictionary(filterString:f)
 		if #available(macOS 11.0, *) {
@@ -316,6 +316,8 @@ class SaveDocument: NSDocument {
 		} else {
 			fileTypes = GetFileType(dictionary)
 		}
+		
+		initialDir = d
 	}
 	
 	internal var fileurl : URL?
@@ -343,7 +345,7 @@ class SaveDocument: NSDocument {
 	
 	var names = [String]()
 	var dictionary = [ String: String]()
-
+	var initialDir : String?
 	
 	override func prepareSavePanel(_ savePanel: NSSavePanel) -> Bool {
 
@@ -359,6 +361,10 @@ class SaveDocument: NSDocument {
 		//	dialog.showsResizeIndicator    = true
 		//	dialog.showsHiddenFiles        = false
 		//	dialog.canSelectHiddenExtension	= true
+		if !(initialDir?.isEmpty ?? true) {
+			dialog.directoryURL = NSURL.fileURL(withPath: initialDir!, isDirectory: true)
+		}
+
 		if #available(macOS 11.0, *) {
 			dialog.allowedContentTypes = contentTypes
 		} else {
@@ -371,10 +377,12 @@ class SaveDocument: NSDocument {
 
 
 @_cdecl("swift_SaveFile")
-func swift_SaveFile(filepath : UnsafeMutablePointer<CChar>, bytes: Int, filefilter : UnsafePointer<CUnsignedChar>) -> Bool
+func swift_SaveFile(filepath : UnsafeMutablePointer<CChar>, bytes: Int, filefilter : UnsafePointer<CUnsignedChar>, initialDir : UnsafePointer<CUnsignedChar>) -> Bool
 {
+	// MUST be a buffer of characters because /0 is used as a separator
 	let s = UnsafeBufferPointer(start: filefilter, count: 1000) // 1000 should be large enough!!
-	let sav = SaveDocument(filterString: String(bytes:s, encoding: .ascii))
+	let d = String(cString: initialDir)
+	let sav = SaveDocument(filterString: String(bytes:s, encoding: .ascii), initialDirectory: d)
 	
 	sav.runModalSavePanel(for:.saveOperation, delegate: nil , didSave:
 								nil, contextInfo: nil)

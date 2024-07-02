@@ -503,7 +503,7 @@ extern "C" void swift_sleepThread(unsigned long microseconds);
 
 
 extern "C" int swift_GetFilesWithPreview (const char *path, int bytes, const char* directory, bool multiFiles, const char *filter);
-extern "C" int swift_SaveFile (const char *path, int bytes, const char *filter);
+extern "C" int swift_SaveFile (const char *path, int bytes, const char *filter, const char *directory);
 extern "C" int swift_MoveFile (const char *src, const char *dest );
 
 extern "C" int swift_SelectFolder (const char *path, int bytes, const char* title);
