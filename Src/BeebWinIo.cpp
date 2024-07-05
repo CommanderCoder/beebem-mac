@@ -1438,10 +1438,12 @@ void BeebWin::LoadFDC(char *DLLName, bool save)
 		DisplayCycles = 0;
 }
 
+#ifndef __APPLE__
 void BeebWin::KillDLLs()
 {
 	Ext1770Reset();
 }
+#endif
 
 void BeebWin::SetDriveControl(unsigned char Value)
 {

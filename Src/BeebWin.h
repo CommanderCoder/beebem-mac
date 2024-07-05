@@ -278,7 +278,6 @@ public:
 	void SelectFDC(int FDC);
 #endif
 	void LoadFDC(char *DLLName, bool save);
-	void KillDLLs(void);
 	void UpdateLEDMenu();
 	void SetDriveControl(unsigned char value);
 	unsigned char GetDriveControl(void);
@@ -462,6 +461,10 @@ public:
 
 	void SetSoundVolume(int Volume);
 	void UpdateSoundVolumeMenu();
+
+	#if ENABLE_SPEECH
+	void EnableSpeech(bool Enable);
+	#endif
 
 	void CheckMenuItem(UINT id, bool Checked);
 	void CheckMenuRadioItem(UINT FirstID, UINT LastID, UINT SelectedID);

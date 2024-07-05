@@ -265,11 +265,16 @@ bool Preferences::GetDWORDValue(const char* id, DWORD& Value) const
 
 	try
 	{
-#ifndef __APPLE__
-		Value = std::stoul(i->second, nullptr, 16);
-#else
-		Value = (DWORD)std::stoul(i->second, nullptr, 16);
-#endif
+		unsigned long Num = std::stoul(i->second, nullptr, 16);
+
+		if (Num <= std::numeric_limits<DWORD>::max())
+		{
+			Value = (DWORD)Num;
+		}
+		else
+		{
+			return false;
+		}
 	}
 	catch (std::exception&)
 	{

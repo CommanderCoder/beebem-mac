@@ -95,7 +95,10 @@ int mainInit()
 			                NULL,   // handle of window receiving the message
 			                0,      // lowest message to examine
 			                0))
-				break; // Quit the app on WM_QUIT
+			{
+				// Quit the app on WM_QUIT
+				break;
+			}
 
 			if (hCurrentDialog != nullptr && hCurrentAccelTable != nullptr)
 			{
@@ -148,8 +151,6 @@ int mainStep()
 int mainEnd()
 {
 #endif
-	mainWin->KillDLLs();
-
 	CloseLog();
 
 	SerialClose();
