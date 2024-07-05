@@ -127,23 +127,31 @@ class BeebViewController: NSViewController {
 			sview.presentScene(scene)
         }
         
-        BeebReady = setupBeeb()
-        
+
+    }
+
+	
+	override func viewDidAppear()
+	{
+		view.window!.acceptsMouseMovedEvents = true
+		
+		BeebReady = setupBeeb()
+		
 		// if not BeebReady
 		//{
 			// close the app
 		//}
-        // two options NSTimer or CVDisplayLink
+		// two options NSTimer or CVDisplayLink
 //        let timer = Timer.scheduledTimer(withTimeInterval: 1.0/100000, repeats: true) { timer in
 //            // update the CPU
 //            self.update_cpu()
 //        }
 
-        // avoid problems with heavy UIs
+		// avoid problems with heavy UIs
 //        RunLoop.current.add(timer, forMode: .common)
 
-        // run the CPU update as fast as possible
-        // it will be put to sleep internally.
+		// run the CPU update as fast as possible
+		// it will be put to sleep internally.
 		if (BeebReady)
 		{
 //			GAME UPDATE is called from the DisplayLinkOutputCallback
@@ -156,12 +164,6 @@ class BeebViewController: NSViewController {
 				}
 			}
 		}
-    }
-
-	
-	override func viewDidAppear()
-	{
-		view.window!.acceptsMouseMovedEvents = true
 	}
     
     func update() {
