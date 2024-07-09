@@ -2232,7 +2232,7 @@ bool EconetPoll_real() // return NMI status
 
 	if (!(ADLC.control1 && CONTROL_REG1_TX_RESET) && ADLC.cts) // TODO: is && right here?
 #else
-	if (!(ADLC.control1 & CONTROL_REG1_TX_RESET) && ADLC.cts)
+	if (!(ADLC.control1 & CONTROL_REG1_RX_RESET) && ADLC.cts)
 #endif
 	{
 		ADLC.status1 |= STATUS_REG1_CTS; // set CTS now
