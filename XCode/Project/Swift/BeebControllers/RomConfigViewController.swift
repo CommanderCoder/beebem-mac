@@ -46,7 +46,12 @@ class RomConfigViewController: NSViewController
     @IBAction func SaveConfig(_ sender: Any) {
 		beeb_RCHandleCommand(IDC_SAVE)
     }
-    
+	@IBAction func Up(_ sender: Any) {
+		beeb_RCHandleCommand(IDC_UP)
+	}
+	@IBAction func Down(_ sender: Any) {
+		beeb_RCHandleCommand(IDC_DOWN)
+	}
     @IBAction func OK(_ sender: Any) {
 		beeb_RCHandleCommand(0x30) //IDOK
 //        self.view.window!.performClose(nil)
@@ -76,10 +81,14 @@ class RomConfigViewController: NSViewController
     func returnRowInTable() -> Int {
         return selectedRow // needs to start at 0
     }
- 
+	func setRowInTable(_ s: Int) {
+		selectedRow = s // needs to start at 0
+		setFocus()
+	}
+
     func setFocus() {
+		tableView.reloadData()
         tableView.selectRowIndexes([selectedRow], byExtendingSelection: false)
-        tableView.reloadData()
     }
     
 }
@@ -124,7 +133,7 @@ extension RomConfigViewController: NSTableViewDelegate {
         {
             col = 1
         }
-        let text: String = String(cString:beeb_getRCEntry(Int32(row), Int32(col)))
+        let text: String = String(cString:beeb_getRCEntry(UInt32(row), UInt32(col)))
 
         if let cell = tableView.makeView(withIdentifier: cellIdentifier , owner: nil) as? NSTableCellView {
           cell.textField?.stringValue = text

@@ -19,8 +19,8 @@ extern "C" bool beeb_RCHandleCommand(int wParam)
 }
 
 
-extern "C" const char* beeb_getRCEntry(int row, int column)
+extern "C" const char* beeb_getRCEntry(unsigned int row, unsigned int column)
 {
-	return beeb_RCTable[row][column].name.c_str();;
+	return GetRCEntry(row,column);
 }
 

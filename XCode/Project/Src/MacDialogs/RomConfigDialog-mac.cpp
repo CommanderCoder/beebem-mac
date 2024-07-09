@@ -7,24 +7,40 @@
 
 #include "RomConfigDialog-mac.hpp"
 
+#include <vector>
 
+#define MAXROWS 20
+#define MAXCOLUMNS 4
+std::string beeb_RCTable[MAXROWS][MAXCOLUMNS];
+int lastRow = 0;
 
-
-RCItem beeb_RCTable[16][2];
+const char* GetRCEntry(UINT uRow, UINT uCol)
+{
+	if (uRow>=MAXROWS || uCol>=MAXCOLUMNS)
+		return nullptr;
+	return beeb_RCTable[uRow][uCol].c_str();
+}
 
 static int LVInsertItem(
 	HWND hWnd, UINT uRow, UINT uCol, const LPTSTR pszText, LPARAM lParam)
 {
-	beeb_RCTable[uRow][uCol].name = pszText;
-	beeb_RCTable[uRow][uCol].bank = (int)lParam;
+	if (uRow>=MAXROWS || uCol>=MAXCOLUMNS || uRow < 0 || uCol < 0)
+		return 1;
+
+	beeb_RCTable[uRow][uCol] = pszText;
+	if (lastRow<uRow)
+		lastRow = uRow;
 	return 0;
 }
 
 static void LVSetItemText(
 	HWND hWnd, UINT uRow, UINT uCol, const LPTSTR pszText)
 {
+	if (uRow>=MAXROWS || uCol>=MAXCOLUMNS || uRow < 0 || uCol < 0)
+		return;
+	
 	// change the row/column data which is read by swift dialogue
-	beeb_RCTable[uRow][uCol].name = pszText;
+	beeb_RCTable[uRow][uCol] = pszText;
 }
 
 static void LVSetFocus(HWND hWnd)
@@ -35,13 +51,14 @@ static void LVSetFocus(HWND hWnd)
 
 void ListView_DeleteAllItems(HWND wnd)
 {
-	for (int r = 0; r<16;r++)
+	for (int r = 0; r<MAXROWS;r++)
 	{
-		for (int c = 0; c<2;c++)
+		for (int c = 0; c<MAXCOLUMNS;c++)
 		{
-			beeb_RCTable[r][c] = RCItem();
+			beeb_RCTable[r][c] = "";
 		}
 	}
+	lastRow=0;
 }
 
 static void ComboBox_AddString(UINT* nIDDlgItem,
@@ -64,7 +81,7 @@ int ListView_GetSelectionMark(HWND hwnd)
 
 void ListView_SetSelectionMark(HWND hwnd, int sel)
 {
-//	swift_SetSelectionMark((Modals)*hwnd, sel);
+	swift_SetSelectionMark((Modals)*hwnd, sel);
 }
 
 /****************************************************************************/
@@ -75,7 +92,7 @@ static void EndDialog(HWND h, WPARAM p)
 
 static int ListView_GetItemCount(HWND a)
 {
-	return 0; // number of items in the listview
+	return lastRow; // number of items in the listview
 }
 
 //static void ListView_SetItemState(HWND a, int c, int x, int y)
@@ -125,8 +142,8 @@ static char szDefaultROMConfigPath[MAX_PATH] = {0};
 /****************************************************************************/
 
 RomConfigDialog::RomConfigDialog(HINSTANCE hInstance,
-								 HWND hwndParent,
-								 const RomConfigFile& Config) :
+                                 HWND hwndParent,
+                                 const RomConfigFile& Config) :
 	Dialog(hInstance, hwndParent, IDD_ROMCONFIG),
 	m_hWndROMList(nullptr),
 	m_hWndModel(nullptr),
@@ -212,38 +229,53 @@ void RomConfigDialog::FillROMList()
 
 /****************************************************************************/
 
-//INT_PTR RomConfigDialog::DlgProc(UINT   nMessage,
-//								 WPARAM wParam,
-//								 LPARAM /* lParam */)
-//{
-//	switch (nMessage)
-//	{
-//		case WM_INITDIALOG:
+#ifndef __APPLE__
+INT_PTR RomConfigDialog::DlgProc(UINT   nMessage,
+                                 WPARAM wParam,
+                                 LPARAM /* lParam */)
+{
+	switch (nMessage)
+	{
+		case WM_INITDIALOG:
+			m_hWndROMList = GetDlgItem(m_hwnd, IDC_ROMLIST);
+
+			ListView_SetExtendedListViewStyle(m_hWndROMList, LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
+			LVInsertColumn(m_hWndROMList, 0, "Bank", LVCFMT_LEFT, 45);
+			LVInsertColumn(m_hWndROMList, 1, "ROM File", LVCFMT_LEFT, 200);
+			ListView_SetColumnWidth(m_hWndROMList, 1, LVSCW_AUTOSIZE_USEHEADER);
+#else
 bool RomConfigDialog::WM_INITDIALOG()
 {
-	m_hWndROMList = (uint*)&m_DialogID;
+			m_hWndROMList = (uint*)&m_DialogID;
 
-	FillModelList();
-	FillROMList();
-	return TRUE;
+#endif
+			FillModelList();
+			FillROMList();
+			return TRUE;
+#ifdef __APPLE__
 }
 
+#define CBN_SELCHANGE 1
+#define ComboBox_GetCurSel(_x_) model
+			
 bool RomConfigDialog::WM_COMMAND(WPARAM wParam)
 {
-//		case WM_COMMAND: {
+	int nDlgItemID = GET_WM_COMMAND_ID(wParam, lParam);
+	int Notification = CBN_SELCHANGE;
+	int model = HIWORD(wParam);	// model is the currently selected Model from the model combo box
+#else
+		case WM_COMMAND: {
 			int nDlgItemID = GET_WM_COMMAND_ID(wParam, lParam);
-//			int Notification = GET_WM_COMMAND_CMD(wParam, lParam);
+			int Notification = GET_WM_COMMAND_CMD(wParam, lParam);
+#endif
 
 			switch (nDlgItemID)
 			{
 			case IDC_MODEL:
-//				if (Notification == CBN_SELCHANGE)
+				if (Notification == CBN_SELCHANGE)
 				{
-//					HWND hWndModelCombo = GetDlgItem(m_hwnd, IDC_MODEL);
-//					m_Model = static_cast<Model>(ComboBox_GetCurSel(hWndModelCombo));
-					int model = HIWORD(wParam);	// model is the currently selected Model from the model combo box
-
-					m_Model = static_cast<Model>(model);
+					HWND hWndModelCombo = GetDlgItem(m_hwnd, IDC_MODEL);
+					m_Model = static_cast<Model>(ComboBox_GetCurSel(hWndModelCombo));
 					FillROMList();
 				}
 				break;
@@ -393,9 +425,11 @@ bool RomConfigDialog::WM_COMMAND(WPARAM wParam)
 				EndDialog(m_hwnd, FALSE);
 				return TRUE;
 			}
-//			break;
-//		}
-//	}
+#ifndef __APPLE__
+			break;
+		}
+	}
+#endif
 
 	return FALSE;
 }
@@ -521,7 +555,3 @@ bool RomConfigDialog::GetROMFile(char *pszFileName)
 
 	return success;
 }
-
-
-
-

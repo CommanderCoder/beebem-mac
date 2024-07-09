@@ -47,7 +47,7 @@ void beeb_ukhandlekeys(long eventkind, unsigned int keycode, char charCode);
 
 // Exposed to RomConfigViewController
 long beeb_RCHandleCommand(int cmdID);
-const char* beeb_getRCEntry(int row, int column);
+const char* beeb_getRCEntry(unsigned int row, unsigned int column);
 
 // Exposed to BreakoutBoxViewController
 void beeb_bbhandlekeys(long eventkind, unsigned int keycode, char charCode);

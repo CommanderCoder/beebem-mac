@@ -413,6 +413,7 @@ extern "C" bool swift_JoystickCapture();
 
 extern "C" void swift_SetModelText(Modals m, const char* n);
 extern "C" int swift_GetSelectionMark(Modals m);
+extern "C" int swift_SetSelectionMark(Modals m, int sel);
 extern "C" void swift_SetFocus(Modals m);
 
 extern "C" void swift_TCSelectItem(long item);

@@ -3797,6 +3797,39 @@ DQ
                                     <real value="3.4028234663852886e+38"/>
                                 </customSpacing>
                             </stackView>
+                            <stackView distribution="fill" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" fixedFrame="YES" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UES-3q-iT7">
+                                <rect key="frame" x="375" y="156" width="55" height="48"/>
+                                <subviews>
+                                    <button identifier="rcup" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="XYo-wV-lZj">
+                                        <rect key="frame" x="-7" y="21" width="52" height="32"/>
+                                        <buttonCell key="cell" type="push" title="Up" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="K8V-jh-OH4">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <action selector="Up:" target="zrW-dx-nsE" id="vJl-3f-cpZ"/>
+                                        </connections>
+                                    </button>
+                                    <button identifier="rcdn" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="kWB-Ss-gRX">
+                                        <rect key="frame" x="-7" y="-7" width="69" height="32"/>
+                                        <buttonCell key="cell" type="push" title="Down" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="pUU-kB-xKH">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <action selector="Down:" target="zrW-dx-nsE" id="q8L-tv-UwK"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <visibilityPriorities>
+                                    <integer value="1000"/>
+                                    <integer value="1000"/>
+                                </visibilityPriorities>
+                                <customSpacing>
+                                    <real value="3.4028234663852886e+38"/>
+                                    <real value="3.4028234663852886e+38"/>
+                                </customSpacing>
+                            </stackView>
                         </subviews>
                         <constraints>
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="ctZ-uy-xdz" secondAttribute="trailing" constant="20" symbolic="YES" id="LNh-Wd-10u"/>

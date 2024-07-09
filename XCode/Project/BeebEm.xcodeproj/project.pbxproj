@@ -150,6 +150,7 @@
 		DCDC734F2BC0B8C500D83402 /* Z80.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0997082BBA0C9C00A109A5 /* Z80.cpp */; };
 		DCDC73502BC0B8D400D83402 /* Z80dis.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0997042BBA0C9C00A109A5 /* Z80dis.cpp */; };
 		DCDC73512BC0B99700D83402 /* Z80Support.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC0996EF2BBA0C9B00A109A5 /* Z80Support.cpp */; };
+		DCE5AD282C3D15AF0080AD01 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = DCE5AD272C3D15AF0080AD01 /* Credits.rtf */; };
 		DCE94C152BD3109500A5C12A /* BeebEm-Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE94C142BD3109500A5C12A /* BeebEm-Menu.swift */; };
 		DCE94C172BD310C600A5C12A /* BeebEm-Sound.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE94C162BD310C600A5C12A /* BeebEm-Sound.swift */; };
 		DCE94C192BD3117200A5C12A /* BeebEm-Files.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE94C182BD3117200A5C12A /* BeebEm-Files.swift */; };
@@ -385,8 +386,6 @@
 		DC84500D2BE4616C002015D9 /* TapeControlDialog-mac.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "TapeControlDialog-mac.hpp"; sourceTree = "<group>"; };
 		DC904DA12BCF3CD60069DCDF /* ExportDiscViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExportDiscViewController.swift; sourceTree = "<group>"; };
 		DC907E952BB4DBCD00523116 /* BeebEm.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BeebEm.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		DC907E982BB4DBCD00523116 /* BeebEmApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeebEmApp.swift; sourceTree = "<group>"; };
-		DC907E9A2BB4DBCD00523116 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		DC907E9C2BB4DBCE00523116 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		DC907E9F2BB4DBCE00523116 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		DC907EA12BB4DBCE00523116 /* BeebEm.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BeebEm.entitlements; sourceTree = "<group>"; };
@@ -458,6 +457,7 @@
 		DCD284032BE8D2D400ABD9F8 /* BeebEm-Debugger.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "BeebEm-Debugger.cpp"; sourceTree = "<group>"; };
 		DCDC73122BBE192200D83402 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		DCDC73182BBE1B9F00D83402 /* commctrl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = commctrl.h; sourceTree = "<group>"; };
+		DCE5AD272C3D15AF0080AD01 /* Credits.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = Credits.rtf; path = BeebEm/Credits.rtf; sourceTree = "<group>"; };
 		DCE94C142BD3109500A5C12A /* BeebEm-Menu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BeebEm-Menu.swift"; sourceTree = "<group>"; };
 		DCE94C162BD310C600A5C12A /* BeebEm-Sound.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BeebEm-Sound.swift"; sourceTree = "<group>"; };
 		DCE94C182BD3117200A5C12A /* BeebEm-Files.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BeebEm-Files.swift"; sourceTree = "<group>"; };
@@ -836,6 +836,7 @@
 				DC527BC72BC75107000D7CCF /* RelayOff.snd */,
 				DC527BC52BC75107000D7CCF /* RelayOn.snd */,
 				DC527BC42BC75107000D7CCF /* Teletext.fnt */,
+				DCE5AD272C3D15AF0080AD01 /* Credits.rtf */,
 			);
 			name = Bundle;
 			sourceTree = "<group>";
@@ -867,8 +868,6 @@
 			isa = PBXGroup;
 			children = (
 				DC907EBF2BB5C02D00523116 /* Info.plist */,
-				DC907E982BB4DBCD00523116 /* BeebEmApp.swift */,
-				DC907E9A2BB4DBCD00523116 /* ContentView.swift */,
 				DC907E9C2BB4DBCE00523116 /* Assets.xcassets */,
 				DC907EA12BB4DBCE00523116 /* BeebEm.entitlements */,
 				DC907E9E2BB4DBCE00523116 /* Preview Content */,
@@ -1035,6 +1034,7 @@
 				DC907EA02BB4DBCE00523116 /* Preview Assets.xcassets in Resources */,
 				DC527BD22BC75114000D7CCF /* HeadStep.snd in Resources */,
 				DC527BD42BC75114000D7CCF /* HeadUnload.snd in Resources */,
+				DCE5AD282C3D15AF0080AD01 /* Credits.rtf in Resources */,
 				DC527BC82BC75107000D7CCF /* Teletext.fnt in Resources */,
 				DC527BD12BC75114000D7CCF /* DriveMotor.snd in Resources */,
 				DC527BC92BC75107000D7CCF /* RelayOn.snd in Resources */,
@@ -1335,7 +1335,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"BeebEm/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -1343,7 +1343,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = BeebEm/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 1994/1995 David Alan Gilbert. All rights reserved.";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "©1995-2024 BeebEm Contributors";
 				INFOPLIST_KEY_NSMainStoryboardFile = Main;
 				INFOPLIST_KEY_NSPrincipalClass = BeebEm.BeebApplication;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1372,7 +1372,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"BeebEm/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -1380,7 +1380,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = BeebEm/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 1994/1995 David Alan Gilbert. All rights reserved.";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "©1995-2024 BeebEm Contributors";
 				INFOPLIST_KEY_NSMainStoryboardFile = Main;
 				INFOPLIST_KEY_NSPrincipalClass = BeebEm.BeebApplication;
 				LD_RUNPATH_SEARCH_PATHS = (

@@ -57,13 +57,6 @@ class RomConfigDialog : public Dialog
 };
 
 
-
-// 16 rows and 2 columns (only column 0 needs the bank value)
-struct RCItem {
-	int bank;
-	std::string name;
-};
-
-extern RCItem beeb_RCTable[16][2];
+extern const char* GetRCEntry(UINT,UINT);
 
 #endif /* RomConfigDialog_mac_hpp */

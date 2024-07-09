@@ -22,6 +22,13 @@ public func  swift_GetSelectionMark(_ m : Dialogs) -> Int
 	return viewCtrl.returnRowInTable()
 }
 
+@_cdecl("swift_SetSelectionMark")
+public func  swift_SetSelectionMark(_ m : Dialogs, _ s: Int)
+{
+	guard let viewCtrl = allViews[m] as? RomConfigViewController else {return}
+	viewCtrl.setRowInTable(s)
+}
+
 @_cdecl("swift_SetFocus")
 public func  swift_SetFocus(_ m : Dialogs)
 {
