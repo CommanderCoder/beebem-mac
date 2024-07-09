@@ -2526,7 +2526,12 @@ static void EconetError(const char *Format, ...)
 		DebugDisplayTraceV(DebugType::Econet, true, Format, Args);
 	}
 
+#ifndef __APPLE__
 	mainWin->ReportV(MessageType::Error, Format, Args);
+#else
+	// this report needs to be in the GUI thread - FIXME
+	vprintf(Format, Args);
+#endif
 
 	va_end(Args);
 }
