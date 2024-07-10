@@ -27,13 +27,21 @@ If you want to compile BeebEm yourself then you will need XCode 13 or later. The
 | ------------------------------------ | --------------------------------- |
 | `BeebEm.xcodeproj`                   | XCode Project package folder      |
 
-To build the distribution BeebEm.dmg & BeebEm.zip the repository uses the [create-dmg](https://github.com/create-dmg/create-dmg) submodule.
+To build the distributions in BeebEm.dmg & BeebEm.zip, the repository uses the [create-dmg](https://github.com/create-dmg/create-dmg) submodule.
 
 ### Configuration
 
-After installing the XCode open `BeebEm.xcodeproj`.  The project should default to building a local app, but you can select your Apple developer account.
+After installing XCode, use it to open `BeebEm.xcodeproj`.  The project should default to building a local app, but you can select your Apple developer account.
 
 Now build.
+
+### Distributions
+
+To build a distribution, use **Archive** in XCode to create the application.  In the Organizer select **Distribute App** and then **Copy App**.  Save the beebem app to a distribution folder somewhere (say, `XCode/Installer/`).  From a Terminal, navigate to `XCode/Installer/` and run
+```
+   ./create_distribution.zsh <beebem_distribution_folder>
+```
+The dmg and zip file will be created after a couple of minutes.
 
 ### Other Operating Systems
 
@@ -48,7 +56,7 @@ Thanks to Mike Wyatt for his contributions to BeebEm and for hosting the [BeebEm
 
 Thanks to the maintainers and contributors for its continued development: Alistair Cree, Bill Carr, Charles Reilly, Chris Needham, David Sharp, Daniel Beardsmore, Dominic Beesley, Greg Cook, Jon Welch, Jonathan Harston, Ken Lowe, Kieran Mockford, Laurie Whiffen, Mark Usher, Martin Mather, Mauro Varischetti, Mike Wyatt, Nigel Magnay, pstnotpd, Rich Talbot-Watkins, Richard Broadhurst, Richard Gellman, Rob O'Donnell, Robert Schmidt, Steve Inglis, Steve Insley, Steve Pick, Tadek Kijkowski, Theo Lindebaum, Tom Seddon.
 
-This Apple Mac version was ported to MacOS usingSwift 5.6.1, C *(gnu11)*, and C++ *(GNU++17)*
+This Apple Mac version was ported to MacOS usingSwift 5.6.1, C *(gnu11)*, and C++ *(GNU++17)* by Andrew Hague.
 
 Copyright
 ---------
