@@ -1,7 +1,7 @@
-BeebEm for ~~Microsoft Windows~~ Apple Mac
-======================================
+BeebEm for Apple Mac
+====================
 
-BeebEm is a BBC Micro and Master Series emulator. It enables you to run BBC Micro software on your Apple Mac ~~PC~~. BeebEm was first developed for Unix systems in 1994 by [Dave Gilbert](http://www.treblig.org/) and was then ported to Microsoft Windows and **now** Apple Mac.  BeebEm-mac will run on any Apple Mac with MacOS 10.13+ (High Sierra).
+BeebEm is a BBC Micro and Master Series emulator. It enables you to run BBC Micro software on your Apple Mac. BeebEm was first developed for Unix systems in 1994 by [Dave Gilbert](http://www.treblig.org/) and was then ported to Microsoft Windows and **now** Apple Mac.  BeebEm-mac will run on any Apple Mac with MacOS 10.13+ (High Sierra).
 
 <p align="center">
   <a href="https://github.com/commandercoder/beebem-mac"><img src="BeebEm-Mac.png" alt="BeebEm" width="642" height="564" /></a>
@@ -21,7 +21,7 @@ Compiling
 
 The source code for BeebEm is available at https://github.com/commandercoder/beebem-mac.
 
-If you want to compile BeebEm yourself then you will need XCode 13 or later. The following project files are included:
+If you want to compile BeebEm yourself then you will need XCode 13 or later. The following project files are included and can be found in `XCode/Project/`:
 
 | File                                 | Description                       |
 | ------------------------------------ | --------------------------------- |
