@@ -30,3 +30,4 @@ Src/ZipFile/x64/Debug
 Src/ZipFile/x64/Release
 Src/BeebEm/x64/Debug
 Src/BeebEm/x64/Release
+**/.DS_Store

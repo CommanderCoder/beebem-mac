@@ -12,14 +12,14 @@
 #include "Main.h"
 #include "Resource.h"
 #include "Serial.h"
+
+#include "beebemrcids.h"
 extern std::vector<TapeMapEntry> beeb_TapeMap;
-
-
+HWND hwndtc = (HWND)Dialogs::tapeControl;
 
 // Tape control dialog box variables
 std::vector<TapeMapEntry> TapeMap;
 bool TapeControlEnabled = false;
-
 static HWND hwndTapeControl;
 static HWND hwndMap;
 
@@ -31,15 +31,30 @@ static void UpdateState(HWND hwndDlg);
 void TapeControlOpenDialog(HINSTANCE hinst, HWND /* hwndMain */)
 {
 	TapeControlEnabled = true;
+    
+    if (!hwndTapeControl)
+    {
+        hwndTapeControl = (HWND)&hwndtc;
+//        hwndTapeControl = CreateDialog(hinst, MAKEINTRESOURCE(IDD_TAPECONTROL),
+//                                       NULL, TapeControlDlgProc);
+//        hCurrentDialog = hwndTapeControl;
+//        ShowWindow(hwndTapeControl, SW_SHOW);
+//
+//        hwndMap = GetDlgItem(hwndTapeControl, IDC_TAPE_CONTROL_MAP);
+//        SendMessage(hwndMap, WM_SETFONT, (WPARAM)GetStockObject(ANSI_FIXED_FONT),
+//                    (LPARAM)MAKELPARAM(FALSE,0));
 
-	swift_OpenDialog(Dialogs::tapeControl, NULL);
-	int Time = SerialGetTapeClock();
-	TapeControlAddMapLines();
-	TapeControlUpdateCounter(Time);
+        swift_OpenDialog(Dialogs::tapeControl, NULL);
+        
+        int Time = SerialGetTapeClock();
+        TapeControlAddMapLines();
+        TapeControlUpdateCounter(Time);
+    }
 }
 
 void TapeControlCloseDialog()
 {
+//    DestroyWindow(hwndTapeControl);
 	hwndTapeControl = nullptr;
 	hwndMap = nullptr;
 	TapeControlEnabled = false;
@@ -48,8 +63,16 @@ void TapeControlCloseDialog()
 
 void TapeControlAddMapLines()
 {
-	beeb_TapeMap = TapeMap;
-	swift_TCReload();
+//    SendMessage(hwndMap, LB_RESETCONTENT, 0, 0);
+//    for (const TapeMapEntry& line : TapeMap)
+//    {
+//        SendMessage(hwndMap, LB_ADDSTRING, 0, (LPARAM)line.desc.c_str());
+//    }
+    beeb_TapeMap.clear();
+    beeb_TapeMap = TapeMap;
+
+    swift_TCReload();
+
 	UpdateState(hwndTapeControl);
 }
 
@@ -64,11 +87,20 @@ void TapeControlUpdateCounter(int tape_time)
 
 		if (i > 0)
 			i--;
-		swift_TCSelectItem(i);  //LB_SETCURSEL
+        
+//        SendMessage(hwndMap, LB_SETCURSEL, (WPARAM)i, 0);
+		swift_TCSelectItem(i);
 	}
 
 }
 
+static void EnableDlgItem(HWND hDlg, UINT nIDDlgItem, bool Enable)
+{
+    //    EnableWindow(GetDlgItem(m_hwnd, nID), bEnable);
+    
+    printf("SetDlgItem %d %d", nIDDlgItem, Enable);
+    swift_SetDlgItem((Dialogs)*hDlg, ConvRC2ID(nIDDlgItem), Enable);
+}
 
 static bool IsDlgItemChecked(HWND hDlg, UINT nIDDlgItem)
 {
@@ -232,7 +264,7 @@ INT_PTR CALLBACK TapeControlDlgProc(HWND hwndDlg, UINT message, WPARAM wParam, L
 
 long TC_WM_COMMAND(UINT32 cmdID)
 {
-	HWND hwndDlg = NULL;
+	HWND hwndDlg = (HWND)&hwndtc;
 	
 	switch(cmdID)
 	{
@@ -321,8 +353,9 @@ void TapeControlRecord()
 
 void TapeControlCloseTape()
 {
+//    SendMessage(hwndMap, LB_RESETCONTENT, 0, 0);
 	beeb_TapeMap.clear();
-	swift_TCReload();  // 	LB_RESETCONTENT
+	swift_TCReload();
 	UpdateState(hwndTapeControl);
 }
 

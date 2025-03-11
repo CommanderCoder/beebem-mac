@@ -145,7 +145,7 @@ std::map<int,int> ID2RC =
 {'ofwm', IDM_FREEZEINACTIVE},
 {'msea', IDM_ANALOGUE_MOUSESTICK},
 {'msed', IDM_DIGITAL_MOUSESTICK},
-{'opnt', IDM_LOADTAPE},
+{'tplo', IDM_LOADTAPE},
 {'tpfa', IDM_TAPE_FAST  },
 {'tpmf', IDM_TAPE_MFAST },
 {'tpms', IDM_TAPE_MSLOW },
@@ -261,6 +261,7 @@ std::map<int,int> ID2RC =
 	
 	{'iprc',IDC_IP323_RAW_COMMS},
 	{'iphs',IDC_IP232_HANDSHAKE},
+    
 
     //keyb
     {'A   ',IDK_A},
@@ -344,7 +345,13 @@ std::map<int,int> ID2RC =
     {'tpst', IDC_TAPE_CONTROL_STOP},
     {'tpej', IDC_TAPE_CONTROL_EJECT},
     {'tprc', IDC_TAPE_CONTROL_RECORD},
-	
+    {'tpld', IDC_TAPE_CONTROL_LOAD_TAPE},
+
+    {'tpsp', IDC_PLAYING},
+    {'tpsr', IDC_RECORDING},
+    {'tpss', IDC_STOPPED},
+    {'tpnm', IDC_TAPE_FILENAME},
+
 	{'idok', IDOK},
 	{'idcl', IDCANCEL},
 
@@ -403,7 +410,7 @@ ConvRC2ID(unsigned int nID)
 	}
 	
 	char* cmdCHR = (char*)&cmdID->second;
-	printf("ConvID2RC %d %c%c%c%c", nID, cmdCHR[3], cmdCHR[2], cmdCHR[1], cmdCHR[0]);
+	printf("ConvRC2ID %d %c%c%c%c", nID, cmdCHR[3], cmdCHR[2], cmdCHR[1], cmdCHR[0]);
 	printf(" NOT FOUND\n");
 	return -1;
 }

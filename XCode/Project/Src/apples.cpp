@@ -410,14 +410,6 @@ DWORD EnableMenuItem(  HMENU hMenu,  UINT  uIDCheckItem,UINT  uEnable)
 	return uEnable;  // should be the previous value of this item
 }
 
-
-DWORD EnableDlgItem(HWND hwnd, UINT nIDDlgItem, bool Enable)
-{
-	printf("EnableDlgItem %d %d", nIDDlgItem, Enable);
-	return swift_SetDlgItem((Dialogs)*hwnd, ConvID2RC(nIDDlgItem), Enable);
-}
-
-
 void _itoa(int i, CHAR* c, int l)
 {
 	snprintf(c, l, "%X ",i);

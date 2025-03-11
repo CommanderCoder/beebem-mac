@@ -11,10 +11,13 @@ import Cocoa
 
 
 // convert a string of 4 characters to a UInt32
+// if the string has more than 4 characters it will be clamped
+// to the first 4
 func conv(_ str: String) -> UInt32
 {
 	var  v: UInt32 = 0
-	let  i = str.count-1
+    let  l = min(str.count,4)
+	let  i = l-1
 	for (index, element) in str.unicodeScalars.enumerated()
 	{
 		if index == 4

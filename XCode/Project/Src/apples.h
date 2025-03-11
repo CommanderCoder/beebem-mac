@@ -451,7 +451,7 @@ extern "C" int swift_Remove(const char* path);
 extern "C" void swift_SetWindowTitleWithCString(const char* title);
 
 #include "Model.h"
-extern "C" enum KB_LEDS { CASS, CAPS, SHIFT, HD0, HD1, HD2, HD3, FD0, FD1 };
+enum KB_LEDS { CASS, CAPS, SHIFT, HD0, HD1, HD2, HD3, FD0, FD1 };
 extern "C" int swift_SetLED(KB_LEDS led, bool on);
 extern "C" int swift_SetMachineType(Model machinetype);
 
@@ -681,8 +681,6 @@ HWND GetDlgItem(
   int  nIDDlgItem
 );
 
-
-DWORD EnableDlgItem(HWND hwnd, UINT nIDDlgItem, bool Enable);
 
 HWND GetFocus();
 
