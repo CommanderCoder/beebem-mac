@@ -8,70 +8,6 @@
 import Foundation
 
 
-// allow access to this in C
-@_cdecl("swift_GetApplicationSupportDirectory")
-public func swift_GetApplicationSupportDirectory( _ resourcePath: UnsafeMutablePointer<CChar>, _ length:Int)
-{
-	
-	/* discover Application Support and Resources folder
-	 Opening files will always start at Documents or folder
-	 https://developer.apple.com/library/archive/documentation/FileManagement/Conceptual/FileSystemProgrammingGuide/MacOSXDirectories/MacOSXDirectories.html#//apple_ref/doc/uid/TP40010672-CH10-SW1
-	 
-	 https://developer.apple.com/library/archive/documentation/FileManagement/Conceptual/FileSystemProgrammingGuide/AccessingFilesandDirectories/AccessingFilesandDirectories.html#//apple_ref/doc/uid/TP40010672-CH3-SW7
-	 */
-	
-	
-//        let patharray = FileManager.default.urls(for: .applicationSupportDirectory,
-//                                                 in: .userDomainMask)
-//        let userDataDirectory = patharray[0].appendingPathComponent("UserData")
-//
-//        print (userDataDirectory.path)
-//
-//        let teletextpath = Bundle.main.url(forResource: "teletext", withExtension: "fnt")!
-//        let z80path = Bundle.main.url(forResource: "Z80", withExtension: "ROM",subdirectory: "UserData/BeebFile")!
-//        let rompath = Bundle.main.url(forResource: "Roms", withExtension: "cfg", subdirectory: "UserData")!
-//        let allpath = Bundle.main.urls( forResourcesWithExtension: nil, subdirectory: "UserData")!
-//
-//        print (teletextpath)
-//        print (z80path)
-//        print (rompath)
-//        print (allpath)
-
-//        if let fileContents = try? String(contentsOf: rompath) {
-//            // we loaded the file into a string!
-//            print(fileContents)
-//        }
-//
-//        if let fileContents = try? Data(contentsOf: z80path) {
-//            // we loaded the file into a binary datablock!
-//            print(fileContents.description)
-//            print(fileContents.base64EncodedString(options: .lineLength64Characters))
-//            print(String(decoding: fileContents, as: UTF8.self))
-//        }
-	
-	
-	
-	
-	do
-	{
-		//  Find Application Support directory
-		let fileManager = FileManager.default
-		let appSupportURL = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
-		//  Create subdirectory
-		let directoryURL = appSupportURL.appendingPathComponent("BeebEm-mac")
-		try fileManager.createDirectory (at: directoryURL, withIntermediateDirectories: true, attributes: nil)
-		
-		let dpath = directoryURL.path+"/"
-		// set the filepath back in the C code - fill with zeros first
-		resourcePath.assign(repeating: 0, count: length)
-		resourcePath.assign(from: dpath, count: dpath.count)
-
-	}
-	catch
-	{
-		print("Couldn't find the ApplicationSupportDirectory")
-	}
-}
 
 @_cdecl("swift_GetDocumentsDirectory")
 public func swift_GetDocumentsDirectory( _ resourcePath: UnsafeMutablePointer<CChar>, _ length:Int)
@@ -143,97 +79,63 @@ public func swift_CopyDirectoryRecursively( _ sourcePath: UnsafePointer<CChar>, 
 			
 }
 
-
-/** GEMINI AI GENERATED CODE **/
-
-
 // File name for the plist in Application Support
 let plistFileName = "prefs.plist"
+let appSupportBundleID = "BeebEm-mac" // Bundle.main.bundleIdentifier
+let fileManager = FileManager.default
+let appSupportURL = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
+let appSupportBundleURL = appSupportURL.appendingPathComponent(appSupportBundleID)
 
+let plistURL = appSupportBundleURL.appendingPathComponent(plistFileName)
 
 // Function to set a value in the plist
 @_cdecl("swift_PListSetValue")
 func swift_PListSetValue(_ CCkey: UnsafePointer<CChar>, _ CCvalue: UnsafePointer<CChar>) {
+	let key = String(cString: CCkey)
+	let value = String(cString: CCvalue)
     
-    let key = String(cString: CCkey)
-    let value = String(cString: CCvalue)
+	do {
+        // create the bundle folder
+		try fileManager.createDirectory(at: appSupportBundleURL, withIntermediateDirectories: true, attributes: nil)
 
-    let fileManager = FileManager.default
-    do {
-        let appSupportURL = try fileManager.url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
-        if let bundleIdentifier = Bundle.main.bundleIdentifier {
-            let appDirectoryURL = appSupportURL.appendingPathComponent(bundleIdentifier, isDirectory: true)
-            try fileManager.createDirectory(at: appDirectoryURL, withIntermediateDirectories: true, attributes: nil)
-            let plistURL = appDirectoryURL.appendingPathComponent(plistFileName)
-
-            // Read existing plist or create a new one
-            var plistData = readPlist(from: plistURL) ?? [:]
-
-            // Set the value
+        do {
+            var plistData = readPlist(from: plistURL) ?? [String: String]()
             plistData[key] = value
-
-            // Write the updated plist
             try writePlist(dictionary: plistData, to: plistURL)
-        } else {
-            print("Error: Could not get bundle identifier.")
+        } catch {
+            print("Error updating plist: \(error)")
         }
-    } catch {
-        print("Error in swift_PListSetValue: \(error)")
-    }
+	} catch {
+		print("Error creating directory: \(error)")
+	}
+
 }
 
 // Function to get a value from the plist
 @_cdecl("swift_PListGetValue")
 func swift_PListGetValue(_ CCkey: UnsafePointer<CChar>) -> UnsafeMutablePointer<CChar>? {
-    
-    let key = String(cString: CCkey)
-
-    let fileManager = FileManager.default
-    do {
-        let appSupportURL = try fileManager.url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
-        if let bundleIdentifier = Bundle.main.bundleIdentifier {
-            let appDirectoryURL = appSupportURL.appendingPathComponent(bundleIdentifier, isDirectory: true)
-            let plistURL = appDirectoryURL.appendingPathComponent(plistFileName)
-
-            if let plistData = readPlist(from: plistURL) {
-                
-                guard let cString = plistData[key]?.cString(using: .utf8) else {
-                    return nil
-                }
-
-                let copiedCString = strdup(cString) // Copy to manage lifetime
-                return UnsafeMutablePointer<CChar>(mutating: copiedCString)
-                
-            } else {
-                return nil // Plist file doesn't exist or is invalid
-            }
-        } else {
-            print("Error: Could not get bundle identifier.")
-            return nil
-        }
-    } catch {
-        print("Error in swift_PListGetValue: \(error)")
-        return nil
-    }
+	let key = String(cString: CCkey)
+	do {
+		if let plistData = readPlist(from: plistURL), let value = plistData[key] {
+			let cString = strdup(value)
+			return UnsafeMutablePointer<CChar>(cString)
+		}
+	} catch {
+		print("Error reading plist: \(error)")
+	}
+	return nil
 }
 
 // Helper functions for read and write
 func readPlist(from url: URL) -> [String: String]? {
-    do {
-        let data = try Data(contentsOf: url)
-        if let plist = try PropertyListSerialization.propertyList(from: data, options: [], format: nil) as? [String: String] {
-            return plist
-        } else {
-            return nil
-        }
-    } catch {
-        return nil
-    }
+	guard let data = try? Data(contentsOf: url),
+		  let plist = try? PropertyListSerialization.propertyList(from: data, options: [], format: nil) as? [String: String] else {
+		return nil
+	}
+	return plist
 }
 
-func writePlist(dictionary: [String: Any], to url: URL) throws {
-    let data = try PropertyListSerialization.data(fromPropertyList: dictionary, format: .xml, options: 0)
-    try data.write(to: url)
+func writePlist(dictionary: [String: String], to url: URL) throws {
+	let data = try PropertyListSerialization.data(fromPropertyList: dictionary, format: .xml, options: 0)
+	try data.write(to: url)
 }
-
-/** END GEMINI AI GENERATED CODE **/

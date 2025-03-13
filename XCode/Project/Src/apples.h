@@ -421,7 +421,6 @@ extern "C" void swift_TCReload();
 extern "C" unsigned int swift_TCGetSelected();
 
 extern "C" void swift_GetBundleDirectory(const char* bundlePath, int length);
-extern "C" void swift_GetApplicationSupportDirectory(const char* appPath, int length);
 extern "C" void swift_GetResourcePath(const char* resourcePath, int length, const char* filename);
 extern "C" void swift_GetDocumentsDirectory(const char* appPath, int length);
 

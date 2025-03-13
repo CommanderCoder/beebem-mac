@@ -217,18 +217,10 @@ int SHGetFolderPath(HWND   hwnd,
 		return 1; //error
 	
 	char userDataPath[PATH_MAX];
-#if 0
-	// grab the application support folder
-	swift_GetApplicationSupportDirectory(userDataPath, _MAX_PATH);
-	// ../library/application support/beebem-mac
-	strcat(userDataPath, "UserData/");
-	// ../library/application support/beebem-mac/UserData
-#else
 	swift_GetDocumentsDirectory(userDataPath, _MAX_PATH);
 	// ../Documents/
 	strcat(userDataPath, "BeebEm/");
 	// ../Documents/BeebEm/
-#endif
 	
 #if 0 //def DEBUG
 	// look for path
