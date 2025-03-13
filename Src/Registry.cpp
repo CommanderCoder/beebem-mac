@@ -99,6 +99,7 @@ bool RegGetStringValue(HKEY hKeyRoot, LPCSTR lpSubKey, LPCSTR lpValue,
                        LPSTR pData, DWORD dwSize)
 {
 	bool Result = false;
+#ifndef __APPLE__
 	HKEY hKeyResult;
 
 	if ((RegOpenKeyEx(hKeyRoot, lpSubKey, 0, KEY_ALL_ACCESS, &hKeyResult)) == ERROR_SUCCESS)
@@ -115,6 +116,12 @@ bool RegGetStringValue(HKEY hKeyRoot, LPCSTR lpSubKey, LPCSTR lpValue,
 
 		RegCloseKey(hKeyResult);
 	}
+#else
+    const char* pD = swift_PListGetValue(lpValue);
+    Result = (pD != NULL);
+    if (Result)
+        strncpy(pData,pD,dwSize);
+#endif
 
 	return Result;
 }
@@ -124,7 +131,8 @@ bool RegGetStringValue(HKEY hKeyRoot, LPCSTR lpSubKey, LPCSTR lpValue,
 bool RegSetStringValue(HKEY hKeyRoot, LPCSTR lpSubKey, LPCSTR lpValue,
                        LPCSTR pData)
 {
-	bool Result = false;
+    bool Result = false;
+#ifndef __APPLE__
 	HKEY hKeyResult;
 
 	if ((RegOpenKeyEx(hKeyRoot, lpSubKey, 0, KEY_ALL_ACCESS, &hKeyResult)) == ERROR_SUCCESS)
@@ -141,7 +149,11 @@ bool RegSetStringValue(HKEY hKeyRoot, LPCSTR lpSubKey, LPCSTR lpValue,
 
 		RegCloseKey(hKeyResult);
 	}
-
+#else
+    swift_PListSetValue(lpValue, pData);
+    Result = true;
+#endif
+    
 	return Result;
 }
 

@@ -430,7 +430,7 @@
                                                             <action selector="HandleCommand:" target="Voe-Tx-rLC" id="RiG-jD-8jL"/>
                                                         </connections>
                                                     </menuItem>
-                                                    <menuItem title="LPT1:" identifier="plpt" id="idR-e0-hcY">
+                                                    <menuItem title="LPT1:" identifier="plp1" id="idR-e0-hcY">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
                                                             <action selector="HandleCommand:" target="Voe-Tx-rLC" id="fT7-Jr-U3W"/>
@@ -1732,7 +1732,7 @@
                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                     <prototypeCellViews>
                                                         <tableCellView id="eE8-AA-waO">
-                                                            <rect key="frame" x="128.5" y="1" width="127" height="17"/>
+                                                            <rect key="frame" x="129" y="1" width="127" height="17"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="5fe-H1-wPI">

@@ -142,3 +142,98 @@ public func swift_CopyDirectoryRecursively( _ sourcePath: UnsafePointer<CChar>, 
 	return true
 			
 }
+
+
+/** GEMINI AI GENERATED CODE **/
+
+
+// File name for the plist in Application Support
+let plistFileName = "prefs.plist"
+
+
+// Function to set a value in the plist
+@_cdecl("swift_PListSetValue")
+func swift_PListSetValue(_ CCkey: UnsafePointer<CChar>, _ CCvalue: UnsafePointer<CChar>) {
+    
+    let key = String(cString: CCkey)
+    let value = String(cString: CCvalue)
+
+    let fileManager = FileManager.default
+    do {
+        let appSupportURL = try fileManager.url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+        if let bundleIdentifier = Bundle.main.bundleIdentifier {
+            let appDirectoryURL = appSupportURL.appendingPathComponent(bundleIdentifier, isDirectory: true)
+            try fileManager.createDirectory(at: appDirectoryURL, withIntermediateDirectories: true, attributes: nil)
+            let plistURL = appDirectoryURL.appendingPathComponent(plistFileName)
+
+            // Read existing plist or create a new one
+            var plistData = readPlist(from: plistURL) ?? [:]
+
+            // Set the value
+            plistData[key] = value
+
+            // Write the updated plist
+            try writePlist(dictionary: plistData, to: plistURL)
+        } else {
+            print("Error: Could not get bundle identifier.")
+        }
+    } catch {
+        print("Error in swift_PListSetValue: \(error)")
+    }
+}
+
+// Function to get a value from the plist
+@_cdecl("swift_PListGetValue")
+func swift_PListGetValue(_ CCkey: UnsafePointer<CChar>) -> UnsafeMutablePointer<CChar>? {
+    
+    let key = String(cString: CCkey)
+
+    let fileManager = FileManager.default
+    do {
+        let appSupportURL = try fileManager.url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+        if let bundleIdentifier = Bundle.main.bundleIdentifier {
+            let appDirectoryURL = appSupportURL.appendingPathComponent(bundleIdentifier, isDirectory: true)
+            let plistURL = appDirectoryURL.appendingPathComponent(plistFileName)
+
+            if let plistData = readPlist(from: plistURL) {
+                
+                guard let cString = plistData[key]?.cString(using: .utf8) else {
+                    return nil
+                }
+
+                let copiedCString = strdup(cString) // Copy to manage lifetime
+                return UnsafeMutablePointer<CChar>(mutating: copiedCString)
+                
+            } else {
+                return nil // Plist file doesn't exist or is invalid
+            }
+        } else {
+            print("Error: Could not get bundle identifier.")
+            return nil
+        }
+    } catch {
+        print("Error in swift_PListGetValue: \(error)")
+        return nil
+    }
+}
+
+// Helper functions for read and write
+func readPlist(from url: URL) -> [String: String]? {
+    do {
+        let data = try Data(contentsOf: url)
+        if let plist = try PropertyListSerialization.propertyList(from: data, options: [], format: nil) as? [String: String] {
+            return plist
+        } else {
+            return nil
+        }
+    } catch {
+        return nil
+    }
+}
+
+func writePlist(dictionary: [String: Any], to url: URL) throws {
+    let data = try PropertyListSerialization.data(fromPropertyList: dictionary, format: .xml, options: 0)
+    try data.write(to: url)
+}
+
+/** END GEMINI AI GENERATED CODE **/

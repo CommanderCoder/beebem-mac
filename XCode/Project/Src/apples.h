@@ -428,6 +428,9 @@ extern "C" void swift_GetDocumentsDirectory(const char* appPath, int length);
 extern "C" bool swift_CopyDirectoryRecursively(const char* sourcePath, const char* targetPath);
 extern "C" void swift_saveScreen(const char * filename);
 
+extern "C" bool swift_PListSetValue(const char * value, const char * data);
+extern "C" const char * swift_PListGetValue(const char * value);
+
 
 extern "C" bool swift_SetMenuCheck(unsigned int cmd, char check);
 extern "C" bool swift_SetMenuEnable(unsigned int cmd, char enable);

@@ -292,6 +292,8 @@ BeebWin::BeebWin()
 			// 'BeebEm-mac' sub-directory in Application Support Directory
 			// or
 			// 'BeebEm' sub-directory in Documents Directory
+            // or
+            // a folder selected by the user from IDM_SELECT_USER_DATA_FOLDER
 #endif
 		}
 	}
@@ -5229,14 +5231,22 @@ void BeebWin::ParseCommandLine()
 				{
 					// Use app path
 					strcpy(m_UserDataPath, m_AppPath);
-					strcat(m_UserDataPath, "UserData\\");
+#ifndef __APPLE__
+                    strcat(m_UserDataPath, "UserData\\");
+#else
+                    strcat(m_UserDataPath, "UserData/");
+#endif
 				}
 				else
 				{
 					if (m_UserDataPath[strlen(m_UserDataPath) - 1] != '\\' &&
 					    m_UserDataPath[strlen(m_UserDataPath) - 1] != '/')
 					{
-						strcat(m_UserDataPath, "\\");
+#ifndef __APPLE__
+                        strcat(m_UserDataPath, "\\");
+#else
+						strcat(m_UserDataPath, "/");
+#endif
 					}
 				}
 
@@ -5706,7 +5716,6 @@ bool BeebWin::CheckUserDataPath(bool Persist)
 			strcpy(m_UserDataPath, m_AppPath);
 #ifndef __APPLE__
 			strcat(m_UserDataPath, "UserData\\");
-
 #else
 			strcat(m_UserDataPath, "UserData/");
 #endif
@@ -5896,7 +5905,11 @@ void BeebWin::SelectUserDataPath()
 		case FolderSelectDialog::Result::OK:
 			PathBackup = m_UserDataPath;
 			strcpy(m_UserDataPath, Dialog.GetFolder().c_str());
-			strcat(m_UserDataPath, "\\");
+#ifndef __APPLE__
+            strcat(m_UserDataPath, "\\");
+#else
+            strcat(m_UserDataPath, "/");
+#endif
 
 			// Check folder contents
 			if (!CheckUserDataPath(true))

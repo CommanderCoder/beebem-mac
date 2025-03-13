@@ -119,10 +119,11 @@ std::map<int,int> ID2RC =
 {'savs', IDM_SAVESTATE},
 {'prnt', IDM_PRINTERONOFF},
 {'pfle', IDM_PRINTER_FILE},
-{'pclp', IDM_PRINTER_LPT1},
-{'pcl2', IDM_PRINTER_LPT2}, //new vv
-{'pcl3', IDM_PRINTER_LPT3},
-{'pcl4', IDM_PRINTER_LPT4},
+{'plp1', IDM_PRINTER_LPT1},
+{'plp2', IDM_PRINTER_LPT2}, //new vv
+{'plp3', IDM_PRINTER_LPT3},
+{'plp4', IDM_PRINTER_LPT4},
+{'pclp', IDM_PRINTER_CLIPBOARD},
 //{'pcc1', IDM_PRINTER_COM1},
 //{'pcc2', IDM_PRINTER_COM2},
 //{'pcc3', IDM_PRINTER_COM3},
@@ -365,6 +366,7 @@ std::map<int,int> ID2RC =
 	{'kbl2', IDC_KEYBOARD_BIT2},
 	{'kbl1', IDC_KEYBOARD_BIT1},
 	{'kbl0', IDC_KEYBOARD_BIT0},
+    
 };
 
 std::map<int,int>
