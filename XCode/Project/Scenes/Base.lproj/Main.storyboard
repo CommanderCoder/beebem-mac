@@ -1696,7 +1696,7 @@
                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                     <prototypeCellViews>
                                                         <tableCellView id="upp-7c-lhu">
-                                                            <rect key="frame" x="1" y="1" width="125" height="17"/>
+                                                            <rect key="frame" x="1" y="1" width="124" height="17"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="k3C-f7-Sk5">
@@ -1732,11 +1732,11 @@
                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                     <prototypeCellViews>
                                                         <tableCellView id="eE8-AA-waO">
-                                                            <rect key="frame" x="129" y="1" width="127" height="17"/>
+                                                            <rect key="frame" x="128" y="1" width="128" height="17"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="5fe-H1-wPI">
-                                                                    <rect key="frame" x="0.0" y="1" width="127" height="16"/>
+                                                                    <rect key="frame" x="0.0" y="1" width="128" height="16"/>
                                                                     <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="2XC-Y1-V1i">
                                                                         <font key="font" metaFont="system"/>
                                                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -3853,8 +3853,10 @@ DQ
                     <window key="window" title="BeebEmulator" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" tabbingMode="disallowed" id="Ckk-yw-fiv">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-                        <rect key="contentRect" x="44" y="339" width="640" height="512"/>
+                        <rect key="contentRect" x="44" y="339" width="650" height="582"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
+                        <value key="minSize" type="size" width="650" height="582"/>
+                        <value key="minFullScreenContentSize" type="size" width="650" height="582"/>
                         <connections>
                             <outlet property="delegate" destination="jGA-0Y-lOj" id="98r-iN-zZc"/>
                         </connections>
@@ -3871,23 +3873,31 @@ DQ
         <scene sceneID="hIz-AP-VOD">
             <objects>
                 <viewController title="TITLE for BeebViewController" showSeguePresentationStyle="single" id="5gI-5U-AMq" userLabel="BeebEm View Controller" customClass="BeebViewController" customModule="BeebEm" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" id="ERx-hH-rdd">
-                        <rect key="frame" x="0.0" y="0.0" width="640" height="532"/>
+                    <view key="view" id="ERx-hH-rdd" userLabel="OuterView">
+                        <rect key="frame" x="0.0" y="0.0" width="650" height="583"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <subviews>
-                            <box boxType="custom" borderType="none" title="Box" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="X6i-vC-XjT">
-                                <rect key="frame" x="0.0" y="0.0" width="640" height="532"/>
+                            <box boxType="custom" borderType="none" title="Box" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="X6i-vC-XjT" userLabel="BeigeBox">
+                                <rect key="frame" x="0.0" y="0.0" width="650" height="583"/>
                                 <view key="contentView" id="e1e-kk-1Ge">
-                                    <rect key="frame" x="0.0" y="0.0" width="640" height="532"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="650" height="583"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 </view>
                                 <color key="fillColor" red="0.92212468385696411" green="0.81016635894775391" blue="0.61102539300918579" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </box>
+                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="DU3-gu-y6b" userLabel="BeebView" customClass="BeebSKView" customModule="BeebEm" customModuleProvider="target">
+                                <rect key="frame" x="5" y="66" width="640" height="512"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="512" id="2AD-AM-Ewn"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="640" id="Vxd-TB-H4B"/>
+                                    <constraint firstAttribute="width" secondItem="DU3-gu-y6b" secondAttribute="height" multiplier="5:4" id="XQt-ES-kNQ"/>
+                                </constraints>
+                            </customView>
                             <stackView distribution="fill" orientation="horizontal" alignment="centerY" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qAc-0X-wdO" userLabel="LEDS">
-                                <rect key="frame" x="103" y="2" width="434" height="49"/>
+                                <rect key="frame" x="103" y="5" width="444" height="56"/>
                                 <subviews>
                                     <stackView distribution="fill" orientation="horizontal" alignment="top" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="faw-TK-f25" userLabel="KB">
-                                        <rect key="frame" x="0.0" y="0.0" width="136" height="49"/>
+                                        <rect key="frame" x="5" y="4" width="136" height="49"/>
                                         <subviews>
                                             <stackView distribution="fill" orientation="vertical" alignment="centerX" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yK3-Hi-Gjk">
                                                 <rect key="frame" x="0.0" y="0.0" width="56" height="49"/>
@@ -3990,7 +4000,7 @@ DQ
                                         </customSpacing>
                                     </stackView>
                                     <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" setsMaxLayoutWidthAtFirstLayout="YES" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aGm-bW-AiC" userLabel="Machine">
-                                        <rect key="frame" x="142" y="17" width="112" height="16"/>
+                                        <rect key="frame" x="147" y="20" width="112" height="16"/>
                                         <textFieldCell key="cell" allowsUndo="NO" alignment="center" title="Work In Progress" placeholderString="w.i.p." id="Xyf-rx-Zvc">
                                             <font key="font" usesAppearanceFont="YES"/>
                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -3998,7 +4008,7 @@ DQ
                                         </textFieldCell>
                                     </textField>
                                     <stackView distribution="fill" orientation="horizontal" alignment="top" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ih0-4d-sFy" userLabel="Discs">
-                                        <rect key="frame" x="260" y="8" width="174" height="33"/>
+                                        <rect key="frame" x="265" y="12" width="174" height="33"/>
                                         <subviews>
                                             <stackView distribution="fill" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="650-UO-wZr">
                                                 <rect key="frame" x="0.0" y="0.0" width="24" height="33"/>
@@ -4175,6 +4185,7 @@ DQ
                                         </customSpacing>
                                     </stackView>
                                 </subviews>
+                                <edgeInsets key="edgeInsets" left="5" right="5" top="0.0" bottom="0.0"/>
                                 <visibilityPriorities>
                                     <integer value="1000"/>
                                     <integer value="1000"/>
@@ -4186,24 +4197,19 @@ DQ
                                     <real value="3.4028234663852886e+38"/>
                                 </customSpacing>
                             </stackView>
-                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="DU3-gu-y6b" userLabel="BeebView" customClass="BeebSKView" customModule="BeebEm" customModuleProvider="target">
-                                <rect key="frame" x="2" y="53" width="636" height="477"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" secondItem="DU3-gu-y6b" secondAttribute="height" multiplier="4:3" id="XQt-ES-kNQ"/>
-                                </constraints>
-                            </customView>
                         </subviews>
                         <constraints>
+                            <constraint firstItem="DU3-gu-y6b" firstAttribute="centerX" secondItem="X6i-vC-XjT" secondAttribute="centerX" id="02S-Pu-rXF"/>
                             <constraint firstItem="X6i-vC-XjT" firstAttribute="leading" secondItem="ERx-hH-rdd" secondAttribute="leading" id="3d7-Dw-urR"/>
-                            <constraint firstItem="DU3-gu-y6b" firstAttribute="centerX" secondItem="ERx-hH-rdd" secondAttribute="centerX" id="JQt-o2-Aqf"/>
-                            <constraint firstItem="DU3-gu-y6b" firstAttribute="top" secondItem="ERx-hH-rdd" secondAttribute="top" constant="2" id="Utv-gg-uSs"/>
+                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="DU3-gu-y6b" secondAttribute="trailing" constant="5" id="NYO-NZ-MJs"/>
+                            <constraint firstItem="qAc-0X-wdO" firstAttribute="top" secondItem="DU3-gu-y6b" secondAttribute="bottom" constant="5" id="PwU-eW-LIC"/>
+                            <constraint firstItem="DU3-gu-y6b" firstAttribute="top" secondItem="ERx-hH-rdd" secondAttribute="top" constant="5" id="Utv-gg-uSs"/>
                             <constraint firstAttribute="bottom" secondItem="X6i-vC-XjT" secondAttribute="bottom" id="WZT-IE-cJJ"/>
                             <constraint firstAttribute="trailing" secondItem="X6i-vC-XjT" secondAttribute="trailing" id="c2Y-g9-ydR"/>
+                            <constraint firstItem="DU3-gu-y6b" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="ERx-hH-rdd" secondAttribute="leading" constant="5" id="cAJ-LU-96J"/>
                             <constraint firstItem="X6i-vC-XjT" firstAttribute="top" secondItem="ERx-hH-rdd" secondAttribute="top" id="ccp-Pl-ZAD"/>
-                            <constraint firstItem="qAc-0X-wdO" firstAttribute="top" secondItem="DU3-gu-y6b" secondAttribute="bottom" constant="2" id="eri-Vs-9ZP"/>
-                            <constraint firstAttribute="bottom" secondItem="DU3-gu-y6b" secondAttribute="bottom" constant="53" id="jru-FS-TRw"/>
-                            <constraint firstAttribute="bottom" secondItem="qAc-0X-wdO" secondAttribute="bottom" constant="2" id="tH8-hd-uma"/>
-                            <constraint firstItem="DU3-gu-y6b" firstAttribute="centerX" secondItem="qAc-0X-wdO" secondAttribute="centerX" id="zFe-NQ-u6R"/>
+                            <constraint firstItem="DU3-gu-y6b" firstAttribute="centerX" secondItem="qAc-0X-wdO" secondAttribute="centerX" id="neg-57-56b"/>
+                            <constraint firstAttribute="bottom" secondItem="qAc-0X-wdO" secondAttribute="bottom" constant="5" id="tH8-hd-uma"/>
                         </constraints>
                     </view>
                     <connections>
