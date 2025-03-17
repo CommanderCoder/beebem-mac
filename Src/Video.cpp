@@ -22,6 +22,8 @@ Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 Boston, MA  02110-1301, USA.
 ****************************************************************/
 
+#include <windows.h>
+
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -212,9 +214,9 @@ bool BuildMode7Font(const char *filename)
 
 			Bitmap |= Value << 8;
 
-			Mode7Font[0][Character - 32][y] = Bitmap << 2; // Text bank
-			Mode7Font[1][Character - 32][y] = Bitmap << 2; // Contiguous graphics bank
-			Mode7Font[2][Character - 32][y] = Bitmap << 2; // Separated graphics bank
+			Mode7Font[0][Character - 32][y] = Bitmap; // Text bank
+			Mode7Font[1][Character - 32][y] = Bitmap; // Contiguous graphics bank
+			Mode7Font[2][Character - 32][y] = Bitmap; // Separated graphics bank
 		}
 	}
 
@@ -649,58 +651,15 @@ static void DoFastTable() {
 }
 
 /*-------------------------------------------------------------------------------------------------------------*/
-#define BEEB_DOTIME_SAMPLESIZE 50
 
-static void VideoStartOfFrame(void) {
-#ifdef BEEB_DOTIME
-  static int Have_GotTime=0;
-  static struct tms previous,now;
-  static int Time_FrameCount=0;
-
-  double frametime;
-  static CycleCountT OldCycles=0;
-
-  if (!Have_GotTime) {
-    times(&previous);
-    Time_FrameCount=-1;
-    Have_GotTime=1;
-  }
-
-  if (Time_FrameCount==(BEEB_DOTIME_SAMPLESIZE-1)) {
-    times(&now);
-    frametime=now.tms_utime-previous.tms_utime;
-#ifndef SUNOS
-#ifndef HPUX
-                frametime/=(double)CLOCKS_PER_SEC;
-#else
-                frametime/=(double)sysconf(_SC_CLK_TCK);
-#endif
-#else
-                frametime/=(double)HZ;
-#endif
-    frametime/=(double)BEEB_DOTIME_SAMPLESIZE;
-    cerr << "Frametime: " << frametime << "s fps=" << (1/frametime) << "Total cycles=" << TotalCycles << "Cycles in last unit=" << (TotalCycles-OldCycles) << "\n";
-    OldCycles=TotalCycles;
-    previous=now;
-    Time_FrameCount=0;
-  } else Time_FrameCount++;
-
-#endif
-
+static void VideoStartOfFrame()
+{
   /* FrameNum is determined by the window handler */
   if (VideoState.IsNewTVFrame)	// RTW - only calibrate timing once per frame
   {
     VideoState.IsNewTVFrame = false;
-#ifdef WIN32
+
     FrameNum = mainWin->StartOfFrame();
-#elif defined(__APPLE__)
-	FrameNum = mainWin->StartOfFrame();
-#else
-    /* If FrameNum hits 0 we actually refresh */
-    if (FrameNum--==0) {
-      FrameNum=Video_RefreshFrequency-1;
-    }
-#endif
 
     CursorFieldCount--;
     Mode7FlashTrigger--;
@@ -1715,7 +1674,7 @@ void LoadVideoUEF(FILE *SUEF, int Version)
 	if (VideoULA_ControlReg & 2) HSyncModifier=12;
 
 	if (Version >= 13)
-    {
+	{
 		VideoState.Addr = UEFRead32(SUEF);
 		VideoState.StartAddr = UEFRead32(SUEF);
 		VideoState.PixmapLine = UEFRead32(SUEF);
@@ -1794,7 +1753,7 @@ void VideoGetText(char *text, int line)
 			if (c == '_')
 				c = '#';
 			else if (c == '#')
-				c = 0xa3; // '£'
+				c = 0xa3; // 'ï¿½'
 			else if (c == '`')
 				c = '_';
 

@@ -33,7 +33,6 @@ Boston, MA  02110-1301, USA.
 #include "Log.h"
 #include "Serial.h"
 #include "Sound.h"
-#include "TapeMap.h"
 #include "Uef.h"
 #include "UefState.h"
 
@@ -112,24 +111,51 @@ CSWResult CSWOpen(const char *FileName)
 		fclose(csw_file);
 		return CSWResult::InvalidHeaderExtension;
 	}
-#ifndef __APPLE__
 
-	int end = ftell(csw_file);
-	fseek(csw_file, 0, SEEK_END);
-	int sourcesize = ftell(csw_file) - end + 1;
-#else
-	int end = (int)ftell(csw_file);
-	fseek(csw_file, 0, SEEK_END);
-	int sourcesize = (int)ftell(csw_file) - end + 1;
-#endif
-	fseek(csw_file, end, SEEK_SET);
+
+	long end = ftell(csw_file);
+
+	if (end == -1)
+	{
+		fclose(csw_file);
+		return CSWResult::ReadFailed;
+	}
+
+	if (fseek(csw_file, 0, SEEK_END) == -1)
+	{
+		fclose(csw_file);
+		return CSWResult::ReadFailed;
+	}
+
+	long pos = ftell(csw_file);
+
+	if (pos == -1)
+	{
+		fclose(csw_file);
+		return CSWResult::ReadFailed;
+	}
+
+	long sourcesize = pos - end;
+
+	if (fseek(csw_file, end, SEEK_SET) == -1)
+	{
+		fclose(csw_file);
+		return CSWResult::ReadFailed;
+	}
 
 	csw_bufflen = 8 * 1024 * 1024;
-	csw_buff = (unsigned char *) malloc(csw_bufflen);
-	unsigned char *sourcebuff = (unsigned char *) malloc(sourcesize);
+	csw_buff = (unsigned char *)malloc(csw_bufflen);
+	unsigned char *sourcebuff = (unsigned char *)malloc(sourcesize);
 
-	fread(sourcebuff, 1, sourcesize, csw_file);
+	size_t BytesRead = fread(sourcebuff, 1, sourcesize, csw_file);
+
 	fclose(csw_file);
+
+	if (BytesRead != (size_t)sourcesize)
+	{
+		return CSWResult::ReadFailed;
+	}
+
 	csw_file = nullptr;
 
 	uncompress(csw_buff, &csw_bufflen, sourcebuff, sourcesize);
@@ -188,11 +214,7 @@ void HexDump(const char *buff, int count)
 void CSWCreateTapeMap(std::vector<TapeMapEntry>& TapeMap)
 {
 	CSWState last_state = CSWState::Undefined;
-#ifndef __APPLE__
-	char block[65535];
-#else
 	unsigned char block[65535];
-#endif
 	int block_ptr = -1;
 
 	int n;

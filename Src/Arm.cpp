@@ -25,14 +25,16 @@ Boston, MA  02110-1301, USA.
 // http://www.davidsharp.com
 //////////////////////////////////////////////////////////////////////
 
+#include <windows.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "Arm.h"
-#include "ArmDisassembler.h"	// gives access to disassembler
+#include "ArmDisassembler.h" // gives access to disassembler
 #include "BeebMem.h"
-#include "Log.h"
+#include "DebugTrace.h"
 #include "Tube.h"
 #include "UefState.h"
 
@@ -44,8 +46,14 @@ CArm::CArm()
 {
 }
 
+CArm::~CArm()
+{
+}
+
 CArm::InitResult CArm::init(const char *ROMPath)
 {
+	armModel = 1; // Emulate ARM1 instructions only.
+
 	// set up pointers to each bank of registers
 	curR[USR_MODE] = usrR;
 	curR[SVC_MODE] = svcR;
@@ -80,90 +88,46 @@ CArm::InitResult CArm::init(const char *ROMPath)
 	// reset processor state to initial values
 	reset();
 
-	// reset instruction execution counter
-	executionCount = 0;
-
-	// ??? profiling usage of different modes
-	previousProcessorMode = SVC_MODE;
-	modeCounter = 0;
-
-	// ??? profiling usage of different exceptions
-	if(dynamicProfilingExceptionFreq)
-	{
-		// resetCounter = 0;
-		undefCounter = 0;
-		swiCounter = 0;
-		prefAbortCounter = 0;
-		dataAbortCounter = 0;
-		addrExcepCounter = 0;
-		irqCounter = 0;
-		fiqCounter = 0;
-		exceptionLastExecutionCount = 0;
-	}
-
-	if(dynamicProfilingRegisterUse)
-	{
-		for(int regNumber=0; regNumber<16; regNumber++)
-		{
-			registerGotCounter[regNumber] = 0;
-			registerSetCounter[regNumber] = 0;
-		}
-	}
-
-	if(dynamicProfilingConditionalExecution)
-	{
-		for(int condition=0; condition<16; condition++)
-		{
-			conditionallyExecuted[condition] =0;
-			conditionallyNotExecuted[condition] = 0;
-		}
-	}
-
-	if(dynamicProfilingCoprocessorUse)
-	{
-		lastCopro = 0;
-	}
-
-	modeTotal[USR_MODE] = 0;
-	modeTotal[FIQ_MODE] = 0;
-	modeTotal[IRQ_MODE] = 0;
-	modeTotal[SVC_MODE] = 0;
-
 	/////////////////////////////
 	// set up test environment
 	/////////////////////////////
 
-	processorMode = USR_MODE;
 	processorMode = SVC_MODE;
 	r[15] = 0;
 	prefetchInvalid = true;
 	conditionFlags = 0;
-	trace = 0;
 
-	WriteLog("init_arm()\n");
-
-	// load file into test memory
+	// load ROM file into memory
 	FILE *ROMFile = fopen(ROMPath, "rb");
 
 	if (ROMFile != nullptr)
 	{
-		fread(romMemory, 0x4000, 1, ROMFile);
+		fseek(ROMFile, 0, SEEK_END);
+		long Length = ftell(ROMFile);
+		fseek(ROMFile, 0, SEEK_SET);
+
+		if (Length != ROM_SIZE)
+		{
+			fclose(ROMFile);
+			return InitResult::InvalidROM;
+		}
+
+		size_t BytesRead = fread(romMemory, 1, ROM_SIZE, ROMFile);
+
 		fclose(ROMFile);
+
+		if (BytesRead != ROM_SIZE)
+		{
+			return InitResult::InvalidROM;
+		}
 	}
 	else
 	{
 		return InitResult::FileNotFound;
 	}
 
-	memset(ramMemory, 0, 0x400000);
-	memcpy(ramMemory, romMemory, 0x4000);
-
-	/* uint32 memoryValue = 0;
-	for(int x=0; x<4*11; x+=4)
-	{
-		(void)readWord(x, memoryValue);
-		TRACE("%x = %x\n", x, memoryValue);
-	} */
+	memset(ramMemory, 0, RAM_SIZE);
+	memcpy(ramMemory, romMemory, ROM_SIZE);
 
 	return InitResult::Success;
 }
@@ -173,6 +137,7 @@ void CArm::exec(int count)
 	uint32 ci;
 	char disassembly[256];
 	char addressS[64];
+	static const bool trace = false;
 
 	while (count > 0)
 	{
@@ -188,8 +153,7 @@ void CArm::exec(int count)
 				Arm_disassemble(pc, ci, disassembly);
 
 				sprintf(addressS, "0x%08x : %02x %02x %02x %02x ", pc,
-						ci & 0xff, (ci >> 8) & 0xff, (ci >> 16) & 0xff, (ci >> 24) & 0xff );
-
+				        ci & 0xff, (ci >> 8) & 0xff, (ci >> 16) & 0xff, (ci >> 24) & 0xff );
 			}
 			else
 			{
@@ -198,62 +162,25 @@ void CArm::exec(int count)
 				Arm_disassemble(pc - 4, ci, disassembly);
 
 				sprintf(addressS, "0x%08x : %02x %02x %02x %02x ", pc - 4,
-						ci & 0xff, (ci >> 8) & 0xff, (ci >> 16) & 0xff, (ci >> 24) & 0xff );
+				        ci & 0xff, (ci >> 8) & 0xff, (ci >> 16) & 0xff, (ci >> 24) & 0xff );
 			}
 
-			WriteLog(" r0 = %08x r1 = %08x r2 = %08x r3 = %08x r4 = %08x r5 = %08x r6 = %08x r7 = %08x r8 = %08x : ",
-					 getRegister(0), getRegister(1), getRegister(2), getRegister(3), getRegister(4),
-					 getRegister(5), getRegister(6), getRegister(7), getRegister(8));
+			DebugTrace(" r0 = %08x r1 = %08x r2 = %08x r3 = %08x r4 = %08x r5 = %08x r6 = %08x r7 = %08x r8 = %08x : ",
+			           getRegister(0), getRegister(1), getRegister(2), getRegister(3), getRegister(4),
+			           getRegister(5), getRegister(6), getRegister(7), getRegister(8));
 
-			WriteLog("%s : %08x : %s\n", addressS, val, disassembly);
-
-			trace--;
+			DebugTrace("%s : %08x : %s\n", addressS, val, disassembly);
 		}
-
-		// if ( ((pc & 0xffff) >= 0x1c48) && ((pc & 0xffff) <= 0x1c60) )
-		// {
-		//	trace = 100;
-		// }
 
 		run();
 		count--;
 	}
 }
 
-CArm::~CArm()
-{
-	// ??? output mode counter info
-	//CString modeInfo;
-	//modeInfo.Format("usr=%d fiq=%d irq=%d svc=%d \n", modeTotal[USR_MODE], modeTotal[FIQ_MODE], modeTotal[IRQ_MODE], modeTotal[SVC_MODE] );
-	//reportFile.WriteString(modeInfo);
-
-	if(dynamicProfilingExceptionFreq)
-		dynamicProfilingExceptionFrequencyReport();
-
-	if(dynamicProfilingRegisterUse)
-		dynamicProfilingRegisterUsageReport();
-
-	if(dynamicProfilingConditionalExecution)
-		dynamicProfilingConditionalExeReport();
-}
-
 void CArm::run()
 {
 	// note, if the while(true) loop is placed inside run() as it may need to be for speed
 	// then returns after exceptions need to be changed to continues!
-
-	// ??? profile usage of processor modes
-	//modeTotal[processorMode]++;
-	//modeCounter++;
-	//if(previousProcessorMode != processorMode)
-	//{
-	//	CString modeInfo;
-	//	modeInfo.Format("mode=%d count=%d\n",previousProcessorMode, modeCounter-1);
-	//	reportFile.WriteString(modeInfo);
-	//
-	//	modeCounter = 0;
-	//	previousProcessorMode = processorMode;
-	//}
 
 	// has prefetch been invalidated by previously executed instruction
 	if(prefetchInvalid)
@@ -283,12 +210,6 @@ void CArm::run()
 		return;
 	}
 
-	// increment total instruction executed counter
-	executionCount++;
-
-	if(dynamicProfilingConditionalExecution)
-		dynamicProfilingConditionalExe(currentInstruction);
-
 	// instruction condition codes match PSR so that instruction should be executed
 	if( executeConditionally(currentInstruction) )
 	{
@@ -301,7 +222,7 @@ void CArm::run()
 			// mul rd, rm, rs
 			case 0x00:
 			{
-				if( isExtendedInstruction(currentInstruction) )
+				if (armModel >= 2 && isExtendedInstruction(currentInstruction))
 				{
 					// mul rd, rm, rs
 					performMul();
@@ -317,7 +238,7 @@ void CArm::run()
 			// mulS rd, rm, rs
 			case 0x01:
 			{
-				if( isExtendedInstruction(currentInstruction) )
+				if (armModel >= 2 && isExtendedInstruction(currentInstruction))
 				{
 					// mulS rd, rm, rs
 					performMulS();
@@ -333,7 +254,7 @@ void CArm::run()
 			// mla rd, rm, rs
 			case 0x02:
 			{
-				if( isExtendedInstruction(currentInstruction) )
+				if (armModel >= 2 && isExtendedInstruction(currentInstruction))
 				{
 					// mla rd, rm, rs
 					performMla();
@@ -349,7 +270,7 @@ void CArm::run()
 			// mlaS rd, rm, rs
 			case 0x03:
 			{
-				if( isExtendedInstruction(currentInstruction) )
+				if (armModel >= 2 && isExtendedInstruction(currentInstruction))
 				{
 					// mlaS rd, rm, rs
 					performMlaS();
@@ -438,7 +359,7 @@ void CArm::run()
 			// swp rd, rn, rm
 			case 0x10:
 			{
-				if( isExtendedInstruction(currentInstruction) )
+				if (armModel >= 3 && isExtendedInstruction(currentInstruction))
 				{
 					// swp rd, rn, rm
 					performSingleDataSwapWord();
@@ -498,7 +419,7 @@ void CArm::run()
 			// cmp rd, rn, rm - NOP
 			case 0x14:
 			{
-				if( isExtendedInstruction(currentInstruction) )
+				if (armModel >= 3 && isExtendedInstruction(currentInstruction))
 				{
 					// swp rd, rn, rm
 					performSingleDataSwapByte();
@@ -569,11 +490,6 @@ void CArm::run()
 			case 0x1A:
 			{
 				setDestination( getDataProcessingRegisterOperand2() );
-
-				// ??? remove keepRunning - for simple code only
-				// checks for mov pc,r14
-				//if(currentInstruction == 0xE1A0F00E)
-				//	keepRunning = false;
 				break;
 			}
 			// movS rd, rn, rm
@@ -731,6 +647,7 @@ void CArm::run()
 					// tst rn, imm
 					(void)andOperatorS( getDataProcessingImmediateOperand1(), getDataProcessingImmediateOperand2S() );
 				}
+				break;
 			}
 			// teq rd, rn, imm
 			case 0x32:
@@ -1213,7 +1130,7 @@ void CArm::run()
 			{
 				uint rn = getField(currentInstruction, 16, 19); // base address register
 				uint rd = getField(currentInstruction, 12, 15); // get register to store
-				performDataTransferStoreWord(getRegister(rn) - getDataTransferValueImmediate(), (uint8)getRegisterWithPSRAndPipelining(rd));
+				performDataTransferStoreWord(getRegister(rn) - getDataTransferValueImmediate(), getRegisterWithPSRAndPipelining(rd));
 				break;
 			}
 			// ldr rd, [rn, -imm]
@@ -2651,7 +2568,6 @@ void CArm::run()
 					coprocessorDataOperation();
 				}
 				break;
-				break;
 			}
 
 			// software interrupt
@@ -2697,9 +2613,9 @@ void CArm::run()
 				break;
 			}
 
-			default :	// ??? DISPLAY ERROR MESSAGE - I'VE MISSED OUT AN INSTRUCTION CASE
-						WriteLog("ERROR UNKNOWN OPCODE %02x\n", getField(currentInstruction, 20, 27) );
-						break;
+			default: // ??? DISPLAY ERROR MESSAGE - I'VE MISSED OUT AN INSTRUCTION CASE
+				DebugTrace("ERROR UNKNOWN OPCODE %02x\n", getField(currentInstruction, 20, 27));
+				break;
 		} // end instruction decoding switch
 	} // end conditional execution
 
@@ -2733,7 +2649,7 @@ void CArm::run()
 	{
 		if (processorMode != FIQ_MODE)
 		{
-//			WriteLog("Entering FIQ Mode\n");
+			// DebugTrace("Entering FIQ Mode\n");
 			exceptionFastInterruptRequest();
 		}
 	}
@@ -2741,7 +2657,7 @@ void CArm::run()
 	{
 		if (processorMode != IRQ_MODE)
 		{
-//			WriteLog("Entering IRQ Mode\n");
+			// DebugTrace("Entering IRQ Mode\n");
 			exceptionInterruptRequest();
 		}
 	}
@@ -2749,7 +2665,7 @@ void CArm::run()
 	{
 		if (processorMode != IRQ_MODE)
 		{
-//			WriteLog("Entering IRQ Mode\n");
+			// DebugTrace("Entering IRQ Mode\n");
 			exceptionInterruptRequest();
 		}
 	}
@@ -2759,7 +2675,7 @@ void CArm::run()
 // instruction templates
 //////////////////////////////////////////////////////////////////////
 
-// tests for bit patter 1001 in bits 4-7 to determine the difference
+// tests for bit pattern 1001 in bits 4-7 to determine the difference
 // between a data processing instruction and a MUL or SWP instruction
 inline bool CArm::isExtendedInstruction(uint32 instruction)
 {
@@ -3621,7 +3537,7 @@ inline bool CArm::performDataTransferLoadWord(uint32 address, uint32 &destinatio
 			// in ARM610 datasheet and tested on Risc PC.
 			if( address & 3 )
 			{
-				WriteLog("LoadWord from non word aligned address %08x, pc = %08x\n", address, pc);
+				DebugTrace("LoadWord from non word aligned address %08x, pc = %08x\n", address, pc);
 				destination = rorOperator(destination, (address & 3)<<3 );
 			}
 
@@ -3708,12 +3624,12 @@ inline bool CArm::readWord(uint32 address, uint32& destination)
 
 	if ((address & ~0x1f) == 0x1000000)
 	{
-//		WriteLog("Read word from tube %08x, reg %d\n", address, (address & 0x1c) >> 2);
+		// DebugTrace("Read word from tube %08x, reg %d\n", address, (address & 0x1c) >> 2);
 		destination = 0xff;
 		return true;
 	}
 
-	if ( (address >= 0x3000000) && (address < 0x3004000) )
+	if (address >= 0x3000000 && address < 0x3004000)
 	{
 		value |= romMemory[(address & 0x3fff)];
 		value |= romMemory[(address & 0x3fff) +1]<<8;
@@ -3723,8 +3639,10 @@ inline bool CArm::readWord(uint32 address, uint32& destination)
 		return true;
 	}
 
-	WriteLog("Bad ARM read word from %08x\n", address);
+	DebugTrace("Bad ARM read word from %08x\n", address);
+
 	destination = 0xff;
+
 	return false;
 }
 
@@ -3741,11 +3659,12 @@ inline bool CArm::writeWord(uint32 address, uint32 data)
 
 	if ((address & ~0x1f) == 0x1000000)
 	{
-//		WriteLog("Write word %08x to tube %08x, reg %d\n", data, address, (address & 0x1c) >> 2);
+		// DebugTrace("Write word %08x to tube %08x, reg %d\n", data, address, (address & 0x1c) >> 2);
 		return true;
 	}
 
-	WriteLog("Bad ARM write word %08x to %08x\n", data, address);
+	DebugTrace("Bad ARM write word %08x to %08x\n", data, address);
+
 	return false;
 }
 
@@ -3764,7 +3683,7 @@ inline bool CArm::readByte(uint32 address, uint8 &destination)
 	if ((address & ~0x1f) == 0x1000000)
 	{
 		destination = ReadTubeFromParasiteSide((address & 0x1c) >> 2);
-//		WriteLog("Read byte from tube %08x, reg %d returned %d\n", address, (address & 0x1c) >> 2, destination);
+		// DebugTrace("Read byte from tube %08x, reg %d returned %d\n", address, (address & 0x1c) >> 2, destination);
 		return true;
 	}
 
@@ -3775,8 +3694,10 @@ inline bool CArm::readByte(uint32 address, uint8 &destination)
 		return true;
 	}
 
-	WriteLog("Bad ARM read byte from %08x\n", address);
+	DebugTrace("Bad ARM read byte from %08x\n", address);
+
 	destination = 0xff;
+
 	return false;
 }
 
@@ -3784,40 +3705,18 @@ inline bool CArm::writeByte(uint32 address, uint8 value)
 {
 	if (address < 0x1000000)
 	{
-
-/*
-		if ( ( (value & 0xff) == 0) && (address == 0xc501) )
-		{
-
-			uint32 val;
-			readWord(0xc500, val);
-
-			WriteLog("Write 0 to 0xc501 - %08x\n", val);
-			trace = 10;
-		}
-*/
-
 		ramMemory[(address & 0x3fffff)] = value & 0xff;
-
-//		if ((value & 0xff) == 255)
-//		{
-//			WriteLog("Write byte %02x to %08x\n", value, address);
-//			trace = 1;
-//		}
-
 		return true;
 	}
 
 	if ((address & ~0x1f) == 0x1000000)
 	{
-//		WriteLog("Write byte %02x (%c) to tube %08x, reg %d\n", value,
-//			((value & 127) > 31) && ((value & 127) != 127) ? value & 127 : '.',
-//			address, (address & 0x1c) >> 2);
-        WriteTubeFromParasiteSide((address & 0x1c) >> 2, value);
-		return TRUE;
+		WriteTubeFromParasiteSide((address & 0x1c) >> 2, value);
+		return true;
 	}
 
-	WriteLog("Bad ARM write byte %02x to %08x\n", value, address);
+	DebugTrace("Bad ARM write byte %02x to %08x\n", value, address);
+
 	return false;
 }
 
@@ -4373,9 +4272,6 @@ inline void CArm::setProcessorStatusFlags(uint32 mask, uint32 value)
 // if it's r15 then don't update PSR but do invalidate the prefetch
 inline void CArm::setRegisterWithPrefetch(uint regNumber, uint32 value)
 {
-	if(dynamicProfilingRegisterUse)
-		dynamicProfilingRegisterUsage(regNumber, false);
-
 	// if r15 then only adjust PC (not PSR as well)
 	if(regNumber == 15)
 	{
@@ -4392,27 +4288,18 @@ inline void CArm::setRegisterWithPrefetch(uint regNumber, uint32 value)
 // plain accessor method for registers, adjusts PSR if r15 etc.
 inline void CArm::setRegister(uint regNumber, uint32 value)
 {
-	if(dynamicProfilingRegisterUse)
-		dynamicProfilingRegisterUsage(regNumber, false);
-
 	r[regNumber] = value;
 }
 
 // get the plain value of a register (without psr if r15)
 inline uint32 CArm::getRegister(uint regNumber)
 {
-	if(dynamicProfilingRegisterUse)
-		dynamicProfilingRegisterUsage(regNumber, true);
-
 	return r[regNumber];
 }
 
 // get the value of a register (with psr if r15)
 inline uint32 CArm::getRegisterWithPSR(uint regNumber)
 {
-	if(dynamicProfilingRegisterUse)
-		dynamicProfilingRegisterUsage(regNumber, true);
-
 	if(regNumber == 15)
 	{
 		return ( r[15] | getProcessorStatusRegister() );
@@ -4426,9 +4313,6 @@ inline uint32 CArm::getRegisterWithPSR(uint regNumber)
 // get the value of a register (if r15 then +4 for pipelining effect)
 inline uint32 CArm::getRegisterWithPipelining(uint regNumber)
 {
-	if(dynamicProfilingRegisterUse)
-		dynamicProfilingRegisterUsage(regNumber, true);
-
 	if(regNumber == 15)
 	{
 		return r[15] + 4;
@@ -4442,9 +4326,6 @@ inline uint32 CArm::getRegisterWithPipelining(uint regNumber)
 // get the value of a register (if r15 then with PSR and +4 for pipelining effect)
 inline uint32 CArm::getRegisterWithPSRAndPipelining(uint regNumber)
 {
-	if(dynamicProfilingRegisterUse)
-		dynamicProfilingRegisterUsage(regNumber, true);
-
 	if(regNumber == 15)
 	{
 		return ( r[15] | getProcessorStatusRegister() ) + 4;
@@ -4616,9 +4497,6 @@ inline void CArm::exceptionReset()
 	setProcessorStatusFlags(M1_FLAG | M2_FLAG | I_FLAG | F_FLAG, SVC_MODE | I_FLAG | F_FLAG );
 	// jump to reset vector
 	setRegisterWithPrefetch(15, RESET_VECTOR);
-
-	if(dynamicProfilingExceptionFreq)
-		dynamicProfilingExceptionFrequency("Reset Exception", resetCounter);
 }
 
 // note, in each of these cases, calling setProcessorStatusFlags can cahnge the processor
@@ -4640,9 +4518,6 @@ inline void CArm::exceptionUndefinedInstruction()
 
 	// jump to address exception vector
 	setRegisterWithPrefetch(15, UNDEFINED_INSTRUCTION_VECTOR);
-
-	if(dynamicProfilingExceptionFreq)
-		dynamicProfilingExceptionFrequency("Undefined Instruction Exception", undefCounter);
 }
 
 inline void CArm::exceptionSoftwareInterrupt()
@@ -4659,9 +4534,6 @@ inline void CArm::exceptionSoftwareInterrupt()
 
 	// jump to address exception vector
 	setRegisterWithPrefetch(15, SOFTWARE_INTERRUPT_VECTOR);
-
-	if(dynamicProfilingExceptionFreq)
-		dynamicProfilingExceptionFrequency("SWI Exception", swiCounter);
 }
 
 inline void CArm::exceptionPrefetchAbort()
@@ -4678,9 +4550,6 @@ inline void CArm::exceptionPrefetchAbort()
 
 	// jump to vector
 	setRegisterWithPrefetch(15, PREFETCH_ABORT_VECTOR);
-
-	if(dynamicProfilingExceptionFreq)
-		dynamicProfilingExceptionFrequency("Prefetch Abort Exception", prefAbortCounter);
 }
 
 inline void CArm::exceptionDataAbort()
@@ -4697,10 +4566,6 @@ inline void CArm::exceptionDataAbort()
 
 	// jump to vector
 	setRegisterWithPrefetch(15, DATA_ABORT_VECTOR);
-
-	if(dynamicProfilingExceptionFreq)
-		dynamicProfilingExceptionFrequency("Data Abort Exception", dataAbortCounter);
-
 }
 
 inline void CArm::exceptionInterruptRequest()
@@ -4717,9 +4582,6 @@ inline void CArm::exceptionInterruptRequest()
 
 	// jump to vector
 	setRegisterWithPrefetch(15, INTERRUPT_REQUEST_VECTOR);
-
-	if(dynamicProfilingExceptionFreq)
-		dynamicProfilingExceptionFrequency("IRQ Exception", irqCounter);
 }
 
 inline void CArm::exceptionFastInterruptRequest()
@@ -4736,15 +4598,11 @@ inline void CArm::exceptionFastInterruptRequest()
 
 	// jump to vector
 	setRegisterWithPrefetch(15, FAST_INTERRUPT_REQUEST_VECTOR);
-
-	if(dynamicProfilingExceptionFreq)
-		dynamicProfilingExceptionFrequency("FIQ Exception", fiqCounter);
 }
 
 // only occurs on 26 bit architectures
 inline void CArm::exceptionAddress()
 {
-
 	// make copy of PSR
 	uint32 psrCopy = getProcessorStatusRegister();
 
@@ -4757,9 +4615,6 @@ inline void CArm::exceptionAddress()
 
 	// jump to vector
 	setRegisterWithPrefetch(15, ADDRESS_EXCEPTION_VECTOR);
-
-	if(dynamicProfilingExceptionFreq)
-		dynamicProfilingExceptionFrequency("Address Exception", addrExcepCounter);
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -4803,9 +4658,6 @@ inline bool CArm::coprocessorRegisterTransferRead()
 
 	// uint coprocessorNumber = getField(currentInstruction, 8, 11);
 
-	if(dynamicProfilingCoprocessorUse)
-		dynamicProfilingCoprocessorUsage(currentInstruction);
-
 	exceptionUndefinedInstruction();
 	return false;
 }
@@ -4815,9 +4667,6 @@ inline bool CArm::coprocessorDataOperation()
 {
 	// uint coprocessorNumber = getField(currentInstruction, 8, 11);
 
-	if(dynamicProfilingCoprocessorUse)
-		dynamicProfilingCoprocessorUsage(currentInstruction);
-
 	exceptionUndefinedInstruction();
 	return false;
 }
@@ -4825,86 +4674,7 @@ inline bool CArm::coprocessorDataOperation()
 // get the coprocessor data transfer immediate offset from the current instruction
 inline uint32 CArm::coprocessorDataTransferOffset()
 {
-	if(dynamicProfilingCoprocessorUse)
-		dynamicProfilingCoprocessorUsage(currentInstruction);
-
 	return (currentInstruction & 0xff) << 2;
-}
-
-//////////////////////////////////////////////////////////////////////
-// Dynamic Profiling routines, for testing ARM feature usage
-//////////////////////////////////////////////////////////////////////
-
-void CArm::dynamicProfilingExceptionFrequency(const char *exceptionName, uint32 &counter)
-{
-	WriteLog("%s executionCount=%d\n", exceptionName, executionCount - exceptionLastExecutionCount);
-	exceptionLastExecutionCount = executionCount;
-	counter++;
-}
-
-void CArm::dynamicProfilingExceptionFrequencyReport()
-{
-	WriteLog(">>>>>>>>>> Report Totals\n");
-	WriteLog("Reset = %d\n", resetCounter);
-	WriteLog("Undefined Instruction = %d\n", undefCounter);
-	WriteLog("SWI = %d\n", swiCounter);
-	WriteLog("prefetch abort = %d\n", prefAbortCounter);
-	WriteLog("data abort = %d\n", dataAbortCounter);
-	WriteLog("address exception = %d\n", addrExcepCounter);
-	WriteLog("IRQ exception = %d\n", irqCounter);
-	WriteLog("FIQ exception = %d\n", fiqCounter);
-}
-
-void CArm::dynamicProfilingRegisterUsage(uint regNumber, bool get)
-{
-	if(get)
-	{
-		registerGotCounter[regNumber]++;
-	}
-	else
-	{
-		registerSetCounter[regNumber]++;
-	}
-}
-
-void CArm::dynamicProfilingRegisterUsageReport()
-{
-	WriteLog("Register usage profiling");
-
-	for(int regNumber=0; regNumber<16; regNumber++)
-	{
-		WriteLog("r%d got=%d set=%d\n", regNumber, registerGotCounter[regNumber], registerSetCounter[regNumber] );
-	}
-}
-
-void CArm::dynamicProfilingConditionalExe(uint32 instruction)
-{
-	if( executeConditionally(instruction) )
-	{
-		// executed
-		conditionallyExecuted[ getField(instruction, 28, 31) ]++;
-	}
-	else
-	{
-		// not executed
-		conditionallyNotExecuted[ getField(instruction, 28, 31) ]++;
-	}
-}
-
-void CArm::dynamicProfilingConditionalExeReport()
-{
-	WriteLog("Conditional Execution profiling");
-
-	for(int condition=0; condition<16; condition++)
-	{
-		WriteLog("cond=%d exe=%d not=%d\n", condition, conditionallyExecuted[condition], conditionallyNotExecuted[condition] );
-	}
-}
-
-void CArm::dynamicProfilingCoprocessorUsage(uint32 instruction)
-{
-	WriteLog("copro number=%d instructions=%d\n", getField(instruction, 8, 11), executionCount - lastCopro);
-	lastCopro = executionCount;
 }
 
 void CArm::SaveState(FILE* SUEF)
@@ -4939,9 +4709,11 @@ void CArm::SaveState(FILE* SUEF)
 	}
 
 	UEFWriteBuf(ramMemory, sizeof(ramMemory), SUEF);
+
+	UEFWrite8((unsigned char)armModel, SUEF);
 }
 
-void CArm::LoadState(FILE* SUEF)
+void CArm::LoadState(FILE* SUEF, int Version)
 {
 	pc = UEFRead32(SUEF);
 	processorMode = UEFRead8(SUEF);
@@ -4973,4 +4745,13 @@ void CArm::LoadState(FILE* SUEF)
 	}
 
 	UEFReadBuf(ramMemory, sizeof(ramMemory), SUEF);
+
+	if (Version >= 15)
+	{
+		armModel = UEFRead8(SUEF);
+	}
+	else
+	{
+		armModel = 1;
+	}
 }

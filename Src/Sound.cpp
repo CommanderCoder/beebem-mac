@@ -37,6 +37,7 @@ Boston, MA  02110-1301, USA.
 #include "AVIWriter.h"
 #endif
 #include "BeebWin.h"
+#include "FileUtils.h"
 #include "Main.h"
 #include "SoundStreamer.h"
 #include "Speech.h"
@@ -554,7 +555,7 @@ void LoadSoundSamples()
 			char FileName[MAX_PATH];
 
 			strcpy(FileName, mainWin->GetAppPath());
-			strcat(FileName, SoundSamples[i].pFilename);
+			AppendPath(FileName, SoundSamples[i].pFilename);
 
 			FILE *fd = fopen(FileName, "rb");
 

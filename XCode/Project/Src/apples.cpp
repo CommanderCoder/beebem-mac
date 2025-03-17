@@ -172,6 +172,11 @@ void GetWindowRect(HWND h, RECT* r)
 {
 }
 
+bool EnableWindow(HWND h, BOOL e)
+{
+    return true;
+}
+
 #include "FileUtils.h"
 
 void _splitpath(const char *path,

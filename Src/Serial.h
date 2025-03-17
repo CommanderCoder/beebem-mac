@@ -98,9 +98,8 @@ void SerialULAWrite(unsigned char Value);
 unsigned char SerialULARead();
 
 extern bool SerialPortEnabled;
-extern char SerialPortName[_MAX_PATH];
 
-void SerialInit();
+bool SerialInit(const char* PortName);
 void SerialReset();
 void SerialPoll(int Cycles);
 void SerialClose();
@@ -108,8 +107,6 @@ UEFResult LoadUEFTape(const char *FileName);
 CSWResult LoadCSWTape(const char *FileName);
 void CloseTape();
 void RewindTape();
-
-extern volatile bool bSerialStateChanged;
 
 struct TapeStateType
 {
@@ -129,14 +126,20 @@ void SetTapeSpeed(int Speed);
 void SetUnlockTape(bool Unlock);
 void SetTapePosition(int Time);
 
+extern UEFTapeImage UEFFile;
+
 void SerialPlayTape();
-bool SerialRecordTape(const char* FileName);
+void SerialNewTape();
+void SerialRecordTape();
+void SerialUpdateTapeClock();
 void SerialStopTape();
-void SerialStopTapeRecording(bool ReloadTape);
+void SerialStopTapeRecording();
 void SerialEjectTape();
 int SerialGetTapeClock();
+bool SerialTapeIsModified();
+bool SerialTapeIsUef();
 
-extern char TapeFileName[256];
+extern char TapeFileName[MAX_PATH];
 
 enum class SerialTapeState
 {
@@ -150,6 +153,7 @@ SerialTapeState SerialGetTapeState();
 
 void SaveSerialUEF(FILE *SUEF);
 void LoadSerialUEF(FILE *SUEF, int Version);
+void CloseUEFFile();
 
 void DebugSerialState();
 

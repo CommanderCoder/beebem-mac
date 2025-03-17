@@ -475,58 +475,16 @@ extern "C" void beeb_handlekeys(long message, long wParam, long lParam)
 
 				if (mainWin->TranslateKey(key, true, row, col) < 0)
 				{
-					if (row == -2)
-					{
-						// Must do a reset!
-						Init6502core();
-
-						if (TubeType == TubeDevice::Acorn65C02)
-						{
-							Init65C02core();
-						}
-						else if (TubeType == TubeDevice::Master512CoPro)
-						{
-							master512CoPro.Reset();
-						}
-						else if (TubeType == TubeDevice::AcornZ80 || TubeType == TubeDevice::TorchZ80)
-						{
-							R1Status = 0;
-							ResetTube();
-							init_z80();
-						}
-						else if (TubeType == TubeDevice::AcornArm)
-						{
-							R1Status = 0;
-							ResetTube();
-							mainWin->DestroyArmCoPro();
-							mainWin->CreateArmCoPro();
-						}
-						else if (TubeType == TubeDevice::SprowArm)
-						{
-							R1Status = 0;
-							ResetTube();
-							// We don't want to throw the contents of memory away
-							// just tell the co-pro to reset itself.
-							sprow->Reset();
-						}
-
-						Disc8271Reset();
-						Reset1770();
-						if (EconetEnabled) EconetReset();//Rob
-						if (SCSIDriveEnabled) SCSIReset();
-						if (SCSIDriveEnabled) SASIReset();
-						if (IDEDriveEnabled)  IDEReset();
-						TeletextInit();
-						//SoundChipReset();
-						Music5000Reset();
-						if (Music5000Enabled)
-							Music5000Init();
-					}
-					else if(row==-3)
-					{
-						if (col==-3) SoundTuning+=0.1; // Page Up
-						if (col==-4) SoundTuning-=0.1; // Page Down
-					}
+                    
+                    if (row == -2)
+                    {
+                        mainWin->Break();
+                    }
+                    else if (row == -3)
+                    {
+                        if (col == -3) SoundTuning += 0.1; // Page Up
+                        if (col == -4) SoundTuning -= 0.1; // Page Down
+                    }
 			}
 			break;
 		case kEventRawKeyModifiersChanged:

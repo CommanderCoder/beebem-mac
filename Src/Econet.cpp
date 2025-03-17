@@ -44,6 +44,7 @@ Boston, MA  02110-1301, USA.
 #include "DebugTrace.h"
 #include "Main.h"
 #include "Rtc.h"
+#include "Socket.h"
 #include "StringUtils.h"
 
 #ifdef __APPLE__
@@ -389,8 +390,8 @@ static int myaunnet = 0; // aunnet table entry that I match. should be -1 as 0 i
 static unsigned char irqcause;   // flag to indicate cause of irq sr1b7
 static unsigned char sr1b2cause; // flag to indicate cause of irq sr1b2
 
-char EconetCfgPath[512];
-char AUNMapPath[512];
+char EconetCfgPath[MAX_PATH];
+char AUNMapPath[MAX_PATH];
 
 // A receiving station goes into flag fill mode while it is processing
 // a message.  This stops other stations sending messages that may interfere
@@ -427,13 +428,8 @@ static void EconetError(const char *Format, ...);
 
 static const char* IpAddressStr(unsigned long inet_addr)
 {
-#ifndef __APPLE__
 	in_addr in;
-	in.S_un.S_addr = inet_addr;
-#else
-	in_addr in;
-	in.s_addr = (in_addr_t)inet_addr;
-#endif
+	IN_ADDR(in) = inet_addr;
 
 	return inet_ntoa(in);
 }
@@ -475,7 +471,7 @@ static ECOLAN* FindHost(sockaddr_in* pAddress)
 	for (int i = 0; i < networkp; i++)
 	{
 		if (pAddress->sin_port == htons(network[i].port) &&
-		    pAddress->sin_addr.s_addr == network[i].inet_addr)
+		    S_ADDR(*pAddress) == network[i].inet_addr)
 		{
 			return &network[i];
 		}
@@ -569,10 +565,10 @@ void EconetReset()
 	{
 		if (!SingleSocket)
 		{
-			closesocket(SendSocket);
+			CloseSocket(SendSocket);
 		}
 
-		closesocket(ListenSocket);
+		CloseSocket(ListenSocket);
 		ReceiverSocketsOpen = false;
 	}
 
@@ -587,7 +583,7 @@ void EconetReset()
 	// Create a SOCKET for listening for incoming connection requests.
 	ListenSocket = socket(AF_INET, SOCK_DGRAM, 0);
 	if (ListenSocket == INVALID_SOCKET) {
-		EconetError("Econet: Failed to open listening socket (error %ld)", WSAGetLastError());
+		EconetError("Econet: Failed to open listening socket (error %ld)", GetLastSocketError());
 		return;
 	}
 
@@ -617,12 +613,12 @@ void EconetReset()
 		}
 
 		service.sin_port = htons(EconetListenPort);
-		service.sin_addr.s_addr = EconetListenIP;
+		S_ADDR(service) = EconetListenIP;
 
 		if (bind(ListenSocket, (SOCKADDR*)&service, sizeof(service)) == SOCKET_ERROR)
 		{
-			EconetError("Econet: Failed to bind to port %d (error %ld)", EconetListenPort, WSAGetLastError());
-			closesocket(ListenSocket);
+			EconetError("Econet: Failed to bind to port %d (error %ld)", EconetListenPort, GetLastSocketError());
+			CloseSocket(ListenSocket);
 			ListenSocket = INVALID_SOCKET;
 			return;
 		}
@@ -652,10 +648,10 @@ void EconetReset()
 					memcpy_localaddr(&localaddr, host->h_addr_list[a], sizeof(struct in_addr_econet));
 #endif
 					if (network[i].inet_addr == inet_addr("127.0.0.1") ||
-					    network[i].inet_addr == localaddr.S_un.S_addr)
+					    network[i].inet_addr == IN_ADDR(localaddr))
 					{
 						service.sin_port = htons(network[i].port);
-						service.sin_addr.s_addr = network[i].inet_addr;
+						S_ADDR(service) = network[i].inet_addr;
 
 						if (bind(ListenSocket, (SOCKADDR*)&service, sizeof(service)) == 0)
 						{
@@ -688,17 +684,17 @@ void EconetReset()
 							memcpy_localaddr(&localaddr, host->h_addr_list[a], sizeof(struct in_addr_econet));
 #endif
 
-							if (aunnet[j].inet_addr == (localaddr.S_un.S_addr & 0x00FFFFFF))
+							if (aunnet[j].inet_addr == (IN_ADDR(localaddr) & 0x00FFFFFF))
 							{
 								service.sin_port = htons(DEFAULT_AUN_PORT);
-								service.sin_addr.s_addr = localaddr.S_un.S_addr;
+								S_ADDR(service) = IN_ADDR(localaddr);
 
 								if (bind(ListenSocket, (SOCKADDR*)&service, sizeof(service)) == 0)
 								{
 									myaunnet = j;
-									network[networkp].inet_addr = EconetListenIP = localaddr.S_un.S_addr;
+									network[networkp].inet_addr = EconetListenIP = IN_ADDR(localaddr);
 									network[networkp].port = EconetListenPort = DEFAULT_AUN_PORT;
-									network[networkp].station = EconetStationID = localaddr.S_un.S_addr >> 24;
+									network[networkp].station = EconetStationID = IN_ADDR(localaddr) >> 24;
 									network[networkp].network = aunnet[j].network;
 									networkp++;
 								}
@@ -744,8 +740,8 @@ void EconetReset()
 		SendSocket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 
 		if (SendSocket == INVALID_SOCKET) {
-			EconetError("Econet: Failed to open sending socket (error %ld)", WSAGetLastError());
-			closesocket(ListenSocket);
+			EconetError("Econet: Failed to open sending socket (error %ld)", GetLastSocketError());
+			CloseSocket(ListenSocket);
 			ListenSocket = INVALID_SOCKET;
 			return;
 		}
@@ -760,8 +756,8 @@ void EconetReset()
 
 	if (setsockopt(SendSocket, SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof(broadcast)) == -1)
 	{
-		EconetError("Econet: Failed to set socket for broadcasts (error %ld)", WSAGetLastError());
-		closesocket(ListenSocket);
+		EconetError("Econet: Failed to set socket for broadcasts (error %ld)", GetLastSocketError());
+		CloseSocket(ListenSocket);
 		ListenSocket = INVALID_SOCKET;
 		return;
 	}
@@ -885,39 +881,39 @@ static void ReadEconetConfigFile()
 
 			try
 			{
-				if (_stricmp(Key.c_str(), "AUNMODE") == 0)
+				if (StrCaseCmp(Key.c_str(), "AUNMODE") == 0)
 				{
 					AUNMode = std::stoi(Value) != 0;
 				}
-				else if (_stricmp(Key.c_str(), "LEARN") == 0)
+				else if (StrCaseCmp(Key.c_str(), "LEARN") == 0)
 				{
 					LearnMode = std::stoi(Value) != 0;
 				}
-				else if (_stricmp(Key.c_str(), "AUNSTRICT") == 0)
+				else if (StrCaseCmp(Key.c_str(), "AUNSTRICT") == 0)
 				{
 					StrictAUNMode = std::stoi(Value) != 0;
 				}
-				else if (_stricmp(Key.c_str(), "SINGLESOCKET") == 0)
+				else if (StrCaseCmp(Key.c_str(), "SINGLESOCKET") == 0)
 				{
 					SingleSocket = std::stoi(Value) != 0;
 				}
-				else if (_stricmp(Key.c_str(), "FLAGFILLTIMEOUT") == 0)
+				else if (StrCaseCmp(Key.c_str(), "FLAGFILLTIMEOUT") == 0)
 				{
 					EconetFlagFillTimeout = std::stoi(Value);
 				}
-				else if (_stricmp(Key.c_str(), "SCACKTIMEOUT") == 0)
+				else if (StrCaseCmp(Key.c_str(), "SCACKTIMEOUT") == 0)
 				{
 					EconetSCACKtimeout = std::stoi(Value);
 				}
-				else if (_stricmp(Key.c_str(), "TIMEBETWEENBYTES") == 0)
+				else if (StrCaseCmp(Key.c_str(), "TIMEBETWEENBYTES") == 0)
 				{
 					TimeBetweenBytes = std::stoi(Value);
 				}
-				else if (_stricmp(Key.c_str(), "FOURWAYTIMEOUT") == 0)
+				else if (StrCaseCmp(Key.c_str(), "FOURWAYTIMEOUT") == 0)
 				{
 					FourWayStageTimeout = std::stoi(Value);
 				}
-				else if (_stricmp(Key.c_str(), "MASSAGENETS") == 0)
+				else if (StrCaseCmp(Key.c_str(), "MASSAGENETS") == 0)
 				{
 					MassageNetworks = std::stoi(Value) != 0;
 				}
@@ -974,7 +970,7 @@ static void ReadAUNConfigFile()
 
 		ParseConfigLine(Line, Tokens);
 
-		if (Tokens.size() == 3 && _stricmp("ADDMAP", Tokens[0].c_str()) == 0)
+		if (Tokens.size() == 3 && StrCaseCmp("ADDMAP", Tokens[0].c_str()) == 0)
 		{
 			if (aunnetp < AUN_TABLE_LENGTH)
 			{
@@ -1434,7 +1430,7 @@ bool EconetPoll_real() // return NMI status
 						// TODO lookup destnet in aunnet() and use proper ip address!
 						RecvAddr.sin_family = AF_INET;
 						RecvAddr.sin_port = htons(DEFAULT_AUN_PORT);
-						RecvAddr.sin_addr.s_addr = INADDR_BROADCAST; // ((EconetListenIP & 0x00FFFFFF) | 0xFF000000);
+						S_ADDR(RecvAddr) = INADDR_BROADCAST; // ((EconetListenIP & 0x00FFFFFF) | 0xFF000000);
 						SendMe = true;
 					}
 					else
@@ -1492,7 +1488,7 @@ bool EconetPoll_real() // return NMI status
 
 						RecvAddr.sin_family = AF_INET;
 						RecvAddr.sin_port = htons(network[i].port);
-						RecvAddr.sin_addr.s_addr = network[i].inet_addr;
+						S_ADDR(RecvAddr) = network[i].inet_addr;
 					}
 
 					//if (DebugEnabled)
@@ -1502,7 +1498,7 @@ bool EconetPoll_real() // return NMI status
 						                   BeebTx.Pointer,
 						                   (unsigned int)BeebTx.eh.destnet,
 						                   (unsigned int)BeebTx.eh.deststn,
-						                   IpAddressStr(RecvAddr.sin_addr.s_addr),
+						                   IpAddressStr(S_ADDR(RecvAddr)),
 						                   (unsigned int)htons(RecvAddr.sin_port));
 
 						std::string str = "Econet: Packet data:" + BytesToString(BeebTx.buff, BeebTx.Pointer);
@@ -1777,11 +1773,7 @@ bool EconetPoll_real() // return NMI status
 						FD_ZERO(&ReadFds);
 						FD_SET(ListenSocket, &ReadFds);
 
-#ifndef __APPLE__
-						static const timeval TimeOut = {0, 0};
-#else
-						static timeval TimeOut = {0, 0};
-#endif
+						timeval TimeOut = {0, 0};
 
 #ifndef __APPLE__
 						int RetVal = select((int)ListenSocket + 1, &ReadFds, NULL, NULL, &TimeOut);
@@ -1816,7 +1808,7 @@ bool EconetPoll_real() // return NMI status
 									DebugDisplayTraceF(DebugType::Econet, true,
 									                   "EconetPoll: Packet received: %u bytes from %s port %u",
 									                   (int)RetVal,
-									                   IpAddressStr(RecvAddr.sin_addr.s_addr),
+									                   IpAddressStr(S_ADDR(RecvAddr)),
 									                   htons(RecvAddr.sin_port));
 
 #ifndef __APPLE__
@@ -1960,7 +1952,8 @@ bool EconetPoll_real() // return NMI status
 
 										case FourWayStage::DataSent:
 											// we sent block of data, awaiting final ack..
-											if (EconetRx.ah.type == AUNType::Ack || EconetRx.ah.type == AUNType::NAck) {
+											if (EconetRx.ah.type == AUNType::Ack || EconetRx.ah.type == AUNType::NAck)
+											{
 												// are we expecting a (N)ACK ?
 												// TODO check it is a (n)ack for packet we just sent!!, deal with naks!
 												// construct a final ack for the beeb
@@ -2020,7 +2013,7 @@ bool EconetPoll_real() // return NMI status
 							}
 							else if (RetVal == SOCKET_ERROR && !SingleSocket)
 							{
-								EconetError("Econet: Failed to receive packet (error %ld)", WSAGetLastError());
+								EconetError("Econet: Failed to receive packet (error %ld)", GetLastSocketError());
 							}
 						}
 						else if (RetVal == SOCKET_ERROR)
@@ -2228,12 +2221,8 @@ bool EconetPoll_real() // return NMI status
 
 	// and then set the status bit if the line is high! (status bit stays
 	// up until cpu tries to clear it) (& still stays up if cts line still high)
-#ifndef __APPLE__
 
-	if (!(ADLC.control1 && CONTROL_REG1_TX_RESET) && ADLC.cts) // TODO: is && right here?
-#else
 	if (!(ADLC.control1 & CONTROL_REG1_RX_RESET) && ADLC.cts)
-#endif
 	{
 		ADLC.status1 |= STATUS_REG1_CTS; // set CTS now
 	}

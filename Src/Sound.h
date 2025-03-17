@@ -52,7 +52,7 @@ extern double SoundTuning;
 void SoundInit();
 void SoundReset();
 
-// Called in sysvia.cpp when a write to one of the 76489's registers occurs
+// Called in SysVia.cpp when a write to one of the 76489's registers occurs
 void Sound_RegWrite(int Value);
 void ClickRelay(bool RelayState);
 
@@ -78,7 +78,7 @@ void SetSound(SoundState state);
 struct AudioType {
 	char Signal; // Signal type: data, gap, or tone.
 	char BytePos; // Position in data byte
-	bool Enabled; // Enable state of audio deooder
+	bool Enabled; // Enable state of audio decoder
 	int Data; // The actual data itself
 	int Samples; // Samples counted in current pattern till changepoint
 	char CurrentBit; // Current bit in data being processed

@@ -43,8 +43,10 @@ Boston, MA  02110-1301, USA.
 #include "DiscType.h"
 #include "KeyMap.h"
 #include "Model.h"
+#include "MonitorType.h"
 #include "Port.h"
 #include "Preferences.h"
+#include "SoundStreamerType.h"
 #include "Tube.h"
 #include "Video.h"
 
@@ -141,25 +143,11 @@ enum class MessageResult
 	Cancel
 };
 
-enum class MonitorType
-{
-	RGB,
-	BW,
-	Amber,
-	Green
-};
-
 enum class DisplayRendererType
 {
 	GDI,
 	DirectDraw,
 	DirectX9
-};
-
-enum class SoundStreamerType
-{
-	XAudio2,
-	DirectSound
 };
 
 enum class JoystickOption
@@ -253,9 +241,9 @@ public:
 
 #ifndef __APPLE__
 	static LRESULT CALLBACK WndProc(HWND hWnd,
-	                                  UINT nMessage,
-	                                  WPARAM wParam,
-	                                  LPARAM lParam);
+	                                UINT nMessage,
+	                                WPARAM wParam,
+	                                LPARAM lParam);
 
 	LRESULT WndProc(UINT nMessage, WPARAM wParam, LPARAM lParam);
 	
@@ -277,7 +265,7 @@ public:
 #ifdef __APPLE__
 	void SelectFDC(int FDC);
 #endif
-	void LoadFDC(char *DLLName, bool save);
+	bool LoadFDC(char *DLLName, bool Save);
 	void UpdateLEDMenu();
 	void SetDriveControl(unsigned char value);
 	unsigned char GetDriveControl(void);
@@ -314,31 +302,31 @@ public:
 	}
 
 	void doUHorizLine(int Colour, int y, int sx, int width) {
-		if (TeletextEnabled) y/=TeletextStyle;
-		if (y>500) return;
-		memset(m_screen+ (y* 800) + sx, Colour, width);
+		if (TeletextEnabled) y /= TeletextStyle;
+		if (y > 500) return;
+		memset(m_screen + (y * 800) + sx, Colour, width);
 	}
 
 	EightUChars *GetLinePtr(int y) {
 #ifndef __APPLE__
-		int d = (y*800)+ScreenAdjust;
+		int d = (y * 800) + ScreenAdjust;
 #else
 		long d = (y*800)+ScreenAdjust;
 #endif
-		if (d > (MAX_VIDEO_SCAN_LINES*800))
-			return((EightUChars *)(m_screen+(MAX_VIDEO_SCAN_LINES*800)));
-		return((EightUChars *)(m_screen + d));
+		if (d > MAX_VIDEO_SCAN_LINES * 800)
+			return (EightUChars *)(m_screen + MAX_VIDEO_SCAN_LINES * 800);
+		return (EightUChars *)(m_screen + d);
 	}
 
 	SixteenUChars *GetLinePtr16(int y) {
 #ifndef __APPLE__
-		int d = (y*800)+ScreenAdjust;
+		int d = (y * 800) + ScreenAdjust;
 #else
 		long d = (y*800)+ScreenAdjust;
 #endif
-		if (d > (MAX_VIDEO_SCAN_LINES*800))
-			return((SixteenUChars *)(m_screen+(MAX_VIDEO_SCAN_LINES*800)));
-		return((SixteenUChars *)(m_screen + d));
+		if (d > MAX_VIDEO_SCAN_LINES * 800)
+			return (SixteenUChars *)(m_screen + MAX_VIDEO_SCAN_LINES * 800);
+		return (SixteenUChars *)(m_screen + d);
 	}
 
 	HWND GethWnd() { return m_hWnd; }
@@ -359,7 +347,7 @@ public:
 	void DisplayTiming();
 	void UpdateWindowTitle();
 	bool IsWindowMinimized() const;
-	void DisplayClientAreaText(HDC hdc);
+	void DisplayClientAreaText(HDC hDC);
 	void DisplayFDCBoardInfo(HDC hDC, int x, int y);
 	void ScaleJoystick(unsigned int x, unsigned int y);
 	void SetMousestickButton(int index, bool button);
@@ -379,9 +367,8 @@ public:
 	void EditRomConfig();
 	void OpenUserKeyboardDialog();
 	void UserKeyboardDialogClosed();
-	void ShowMenu(bool on);
-	void HideMenu(bool hide);
-	void TrackPopupMenu(int x, int y);
+	void ShowMenu(bool Show);
+	void HideMenu(bool Hide);
 	bool IsFullScreen() const { return m_FullScreen; }
 	void ResetTiming(void);
 	int TranslateKey(int vkey, bool keyUp, int &row, int &col);
@@ -390,16 +377,13 @@ public:
 	bool FindCommandLineFile(char *FileName);
 	void HandleCommandLineFile(int Drive, const char *FileName);
 	bool CheckUserDataPath(bool Persist);
+	bool CopyFiles(const char* SourceFileSpec, const char* DestPath);
 	void SelectUserDataPath(void);
 	void StoreUserDataPath(void);
-	bool NewTapeImage(char *FileName, int Size);
 	const char *GetAppPath() const { return m_AppPath; }
 	const char *GetUserDataPath() const { return m_UserDataPath; }
-	void GetDataPath(const char *folder, char *path);
-	void QuickLoad();
-	void QuickSave();
-	void LoadUEFState(const char *FileName);
-	void SaveUEFState(const char *FileName);
+	void GetDataPath(const char *Folder, char *Path);
+
 	bool LoadUEFTape(const char *FileName);
 	bool LoadCSWTape(const char *FileName);
 
@@ -427,9 +411,10 @@ public:
 	void LoadEmuUEF(FILE *SUEF,int Version);
 
 	bool InitClass();
+	bool CreateBeebWindow();
+	DWORD SetWindowStyle(DWORD StylesToAdd, DWORD StylesToClear);
+
 	void UpdateOptionsMenu();
-	void CreateBeebWindow(void);
-	void DisableRoundedCorners(HWND hWnd);
 	void FlashWindow();
 	void CreateBitmap(void);
 	void InitMenu();
@@ -439,10 +424,11 @@ public:
 	void ToggleSerial();
 	void DisableSerial();
 	void ConfigureSerial();
-	void SelectSerialPort(const char *PortName);
 	void UpdateSerialMenu();
 	void OnIP232Error(int Error);
 
+	// Econet
+	void ToggleEconet();
 	void UpdateEconetMenu();
 
 	void UpdateSFXMenu();
@@ -512,16 +498,26 @@ public:
 	bool ReadDisc(int Drive, bool bCheckForPrefs);
 	bool Load1770DiscImage(const char *FileName, int Drive, DiscType Type);
 	bool Load8271DiscImage(const char *FileName, int Drive, int Tracks, DiscType Type);
+
+	// Tape
 	void LoadTape();
 	bool LoadTape(const char *FileName);
+	bool NewTape(char* FileName, int Size);
 
 	void SetJoystickOption(JoystickOption Option);
 	void UpdateJoystickMenu();
 	void InitJoystick();
 	void ResetJoystick();
 
-	void RestoreState(void);
-	void SaveState(void);
+	// Save/Restore State
+	void RestoreState();
+	void SaveState();
+	void QuickLoad();
+	void QuickSave();
+	void LoadUEFState(const char* FileName);
+	void SaveUEFState(const char* FileName);
+	void EnableSaveState(bool Enable);
+
 	void NewDiscImage(int Drive);
 	void CreateDFSDiscImage(const char *FileName, int Drive, int Heads, int Tracks);
 	void EjectDiscImage(int Drive);
@@ -542,7 +538,7 @@ public:
 	void SetPrinterPort(PrinterPortType PrinterPort);
 	void UpdatePrinterPortMenu();
 	bool GetPrinterFileName();
-	bool TogglePrinter();
+	bool EnablePrinter(bool Enable);
 	void TranslatePrinterPort();
 
 	// AVI recording
@@ -609,8 +605,8 @@ public:
 
 	// Preferences
 	void LoadPreferences();
-	void LoadHardwarePreferences();
-	void LoadTubePreferences();
+	void LoadHardwarePreferences(int Version);
+	void LoadTubePreferences(int Version);
 	void LoadWindowPosPreferences(int Version);
 	void LoadTimingPreferences(int Version);
 	void LoadDisplayPreferences(int Version);
@@ -638,9 +634,9 @@ public:
 	int FindEnum(const std::string& Value, const char* const* Names, int Default);
 
 	// Timers
-	const int TIMER_KEYBOARD       = 1;
-	const int TIMER_AUTOBOOT_DELAY = 2;
-	const int TIMER_PRINTER        = 3;
+	const UINT TIMER_KEYBOARD       = 1;
+	const UINT TIMER_AUTOBOOT_DELAY = 2;
+	const UINT TIMER_PRINTER        = 3;
 
 	// Main window
 	HWND m_hWnd;
@@ -675,7 +671,7 @@ public:
 
 	// Pause / freeze emulation
 	bool m_StartPaused;
-	bool m_EmuPaused;
+	bool m_Paused;
 	bool m_WasPaused;
 	bool m_FreezeWhenInactive;
 	bool m_Frozen;
@@ -756,7 +752,7 @@ public:
 	KeyboardMappingType m_KeyboardMapping;
 	bool m_KeyMapAS;
 	bool m_KeyMapFunc;
-	char m_UserKeyMapPath[_MAX_PATH];
+	char m_UserKeyMapPath[MAX_PATH];
 	bool m_DisableKeysWindows;
 	bool m_DisableKeysBreak;
 	bool m_DisableKeysEscape;
@@ -766,10 +762,10 @@ public:
 	int m_vkeyPressed[256][2][2];
 
 	// File paths
-	char m_AppPath[_MAX_PATH];
-	char m_UserDataPath[_MAX_PATH];
+	char m_AppPath[MAX_PATH];
+	char m_UserDataPath[MAX_PATH];
 	bool m_CustomData;
-	char m_DiscPath[_MAX_PATH]; // JGH
+	char m_DiscPath[MAX_PATH]; // JGH
 	bool m_WriteProtectDisc[2];
 	bool m_WriteProtectOnLoad;
 
@@ -789,9 +785,7 @@ public:
 
 	// Clipboard
 	std::vector<char> m_ClipboardBuffer;
-#ifndef __APPLE__
 	size_t m_ClipboardLength;
-#endif
 	size_t m_ClipboardIndex;
 
 	// Printer
@@ -801,9 +795,12 @@ public:
 	std::string m_PrinterFileName;
 	std::string m_PrinterDevice;
 
+	// Serial
+	std::string m_SerialPort;
+
 	// Command line
-	char m_CommandLineFileName1[_MAX_PATH];
-	char m_CommandLineFileName2[_MAX_PATH];
+	char m_CommandLineFileName1[MAX_PATH];
+	char m_CommandLineFileName2[MAX_PATH];
 	std::string m_DebugScriptFileName;
 	std::string m_DebugLabelsFileName;
 	bool m_HasCommandLineModel;

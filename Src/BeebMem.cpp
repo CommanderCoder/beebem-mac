@@ -140,12 +140,12 @@ static bool Sh_CPUX, Sh_CPUE;
 /* End of Master 128 Specific Stuff, note initilised anyway regardless of Model Type in use */
 
 /* ROM file data */
-char RomPath[_MAX_PATH];
-char RomFile[_MAX_PATH];
+char RomPath[MAX_PATH];
+char RomFile[MAX_PATH];
 RomConfigFile RomConfig;
 
 // SCSI and IDE hard drive file location
-char HardDrivePath[_MAX_PATH]; // JGH
+char HardDrivePath[MAX_PATH]; // JGH
 
 // FDD Extension board variables
 int EFDCAddr;   // 1770 FDC location
@@ -728,31 +728,33 @@ static void FiddleACCCON(unsigned char newValue) {
 }
 
 /*----------------------------------------------------------------------------*/
-static void RomWriteThrough(int Address, unsigned char Value) {
-	int bank = 0;
+
+static void RomWriteThrough(int Address, unsigned char Value)
+{
+	int Bank = 0;
 
 	// SW RAM board - bank to write to is selected by User VIA
 	if (SWRAMBoardEnabled)
 	{
-		bank = (UserVIAState.orb & UserVIAState.ddrb) & 0xf;
+		Bank = (UserVIAState.orb & UserVIAState.ddrb) & 0xf;
 
-		if (!RomWritable[bank])
+		if (!RomWritable[Bank])
 		{
-			bank = ROM_BANK_COUNT;
+			Bank = ROM_BANK_COUNT;
 		}
 	}
 	else
 	{
 		// Find first writable bank
-		while (bank < ROM_BANK_COUNT && !RomWritable[bank])
+		while (Bank < ROM_BANK_COUNT && !RomWritable[Bank])
 		{
-			++bank;
+			++Bank;
 		}
 	}
 
-	if (bank < ROM_BANK_COUNT)
+	if (Bank < ROM_BANK_COUNT)
 	{
-		Roms[bank][Address - 0x8000] = Value;
+		Roms[Bank][Address - 0x8000] = Value;
 	}
 }
 
@@ -1185,26 +1187,16 @@ char *ReadRomTitle(int bank, char *Title, int BufSize)
 
 static std::string GetRomFileName(const std::string& RomName)
 {
-	
-#ifndef __APPLE__
-	if (RomName[0] != '\\' && RomName[1] != ':')
+	if (IsRelativePath(RomName.c_str()))
 	{
-		std::string RomFileName = RomPath;
-		RomFileName += "BeebFile\\";
-		RomFileName += RomName;
+		char PathName[MAX_PATH];
+		strcpy(PathName, mainWin->GetUserDataPath());
+		AppendPath(PathName, "BeebFile");
+		AppendPath(PathName, RomName.c_str());
+		MakePreferredPath(PathName);
 
-		return RomFileName;
+		return PathName;
 	}
-#else
-	if ((RomName[0]!='\\') && (RomName[0]!='/') && (RomName[1]!=':') )
-	{
-		std::string RomFileName = RomPath;
-		RomFileName += "BeebFile/";
-		RomFileName += RomName;
-
-		return RomFileName;
-	}
-#endif
 	else
 	{
 		return RomName;
@@ -1223,15 +1215,38 @@ static bool ReadRom(const std::string& RomFileName, int Bank)
 		long Size = ftell(File);
 		fseek(File, 0, SEEK_SET);
 
-		if (Size <= MAX_PALROM_SIZE)
+		if (Size == -1)
+		{
+			mainWin->Report(MessageType::Error,
+			                "Failed to read ROM file:\n %s", RomFileName.c_str());
+
+			return false;
+		}
+		else if (Size <= MAX_PALROM_SIZE)
 		{
 			// Read ROM:
-			fread(Roms[Bank], 1, MAX_ROM_SIZE, File);
+			size_t BytesRead = fread(Roms[Bank], 1, MAX_ROM_SIZE, File);
 
 			// Read PAL ROM:
 			fseek(File, 0L, SEEK_SET);
-			fread(PALRom[Bank].Rom, 1, Size, File);
+			BytesRead = fread(PALRom[Bank].Rom, 1, Size, File);
 			fclose(File);
+
+			if (BytesRead != (size_t)Size)
+			{
+				mainWin->Report(MessageType::Error,
+				                "Failed to read ROM file:\n %s", RomFileName.c_str());
+
+				return false;
+			}
+
+			if (BytesRead != (size_t)Size)
+			{
+				mainWin->Report(MessageType::Error,
+				                "Failed to read ROM file:\n %s", RomFileName.c_str());
+
+				return false;
+			}
 
 #ifndef __APPLE__
 			PALRom[Bank].Type = GuessRomType(PALRom[Bank].Rom, Size);
@@ -1292,15 +1307,25 @@ void BeebReadRoms()
 
 	if (InFile != nullptr)
 	{
-		fread(WholeRam + 0xc000, 1, MAX_ROM_SIZE, InFile);
+		size_t BytesRead = fread(WholeRam + 0xc000, 1, MAX_ROM_SIZE, InFile);
+
 		fclose(InFile);
+
+		if (BytesRead != MAX_ROM_SIZE)
+		{
+			mainWin->Report(MessageType::Error,
+			                "OS ROM has wrong file size (expected %d bytes):\n %s",
+			                OSRomFileName.c_str(),
+			                MAX_ROM_SIZE);
+		}
 
 		// Try to read OS ROM memory map:
 		std::string MapFileName = ReplaceFileExt(OSRomFileName, ".map");
 
 		DebugLoadMemoryMap(MapFileName.c_str(), 16);
 	}
-	else {
+	else
+	{
 		mainWin->Report(MessageType::Error,
 		                "Cannot open specified OS ROM:\n %s", OSRomFileName.c_str());
 	}

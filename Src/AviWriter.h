@@ -31,11 +31,12 @@ Boston, MA  02110-1301, USA.
 
 #include "BeebWin.h"
 
-class AVIWriter
+class AviWriter
 {
 public:
-	AVIWriter();
-	virtual ~AVIWriter();
+	AviWriter();
+	virtual ~AviWriter();
+	
 #ifndef __APPLE__
 	// Open file
 	HRESULT Initialise(const CHAR *psFileName,
@@ -48,7 +49,7 @@ public:
 	HRESULT WriteVideo(BYTE *pBuffer);
 
 private:
-	PAVIFILE m_pAVIFile;
+	PAVIFILE m_pAviFile;
 
 	WAVEFORMATEX m_WaveFormat;
 	PAVISTREAM m_pAudioStream;
@@ -66,6 +67,7 @@ private:
 #endif
 };
 
-extern AVIWriter *aviWriter;
+extern AviWriter *aviWriter;
 
 #endif
+

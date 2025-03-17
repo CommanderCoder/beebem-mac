@@ -70,6 +70,12 @@ public:
 		multiSelect = true;
 //		m_ofn.Flags |= OFN_ALLOWMULTISELECT | OFN_EXPLORER;
 	}
+    
+    void NoOverwritePrompt()
+    {
+//        m_ofn.Flags &= ~OFN_OVERWRITEPROMPT;
+    }
+
 
 	void SetTitle(LPCTSTR title)
 	{

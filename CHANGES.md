@@ -5,7 +5,8 @@ Unreleased changes
 ------------
 
 Contributors: Chris Needham, Mauro Varischetti, Bill Carr, Daniel Beardsmore,
-Steve Inglis, Alistair Cree, Ken Lowe, Mark Usher, Martin Mather, Tom Seddon
+Steve Inglis, Alistair Cree, Ken Lowe, Mark Usher, Martin Mather, Tom Seddon,
+Andrew Hague
 
 * Added support for FSD format disk images. This currently only works
   with the 8271 and not the 1770 disk controller.
@@ -25,6 +26,7 @@ Steve Inglis, Alistair Cree, Ken Lowe, Mark Usher, Martin Mather, Tom Seddon
   - Fixed potential buffer overflow bug.
   - Added support for immediate operations, used by the *VIEW and *NOTIFY
     commands. These currently only work under Master series emulation.
+  - Fixed CTS status bit.
 * Added Master ET support.
 * ROM config files (e.g., Roms.cfg) can now include comments. Note that
   files with comments are not backwards compatible with older BeebEm
@@ -40,10 +42,14 @@ Steve Inglis, Alistair Cree, Ken Lowe, Mark Usher, Martin Mather, Tom Seddon
 * Tape emulation improvements:
   - Improved tape input data carrier detect emulation.
   - Tape state is now preserved when loading and saving savestate files,
-    for both UEF and CSW files.
+    for both UEF and CSW files. Saving state is disabled while the tape
+	is recording.
   - Fixed loading CSW files from the command line.
+  - Fixed recording (appending) to existing tape image files.
 * Improved serial port emulation, and fixed data loss when using
   serial over a TCP connection.
+* Rewrote the Windows serial port implementation. Received characters
+  are now buffered to prevent being lost.
 * Added Set Keyboard Links command, which allows you to change the default
   screen mode and other options (Model B/B+ only).
 * Fixed installer to not delete Econet and key map config files.
@@ -81,8 +87,11 @@ Steve Inglis, Alistair Cree, Ken Lowe, Mark Usher, Martin Mather, Tom Seddon
   rendering after the host PC resumes from being suspended or in some cases
   enter a loop continually resetting the screen mode on entering full screen.
 * Fixed sound register reinitialisation after changing the sound sample rate.
+* Fixed sound muting when the BeebEm window loses focus.
+* Fixed teletext mode character alignment.
 * Fixed printing to the Windows clipboard, which would previously cause the
   emulator to slow down or stall.
+* When printing to file, the file is now appended to, not overwritten.
 * Lots of help documentation improvements.
 
 Version 4.19 (1 May 2023)

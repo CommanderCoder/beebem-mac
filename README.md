@@ -61,7 +61,7 @@ This Apple Mac version was ported to MacOS usingSwift 5.6.1, C *(gnu11)*, and C+
 Copyright
 ---------
 
-Copyright (C) 1994-2024 David Alan Gilbert and contributors.
+Copyright (C) 1994-2025 David Alan Gilbert and contributors.
 
 License
 -------

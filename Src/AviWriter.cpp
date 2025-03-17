@@ -27,19 +27,17 @@ Boston, MA  02110-1301, USA.
 #include <windows.h>
 #ifndef __APPLE__
 #include <mmreg.h>
-#include "AviWriter.h"
-#else
-#include "AVIWriter.h"
 #endif
+#include "AviWriter.h"
 
 /*--------------------------------------------------------------------------*/
 
-AVIWriter *aviWriter = nullptr;
+AviWriter *aviWriter = nullptr;
 
 /*--------------------------------------------------------------------------*/
 #ifndef __APPLE__
-AVIWriter::AVIWriter() :
-	m_pAVIFile(nullptr),
+AviWriter::AviWriter() :
+	m_pAviFile(nullptr),
 	m_pAudioStream(nullptr),
 	m_pCompressedAudioStream(nullptr),
 	m_pVideoStream(nullptr),
@@ -55,7 +53,7 @@ AVIWriter::AVIWriter() :
 
 /*--------------------------------------------------------------------------*/
 
-HRESULT AVIWriter::Initialise(const CHAR *pszFileName, 
+HRESULT AviWriter::Initialise(const CHAR *pszFileName,
                               const WAVEFORMATEX *WaveFormat,
                               const bmiData *BitmapFormat,
                               int fps)
@@ -66,7 +64,7 @@ HRESULT AVIWriter::Initialise(const CHAR *pszFileName,
 	m_BitmapFormat = *BitmapFormat;
 
 	DeleteFile(pszFileName);
-	HRESULT hr = AVIFileOpen(&m_pAVIFile,
+	HRESULT hr = AVIFileOpen(&m_pAviFile,
 	                         pszFileName,
 	                         OF_WRITE | OF_CREATE,
 	                         NULL);
@@ -84,7 +82,7 @@ HRESULT AVIWriter::Initialise(const CHAR *pszFileName,
 
 		m_nSampleSize = StreamInfo.dwSampleSize;
 
-		hr = AVIFileCreateStream(m_pAVIFile, &m_pAudioStream, &StreamInfo);
+		hr = AVIFileCreateStream(m_pAviFile, &m_pAudioStream, &StreamInfo);
 	}
 
 	if (SUCCEEDED(hr) && WaveFormat)
@@ -112,7 +110,7 @@ HRESULT AVIWriter::Initialise(const CHAR *pszFileName,
 		StreamInfo.rcFrame.bottom = m_BitmapFormat.bmiHeader.biHeight;
 		strcpy(&StreamInfo.szName[0], "BeebEm Video Capture");
 
-		hr = AVIFileCreateStream(m_pAVIFile, &m_pVideoStream, &StreamInfo);
+		hr = AVIFileCreateStream(m_pAviFile, &m_pVideoStream, &StreamInfo);
 	}
 
 	bmiData outputData = m_BitmapFormat;
@@ -155,7 +153,7 @@ HRESULT AVIWriter::Initialise(const CHAR *pszFileName,
 
 /*--------------------------------------------------------------------------*/
 
-AVIWriter::~AVIWriter()
+AviWriter::~AviWriter()
 {
 	Close();
 	AVIFileExit();
@@ -163,7 +161,7 @@ AVIWriter::~AVIWriter()
 
 /*--------------------------------------------------------------------------*/
 
-void AVIWriter::Close()
+void AviWriter::Close()
 {
 	if (m_pCompressedAudioStream != nullptr)
 	{
@@ -201,18 +199,18 @@ void AVIWriter::Close()
 		m_pVideoStream = nullptr;
 	}
 
-	if (m_pAVIFile != nullptr)
+	if (m_pAviFile != nullptr)
 	{
-		AVIFileRelease(m_pAVIFile);
-		m_pAVIFile = nullptr;
+		AVIFileRelease(m_pAviFile);
+		m_pAviFile = nullptr;
 	}
 }
 
 /*--------------------------------------------------------------------------*/
 
-HRESULT AVIWriter::WriteSound(BYTE *pBuffer, ULONG nBytesToWrite)
+HRESULT AviWriter::WriteSound(BYTE *pBuffer, ULONG nBytesToWrite)
 {
-	if (m_pAudioStream == nullptr || m_pAVIFile == nullptr)
+	if (m_pAudioStream == nullptr || m_pAviFile == nullptr)
 	{
 		return E_UNEXPECTED;
 	}
@@ -244,12 +242,12 @@ HRESULT AVIWriter::WriteSound(BYTE *pBuffer, ULONG nBytesToWrite)
 
 /*--------------------------------------------------------------------------*/
 
-HRESULT AVIWriter::WriteVideo(BYTE *pBuffer)
+HRESULT AviWriter::WriteVideo(BYTE *pBuffer)
 {
 	if (m_videoCompressor == nullptr ||
 	    m_videoBuffer == nullptr ||
 	    m_lastVideoFrame == nullptr ||
-	    m_pAVIFile == nullptr)
+	    m_pAviFile == nullptr)
 	{
 		return E_UNEXPECTED;
 	}

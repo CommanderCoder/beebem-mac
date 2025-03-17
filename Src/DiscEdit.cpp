@@ -12,8 +12,8 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public 
-License along with this program; if not, write to the Free 
+You should have received a copy of the GNU General Public
+License along with this program; if not, write to the Free
 Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 Boston, MA  02110-1301, USA.
 ****************************************************************/
@@ -35,7 +35,6 @@ Boston, MA  02110-1301, USA.
 
 #include "DiscEdit.h"
 #include "DiscInfo.h"
-#include "FileDialog.h"
 #include "FileUtils.h"
 
 static int DFS_LENGTH_TO_SECTORS(int Length)
@@ -153,7 +152,7 @@ bool dfs_get_catalogue(const char *szDiscFile,
 				dfsCat->numFiles   = buffer[DFS_SECTOR_SIZE + 5] / 8;
 				dfsCat->numSectors = ((buffer[DFS_SECTOR_SIZE + 6] & 3) << 8) + buffer[DFS_SECTOR_SIZE + 7];
 				dfsCat->bootOpts   = (buffer[DFS_SECTOR_SIZE + 6] >> 4) & 3;
-			
+
 				// Read first 31 files
 				dfs_get_files_from_cat(buffer, buffer + DFS_SECTOR_SIZE, dfsCat->numFiles, dfsCat->fileAttrs);
 
@@ -247,7 +246,7 @@ bool dfs_export_file(const char *szDiscFile,
 			}
 
 			// Read next sector
-			int n = len < DFS_SECTOR_SIZE ? len : DFS_SECTOR_SIZE;
+			size_t n = len < DFS_SECTOR_SIZE ? len : DFS_SECTOR_SIZE;
 
 			if (fseek(discfd, offset, SEEK_SET) != 0 ||
 			    fread(buffer, 1, n, discfd) != n)
@@ -348,16 +347,10 @@ bool dfs_import_file(const char *szDiscFile,
 {
 	bool success = true;
 
-	char infname[_MAX_PATH];
 	char dfsname[DFS_MAX_NAME_LEN + 3];
 	int startSector = 0;
 	int catIndex = 0;
-	int numSectors;
-	int sector;
-	int len;
-	int offset;
-	int track;
-	int i, j, n;
+	int i, j;
 	unsigned char buffer[DFS_SECTOR_SIZE * 4];
 
 	DFS_FILE_ATTR *attrs = dfsCat->fileAttrs;
@@ -371,11 +364,11 @@ bool dfs_import_file(const char *szDiscFile,
 	}
 
 	// Build file names
-	char filename[_MAX_PATH];
-
+	char filename[MAX_PATH];
 	strcpy(filename, szImportFolder);
-	strcat(filename, "/");
-	strcat(filename, szFile);
+	AppendPath(filename, szFile);
+
+	char infname[MAX_PATH];
 	strcpy(infname, filename);
 	strcat(infname, ".inf");
 
@@ -385,13 +378,15 @@ bool dfs_import_file(const char *szDiscFile,
 	int fileLen = -1;
 
 	FILE* filefd = fopen(infname, "rb");
+
 	if (filefd != NULL)
 	{
-		if (fscanf(filefd, "%9s %X %X", dfsname, &loadAddr, &execAddr) < 1)
+		if (fscanf(filefd, "%9s %X %X", dfsname, (unsigned int*)&loadAddr, (unsigned int*)&execAddr) < 1)
 		{
 			sprintf(szErrStr, "Failed to read file attributes from:\n  %s", infname);
 			success = false;
 		}
+
 		fclose(filefd);
 	}
 	else
@@ -442,6 +437,7 @@ bool dfs_import_file(const char *szDiscFile,
 		if (fileLen == -1)
 		{
 			filefd = fopen(filename, "rb");
+
 			if (filefd == NULL)
 			{
 				sprintf(szErrStr, "Failed to open file:\n  %s", filename);
@@ -502,7 +498,8 @@ bool dfs_import_file(const char *szDiscFile,
 		else
 			startSector = 2;
 
-		numSectors = DFS_LENGTH_TO_SECTORS(fileLen);
+		int numSectors = DFS_LENGTH_TO_SECTORS(fileLen);
+
 		for (i = 0; i < dfsCat->numFiles; ++i)
 		{
 			if ((attrs[i].startSector - startSector) >= numSectors)
@@ -533,6 +530,7 @@ bool dfs_import_file(const char *szDiscFile,
 	{
 		// Import the data
 		filefd = fopen(filename, "rb");
+
 		if (filefd == NULL)
 		{
 			sprintf(szErrStr, "Failed to open file:\n  %s", filename);
@@ -540,11 +538,13 @@ bool dfs_import_file(const char *szDiscFile,
 		}
 		else
 		{
-			sector = startSector;
-			len = fileLen;
+			int sector = startSector;
+			int len = fileLen;
 
 			while (success && len > 0)
 			{
+				int offset;
+
 				// Calc file offset for next sector
 				if (numSides == 1)
 				{
@@ -552,7 +552,7 @@ bool dfs_import_file(const char *szDiscFile,
 				}
 				else
 				{
-					track = sector / DFS_SECTORS_PER_TRACK;
+					int track = sector / DFS_SECTORS_PER_TRACK;
 					offset = (track * 2 + side) * DFS_SECTORS_PER_TRACK;
 					offset += (sector % DFS_SECTORS_PER_TRACK);
 					offset *= DFS_SECTOR_SIZE;
@@ -560,7 +560,7 @@ bool dfs_import_file(const char *szDiscFile,
 
 				// Read next sector
 				memset(buffer, 0, DFS_SECTOR_SIZE);
-				n = len < DFS_SECTOR_SIZE ? len : DFS_SECTOR_SIZE;
+				size_t n = len < DFS_SECTOR_SIZE ? len : DFS_SECTOR_SIZE;
 				if (fread(buffer, 1, n, filefd) != n)
 				{
 					sprintf(szErrStr, "Failed to read data from:\n  %s", filename);
@@ -588,7 +588,8 @@ bool dfs_import_file(const char *szDiscFile,
 	if (success)
 	{
 		// Update the catalogue
-		offset = 0;
+		int offset = 0;
+
 		if (numSides == 2 && side == 1)
 		{
 			// Tracks are interleaved in a double sided disc image
@@ -603,7 +604,7 @@ bool dfs_import_file(const char *szDiscFile,
 		else
 		{
 			memset(buffer, 0, DFS_SECTOR_SIZE * 4);
-			numSectors = dfsCat->watford62 ? 4 : 2;
+			size_t numSectors = dfsCat->watford62 ? 4 : 2;
 			if (fread(buffer, 1, DFS_SECTOR_SIZE * numSectors, discfd) !=
 			    (DFS_SECTOR_SIZE * numSectors))
 			{
@@ -625,14 +626,14 @@ bool dfs_import_file(const char *szDiscFile,
 				dfsCat->numFiles++;
 
 				// Update catalogue sectors
-				n = (dfsCat->numFiles > 31) ? 31 : dfsCat->numFiles;
-				buffer[DFS_SECTOR_SIZE + 5] = n * 8;
+				int n = (dfsCat->numFiles > 31) ? 31 : dfsCat->numFiles;
+				buffer[DFS_SECTOR_SIZE + 5] = (unsigned char)(n * 8);
 				dfs_write_files_to_cat(buffer, buffer + DFS_SECTOR_SIZE, n, attrs);
 
 				if (dfsCat->watford62)
 				{
 					n = (dfsCat->numFiles > 31) ? dfsCat->numFiles - 31 : 0;
-					buffer[DFS_SECTOR_SIZE * 3 + 5] = n * 8;
+					buffer[DFS_SECTOR_SIZE * 3 + 5] = (unsigned char)(n * 8);
 					dfs_write_files_to_cat(buffer + DFS_SECTOR_SIZE * 2, buffer + DFS_SECTOR_SIZE * 3,
 					                       n, &attrs[31]);
 				}

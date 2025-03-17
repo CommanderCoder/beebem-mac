@@ -20,15 +20,15 @@ Boston, MA  02110-1301, USA.
 
 #include <windows.h>
 
+#include <fstream>
+#include <string>
+#include <stdio.h>
+
 #include "RomConfigFile.h"
 #include "BeebWin.h"
 #include "FileUtils.h"
 #include "Main.h"
 #include "StringUtils.h"
-
-#include <stdio.h>
-#include <fstream>
-#include <string>
 
 /****************************************************************************/
 
@@ -184,7 +184,7 @@ bool RomConfigFile::Load(const char *FileName)
 			continue;
 		}
 
-		if (Line.size() >= _MAX_PATH)
+		if (Line.size() >= MAX_PATH)
 		{
 			Success = false;
 			break;

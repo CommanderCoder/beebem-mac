@@ -356,6 +356,8 @@ unsigned char UserVIARead(int Address)
 		case 1:
 			UserVIAState.ifr &= 0xfc;
 			UpdateIFRTopBit();
+			// Fall through...
+
 		case 15:
 			tmp = 255;
 			break;
@@ -612,31 +614,33 @@ bool PrinterEnable(const char *FileName)
 	ClosePrinterOutputFile();
 
 #ifndef __APPLE__
-	if (FileName != nullptr)
+	if (FileName == nullptr)
 #else
 	if (FileName == nullptr || FileName[0] == 0)
-#endif
+#endif	
 	{
 		PrinterEnabled = true;
 		SetTrigger(PRINTER_TRIGGER, PrinterTrigger);
 		return true;
-	}
-
-	PrinterFileName = FileName;
-
-	PrinterFileHandle = fopen(PrinterFileName.c_str(), "wb");
-
-	if (PrinterFileHandle == nullptr)
-	{
-		mainWin->Report(MessageType::Error,
-		                "Failed to open printer:\n  %s", PrinterFileName.c_str());
-		return false;
 	}
 	else
 	{
-		PrinterEnabled = true;
-		SetTrigger(PRINTER_TRIGGER, PrinterTrigger);
-		return true;
+		PrinterFileName = FileName;
+
+		PrinterFileHandle = fopen(PrinterFileName.c_str(), "ab");
+
+		if (PrinterFileHandle == nullptr)
+		{
+			mainWin->Report(MessageType::Error,
+			                "Failed to open printer:\n  %s", PrinterFileName.c_str());
+			return false;
+		}
+		else
+		{
+			PrinterEnabled = true;
+			SetTrigger(PRINTER_TRIGGER, PrinterTrigger);
+			return true;
+		}
 	}
 }
 

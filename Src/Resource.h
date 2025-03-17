@@ -208,6 +208,7 @@
 #define IDC_UNLOCK                      1119
 #define IDC_TAPE_CONTROL_UNLOCK         1119
 #define IDC_TELETEXT_SOURCE             1120
+#define IDC_TAPE_CONTROL_NEW_TAPE       1120
 #define IDC_FILE1                       1121
 #define IDC_FILE2                       1122
 #define IDC_FILE3                       1123
@@ -313,8 +314,8 @@
 #define IDM_MODELBINT                   40105
 #define IDM_MODELBPLUS                  40106
 #define IDM_MASTER128                   40107
-#define IDM_MASTER_ET                   40327
-#define IDM_LOADTAPE                    40108
+#define IDM_MASTER_ET                   40108
+#define IDM_LOADTAPE                    40109
 #define IDM_REWINDTAPE                  40116
 #define IDM_SFX_RELAY                   40117
 #define IDM_TUBE_NONE                   40118
@@ -445,7 +446,7 @@
 #define IDM_XAUDIO2                     40285
 #define IDM_DIRECTSOUND                 40286
 #define IDM_IDE_HARD_DRIVE              40287
-#define IDM_EMUPAUSED                   40296
+#define IDM_PAUSE                       40296
 #define IDM_VIEW_DD_SCREENRES           40297
 #define IDM_VIEW_DD_640X480             40298
 #define IDM_VIEW_DD_720X576             40299
@@ -471,12 +472,12 @@
 #define IDM_SELECT_TELETEXT_DATA_SOURCE 40326
 
 // Next default values for new objects
-//
+// 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        122
-#define _APS_NEXT_COMMAND_VALUE         40328
+#define _APS_NEXT_COMMAND_VALUE         40327
 #define _APS_NEXT_CONTROL_VALUE         1145
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

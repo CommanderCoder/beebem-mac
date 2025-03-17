@@ -64,8 +64,6 @@ class Dialog
 		int m_DialogID;
 		HWND m_hwnd;
 };
-
-void CenterDialog(HWND hWndParent, HWND hWnd);
 #else
 #include "Dialog-mac.hpp"
 #endif //__APPLE__

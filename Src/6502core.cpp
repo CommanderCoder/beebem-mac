@@ -57,11 +57,7 @@ Boston, MA  02110-1301, USA.
 #include "Z80mem.h"
 #include "Z80.h"
 
-#ifdef WIN32
 #define INLINE inline
-#else
-#define INLINE
-#endif
 
 static CPU CPUType;
 static int CurrentInstruction;
@@ -1307,9 +1303,10 @@ INLINE static int ZeroPgYAddrModeHandler_Address()
 
 // Initialise 6502core
 
-void Init6502core()
+void Init6502Core()
 {
-	switch (MachineType) {
+	switch (MachineType)
+	{
 		case Model::Master128:
 		case Model::MasterET:
 			CPUType = CPU::CPU65C12;
@@ -1395,11 +1392,7 @@ static void ClipboardREMVHandler()
 	{
 		// Examine buffer state
 
-#ifndef __APPLE__
 		if (mainWin->m_ClipboardIndex < mainWin->m_ClipboardLength)
-#else
-		if (mainWin->m_ClipboardIndex < mainWin->m_ClipboardBuffer.size())
-#endif
 			{
 			Accumulator = mainWin->m_ClipboardBuffer[mainWin->m_ClipboardIndex];
 			PSR &= ~FlagC;
@@ -1411,11 +1404,7 @@ static void ClipboardREMVHandler()
 	}
 	else {
 		// Remove character from buffer
-#ifndef __APPLE__
 		if (mainWin->m_ClipboardIndex < mainWin->m_ClipboardLength)
-#else
-		if (mainWin->m_ClipboardIndex < mainWin->m_ClipboardBuffer.size())
-#endif
 		{
 			unsigned char c = mainWin->m_ClipboardBuffer[mainWin->m_ClipboardIndex++];
 
@@ -1488,11 +1477,7 @@ static void ClipboardCNPVHandler()
 		}
 		else
 		{
-#ifndef __APPLE__
 			XReg = mainWin->m_ClipboardIndex < mainWin->m_ClipboardLength;
-#else
-			XReg = mainWin->m_ClipboardIndex < mainWin->m_ClipboardBuffer.size();
-#endif
 			YReg = 0;
 		}
 	}
@@ -1535,11 +1520,7 @@ void Exec6502Instruction()
 			ProgramCounter == (WholeRam[0x20e] | (WholeRam[0x20f] << 8))) {
 			mainWin->SpeakChar(Accumulator);
 		}
-#ifndef __APPLE__
 		else if (mainWin->m_ClipboardLength > 0) {
-#else
-		else if (!mainWin->m_ClipboardBuffer.empty()) {
-#endif
 			// Check for REMV (Remove from buffer vector) and CNPV (Count/purge buffer
 			// vector). X register contains the buffer number (0 indicates the keyboard
 			// buffer). See AUG p.263/264 and p.138
@@ -1560,7 +1541,7 @@ void Exec6502Instruction()
 		InstructionCount[CurrentInstruction]++;
 
 		// Advance VIAs to point where mem read happens
-		ViaCycles=0;
+		ViaCycles = 0;
 		AdvanceCyclesForMemRead();
 
 		switch (CurrentInstruction)
@@ -3268,7 +3249,7 @@ void Exec6502Instruction()
 
 			case TubeDevice::AcornZ80: // TODO: 6MHz
 			case TubeDevice::TorchZ80: // TODO: 4MHz
-				z80_execute();
+				Z80Execute();
 				break;
 
 			case TubeDevice::AcornArm: // TODO: 8MHz

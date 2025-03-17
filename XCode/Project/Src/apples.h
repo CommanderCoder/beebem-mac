@@ -63,6 +63,8 @@ typedef uint32_t* HGDIOBJ; //
 typedef uint32_t* HMENU; //
 typedef uint32_t* HBITMAP; //
 typedef HANDLE HHOOK;
+typedef int32_t INT_PTR; //
+
 
 #define CALLBACK /**/
 int GetCurrentThreadId();
@@ -116,6 +118,8 @@ typedef char *LPSTR;
 //typedef __nullterminated CONST CHAR *LPCSTR;
 typedef const char *LPCSTR;
 #define LPTSTR char *
+#define LPCTSTR const char *
+
 
 typedef char REGSAM;
 typedef char LPSECURITY_ATTRIBUTES;
@@ -353,6 +357,7 @@ extern char** __argv;
 #define LB_RESETCONTENT -1
 #define LB_FINDSTRING -1
 #define LB_ERR -1
+#define LB_SETCURSEL -1
 int SendMessage(HWND w, int a, size_t b, long c);
 void DestroyWindow(HWND w);
 void ModifyMenu(HMENU m_hMenu, UINT pf, UINT flags, UINT_PTR newID, LPCSTR str);
@@ -462,6 +467,7 @@ extern "C" int swift_SetMachineType(Model machinetype);
 void GetWindowRect(HWND h, RECT* r);
 void GetClientRect(HWND h, RECT* r);
 void InvalidateRect(HWND h, RECT* r, bool b);
+bool EnableWindow(HWND h,BOOL bEnable);
 
 void CheckRadioButton(HWND hwndDlg,
 					  int first,
@@ -505,6 +511,7 @@ int beebwin_KeyUpDown(long, long,long);
 #define SW_MAXIMIZE -1
 #define SW_RESTORE -1
 #define SW_SHOWNORMAL -1
+
 DWORD GetWindowLong(HWND wnd, long s);
 void SetWindowLong(HWND m_hWnd, int f, DWORD s);
 BOOL SetWindowText(HWND    hWnd, LPCSTR lpString);
@@ -568,6 +575,8 @@ extern "C" int swift_Report ( const char* message, const char* title, int button
 #define ID_FDC_ACORN                      39901
 #define ID_FDC_OPUS                       39902
 #define ID_FDC_WATFORD                    39903
+
+#define MS_CTS_ON 0x0010
 
 
 int MessageBox(HWND m_hWnd, const char* buffer, const char* WindowTitle, int Type);
@@ -696,7 +705,7 @@ void FreeLibrary(HMODULE);
 bool GetFullPathName(const char* c, int l, const char* p, char** f);
 void PathCanonicalize(const char* c, const char* p);
 
-typedef char* PCZZSTR;//
+typedef const char* PCZZSTR;//
 typedef uint32_t LPVOID;//
 typedef uint32_t PCSTR;//
 typedef uint32_t FILEOP_FLAGS;//

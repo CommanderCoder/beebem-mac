@@ -24,6 +24,8 @@ Boston, MA  02110-1301, USA.
 /* Mike Wyatt 7/6/97 - Added undocumented instructions */
 /* Copied for 65C02 Tube core - 13/04/01 */
 
+#include <windows.h>
+
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -36,6 +38,7 @@ Boston, MA  02110-1301, USA.
 #include "Arm.h"
 #include "BeebMem.h"
 #include "Debug.h"
+#include "FileUtils.h"
 #include "Log.h"
 #include "Main.h"
 #include "SprowCoPro.h"
@@ -43,12 +46,7 @@ Boston, MA  02110-1301, USA.
 #include "Z80mem.h"
 #include "Z80.h"
 
-#ifdef WIN32
-#include <windows.h>
 #define INLINE inline
-#else
-#define INLINE
-#endif
 
 // Some interrupt set macros
 #define SETTUBEINT(a) TubeintStatus |= 1 << a
@@ -310,7 +308,7 @@ void WriteTorchTubeFromHostSide(int IOAddr,unsigned char IOData)
 	case 0x0c :
 		if (IOData == 0xaa)
 		{
-			init_z80();
+			Z80Init();
 		}
 		break;
 
@@ -1534,19 +1532,30 @@ static void Reset65C02()
 
   //The fun part, the tube OS is copied from ROM to tube RAM before the processor starts processing
   //This makes the OS "ROM" writable in effect, but must be restored on each reset.
-  char TubeRomName[MAX_PATH];
-  strcpy(TubeRomName,RomPath);
-  strcat(TubeRomName,"BeebFile/6502Tube.rom");
-  FILE *TubeRom = fopen(TubeRomName,"rb");
+  char TubeRomPath[MAX_PATH];
+  strcpy(TubeRomPath, RomPath);
+  AppendPath(TubeRomPath, "BeebFile");
+  AppendPath(TubeRomPath, "6502Tube.rom");
+
+  FILE *TubeRom = fopen(TubeRomPath, "rb");
+
   if (TubeRom != nullptr)
   {
-    fread(TubeRam+0xf800,1,2048,TubeRom);
+    size_t BytesRead = fread(TubeRam + 0xf800, 1, 2048, TubeRom);
+
     fclose(TubeRom);
+
+    if (BytesRead != 2048)
+    {
+      mainWin->Report(MessageType::Error,
+                      "Invalid Tube ROM file (expected 2,048 bytes):\n  %s",
+                      TubeRomPath);
+    }
   }
   else
   {
     mainWin->Report(MessageType::Error,
-                    "Cannot open ROM:\n %s", TubeRomName);
+                    "Cannot open ROM:\n %s", TubeRomPath);
   }
 
   TubeProgramCounter = TubeReadMem(0xfffc);
@@ -1586,8 +1595,10 @@ void ResetTube(void)
   TubeNMIStatus=0;
 }
 
-/* Initialise 6502core */
-void Init65C02core(void) {
+// Initialise 65C02Core
+
+void Init65C02Core()
+{
   Reset65C02();
   R1Status=0;
   ResetTube();

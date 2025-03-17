@@ -22,7 +22,6 @@ Boston, MA  02110-1301, USA.
 
 #include <windows.h>
 #include <stdio.h>
-
 #include <stdlib.h>
 
 #include <map>
@@ -51,15 +50,28 @@ CSprowCoPro::CSprowCoPro()
 
 CSprowCoPro::InitResult CSprowCoPro::Init(const char* ROMPath)
 {
-    FILE *testFile = fopen(ROMPath, "rb");
+    FILE * ROMFile = fopen(ROMPath, "rb");
 
-    if (testFile != nullptr)
+    if (ROMFile != nullptr)
     {
-        fseek(testFile, 0, SEEK_END);
-        long length = ftell(testFile);
-        fseek(testFile, 0, SEEK_SET);
-        fread(m_ROMMemory, length, 1, testFile);
-        fclose(testFile);
+        fseek(ROMFile, 0, SEEK_END);
+        long Length = ftell(ROMFile);
+        fseek(ROMFile, 0, SEEK_SET);
+
+        if (Length != ROM_SIZE)
+        {
+            fclose(ROMFile);
+            return InitResult::InvalidROM;
+        }
+
+        size_t BytesRead = fread(m_ROMMemory, 1, ROM_SIZE, ROMFile);
+
+        fclose(ROMFile);
+
+        if (BytesRead != ROM_SIZE)
+        {
+            return InitResult::InvalidROM;
+        }
     }
     else
     {
@@ -159,9 +171,11 @@ For the new test suite Abort between 8 Mbytes and 26 Mbytes */
 
 int SWI_vector_installed = FALSE;
 int tenval = 1;
+
 #define PRIMEPIPE     4
 #define RESUME        8
 #define FLUSHPIPE state->NextInstr |= PRIMEPIPE
+
 unsigned
 ARMul_OSHandleSWI (ARMul_State * state, ARMword number)
 {
@@ -424,7 +438,7 @@ PutWord (ARMul_State * state, ARMword address, ARMword data, int /* check */)
 \***************************************************************************/
 
 unsigned
-ARMul_MemoryInit (ARMul_State * state, ARMword initmemsize)
+ARMul_MemoryInit (ARMul_State * state, unsigned long initmemsize)
 {
     if (initmemsize)
 #ifndef __APPLE__
@@ -800,7 +814,6 @@ ARMul_Ccycles (ARMul_State * state, unsigned number, ARMword /* address */)
     state->NumCcycles += number;
     ARMul_CLEARABORT;
 }
-
 
 /* Read a byte.  Do not check for alignment or access errors.  */
 

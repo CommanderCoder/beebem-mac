@@ -34,7 +34,8 @@ Boston, MA  02110-1301, USA.
 #include "BeebWin.h"
 #include "Log.h"
 #include "SelectKeyDialog.h"
-#include "Serial.h"
+
+/****************************************************************************/
 
 Model MachineType;
 BeebWin *mainWin = nullptr;
@@ -42,6 +43,7 @@ HINSTANCE hInst;
 HWND hCurrentDialog = nullptr;
 HACCEL hCurrentAccelTable = nullptr;
 
+/****************************************************************************/
 #ifndef __APPLE__
 int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE /* hPrevInstance */,
                      LPSTR /* lpszCmdLine */, int /* nCmdShow */)
@@ -76,9 +78,6 @@ int mainInit()
 	}
 
 	OpenLog();
-
-	// Create serial threads
-	SerialInit();
 
 #ifdef __APPLE__
 	return 0;
@@ -136,7 +135,8 @@ int mainStep()
 		 return 1;
 
 #endif
-		if (!mainWin->IsFrozen() && !mainWin->IsPaused()) {
+		if (!mainWin->IsFrozen() && !mainWin->IsPaused())
+		{
 			Exec6502Instruction();
 		}
 	
@@ -153,9 +153,9 @@ int mainEnd()
 #endif
 	CloseLog();
 
-	SerialClose();
-
 	delete mainWin;
 
 	return 0;
 }
+
+/****************************************************************************/

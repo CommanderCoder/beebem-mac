@@ -45,6 +45,8 @@ Boston, MA  02110-1301, USA.
 #include "Messages.h"
 #include "RingBuffer.h"
 #include "Serial.h"
+#include "Socket.h"
+#include "StringUtils.h"
 #include "Thread.h"
 #ifdef __APPLE__
 #undef Sleep // sleep should sleep the thread, not the beeb cpu
@@ -74,15 +76,13 @@ int IP232Port;
 
 static bool IP232FlagReceived = false;
 
-static bool IP232RTS = false;
-
 // IP232 routines use InputBuffer as data coming in from the modem,
 // and OutputBuffer for data to be sent out to the modem.
 // StatusBuffer is used for changes to the serial ACIA status
 // registers
-static RingBuffer InputBuffer;
-static RingBuffer OutputBuffer;
-static RingBuffer StatusBuffer;
+static RingBuffer InputBuffer(1024);
+static RingBuffer OutputBuffer(1024);
+static RingBuffer StatusBuffer(128);
 
 CycleCountT IP232RxTrigger = CycleCountTMax;
 
@@ -210,15 +210,11 @@ void IP232Close()
 		if (DebugEnabled)
 			DebugDisplayTrace(DebugType::RemoteServer, true, "IP232: Closing socket");
 
-		int Result = closesocket(EthernetSocket);
+		int Result = CloseSocket(EthernetSocket);
 
 		if (Result == SOCKET_ERROR)
 		{
-			int Error = WSAGetLastError();
-#ifdef __APPLE__
-			Error = Error; // Error isn't used if NDEBUG is undefined
-#endif
-			DebugTrace("closesocket() returned error %d\n", Error);
+			DebugTrace("closesocket() returned error %d\n", GetLastSocketError());
 		}
 
 		EthernetSocket = INVALID_SOCKET;
@@ -291,17 +287,12 @@ unsigned char IP232ReadStatus()
 
 void IP232SetRTS(bool RTS)
 {
-	if (RTS != IP232RTS)
+	DebugTrace("IP232SetRTS: RTS=%d\n", (int)RTS);
+
+	if (IP232Handshake)
 	{
-		DebugTrace("IP232SetRTS: RTS=%d\n", (int)RTS);
-
-		if (IP232Handshake)
-		{
-			IP232Write(255);
-			IP232Write(static_cast<unsigned char>(RTS));
-		}
-
-		IP232RTS = RTS;
+		IP232Write(255);
+		IP232Write(static_cast<unsigned char>(RTS));
 	}
 }
 
@@ -321,18 +312,15 @@ unsigned int EthernetPortReadThread::ThreadFunc()
 			{
 				fd_set fds;
 				FD_ZERO(&fds);
-#ifndef __APPLE__
-				static const timeval TimeOut = {0, 0};
-#else
-				static timeval TimeOut = {0, 0};
-#endif
+				timeval TimeOut = {0, 0};
+
 				FD_SET(EthernetSocket, &fds);
 
 				int NumReady = select(32, &fds, nullptr, nullptr, &TimeOut); // Read
 
 				if (NumReady == SOCKET_ERROR)
 				{
-					DebugTrace("Read Select Error %d\n", WSAGetLastError());
+					DebugTrace("Read Select Error %d\n", GetLastSocketError());
 
 					if (DebugEnabled)
 						DebugDisplayTrace(DebugType::RemoteServer, true, "IP232: Select error on read");
@@ -356,10 +344,7 @@ unsigned int EthernetPortReadThread::ThreadFunc()
 						Close = true;
 
 						// Should really check what the error was ...
-						int Error = WSAGetLastError();
-#ifdef __APPLE__
-						Error = Error; // Error isn't used if NDEBUG is undefined
-#endif
+						int Error = GetLastSocketError();
 
 						DebugTrace("Read error %d, remote session disconnected\n", Error);
 
@@ -389,11 +374,7 @@ unsigned int EthernetPortReadThread::ThreadFunc()
 
 				fd_set fds;
 				FD_ZERO(&fds);
-#ifndef __APPLE__
-				static const timeval TimeOut = {0, 0};
-#else
-				static timeval TimeOut = {0, 0};
-#endif
+				timeval TimeOut = {0, 0};
 
 				FD_SET(EthernetSocket, &fds);
 
@@ -401,7 +382,7 @@ unsigned int EthernetPortReadThread::ThreadFunc()
 
 				if (NumReady == SOCKET_ERROR)
 				{
-					DebugTrace("Write Select Error %d\n", WSAGetLastError());
+					DebugTrace("Write Select Error %d\n", GetLastSocketError());
 
 					if (DebugEnabled)
 						DebugDisplayTrace(DebugType::RemoteServer, true, "IP232: Select error on write");
@@ -418,10 +399,7 @@ unsigned int EthernetPortReadThread::ThreadFunc()
 						Close = true;
 
 						// Should really check what the error was ...
-						int Error = WSAGetLastError();
-#ifdef __APPLE__
-						Error = Error; // Error isn't used if NDEBUG is undefined
-#endif
+						int Error = GetLastSocketError();
 
 						DebugTrace("Send Error %i, Error %d\n", BytesSent, Error);
 
@@ -536,12 +514,10 @@ static void DebugReceivedData(unsigned char* pData, int Length)
 	DebugDisplayTraceF(DebugType::RemoteServer, true,
 	                   "IP232: Read %d bytes from server", Length);
 
-	static const char HexDigit[16] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
-
 	for (i = 0; i < Length; i++)
 	{
-		info[i * 2]       = HexDigit[(pData[i] >> 4) & 0xf];
-		info[(i * 2) + 1] = HexDigit[pData[i] & 0x0f];
+		info[i * 2]       = ToHexDigit((pData[i] >> 4) & 0xf);
+		info[(i * 2) + 1] = ToHexDigit(pData[i] & 0x0f);
 	}
 
 	info[i * 2] = 0;

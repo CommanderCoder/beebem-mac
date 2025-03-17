@@ -306,8 +306,8 @@ void BeebWin::LoadPreferences()
 		       m_PrefsFileName.c_str());
 	}
 
-	LoadHardwarePreferences();
-	LoadTubePreferences();
+	LoadHardwarePreferences(Version);
+	LoadTubePreferences(Version);
 	LoadWindowPosPreferences(Version);
 	LoadTimingPreferences(Version);
 	LoadDisplayPreferences(Version);
@@ -334,13 +334,43 @@ void BeebWin::LoadPreferences()
 
 /****************************************************************************/
 
-void BeebWin::LoadHardwarePreferences()
+void BeebWin::LoadHardwarePreferences(int Version)
 {
-	std::string Value;
+	if (Version >= 3)
+	{
+		std::string Value;
 
-	m_Preferences.GetStringValue(CFG_MACHINE_TYPE, Value, MachineTypeStr[0]);
+		m_Preferences.GetStringValue(CFG_MACHINE_TYPE, Value, MachineTypeStr[0]);
 
-	MachineType = static_cast<Model>(FindEnum(Value, MachineTypeStr, 0));
+		MachineType = static_cast<Model>(FindEnum(Value, MachineTypeStr, 0));
+	}
+	else
+	{
+		unsigned char Type = 0;
+
+		if (m_Preferences.GetBinaryValue(CFG_MACHINE_TYPE, &Type, 1))
+		{
+			switch (Type)
+			{
+				case 0:
+				default:
+					MachineType = Model::B;
+					break;
+
+				case 1:
+					MachineType = Model::IntegraB;
+					break;
+
+				case 2:
+					MachineType = Model::BPlus;
+					break;
+
+				case 3:
+					MachineType = Model::Master128;
+					break;
+			}
+		}
+	}
 
 	if (!m_Preferences.GetBoolValue(CFG_BASIC_HARDWARE_ONLY, BasicHardwareOnly, false))
 	{
@@ -361,52 +391,94 @@ void BeebWin::LoadHardwarePreferences()
 
 /****************************************************************************/
 
-void BeebWin::LoadTubePreferences()
+void BeebWin::LoadTubePreferences(int Version)
 {
 	std::string Value;
 
-	if (m_Preferences.GetStringValue(CFG_TUBE_TYPE, Value, TubeDeviceStr[0]))
+	if (Version >= 3)
 	{
-		TubeType = static_cast<TubeDevice>(FindEnum(Value, TubeDeviceStr, 0));
+		if (m_Preferences.GetStringValue(CFG_TUBE_TYPE, Value, TubeDeviceStr[0]))
+		{
+			TubeType = static_cast<TubeDevice>(FindEnum(Value, TubeDeviceStr, 0));
+		}
 	}
 	else
 	{
-		// For backwards compatibility with BeebEm 4.14 or earlier.
-		bool TubeEnabled;
-		bool AcornZ80;
-		bool TorchTube;
-		bool Tube186Enabled;
-		bool ArmTube;
+		unsigned char Type = 0;
 
-		m_Preferences.GetBoolValue(CFG_TUBE_ENABLED_OLD, TubeEnabled, false);
-		m_Preferences.GetBoolValue(CFG_TUBE_ACORN_Z80_OLD, AcornZ80, false);
-		m_Preferences.GetBoolValue(CFG_TUBE_TORCH_Z80_OLD, TorchTube, false);
-		m_Preferences.GetBoolValue(CFG_TUBE_186_OLD, Tube186Enabled, false);
-		m_Preferences.GetBoolValue(CFG_TUBE_ARM_OLD, ArmTube, false);
+		if (m_Preferences.GetBinaryValue(CFG_TUBE_TYPE, &Type, 1))
+		{
+			switch (Type)
+			{
+				case 0:
+				default:
+					TubeType = TubeDevice::None;
+					break;
 
-		if (TubeEnabled)
-		{
-			TubeType = TubeDevice::Acorn65C02;
-		}
-		else if (AcornZ80)
-		{
-			TubeType = TubeDevice::AcornZ80;
-		}
-		else if (TorchTube)
-		{
-			TubeType = TubeDevice::TorchZ80;
-		}
-		else if (Tube186Enabled)
-		{
-			TubeType = TubeDevice::Master512CoPro;
-		}
-		else if (ArmTube)
-		{
-			TubeType = TubeDevice::AcornArm;
+				case 1:
+					TubeType = TubeDevice::Acorn65C02;
+					break;
+
+				case 2:
+					TubeType = TubeDevice::Master512CoPro;
+					break;
+
+				case 3:
+					TubeType = TubeDevice::AcornZ80;
+					break;
+
+				case 4:
+					TubeType = TubeDevice::TorchZ80;
+					break;
+
+				case 5:
+					TubeType = TubeDevice::AcornArm;
+					break;
+
+				case 6:
+					TubeType = TubeDevice::SprowArm;
+					break;
+			}
 		}
 		else
 		{
-			TubeType = TubeDevice::None;
+			// For backwards compatibility with BeebEm 4.14 or earlier.
+			bool TubeEnabled;
+			bool AcornZ80;
+			bool TorchTube;
+			bool Tube186Enabled;
+			bool ArmTube;
+
+			m_Preferences.GetBoolValue(CFG_TUBE_ENABLED_OLD, TubeEnabled, false);
+			m_Preferences.GetBoolValue(CFG_TUBE_ACORN_Z80_OLD, AcornZ80, false);
+			m_Preferences.GetBoolValue(CFG_TUBE_TORCH_Z80_OLD, TorchTube, false);
+			m_Preferences.GetBoolValue(CFG_TUBE_186_OLD, Tube186Enabled, false);
+			m_Preferences.GetBoolValue(CFG_TUBE_ARM_OLD, ArmTube, false);
+
+			if (TubeEnabled)
+			{
+				TubeType = TubeDevice::Acorn65C02;
+			}
+			else if (AcornZ80)
+			{
+				TubeType = TubeDevice::AcornZ80;
+			}
+			else if (TorchTube)
+			{
+				TubeType = TubeDevice::TorchZ80;
+			}
+			else if (Tube186Enabled)
+			{
+				TubeType = TubeDevice::Master512CoPro;
+			}
+			else if (ArmTube)
+			{
+				TubeType = TubeDevice::AcornArm;
+			}
+			else
+			{
+				TubeType = TubeDevice::None;
+			}
 		}
 	}
 }
@@ -863,17 +935,26 @@ void BeebWin::LoadInputPreferences(int Version)
 
 	if (m_Preferences.GetStringValue(CFG_OPTIONS_USER_KEY_MAP_FILE, m_UserKeyMapPath))
 	{
-		strcpy(Path, m_UserKeyMapPath);
-		GetDataPath(m_UserDataPath, Path);
+		if (IsRelativePath(m_UserKeyMapPath))
+		{
+			strcpy(Path, m_UserDataPath);
+			AppendPath(Path, m_UserKeyMapPath);
+		}
+		else
+		{
+			strcpy(Path, m_UserKeyMapPath);
+		}
+
 		if (ReadKeyMap(Path, &UserKeyMap))
+		{
 			ReadDefault = false;
+		}
 	}
 
 	if (ReadDefault)
 	{
-		strcpy(m_UserKeyMapPath, "DefaultUser.kmap");
-		strcpy(Path, m_UserKeyMapPath);
-		GetDataPath(m_UserDataPath, Path);
+		strcpy(Path, m_UserDataPath);
+		AppendPath(Path, "DefaultUser.kmap");
 		ReadKeyMap(Path, &UserKeyMap);
 	}
 }
@@ -1087,23 +1168,26 @@ void BeebWin::LoadTapePreferences(int Version)
 
 void BeebWin::LoadSerialPortPreferences(int Version)
 {
-	if (m_Preferences.GetStringValue(CFG_SERIAL_PORT, SerialPortName))
+	if (m_Preferences.GetStringValue(CFG_SERIAL_PORT, m_SerialPort))
 	{
 		// For backwards compatibility with Preferences.cfg files from
 		// BeebEm 4.18 and earlier, which stored the port number as a
 		// binary value
-		if (strlen(SerialPortName) == 2 &&
-		    isxdigit(SerialPortName[0]) &&
-		    isxdigit(SerialPortName[1]))
+		if (m_SerialPort.size() == 2 &&
+		    isxdigit(m_SerialPort[0]) &&
+		    isxdigit(m_SerialPort[1]))
 		{
-			int Port;
-			sscanf(SerialPortName, "%x", &Port);
-			sprintf(SerialPortName, "COM%d", Port);
+			unsigned int Port;
+			sscanf(m_SerialPort.c_str(), "%x", &Port);
+
+			char PortName[20];
+			sprintf(PortName, "COM%u", Port);
+			m_SerialPort = PortName;
 		}
 	}
 	else
 	{
-		strcpy(SerialPortName, "COM2");
+		m_SerialPort = "COM2";
 	}
 
 	m_Preferences.GetBoolValue(CFG_SERIAL_PORT_ENABLED, SerialPortEnabled, false);
@@ -1296,7 +1380,7 @@ void BeebWin::LoadTeletextAdapterPreferences(int Version)
 
 			m_Preferences.GetDWORDValue(key, Value, TELETEXT_BASE_PORT + ch);
 
-			if (Value >= 0 && Value <= 65535)
+			if (Value <= 65535)
 			{
 				TeletextPort[ch] = (u_short)Value;
 			}
@@ -1377,9 +1461,9 @@ void BeebWin::LoadCapturePreferences(int Version)
 
 		switch (Value)
 		{
-			case 40185:          m_VideoCaptureResolution = VideoCaptureResolution::Display;
-			case 40186: default: m_VideoCaptureResolution = VideoCaptureResolution::_640x512;
-			case 40187:          m_VideoCaptureResolution = VideoCaptureResolution::_320x256;
+			case 40185:          m_VideoCaptureResolution = VideoCaptureResolution::Display; break;
+			case 40186: default: m_VideoCaptureResolution = VideoCaptureResolution::_640x512; break;
+			case 40187:          m_VideoCaptureResolution = VideoCaptureResolution::_320x256; break;
 		}
 	}
 
@@ -1632,7 +1716,7 @@ void BeebWin::SavePreferences(bool saveAll)
 		m_Preferences.SetBinaryValue(CFG_KEYBOARD_LINKS, &KeyboardLinks, sizeof(KeyboardLinks));
 
 		// Second processors
-		m_Preferences.SetDecimalValue(CFG_TUBE_TYPE, (int)TubeType);
+		m_Preferences.SetStringValue(CFG_TUBE_TYPE, TubeDeviceStr[(int)TubeType]);
 		m_Preferences.EraseValue(CFG_TUBE_ENABLED_OLD);
 		m_Preferences.EraseValue(CFG_TUBE_ACORN_Z80_OLD);
 		m_Preferences.EraseValue(CFG_TUBE_TORCH_Z80_OLD);
@@ -1724,7 +1808,7 @@ void BeebWin::SavePreferences(bool saveAll)
 		m_Preferences.SetBoolValue(CFG_UNLOCK_TAPE, TapeState.Unlock);
 
 		// Serial port
-		m_Preferences.SetStringValue(CFG_SERIAL_PORT, SerialPortName);
+		m_Preferences.SetStringValue(CFG_SERIAL_PORT, m_SerialPort);
 		m_Preferences.SetBoolValue(CFG_SERIAL_PORT_ENABLED, SerialPortEnabled);
 		m_Preferences.SetBoolValue(CFG_TOUCH_SCREEN_ENABLED, SerialDestination == SerialType::TouchScreen);
 		m_Preferences.SetBoolValue(CFG_IP232_ENABLED, SerialDestination == SerialType::IP232);

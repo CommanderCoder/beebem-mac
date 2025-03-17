@@ -21,6 +21,8 @@ Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 Boston, MA  02110-1301, USA.
 ****************************************************************/
 
+#include <algorithm>
+
 #include "SoundStreamer.h"
 #ifndef __APPLE__
 #include "DirectSoundStreamer.h"
@@ -34,31 +36,43 @@ Boston, MA  02110-1301, USA.
 #include "AppleSoundStreamer.hpp"
 #endif
 
-std::list<SoundStreamer*> SoundStreamer::m_streamers;
+std::vector<SoundStreamer*> SoundStreamer::m_streamers;
+
+/****************************************************************************/
 
 SoundStreamer::SoundStreamer()
 {
 	m_streamers.push_back(this);
 }
 
+/****************************************************************************/
+
 SoundStreamer::~SoundStreamer()
 {
-	m_streamers.remove(this);
+	m_streamers.erase(std::find(m_streamers.begin(), m_streamers.end(), this));
 }
+
+/****************************************************************************/
 
 void SoundStreamer::PlayAll()
 {
-	std::list<SoundStreamer*>::iterator li;
-	for (li = m_streamers.begin(); li != m_streamers.end(); li++)
-		(*li)->Play();
+	for (auto i = m_streamers.begin(); i != m_streamers.end(); ++i)
+	{
+		(*i)->Play();
+	}
 }
+
+/****************************************************************************/
 
 void SoundStreamer::PauseAll()
 {
-	std::list<SoundStreamer*>::iterator li;
-	for (li = m_streamers.begin(); li != m_streamers.end(); li++)
-		(*li)->Pause();
+	for (auto i = m_streamers.begin(); i != m_streamers.end(); ++i)
+	{
+		(*i)->Pause();
+	}
 }
+
+/****************************************************************************/
 
 SoundStreamer *CreateSoundStreamer(int samplerate, int bits_per_sample, int channels)
 {
@@ -118,3 +132,5 @@ SoundStreamer *CreateSoundStreamer(int samplerate, int bits_per_sample, int chan
 
 	return pSoundStreamer;
 }
+
+/****************************************************************************/

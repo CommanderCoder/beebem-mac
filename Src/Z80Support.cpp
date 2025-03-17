@@ -18,6 +18,8 @@ Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 Boston, MA  02110-1301, USA.
 ****************************************************************/
 
+#include <windows.h>
+
 #include <stdio.h>
 #include <string.h>
 
@@ -25,7 +27,9 @@ Boston, MA  02110-1301, USA.
 #include "Z80.h"
 #include "BeebMem.h"
 #include "Debug.h"
+#include "FileUtils.h"
 #include "Log.h"
+#include "Main.h"
 #include "Tube.h"
 #include "UefState.h"
 
@@ -144,7 +148,7 @@ void disp_regs()
 	WriteLog("%s\n", str);
 }
 
-unsigned char in(unsigned int addr)
+unsigned char Z80ReadIO(unsigned int addr)
 {
 	unsigned char value = 0xff;
 
@@ -176,7 +180,7 @@ unsigned char in(unsigned int addr)
 	return value;
 }
 
-void out(unsigned int addr, unsigned char value)
+void Z80WriteIO(unsigned int addr, unsigned char value)
 {
 	addr &= 255;
 
@@ -195,7 +199,7 @@ void out(unsigned int addr, unsigned char value)
 	}
 }
 
-void z80_execute()
+void Z80Execute()
 {
 	if (trace_z80)
 	{
@@ -228,56 +232,68 @@ void z80_execute()
 	}
 }
 
-void init_z80()
+void Z80Init()
 {
-	char path[256];
+	char PathName[MAX_PATH];
 
-	WriteLog("init_z80()\n");
+	WriteLog("Z80Init()\n");
 
 	if (TubeType == TubeDevice::AcornZ80)
 	{
-		strcpy(path, RomPath);
-		strcat(path, "BeebFile/Z80.rom");
+		strcpy(PathName, RomPath);
+		AppendPath(PathName, "BeebFile");
+		AppendPath(PathName, "Z80.rom");
 
-		FILE *f = fopen(path, "rb");
+		FILE *f = fopen(PathName, "rb");
+
 		if (f != nullptr)
 		{
-			fread(z80_rom, 4096, 1, f);
+			size_t BytesRead = fread(z80_rom, 1, 4096, f);
+
 			fclose(f);
+
+			if (BytesRead != 4096)
+			{
+				mainWin->Report(MessageType::Error,
+				                "Failed to read ROM file:\n  %s",
+				                PathName);
+			}
+		}
+		else
+		{
+			mainWin->Report(MessageType::Error,
+			                "Cannot open ROM:\n %s", PathName);
 		}
 	}
 	else // Tube::TorchZ80
 	{
-		strcpy(path, RomPath);
-		strcat(path, "BeebFile/CCPN102.rom");
+		strcpy(PathName, RomPath);
+		AppendPath(PathName, "BeebFile");
+		AppendPath(PathName, "CCPN102.rom");
 
-		FILE *f = fopen(path, "rb");
+		FILE *f = fopen(PathName, "rb");
+
 		if (f != nullptr)
 		{
-			size_t addr = 0;
-			fseek(f, 0, SEEK_END);
-			long count = ftell(f);
-			if (count > 4096) {
-				fseek(f, 0, SEEK_SET);
-				addr=addr+fread(z80_rom+0, 8192, 1, f);
-			} else {
-				if (count > 2048) {
-					fseek(f, 0, SEEK_SET);
-					addr=addr+fread(z80_rom+0, 4096, 1, f);
-					fseek(f, 0, SEEK_SET);
-					addr=addr+fread(z80_rom+4096, 4096, 1, f);
-				} else {
-					fseek(f, 0, SEEK_SET);
-					addr=addr+fread(z80_rom+0, 2048, 1, f);
-					fseek(f, 0, SEEK_SET);
-					addr=addr+fread(z80_rom+2048, 2048, 1, f);
-					fseek(f, 0, SEEK_SET);
-					addr=addr+fread(z80_rom+4096, 2048, 1, f);
-					fseek(f, 0, SEEK_SET);
-					addr=addr+fread(z80_rom+6144, 2048, 1, f);
-				}
+			size_t BytesRead = fread(z80_rom, 1, 8192, f);
+
+			if (BytesRead <= 2048)
+			{
+				memcpy(z80_rom + 2048, z80_rom, 2048);
+				memcpy(z80_rom + 4096, z80_rom, 2048);
+				memcpy(z80_rom + 6144, z80_rom, 2048);
 			}
+			else if (BytesRead <= 4096)
+			{
+				memcpy(z80_rom + 4096, z80_rom, 4096);
+			}
+
 			fclose(f);
+		}
+		else
+		{
+			mainWin->Report(MessageType::Error,
+			                "Cannot open ROM:\n %s", PathName);
 		}
 	}
 

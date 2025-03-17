@@ -223,7 +223,9 @@
     <ClCompile Include="Scsi.cpp" />
     <ClCompile Include="SelectKeyDialog.cpp" />
     <ClCompile Include="Serial.cpp" />
+    <ClCompile Include="SerialPort.cpp" />
     <ClCompile Include="SerialPortDialog.cpp" />
+    <ClCompile Include="Socket.cpp" />
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="SoundStreamer.cpp" />
     <ClCompile Include="Speech.cpp" />
@@ -245,6 +247,7 @@
     <ClCompile Include="UserVia.cpp" />
     <ClCompile Include="Via.cpp" />
     <ClCompile Include="Video.cpp" />
+    <ClCompile Include="WindowUtils.cpp" />
     <ClCompile Include="XAudio2Streamer.cpp" />
     <ClCompile Include="Z80.cpp" />
     <ClCompile Include="Z80dis.cpp" />
@@ -262,10 +265,10 @@
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4131</DisableSpecificWarnings>
     </ClCompile>
     <ClCompile Include="zlib\deflate.c">
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4131</DisableSpecificWarnings>
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4131</DisableSpecificWarnings>
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4131</DisableSpecificWarnings>
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4131</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4131;4244;4127</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4131;4244;4127</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4131;4244;4127</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4131;4244;4127</DisableSpecificWarnings>
     </ClCompile>
     <ClCompile Include="zlib\gzclose.c">
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4131</DisableSpecificWarnings>
@@ -310,10 +313,10 @@
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4131</DisableSpecificWarnings>
     </ClCompile>
     <ClCompile Include="zlib\trees.c">
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4131</DisableSpecificWarnings>
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4131</DisableSpecificWarnings>
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4131</DisableSpecificWarnings>
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4131</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4131;4244</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4131;4244</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4131;4244</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4131;4244</DisableSpecificWarnings>
     </ClCompile>
     <ClCompile Include="zlib\uncompr.c">
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4131</DisableSpecificWarnings>
@@ -377,6 +380,7 @@
     <ClInclude Include="Messages.h" />
     <ClInclude Include="ML675001.h" />
     <ClInclude Include="Model.h" />
+    <ClInclude Include="MonitorType.h" />
     <ClInclude Include="Music5000.h" />
     <ClInclude Include="PALRom.h" />
     <ClInclude Include="Port.h" />
@@ -392,9 +396,12 @@
     <ClInclude Include="Scsi.h" />
     <ClInclude Include="SelectKeyDialog.h" />
     <ClInclude Include="Serial.h" />
+    <ClInclude Include="SerialPort.h" />
     <ClInclude Include="SerialPortDialog.h" />
+    <ClInclude Include="Socket.h" />
     <ClInclude Include="Sound.h" />
     <ClInclude Include="SoundStreamer.h" />
+    <ClInclude Include="SoundStreamerType.h" />
     <ClInclude Include="Speech.h" />
     <ClInclude Include="SprowCoPro.h" />
     <ClInclude Include="StringUtils.h" />
@@ -416,6 +423,7 @@
     <ClInclude Include="Version.h" />
     <ClInclude Include="Via.h" />
     <ClInclude Include="Video.h" />
+    <ClInclude Include="WindowUtils.h" />
     <ClInclude Include="XAudio2Streamer.h" />
     <ClInclude Include="Z80.h" />
     <ClInclude Include="Z80mem.h" />

@@ -33,6 +33,7 @@ Boston, MA  02110-1301, USA.
 #include "Messages.h"
 #include "Resource.h"
 #include "SelectKeyDialog.h"
+#include "WindowUtils.h"
 
 static void SetKeyColour(COLORREF aColour);
 static void SelectKeyMapping(HWND hwnd, UINT ctrlID, HWND hwndCtrl);
@@ -86,6 +87,8 @@ bool UserKeyboardDialog(HWND hwndParent)
 
 	if (hwndUserKeyboard != nullptr)
 	{
+		DisableRoundedCorners(hwndUserKeyboard);
+
 		EnableWindow(hwndParent, FALSE);
 
 		return true;
@@ -389,7 +392,7 @@ static void DrawBorder(HDC hDC, RECT rect, BOOL Depressed)
 		DrawSides(hDC, rect, 0x00000000, 0x00FFFFFF);
 	else
 		DrawSides(hDC, rect, 0x00FFFFFF, 0x00000000);
-	
+
 	// Draw inner border.
 	rect.top++;
 	rect.left++;
