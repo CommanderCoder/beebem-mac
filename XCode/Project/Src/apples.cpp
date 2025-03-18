@@ -9,6 +9,8 @@
 #include <windows.h>
 #include "beebemrcids.h"
 #include <string>
+#include <dispatch/dispatch.h>
+#include <dispatch/source.h>
 
 #if ((defined(__ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__) && __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ >= 101500))
 #include <filesystem> // C++17 (or Microsoft-specific implementation in C++14)
@@ -178,6 +180,7 @@ bool EnableWindow(HWND h, BOOL e)
 }
 
 #include "FileUtils.h"
+#include <dispatch/source.h>
 
 void _splitpath(const char *path,
 				char *drive,
@@ -448,22 +451,68 @@ void DeleteDC(HDC m_hDCBitmap)
 
 }
 
+// Create a dispatch queue [DEFAULT]
+dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+dispatch_source_t kbdtimer = NULL;
+
+bool CreateTimers()
+{
+    if (!kbdtimer)
+    {
+        // Create a dispatch source timer [TIMER]
+        kbdtimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);
+        
+        if (kbdtimer == NULL)
+            return false;
+        
+        // set the timer handler
+        dispatch_source_set_event_handler(kbdtimer, ^{
+            mainWin->HandleKeyboardTimer();
+        });
+
+        // Start the timer
+        dispatch_resume(kbdtimer);
+
+    }
+    return true;
+}
+
 UINT_PTR SetTimer(HWND hWnd, UINT_PTR  nIDEvent, UINT uElapse, TIMERPROC lpTimerFunc) {
 	
 	if (mainWin == NULL)
 		return 0;
+    
+    if (!CreateTimers())
+        return 0;
 	
 	if (mainWin->TIMER_PRINTER == nIDEvent)
 	{
 		mainWin->CopyPrinterBufferToClipboard();
 		return 1;
 	}
+
+    if (mainWin->TIMER_KEYBOARD == nIDEvent)
+    {
+        // Set timer start time and interval
+        dispatch_source_set_timer(kbdtimer, dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_MSEC*uElapse),DISPATCH_TIME_FOREVER /*one shot*/ , 0);
+
+
+        return 1;
+    }
 	fprintf(stderr, "Trying to set timer %d for %d microsec", nIDEvent, uElapse);
 	return 0;
 	
 }
 
-BOOL KillTimer(HWND hWnd, UINT_PTR  nIDEvent) {return 0;}
+BOOL KillTimer(HWND hWnd, UINT_PTR  nIDEvent) {
+    if (mainWin->TIMER_KEYBOARD == nIDEvent)
+    {
+//        dispatch_suspend(kbdtimer);
+        return 1;
+        
+    }
+    return 0;
+}
 
 BOOL SetWindowPos( HWND hWnd, HWND hWndInsertAfter,
 		int  X,int  Y,
