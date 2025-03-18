@@ -451,30 +451,31 @@ void DeleteDC(HDC m_hDCBitmap)
 
 }
 
-// Create a dispatch queue [DEFAULT]
-dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
 dispatch_source_t kbdtimer = NULL;
+dispatch_source_t boottimer = NULL;
+
+bool createTimer(dispatch_source_t& timer, dispatch_block_t handler) {
+    // Get the global dispatch queue [DEFAULT]
+	dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+	if (!timer)
+	{
+		timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);
+		if (!timer) return false;
+		dispatch_source_set_event_handler(timer, handler);
+		dispatch_resume(timer);
+	}
+	return true;
+};
 
 bool CreateTimers()
 {
-    if (!kbdtimer)
-    {
-        // Create a dispatch source timer [TIMER]
-        kbdtimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);
-        
-        if (kbdtimer == NULL)
-            return false;
-        
-        // set the timer handler
-        dispatch_source_set_event_handler(kbdtimer, ^{
-            mainWin->HandleKeyboardTimer();
-        });
-
-        // Start the timer
-        dispatch_resume(kbdtimer);
-
-    }
-    return true;
+	return createTimer(kbdtimer,
+                       ^{ mainWin->HandleKeyboardTimer(); }) &&
+		   createTimer(boottimer,
+                       ^{
+                           mainWin->KillBootDiscTimer();
+                           mainWin->DoShiftBreak();
+                       });
 }
 
 UINT_PTR SetTimer(HWND hWnd, UINT_PTR  nIDEvent, UINT uElapse, TIMERPROC lpTimerFunc) {
@@ -490,27 +491,34 @@ UINT_PTR SetTimer(HWND hWnd, UINT_PTR  nIDEvent, UINT uElapse, TIMERPROC lpTimer
 		mainWin->CopyPrinterBufferToClipboard();
 		return 1;
 	}
-
+    
+    dispatch_source_t timer = NULL;
+    
     if (mainWin->TIMER_KEYBOARD == nIDEvent)
     {
-        // Set timer start time and interval
-        dispatch_source_set_timer(kbdtimer, dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_MSEC*uElapse),DISPATCH_TIME_FOREVER /*one shot*/ , 0);
-
-
-        return 1;
+        timer = kbdtimer;
     }
-	fprintf(stderr, "Trying to set timer %d for %d microsec", nIDEvent, uElapse);
-	return 0;
-	
+    
+    if (mainWin->TIMER_AUTOBOOT_DELAY == nIDEvent)
+    {
+        timer = boottimer;
+    }
+
+    if (!timer)
+    {
+        fprintf(stderr, "Trying to set unknown timer %d for %d microsec", nIDEvent, uElapse);
+        return 0;
+    }
+
+    // Set timer start time and interval
+    dispatch_source_set_timer(timer,
+                              dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_MSEC*uElapse),
+                              DISPATCH_TIME_FOREVER /*one shot*/,
+                              0);
+    return 1;
 }
 
 BOOL KillTimer(HWND hWnd, UINT_PTR  nIDEvent) {
-    if (mainWin->TIMER_KEYBOARD == nIDEvent)
-    {
-//        dispatch_suspend(kbdtimer);
-        return 1;
-        
-    }
     return 0;
 }
 
