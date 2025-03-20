@@ -3,8 +3,17 @@
 The submodule should already exist, but you can get it directly with:
 
 ```
+git submodule init
+git submodule update
+```
+
+or
+
+```
 git clone https://github.com/create-dmg/create-dmg.git
 ```
+
+
 
 ## XCODE ##
 

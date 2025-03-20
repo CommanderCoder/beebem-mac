@@ -162,12 +162,24 @@ class BeebViewController: NSViewController {
 
 	override func viewDidAppear()
 	{
-		view.window!.acceptsMouseMovedEvents = true
+        super.viewDidAppear()
+        if let window = view.window {
+            // set the delegate to respond to window being closed
+            window.delegate = self
+            
+            window.acceptsMouseMovedEvents = true
+        }
+        
+        
+
 	}
     
     override func viewDidDisappear()
     {
-        view.window!.acceptsMouseMovedEvents = false
+        super.viewDidDisappear()
+        if let window = view.window {
+            window.acceptsMouseMovedEvents = false
+        }
     }
 
     func update() {
@@ -325,4 +337,15 @@ extension BeebViewController
 		}
 	}
 
+}
+
+
+
+extension BeebViewController: NSWindowDelegate {
+    
+    // This method is called just before the window is closed.
+    func windowWillClose(_ notification: Notification) {
+        // if the BeebViewController goes, then just stop the app.
+        NSApp.terminate(self)
+    }
 }
