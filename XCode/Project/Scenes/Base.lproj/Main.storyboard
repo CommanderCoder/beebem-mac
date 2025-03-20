@@ -1666,24 +1666,23 @@
             <objects>
                 <viewController id="tcv-Q8-lYO" userLabel="TapeControl View Controller" customClass="TapeControlViewController" customModule="BeebEm" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="bbm-I1-Ijf">
-                        <rect key="frame" x="0.0" y="0.0" width="444" height="527"/>
+                        <rect key="frame" x="0.0" y="0.0" width="464" height="533"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <scrollView fixedFrame="YES" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9I4-Yf-xHc">
-                                <rect key="frame" x="20" y="134" width="404" height="373"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9I4-Yf-xHc">
+                                <rect key="frame" x="20" y="225" width="325" height="288"/>
                                 <clipView key="contentView" id="bxb-nq-r68">
-                                    <rect key="frame" x="1" y="1" width="402" height="371"/>
+                                    <rect key="frame" x="1" y="1" width="323" height="286"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" multipleSelection="NO" emptySelection="NO" autosaveColumns="NO" typeSelect="NO" rowSizeStyle="automatic" headerView="Ghv-5L-cAi" viewBased="YES" id="o6K-RA-peU">
-                                            <rect key="frame" x="0.0" y="0.0" width="402" height="346"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="323" height="261"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <size key="intercellSpacing" width="3" height="2"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                             <tableColumns>
-                                                <tableColumn identifier="NAME" width="119.5" minWidth="40" maxWidth="1000" id="Fxd-fp-D7P" userLabel="Filename">
+                                                <tableColumn identifier="NAME" width="119.5" minWidth="40" maxWidth="400" id="Fxd-fp-D7P" userLabel="Filename">
                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Filename">
                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
@@ -1700,7 +1699,7 @@
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="k3C-f7-Sk5">
-                                                                    <rect key="frame" x="0.0" y="1" width="124" height="16"/>
+                                                                    <rect key="frame" x="1" y="1" width="122" height="16"/>
                                                                     <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="DJP-ja-yWj">
                                                                         <font key="font" metaFont="system"/>
                                                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -1709,9 +1708,9 @@
                                                                 </textField>
                                                             </subviews>
                                                             <constraints>
-                                                                <constraint firstItem="k3C-f7-Sk5" firstAttribute="centerY" secondItem="upp-7c-lhu" secondAttribute="centerY" id="AXk-Kz-hkE"/>
-                                                                <constraint firstItem="k3C-f7-Sk5" firstAttribute="leading" secondItem="upp-7c-lhu" secondAttribute="leading" constant="2" id="ZZU-ar-xrO"/>
-                                                                <constraint firstItem="k3C-f7-Sk5" firstAttribute="centerX" secondItem="upp-7c-lhu" secondAttribute="centerX" id="tMI-VD-IUM"/>
+                                                                <constraint firstItem="k3C-f7-Sk5" firstAttribute="centerX" secondItem="upp-7c-lhu" secondAttribute="centerX" id="sVX-AE-D0Y"/>
+                                                                <constraint firstItem="k3C-f7-Sk5" firstAttribute="centerY" secondItem="upp-7c-lhu" secondAttribute="centerY" id="tuK-hO-UE6"/>
+                                                                <constraint firstAttribute="trailing" secondItem="k3C-f7-Sk5" secondAttribute="trailing" constant="3" id="yF8-fu-W96"/>
                                                             </constraints>
                                                             <connections>
                                                                 <outlet property="textField" destination="k3C-f7-Sk5" id="Sgt-mr-2Xr"/>
@@ -1719,7 +1718,7 @@
                                                         </tableCellView>
                                                     </prototypeCellViews>
                                                 </tableColumn>
-                                                <tableColumn identifier="BLCK" width="127.5" minWidth="40" maxWidth="1000" id="Z1I-UR-yYg" userLabel="Block">
+                                                <tableColumn identifier="BLCK" width="48" minWidth="40" maxWidth="100" id="Z1I-UR-yYg" userLabel="Block">
                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Block">
                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
@@ -1732,7 +1731,7 @@
                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                     <prototypeCellViews>
                                                         <tableCellView id="eE8-AA-waO">
-                                                            <rect key="frame" x="128" y="1" width="128" height="17"/>
+                                                            <rect key="frame" x="128" y="1" width="48" height="17"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="5fe-H1-wPI">
@@ -1745,9 +1744,9 @@
                                                                 </textField>
                                                             </subviews>
                                                             <constraints>
-                                                                <constraint firstItem="5fe-H1-wPI" firstAttribute="centerY" secondItem="eE8-AA-waO" secondAttribute="centerY" id="Lol-Hu-Kj4"/>
-                                                                <constraint firstItem="5fe-H1-wPI" firstAttribute="leading" secondItem="eE8-AA-waO" secondAttribute="leading" constant="2" id="dGt-B7-na9"/>
-                                                                <constraint firstItem="5fe-H1-wPI" firstAttribute="centerX" secondItem="eE8-AA-waO" secondAttribute="centerX" id="nb0-N9-Xvt"/>
+                                                                <constraint firstAttribute="trailing" secondItem="5fe-H1-wPI" secondAttribute="trailing" constant="-78" id="4p1-bd-yLG"/>
+                                                                <constraint firstItem="5fe-H1-wPI" firstAttribute="leading" secondItem="eE8-AA-waO" secondAttribute="leading" constant="2" id="Z5p-ue-iSh"/>
+                                                                <constraint firstItem="5fe-H1-wPI" firstAttribute="centerY" secondItem="eE8-AA-waO" secondAttribute="centerY" id="dgf-kk-0kJ"/>
                                                             </constraints>
                                                             <connections>
                                                                 <outlet property="textField" destination="5fe-H1-wPI" id="qlN-Wf-IzZ"/>
@@ -1755,7 +1754,7 @@
                                                         </tableCellView>
                                                     </prototypeCellViews>
                                                 </tableColumn>
-                                                <tableColumn identifier="LENG" width="100" minWidth="10" maxWidth="3.4028234663852886e+38" id="Yf9-S8-ZYi" userLabel="Length">
+                                                <tableColumn identifier="LENG" width="100" minWidth="10" maxWidth="100" id="Yf9-S8-ZYi" userLabel="Length">
                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Length">
                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -1768,7 +1767,7 @@
                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                     <prototypeCellViews>
                                                         <tableCellView id="EWX-Zl-Tw2">
-                                                            <rect key="frame" x="259" y="1" width="104" height="17"/>
+                                                            <rect key="frame" x="179" y="1" width="104" height="17"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="b9D-R5-OPq">
@@ -1781,9 +1780,9 @@
                                                                 </textField>
                                                             </subviews>
                                                             <constraints>
-                                                                <constraint firstItem="b9D-R5-OPq" firstAttribute="centerY" secondItem="EWX-Zl-Tw2" secondAttribute="centerY" id="1yo-fl-ElY"/>
-                                                                <constraint firstAttribute="trailing" secondItem="b9D-R5-OPq" secondAttribute="trailing" constant="-2" id="ikk-FW-z1K"/>
-                                                                <constraint firstItem="b9D-R5-OPq" firstAttribute="leading" secondItem="EWX-Zl-Tw2" secondAttribute="leading" constant="2" id="rk0-XI-ypV"/>
+                                                                <constraint firstAttribute="trailing" secondItem="b9D-R5-OPq" secondAttribute="trailing" constant="-2" id="X7i-BZ-2u5"/>
+                                                                <constraint firstItem="b9D-R5-OPq" firstAttribute="leading" secondItem="EWX-Zl-Tw2" secondAttribute="leading" constant="2" id="qgd-9v-q5F"/>
+                                                                <constraint firstItem="b9D-R5-OPq" firstAttribute="centerY" secondItem="EWX-Zl-Tw2" secondAttribute="centerY" id="rYn-eH-d0b"/>
                                                             </constraints>
                                                             <connections>
                                                                 <outlet property="textField" destination="b9D-R5-OPq" id="2tV-QE-6UO"/>
@@ -1796,7 +1795,7 @@
                                     </subviews>
                                 </clipView>
                                 <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="Qwu-S2-bRs">
-                                    <rect key="frame" x="1" y="377" width="402" height="16"/>
+                                    <rect key="frame" x="1" y="356" width="320" height="16"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                                 <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="XSO-dK-7qR">
@@ -1804,224 +1803,201 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                                 <tableHeaderView key="headerView" wantsLayer="YES" id="Ghv-5L-cAi">
-                                    <rect key="frame" x="0.0" y="0.0" width="402" height="25"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="323" height="25"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableHeaderView>
                             </scrollView>
-                            <stackView identifier="td" distribution="fill" orientation="vertical" alignment="leading" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" fixedFrame="YES" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Z9c-aS-8PV" userLabel="controls">
-                                <rect key="frame" x="20" y="32" width="267" height="94"/>
+                            <stackView identifier="td2" distribution="fill" orientation="vertical" alignment="leading" spacing="11" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eVa-Xz-rUt" userLabel="controls">
+                                <rect key="frame" x="353" y="270" width="91" height="243"/>
                                 <subviews>
-                                    <stackView identifier="td2" distribution="fill" orientation="vertical" alignment="leading" spacing="4" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eVa-Xz-rUt">
-                                        <rect key="frame" x="0.0" y="0.0" width="267" height="94"/>
-                                        <subviews>
-                                            <stackView identifier="td3" distribution="fill" orientation="horizontal" alignment="centerY" spacing="3" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4ZH-xh-W8A">
-                                                <rect key="frame" x="5" y="69" width="220" height="20"/>
-                                                <subviews>
-                                                    <button identifier="tppl" verticalHuggingPriority="750" horizontalCompressionResistancePriority="749" translatesAutoresizingMaskIntoConstraints="NO" id="oKo-CY-Tv1">
-                                                        <rect key="frame" x="-7" y="-7" width="60" height="32"/>
-                                                        <buttonCell key="cell" type="push" title="Play" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="MdD-15-5ZY">
-                                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                            <font key="font" metaFont="system"/>
-                                                        </buttonCell>
-                                                        <connections>
-                                                            <action selector="TCHandleCommand:" target="tcv-Q8-lYO" id="oeJ-Ur-Vqk"/>
-                                                        </connections>
-                                                    </button>
-                                                    <button identifier="tpst" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Wl4-rq-D1Q">
-                                                        <rect key="frame" x="42" y="-7" width="63" height="32"/>
-                                                        <buttonCell key="cell" type="push" title="Stop" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Y4J-fH-eGg">
-                                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                            <font key="font" metaFont="system"/>
-                                                        </buttonCell>
-                                                        <connections>
-                                                            <action selector="TCHandleCommand:" target="tcv-Q8-lYO" id="G7S-RM-vqB"/>
-                                                        </connections>
-                                                    </button>
-                                                    <button identifier="tpej" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="tv8-we-Rzw">
-                                                        <rect key="frame" x="94" y="-7" width="65" height="32"/>
-                                                        <buttonCell key="cell" type="push" title="Eject" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="CTI-xm-flE">
-                                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                            <font key="font" metaFont="system"/>
-                                                        </buttonCell>
-                                                        <connections>
-                                                            <action selector="TCHandleCommand:" target="tcv-Q8-lYO" id="blm-Jt-z60"/>
-                                                        </connections>
-                                                    </button>
-                                                    <button identifier="tprw" verticalHuggingPriority="750" horizontalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="9m2-F2-WDy">
-                                                        <rect key="frame" x="148" y="-7" width="79" height="32"/>
-                                                        <buttonCell key="cell" type="push" title="Rewind" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="216-dx-mJV">
-                                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                            <font key="font" metaFont="system"/>
-                                                        </buttonCell>
-                                                        <connections>
-                                                            <action selector="TCHandleCommand:" target="tcv-Q8-lYO" id="0jj-zi-GWR"/>
-                                                        </connections>
-                                                    </button>
-                                                </subviews>
-                                                <constraints>
-                                                    <constraint firstItem="tv8-we-Rzw" firstAttribute="baseline" secondItem="9m2-F2-WDy" secondAttribute="baseline" id="7RL-hC-Ccy"/>
-                                                    <constraint firstItem="oKo-CY-Tv1" firstAttribute="baseline" secondItem="Wl4-rq-D1Q" secondAttribute="baseline" id="goM-81-2Nx"/>
-                                                    <constraint firstItem="oKo-CY-Tv1" firstAttribute="top" secondItem="4ZH-xh-W8A" secondAttribute="top" id="iVY-Te-yvk"/>
-                                                    <constraint firstItem="Wl4-rq-D1Q" firstAttribute="baseline" secondItem="tv8-we-Rzw" secondAttribute="baseline" id="p1n-CD-9GJ"/>
-                                                </constraints>
-                                                <visibilityPriorities>
-                                                    <integer value="1000"/>
-                                                    <integer value="1000"/>
-                                                    <integer value="1000"/>
-                                                    <integer value="1000"/>
-                                                </visibilityPriorities>
-                                                <customSpacing>
-                                                    <real value="3.4028234663852886e+38"/>
-                                                    <real value="3.4028234663852886e+38"/>
-                                                    <real value="3.4028234663852886e+38"/>
-                                                    <real value="3.4028234663852886e+38"/>
-                                                </customSpacing>
-                                            </stackView>
-                                            <stackView distribution="fill" orientation="horizontal" alignment="centerY" spacing="3" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ix9-6v-sCZ">
-                                                <rect key="frame" x="5" y="45" width="219" height="20"/>
-                                                <subviews>
-                                                    <button identifier="tpld" verticalHuggingPriority="750" horizontalCompressionResistancePriority="749" translatesAutoresizingMaskIntoConstraints="NO" id="Ss3-dr-aGW">
-                                                        <rect key="frame" x="-7" y="-7" width="97" height="32"/>
-                                                        <buttonCell key="cell" type="push" title="Load Tape" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="qgg-Nq-lFe">
-                                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                            <font key="font" metaFont="system"/>
-                                                        </buttonCell>
-                                                        <connections>
-                                                            <action selector="TCHandleCommand:" target="tcv-Q8-lYO" id="Wr2-b5-5Uq"/>
-                                                        </connections>
-                                                    </button>
-                                                    <button identifier="tprc" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="SXP-lf-215">
-                                                        <rect key="frame" x="79" y="-7" width="77" height="32"/>
-                                                        <buttonCell key="cell" type="push" title="Record" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="rDM-gs-2zL">
-                                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                            <font key="font" metaFont="system"/>
-                                                        </buttonCell>
-                                                        <connections>
-                                                            <action selector="TCHandleCommand:" target="tcv-Q8-lYO" id="OBr-At-4Ke"/>
-                                                        </connections>
-                                                    </button>
-                                                    <button identifier="tpun" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="INa-De-tws">
-                                                        <rect key="frame" x="150" y="1" width="69" height="18"/>
-                                                        <buttonCell key="cell" type="check" title="Unlock" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="cY1-Zn-6lz">
-                                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                            <font key="font" metaFont="system"/>
-                                                        </buttonCell>
-                                                    </button>
-                                                </subviews>
-                                                <constraints>
-                                                    <constraint firstItem="Ss3-dr-aGW" firstAttribute="baseline" secondItem="SXP-lf-215" secondAttribute="baseline" id="0Cb-CK-yok"/>
-                                                    <constraint firstItem="Ss3-dr-aGW" firstAttribute="top" secondItem="Ix9-6v-sCZ" secondAttribute="top" id="lEu-oX-zzW"/>
-                                                </constraints>
-                                                <visibilityPriorities>
-                                                    <integer value="1000"/>
-                                                    <integer value="1000"/>
-                                                    <integer value="1000"/>
-                                                </visibilityPriorities>
-                                                <customSpacing>
-                                                    <real value="3.4028234663852886e+38"/>
-                                                    <real value="3.4028234663852886e+38"/>
-                                                    <real value="3.4028234663852886e+38"/>
-                                                </customSpacing>
-                                            </stackView>
-                                            <stackView distribution="fill" orientation="horizontal" alignment="centerY" spacing="3" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mbP-gz-4lx">
-                                                <rect key="frame" x="5" y="25" width="104" height="16"/>
-                                                <subviews>
-                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Dr1-uc-qH4">
-                                                        <rect key="frame" x="-2" y="0.0" width="62" height="16"/>
-                                                        <textFieldCell key="cell" lineBreakMode="clipping" title="Tape File:" id="3fx-42-U2z">
-                                                            <font key="font" metaFont="system"/>
-                                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                        </textFieldCell>
-                                                    </textField>
-                                                    <textField identifier="tpnm" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="sSm-cg-yfW">
-                                                        <rect key="frame" x="59" y="0.0" width="47" height="16"/>
-                                                        <textFieldCell key="cell" lineBreakMode="clipping" title="[name]" id="Ybr-x7-PGE">
-                                                            <font key="font" metaFont="system"/>
-                                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                        </textFieldCell>
-                                                    </textField>
-                                                </subviews>
-                                                <visibilityPriorities>
-                                                    <integer value="1000"/>
-                                                    <integer value="1000"/>
-                                                </visibilityPriorities>
-                                                <customSpacing>
-                                                    <real value="3.4028234663852886e+38"/>
-                                                    <real value="3.4028234663852886e+38"/>
-                                                </customSpacing>
-                                            </stackView>
-                                            <stackView distribution="fill" orientation="horizontal" alignment="centerY" spacing="3" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tHT-2p-IrE">
-                                                <rect key="frame" x="5" y="5" width="262" height="16"/>
-                                                <subviews>
-                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="aNh-BQ-LJr">
-                                                        <rect key="frame" x="-2" y="0.0" width="40" height="16"/>
-                                                        <textFieldCell key="cell" lineBreakMode="clipping" title="State:" id="AmI-aE-nlB">
-                                                            <font key="font" metaFont="system"/>
-                                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                        </textFieldCell>
-                                                    </textField>
-                                                    <button identifier="tpsp" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="KUu-Nk-Gey">
-                                                        <rect key="frame" x="39" y="0.0" width="60" height="16"/>
-                                                        <buttonCell key="cell" type="bevel" title="Playing" bezelStyle="regularSquare" image="play.fill" catalog="system" imagePosition="left" alignment="left" enabled="NO" inset="2" id="6Ll-Nh-hMC">
-                                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                            <font key="font" metaFont="system"/>
-                                                        </buttonCell>
-                                                    </button>
-                                                    <button identifier="tpsr" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Gc9-6M-xkY">
-                                                        <rect key="frame" x="102" y="0.0" width="87" height="16"/>
-                                                        <buttonCell key="cell" type="bevel" title="Recording" bezelStyle="regularSquare" image="recordingtape" catalog="system" imagePosition="left" alignment="left" enabled="NO" inset="2" id="c0R-vK-F0p">
-                                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                            <font key="font" metaFont="system"/>
-                                                        </buttonCell>
-                                                    </button>
-                                                    <button identifier="tpss" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Udc-dh-DDb">
-                                                        <rect key="frame" x="192" y="0.0" width="70" height="16"/>
-                                                        <buttonCell key="cell" type="bevel" title="Stopped" bezelStyle="regularSquare" image="stop.fill" catalog="system" imagePosition="left" alignment="left" enabled="NO" inset="2" id="rhe-mq-ws9">
-                                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                            <font key="font" metaFont="system"/>
-                                                        </buttonCell>
-                                                    </button>
-                                                </subviews>
-                                                <visibilityPriorities>
-                                                    <integer value="1000"/>
-                                                    <integer value="1000"/>
-                                                    <integer value="1000"/>
-                                                    <integer value="1000"/>
-                                                </visibilityPriorities>
-                                                <customSpacing>
-                                                    <real value="3.4028234663852886e+38"/>
-                                                    <real value="3.4028234663852886e+38"/>
-                                                    <real value="3.4028234663852886e+38"/>
-                                                    <real value="3.4028234663852886e+38"/>
-                                                </customSpacing>
-                                            </stackView>
-                                        </subviews>
-                                        <edgeInsets key="edgeInsets" left="5" right="5" top="5" bottom="5"/>
-                                        <visibilityPriorities>
-                                            <integer value="1000"/>
-                                            <integer value="1000"/>
-                                            <integer value="1000"/>
-                                            <integer value="1000"/>
-                                        </visibilityPriorities>
-                                        <customSpacing>
-                                            <real value="3.4028234663852886e+38"/>
-                                            <real value="3.4028234663852886e+38"/>
-                                            <real value="3.4028234663852886e+38"/>
-                                            <real value="3.4028234663852886e+38"/>
-                                        </customSpacing>
-                                    </stackView>
+                                    <button identifier="tpld" verticalHuggingPriority="750" horizontalCompressionResistancePriority="749" translatesAutoresizingMaskIntoConstraints="NO" id="Ss3-dr-aGW">
+                                        <rect key="frame" x="-2" y="211" width="97" height="32"/>
+                                        <buttonCell key="cell" type="push" title="Load Tape" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="qgg-Nq-lFe">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <action selector="TCHandleCommand:" target="tcv-Q8-lYO" id="Wr2-b5-5Uq"/>
+                                        </connections>
+                                    </button>
+                                    <button identifier="tpnt" verticalHuggingPriority="750" horizontalCompressionResistancePriority="749" translatesAutoresizingMaskIntoConstraints="NO" id="vqa-EE-vC7">
+                                        <rect key="frame" x="-2" y="180" width="94" height="32"/>
+                                        <buttonCell key="cell" type="push" title="New Tape" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="liy-Ce-mEJ">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <action selector="TCHandleCommand:" target="tcv-Q8-lYO" id="TJz-wV-Jmj"/>
+                                        </connections>
+                                    </button>
+                                    <button identifier="tppl" verticalHuggingPriority="750" horizontalCompressionResistancePriority="749" translatesAutoresizingMaskIntoConstraints="NO" id="oKo-CY-Tv1">
+                                        <rect key="frame" x="-2" y="149" width="60" height="32"/>
+                                        <buttonCell key="cell" type="push" title="Play" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="MdD-15-5ZY">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <action selector="TCHandleCommand:" target="tcv-Q8-lYO" id="oeJ-Ur-Vqk"/>
+                                        </connections>
+                                    </button>
+                                    <button identifier="tprc" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="SXP-lf-215">
+                                        <rect key="frame" x="-2" y="118" width="77" height="32"/>
+                                        <buttonCell key="cell" type="push" title="Record" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="rDM-gs-2zL">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <action selector="TCHandleCommand:" target="tcv-Q8-lYO" id="OBr-At-4Ke"/>
+                                        </connections>
+                                    </button>
+                                    <button identifier="tprw" verticalHuggingPriority="750" horizontalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="9m2-F2-WDy">
+                                        <rect key="frame" x="-2" y="87" width="79" height="32"/>
+                                        <buttonCell key="cell" type="push" title="Rewind" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="216-dx-mJV">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <action selector="TCHandleCommand:" target="tcv-Q8-lYO" id="0jj-zi-GWR"/>
+                                        </connections>
+                                    </button>
+                                    <button identifier="tpst" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Wl4-rq-D1Q">
+                                        <rect key="frame" x="-2" y="56" width="63" height="32"/>
+                                        <buttonCell key="cell" type="push" title="Stop" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Y4J-fH-eGg">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <action selector="TCHandleCommand:" target="tcv-Q8-lYO" id="G7S-RM-vqB"/>
+                                        </connections>
+                                    </button>
+                                    <button identifier="tpej" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="tv8-we-Rzw">
+                                        <rect key="frame" x="-2" y="25" width="65" height="32"/>
+                                        <buttonCell key="cell" type="push" title="Eject" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="CTI-xm-flE">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <action selector="TCHandleCommand:" target="tcv-Q8-lYO" id="blm-Jt-z60"/>
+                                        </connections>
+                                    </button>
+                                    <button identifier="tpun" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="INa-De-tws">
+                                        <rect key="frame" x="3" y="4" width="69" height="18"/>
+                                        <buttonCell key="cell" type="check" title="Unlock" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="cY1-Zn-6lz">
+                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                    </button>
                                 </subviews>
+                                <edgeInsets key="edgeInsets" left="5" right="5" top="5" bottom="5"/>
                                 <visibilityPriorities>
+                                    <integer value="1000"/>
+                                    <integer value="1000"/>
+                                    <integer value="1000"/>
+                                    <integer value="1000"/>
+                                    <integer value="1000"/>
+                                    <integer value="1000"/>
+                                    <integer value="1000"/>
                                     <integer value="1000"/>
                                 </visibilityPriorities>
                                 <customSpacing>
                                     <real value="3.4028234663852886e+38"/>
+                                    <real value="3.4028234663852886e+38"/>
+                                    <real value="3.4028234663852886e+38"/>
+                                    <real value="3.4028234663852886e+38"/>
+                                    <real value="3.4028234663852886e+38"/>
+                                    <real value="3.4028234663852886e+38"/>
+                                    <real value="3.4028234663852886e+38"/>
+                                    <real value="3.4028234663852886e+38"/>
+                                </customSpacing>
+                            </stackView>
+                            <stackView distribution="fill" orientation="horizontal" alignment="centerY" spacing="3" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tHT-2p-IrE" userLabel="state">
+                                <rect key="frame" x="20" y="20" width="262" height="16"/>
+                                <subviews>
+                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="aNh-BQ-LJr">
+                                        <rect key="frame" x="-2" y="0.0" width="40" height="16"/>
+                                        <textFieldCell key="cell" lineBreakMode="clipping" title="State:" id="AmI-aE-nlB">
+                                            <font key="font" metaFont="system"/>
+                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                        </textFieldCell>
+                                    </textField>
+                                    <button identifier="tpsp" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="KUu-Nk-Gey">
+                                        <rect key="frame" x="39" y="0.0" width="60" height="16"/>
+                                        <buttonCell key="cell" type="bevel" title="Playing" bezelStyle="regularSquare" image="play.fill" catalog="system" imagePosition="left" alignment="left" enabled="NO" inset="2" id="6Ll-Nh-hMC">
+                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                    </button>
+                                    <button identifier="tpsr" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Gc9-6M-xkY">
+                                        <rect key="frame" x="102" y="0.0" width="87" height="16"/>
+                                        <buttonCell key="cell" type="bevel" title="Recording" bezelStyle="regularSquare" image="recordingtape" catalog="system" imagePosition="left" alignment="left" enabled="NO" inset="2" id="c0R-vK-F0p">
+                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                    </button>
+                                    <button identifier="tpss" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Udc-dh-DDb">
+                                        <rect key="frame" x="192" y="0.0" width="70" height="16"/>
+                                        <buttonCell key="cell" type="bevel" title="Stopped" bezelStyle="regularSquare" image="stop.fill" catalog="system" imagePosition="left" alignment="left" enabled="NO" inset="2" id="rhe-mq-ws9">
+                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                    </button>
+                                </subviews>
+                                <visibilityPriorities>
+                                    <integer value="1000"/>
+                                    <integer value="1000"/>
+                                    <integer value="1000"/>
+                                    <integer value="1000"/>
+                                </visibilityPriorities>
+                                <customSpacing>
+                                    <real value="3.4028234663852886e+38"/>
+                                    <real value="3.4028234663852886e+38"/>
+                                    <real value="3.4028234663852886e+38"/>
+                                    <real value="3.4028234663852886e+38"/>
+                                </customSpacing>
+                            </stackView>
+                            <stackView distribution="fill" orientation="horizontal" alignment="centerY" spacing="3" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mbP-gz-4lx" userLabel="tapename">
+                                <rect key="frame" x="20" y="44" width="104" height="173"/>
+                                <subviews>
+                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Dr1-uc-qH4">
+                                        <rect key="frame" x="-2" y="79" width="62" height="16"/>
+                                        <textFieldCell key="cell" lineBreakMode="clipping" title="Tape File:" id="3fx-42-U2z">
+                                            <font key="font" metaFont="system"/>
+                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                        </textFieldCell>
+                                    </textField>
+                                    <textField identifier="tpnm" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="sSm-cg-yfW">
+                                        <rect key="frame" x="59" y="79" width="47" height="16"/>
+                                        <textFieldCell key="cell" lineBreakMode="clipping" title="[name]" id="Ybr-x7-PGE">
+                                            <font key="font" metaFont="system"/>
+                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                        </textFieldCell>
+                                    </textField>
+                                </subviews>
+                                <visibilityPriorities>
+                                    <integer value="1000"/>
+                                    <integer value="1000"/>
+                                </visibilityPriorities>
+                                <customSpacing>
+                                    <real value="3.4028234663852886e+38"/>
+                                    <real value="3.4028234663852886e+38"/>
                                 </customSpacing>
                             </stackView>
                         </subviews>
+                        <constraints>
+                            <constraint firstItem="9I4-Yf-xHc" firstAttribute="top" secondItem="eVa-Xz-rUt" secondAttribute="top" id="GdJ-Uk-asa"/>
+                            <constraint firstItem="mbP-gz-4lx" firstAttribute="leading" secondItem="tHT-2p-IrE" secondAttribute="leading" id="Gfh-bL-bpg"/>
+                            <constraint firstAttribute="trailing" secondItem="eVa-Xz-rUt" secondAttribute="trailing" constant="20" symbolic="YES" id="Inh-mS-05t"/>
+                            <constraint firstItem="tHT-2p-IrE" firstAttribute="top" secondItem="mbP-gz-4lx" secondAttribute="bottom" constant="8" symbolic="YES" id="QWq-or-eem"/>
+                            <constraint firstItem="9I4-Yf-xHc" firstAttribute="top" secondItem="bbm-I1-Ijf" secondAttribute="top" constant="20" symbolic="YES" id="Ts9-WG-uvn"/>
+                            <constraint firstItem="mbP-gz-4lx" firstAttribute="top" secondItem="9I4-Yf-xHc" secondAttribute="bottom" constant="8" symbolic="YES" id="UlZ-nW-Jnh"/>
+                            <constraint firstAttribute="bottom" secondItem="tHT-2p-IrE" secondAttribute="bottom" constant="20" symbolic="YES" id="Xar-8w-0OC"/>
+                            <constraint firstItem="9I4-Yf-xHc" firstAttribute="leading" secondItem="mbP-gz-4lx" secondAttribute="leading" id="ZID-hp-dev"/>
+                            <constraint firstItem="9I4-Yf-xHc" firstAttribute="leading" secondItem="bbm-I1-Ijf" secondAttribute="leading" constant="20" symbolic="YES" id="hSR-oO-dYg"/>
+                            <constraint firstItem="eVa-Xz-rUt" firstAttribute="leading" secondItem="9I4-Yf-xHc" secondAttribute="trailing" constant="8" symbolic="YES" id="tVO-Vt-GlX"/>
+                        </constraints>
                     </view>
                     <connections>
                         <outlet property="tableView" destination="o6K-RA-peU" id="MAi-Rc-Qvm"/>
@@ -2029,7 +2005,7 @@
                 </viewController>
                 <customObject id="PY0-eV-NOa" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="382" y="1163.5"/>
+            <point key="canvasLocation" x="392" y="1166.5"/>
         </scene>
         <!--Debugger Window Controller-->
         <scene sceneID="NXs-KR-xTs">

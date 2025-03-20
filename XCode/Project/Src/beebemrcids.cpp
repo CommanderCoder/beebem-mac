@@ -347,6 +347,7 @@ std::map<int,int> ID2RC =
     {'tpej', IDC_TAPE_CONTROL_EJECT},
     {'tprc', IDC_TAPE_CONTROL_RECORD},
     {'tpld', IDC_TAPE_CONTROL_LOAD_TAPE},
+    {'tpnt', IDC_TAPE_CONTROL_NEW_TAPE},
 
     {'tpsp', IDC_PLAYING},
     {'tpsr', IDC_RECORDING},
