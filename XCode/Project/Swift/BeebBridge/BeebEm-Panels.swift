@@ -1,6 +1,5 @@
 //
-//  BeebEm5-Bridging-Code.swift
-//  BeebEm5
+//  BeebEm-Bridging-Code.swift
 //
 //  Created by Commander Coder on 06/07/2020.
 //  Copyright © 2020 Andrew Hague. All rights reserved.
@@ -34,81 +33,90 @@ extension UTType {
 //	public static let ssdout = UTType(exportedAs: "com.commandercoder.BeebEm.ssdout")
 }
 
-func GetContentDictionary(filterString f : String?) -> ([String: String],[String])
+func GetFilters(filterString s : String) -> ([String: String],[String])
 {
 	/*
 	 The first string in each pair is a display string that describes the filter (for example, "Text Files"), and the second string specifies the filter pattern (for example, ".TXT"). To specify multiple filter patterns for a single display string, use a semicolon to separate the patterns (for example, ".TXT;.DOC;.BAK"). A pattern string can be a combination of valid file name characters and the asterisk (*) wildcard character. Do not include spaces in the pattern string.
 	 */
 	
-	// using a 'names' array so that the order of the options doesn't keep changing as it would if the Array(dictionary.keys) were used.
-	var names: [String] = []
+	// including a 'descriptor' array so that the order of the options doesn't change
+    // as it would if an array of dictionary.keys were used.
+	var descriptor: [String] = []
+	var desc_pattern = [String: String]()
+    
+    // l = the end of the long string indicated by \0\0
+    if let l = s.range(of: "\0\0")?.lowerBound
+    {
+        let t = String(s[..<l]) // the sliced string
+        let element = t.components(separatedBy: "\0")
+        // each even element (starting at 0) is a descriptor, each odd element is the filter pattern
+        for i in stride(from: 0, to: element.count, by:2) {
+            descriptor.append(element[i])
+            desc_pattern[element[i]] = element[i+1]
+        }
+    }
 	
-	var dictionary = [String: String]()
-	if let s = f
-	{
-		if let l = s.range(of: "\0\0")?.lowerBound
-		{
-			let t = String(s[..<l])
-			let pairs = t.components(separatedBy: "\0")
-			for i in stride(from: 0, to: pairs.count, by:2) {
-				names.append(pairs[i])
-				dictionary[pairs[i]] = pairs[i+1]
-			}
-		}
-	}
-	
-	return (dictionary,names)
+	return (desc_pattern, descriptor)
+}
+
+func GetContentDictionary(filterString filters : String) -> [String:String]
+{
+    var desc_pattern = [String: String]()
+    (desc_pattern, _) = GetFilters(filterString: filters)
+    return desc_pattern
 }
 
 
+
+// get an array of content types based on the values in the dictionary (the filter patterns)
 @available(macOS 11.0, *)
 func GetContentType(_ dictionary : [String:String]) -> [UTType]?
 {
-	var ct : [UTType]? = [] // .ANYFILE
+	var ct : [UTType] = [] // .ANYFILE
 	
 	if dictionary.values.contains("*.ssd") // DISC
 	{
-		ct = [.ssd] // ["ssd", "dsd", "wdd", "dos", "adl", "adf", "img"]
+        ct.append(.ssd) // ["ssd", "dsd", "wdd", "dos", "adl", "adf", "img"]
 	}
-	else if dictionary.values.contains("*.uefstate") //UEFSTATEFILE
+	if dictionary.values.contains("*.uefstate") //UEFSTATEFILE
 	{
 		Swift.print("found uefstate.")
-		ct = [.uefstate] // ["uefstate", "csw"]
+        ct.append(.uefstate) // ["uefstate", "csw"]
 	}
-	else if dictionary.values.contains("*.uef") //UEFFILE
+    if dictionary.values.contains("*.uef") //UEFFILE
 	{
 		Swift.print("found uef.")
-		ct = [.tape] // ["uef", "csw"]
+        ct.append(.tape) // ["uef", "csw"]
 	}
-	else if dictionary.values.contains("*.uef") //IFD
+	if dictionary.values.contains("*.uef") //IFD
 	{
 		Swift.print("found uefstate.")
-		ct = [.tape] // ["uef", "csw"]
+        ct.append(.tape) // ["uef", "csw"]
 	}
-	else if dictionary.values.contains("*.kmap") //KEYBOARD
+	if dictionary.values.contains("*.kmap") //KEYBOARD
 	{
 		Swift.print("found Key Map File.")
-		ct = [.keymap] // ["kmap"]
+		ct.append(.keymap) // ["kmap"]
 	}
-	else if dictionary.values.contains("*.dat") //HARDDRIVE
+	if dictionary.values.contains("*.dat") //HARDDRIVE
 	{
 		Swift.print("found hdd.")
-		ct = [.hdd] //nil  // ["dat"]
+		ct.append(.hdd) //nil  // ["dat"]
 	}
-	else if dictionary.values.contains("*.inf") //DISCFILE
+	if dictionary.values.contains("*.inf") //DISCFILE
 	{
 		Swift.print("found inf.")
-		ct = [.data] //nil  // ["inf"]
+		ct.append(.data) //nil  // ["inf"]
 	}
-	else if dictionary.values.contains("*.cfg") //ROMCFG
+	if dictionary.values.contains("*.cfg") //ROMCFG
 	{
 		Swift.print("found rom config file.")
-		ct = [.romcfg ] // ["cfg"]
+		ct.append(.romcfg ) // ["cfg"]
 	}
-	else if dictionary.values.contains("*.*") //PRINTFILE
+	if dictionary.values.contains("*.*") //PRINTFILE
 	{
 		Swift.print("found *.*")
-		ct = [.plainText]
+		ct.append(.plainText)
 	}
 
 	return ct
@@ -119,51 +127,53 @@ func GetFileType(_ dictionary : [String:String]) -> [String]
 {
 	var ct : [String] = []
 	
+    // quick exit if *.*
+    if dictionary.values.contains("*.*") //PRINTFILE
+    {
+        Swift.print("found *.*")
+        return ct
+    }
+    
 	if dictionary.values.contains("*.ssd") // DISC
 	{
-		ct = ["ssd", "dsd", "wdd", "dos", "adl", "adf", "img"]
+        ct.append( contentsOf: ["ssd", "dsd", "wdd", "dos", "adl", "adf", "img"] )
 	}
-	else if dictionary.values.contains("*.uefstate") //UEFSTATEFILE
+	if dictionary.values.contains("*.uefstate") //UEFSTATEFILE
 	{
 		Swift.print("found uefstate.")
-		ct = ["uefstate"]
+		ct.append( contentsOf: ["uefstate"])
 	}
-	else if dictionary.values.contains("*.uef") //UEFFILE
+	if dictionary.values.contains("*.uef") //UEFFILE
 	{
 		Swift.print("found uef.")
-		ct = ["uef", "csw"]
+		ct.append( contentsOf:["uef", "csw"])
 	}
-	else if dictionary.values.contains("*.ifd") //IFD
+	if dictionary.values.contains("*.ifd") //IFD
 	{
 		Swift.print("found ifd.")
-		ct = ["ifd"]
+		ct.append( contentsOf:["ifd"])
 	}
-	else if dictionary.values.contains("*.kmap") //KEYBOARD
+    if dictionary.values.contains("*.kmap") //KEYBOARD
 	{
 		Swift.print("found Key Map File.")
-		ct = ["kmap"]
+		ct.append( contentsOf:["kmap"])
 	}
-	else if dictionary.values.contains("*.dat") //HARDDRIVE
+    if dictionary.values.contains("*.dat") //HARDDRIVE
 	{
 		Swift.print("found hdd.")
-		ct = ["dat"]
+		ct.append( contentsOf:["dat"])
 	}
-	else if dictionary.values.contains("*.inf") //DISCFILE
+    if dictionary.values.contains("*.inf") //DISCFILE
 	{
 		Swift.print("found inf.")
-		ct = ["inf"]
+		ct.append( contentsOf:["inf"])
 	}
-	else if dictionary.values.contains("*.cfg") //ROMCFG
+    if dictionary.values.contains("*.cfg") //ROMCFG
 	{
 		Swift.print("found rom config file.")
-		ct = ["cfg"]
+		ct.append( contentsOf:["cfg"])
 	}
-	else if dictionary.values.contains("*.*") //PRINTFILE
-	{
-		Swift.print("found *.*")
-		ct = []
-	}
-	
+    
 	return ct
 }
 
@@ -171,37 +181,50 @@ func GetFileType(_ dictionary : [String:String]) -> [String]
 
 // allow access to this in C
 @_cdecl("swift_GetFilesWithPreview")
-func swift_GetFilesWithPreview(filepath : UnsafeMutablePointer<CChar>, bytes: Int, directory : UnsafeMutablePointer<CChar>, multiFiles : Bool = false, filefilter : UnsafePointer<CUnsignedChar>) -> Int
+func swift_GetFilesWithPreview(filepath : UnsafeMutablePointer<CChar>, bytes: Int, directory : UnsafeMutablePointer<CChar>, multiFiles : Bool = false, filefilter : UnsafePointer<CUnsignedChar>, title : UnsafeMutablePointer<CChar>?) -> Int
 {
     let dialog = NSOpenPanel()
-	let s = UnsafeBufferPointer(start: filefilter, count: 1000) // 1000 should be large enough!s
+	let fileFilterBytes = UnsafeBufferPointer(start: filefilter, count: 1000) // 1000 should be large enough!s
+    let filters = String(bytes:fileFilterBytes, encoding: .ascii)!
+    let filter_patterns = GetContentDictionary(filterString: filters)
+    // FUTURE - need to expand the path if it includes ~
+    //    let launcherLogPath = NSString("~/Documents").expandingTildeInPath
+    let launcherLogPath = String( cString: directory)
 
-    dialog.title                   = "Choose a file | BeebEm5"
+    if let pointer = title
+    {
+        dialog.message =  String(cString: pointer)
+    }
+    else
+    {
+        dialog.message = "Select File"
+    }
+    
     dialog.showsResizeIndicator    = true
     dialog.showsHiddenFiles        = false
     dialog.allowsMultipleSelection = multiFiles
     dialog.canChooseDirectories    = false
-    dialog.canChooseFiles    = true
-    dialog.allowsOtherFileTypes = true
+	dialog.canChooseFiles		   = true
+	dialog.allowsOtherFileTypes	   = true
+    dialog.showsTagField = false
+    dialog.isExtensionHidden = false
+    // dialog.nameFieldStringValue = "somefile.txt"
 
-
-    // FUTURE
-//    let launcherLogPath = NSString("~/Documents").expandingTildeInPath  // need to expand the path if it includes ~
-    let launcherLogPath = String( cString: directory)
+	// Defaults in FileDialog-mac.cpp are:
+	//    OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT;
+	//    OFN_OVERWRITEPROMPT can be false
+	
     dialog.directoryURL = NSURL.fileURL(withPath: launcherLogPath, isDirectory: true)
     dialog.canCreateDirectories = true
 	
-	
-	let (dictionary, _) = GetContentDictionary(filterString: String(bytes:s, encoding: .ascii))
-	
 	if #available(macOS 11.0, *) {
-		dialog.allowedContentTypes = GetContentType(dictionary) ?? []
+		dialog.allowedContentTypes = GetContentType(filter_patterns) ?? []
 	} else {
-		dialog.allowedFileTypes = GetFileType(dictionary)
+		dialog.allowedFileTypes = GetFileType(filter_patterns)
 	}
-	
 
-    if (dialog.runModal() ==  NSApplication.ModalResponse.OK) {
+    // open the LOAD dialog
+    if (dialog.runModal() == NSApplication.ModalResponse.OK) {
         let result = dialog.urls // Pathnames of the files
 
         if (result.count != 0) {
@@ -241,12 +264,13 @@ func swift_GetFilesWithPreview(filepath : UnsafeMutablePointer<CChar>, bytes: In
 @_cdecl("swift_SelectFolder")
 func swift_SelectFolder(filepath : UnsafeMutablePointer<CChar>, bytes: Int, title : UnsafePointer<CChar> ) -> Int
 {
-    let dialog = NSOpenPanel();
-    dialog.title                   = "Select Folder | BeebEm5"
-	dialog.message                   = String(cString: title)
+    let dialog = NSOpenPanel()
+    dialog.title                   = "Select Folder"
+	dialog.message                 = String(cString: title)
 	dialog.showsResizeIndicator    = true
     dialog.canChooseDirectories    = true
     dialog.canChooseFiles          = false
+    dialog.canCreateDirectories    = true
     
     if (dialog.runModal() ==  NSApplication.ModalResponse.OK) {
         guard let result = dialog.url else { return 0} // Pathname of the file
@@ -267,140 +291,51 @@ func swift_SelectFolder(filepath : UnsafeMutablePointer<CChar>, bytes: Int, titl
 
 
 
-
-
-
-//https://christiantietze.de/posts/2020/05/create-nssavepanel-accessoryview-in-swift/
-class SaveDelegate: NSObject, NSOpenSavePanelDelegate {
-	
-	func panelSelectionDidChange(_ sender: Any?)
-	{
-		Swift.print("panelSelectionDidChange \(String(describing: sender))")
-	}
-
-	func panel(_ sender: Any, userEnteredFilename filename: String, confirmed okFlag: Bool) -> String? {
-		Swift.print("panel \(String(describing: sender))")
-		Swift.print("panel \(filename)")
-		return filename
-	}
-	
-	func panel(_ sender: Any, shouldEnable url: URL) -> Bool
-	{
-		return true;
-	}
-	
-//	func panel(_ sender: Any, validate url: URL) throws
-//	{
-//
-//	}
-	func panel(_ sender: Any, didChangeToDirectoryURL url: URL?)
-	{
-		
-	}
-}
-
-
-@available(macOS 11.0, *)
-var contentTypes : [UTType] = []
-
-@available(macOS, introduced: 10.0, deprecated: 11.0, renamed: "GetContentType")
-var fileTypes : [String] = []
-
-class SaveDocument: NSDocument {
-	
-	internal init(filterString f : String?, initialDirectory d : String?)
-	{
-		(dictionary,names) = GetContentDictionary(filterString:f)
-		if #available(macOS 11.0, *) {
-			contentTypes = GetContentType(dictionary) ?? []
-		} else {
-			fileTypes = GetFileType(dictionary)
-		}
-		
-		initialDir = d
-	}
-	
-	internal var fileurl : URL?
-	override func save(
-		to url: URL,
-		ofType typeName: String,
-		for saveOperation: NSDocument.SaveOperationType,
-		completionHandler: @escaping ((any Error)?) -> Void
-	)
-	{
-		Swift.print(url, typeName)
-		fileurl = url
-	}
-
-	override func fileNameExtension(forType typeName: String, saveOperation: NSDocument.SaveOperationType) -> String? {
-		Swift.print("file name extension \(typeName)")
-		return String((dictionary[typeName]?.dropFirst() )!)
-		
-	}
-
-	override func writableTypes(for saveOperation: NSDocument.SaveOperationType) -> [String]
-	{
-		return names
-	}
-	
-	var names = [String]()
-	var dictionary = [ String: String]()
-	var initialDir : String?
-	
-	override func prepareSavePanel(_ savePanel: NSSavePanel) -> Bool {
-
-		let dialog=savePanel
-		let delegate = SaveDelegate()
-
-		dialog.delegate = delegate
-		dialog.title                   = "Choose a file | BeebEm5"
-		dialog.allowsOtherFileTypes    = true
-		dialog.isExtensionHidden	= false
-		dialog.showsTagField = false
-		dialog.nameFieldStringValue = "somefile.txt"
-		//	dialog.showsResizeIndicator    = true
-		//	dialog.showsHiddenFiles        = false
-		//	dialog.canSelectHiddenExtension	= true
-		if !(initialDir?.isEmpty ?? true) {
-			dialog.directoryURL = NSURL.fileURL(withPath: initialDir!, isDirectory: true)
-		}
-
-		if #available(macOS 11.0, *) {
-			dialog.allowedContentTypes = contentTypes
-		} else {
-			dialog.allowedFileTypes = fileTypes
-		}
-		
-		return true
-	}
-}
-
-
 @_cdecl("swift_SaveFile")
 func swift_SaveFile(filepath : UnsafeMutablePointer<CChar>, bytes: Int, filefilter : UnsafePointer<CUnsignedChar>, initialDir : UnsafePointer<CUnsignedChar>) -> Bool
 {
-	// MUST be a buffer of characters because /0 is used as a separator
-	let s = UnsafeBufferPointer(start: filefilter, count: 1000) // 1000 should be large enough!!
-	let d = String(cString: initialDir)
-	let sav = SaveDocument(filterString: String(bytes:s, encoding: .ascii), initialDirectory: d)
-	
-	sav.runModalSavePanel(for:.saveOperation, delegate: nil , didSave:
-								nil, contextInfo: nil)
-	// fileurl in SaveDocument will contain the file IF
-	// it SAVE was pressed
-	guard let result = sav.fileurl else { return false} // Pathname of the file
+    // MUST be a buffer of characters because /0 is used as a separator and we'd only
+    // get the first entry if we converted from a CString to a Swift String
+    let fileFilterBytes = UnsafeBufferPointer(start: filefilter, count: 1000) // 1000 should be large enough!!
+    let filters = String(bytes:fileFilterBytes, encoding: .ascii)!
+    let filter_patterns = GetContentDictionary(filterString: filters)
 
-	let path: String = result.path
-	
-	// path contains the file path e.g
-	// /Users/ourcodeworld/Desktop/file.txt
-	
-	// set the filepath back in the C code.. fill with zeros first
-	filepath.assign(repeating: 0, count: bytes)
-	filepath.assign(from: path, count: path.count)
-		
-	print("Picked \(String(cString:filepath))")
-	return true
+    let initDir = String(cString: initialDir)
+    
+    let dialog = NSSavePanel()
+    
+    dialog.message = "Select File"
+
+    dialog.showsResizeIndicator    = true
+    dialog.showsHiddenFiles        = false
+    dialog.allowsOtherFileTypes    = true
+    dialog.showsTagField           = false
+    dialog.isExtensionHidden       = false
+    dialog.directoryURL            = NSURL.fileURL(withPath: initDir, isDirectory: true)
+    dialog.canCreateDirectories    = true
+    
+    if #available(macOS 11.0, *) {
+        dialog.allowedContentTypes = GetContentType(filter_patterns) ?? []
+    } else {
+        dialog.allowedFileTypes = GetFileType(filter_patterns)
+    }
+
+    // open the SAVE dialog
+    if (dialog.runModal() == NSApplication.ModalResponse.OK) {
+        guard let result = dialog.url else { return false } // Pathname of the file
+        let path: String = result.path
+
+        // path contains the file path e.g
+        // /Users/ourcodeworld/Desktop/file.txt
+        
+        // set the filepath back in the C code.. fill with zeros first
+        filepath.assign(repeating: 0, count: bytes)
+        filepath.assign(from: path, count: path.count)
+            
+        print("Picked \(String(cString:filepath))")
+        return true
+    }
+    return false
 }
 
 @_cdecl("swift_Alert")

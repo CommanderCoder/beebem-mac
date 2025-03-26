@@ -51,46 +51,131 @@
  const char* filter = "Label Files (*.txt)\0*.txt\0" "All Files (*.*)\0*.*\0";
  const char* filter = "Debugger Script Files (*.txt)\0*.txt\0" "All Files (*.*)\0*.*\0";
  
- 
- 
- 
- 
- 
- 
- 
- 
+
  */
 
+// __APPLE__
+BOOL GetOpenFileName(OPENFILENAME* ofn)
+{
+	// show folder select
+	//		if (strlen(m_ofn.lpstrFile) == 0)
+	//		{
+	//			bool err = swift_SelectFolder(m_ofn.lpstrFile, _MAX_PATH, "Choose a Folder");
+	//			return !err;
+	//		}
+	//		else
+	{
+		bool multiSelect = (ofn->Flags & OFN_ALLOWMULTISELECT) != 0;
+		bool err = swift_GetFilesWithPreview(ofn->lpstrFile, ofn->nMaxFile, ofn->lpstrInitialDir, multiSelect, ofn->lpstrFilter, ofn->lpstrTitle);
+		return !err;
+	}
+}
+
+
+int SelectFilterFromExt(const char* filename)
+{
+	const char *Ext = strrchr(filename, '.');
+	if (Ext != nullptr)
+	{
+		if (_stricmp(Ext + 1, "ssd") == 0)
+		{
+			return 1;
+		}
+		else if (_stricmp(Ext + 1, "dsd") == 0)
+		{
+			return 2;
+		}
+		else if (_stricmp(Ext + 1, "adf") == 0)
+		{
+			return 5;
+		}
+		else if (_stricmp(Ext + 1, "adl") == 0)
+		{
+			return 6;
+		}
+	}
+	return 0;
+}
+
+BOOL GetSaveFileName(OPENFILENAME* ofn)
+{
+	bool Result = swift_SaveFile(ofn->lpstrFile, 256, ofn->lpstrFilter, ofn->lpstrInitialDir);
+
+	// lpstrFile will have changed value
+	ofn->nFilterIndex = SelectFilterFromExt(ofn->lpstrFile);
+
+	return Result;
+}
 
 // MacOS FileDialog
 
-FileDialog::FileDialog(HWND hwndOwner, LPTSTR result, DWORD resultLength,
-					   LPCTSTR initialFolder, LPCTSTR filter)
+FileDialog::FileDialog(HWND hwndOwner, LPTSTR Result, DWORD ResultLength,
+                       LPCTSTR InitialFolder, LPCTSTR Filter)
 {
-	memset(&m_ofn, 0, sizeof(m_ofn));
+    ZeroMemory(&m_ofn, sizeof(m_ofn));
 
-	m_ofn.lStructSize = sizeof(OPENFILENAME);
-	m_ofn.lpstrFilter = filter;
-	m_ofn.nFilterIndex = 1;
-	m_ofn.lpstrFile = result;
-	m_ofn.nMaxFile = resultLength;
-	m_ofn.lpstrInitialDir = initialFolder;
-//	m_ofn.Flags = OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_HIDEREADONLY;
-	multiSelect = false;
+    m_ofn.lStructSize = sizeof(OPENFILENAME);
+    m_ofn.hwndOwner = hwndOwner;
+    m_ofn.lpstrFilter = Filter;
+    m_ofn.nFilterIndex = 1;
+    m_ofn.lpstrFile = Result;
+    m_ofn.nMaxFile = ResultLength;
+    m_ofn.lpstrInitialDir = InitialFolder;
+    m_ofn.Flags = OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_HIDEREADONLY |
+                  OFN_OVERWRITEPROMPT;
 }
 
-bool FileDialog::ShowDialog(bool open)
+/****************************************************************************/
+
+void FileDialog::SetFilterIndex(DWORD Index)
 {
-	if (open)
+	m_ofn.nFilterIndex = Index;
+}
+
+void FileDialog::AllowMultiSelect()
+{
+	m_ofn.Flags |= OFN_ALLOWMULTISELECT | OFN_EXPLORER;
+}
+
+void FileDialog::NoOverwritePrompt()
+{
+	m_ofn.Flags &= ~OFN_OVERWRITEPROMPT;
+}
+
+void FileDialog::SetTitle(LPCTSTR Title)
+{
+	m_ofn.lpstrTitle = Title;
+}
+
+/****************************************************************************/
+
+bool FileDialog::Open()
+{
+	return ShowDialog(true);
+}
+
+bool FileDialog::Save()
+{
+	return ShowDialog(false);
+}
+
+/****************************************************************************/
+
+DWORD FileDialog::GetFilterIndex() const
+{
+	return m_ofn.nFilterIndex;
+}
+
+/****************************************************************************/
+
+bool FileDialog::ShowDialog(bool Open)
+{
+	if (Open)
 	{
-//		return GetOpenFileName(&m_ofn) != 0;
-		return true;
+		return GetOpenFileName(&m_ofn) != 0;
 	}
 	else
 	{
-//		m_ofn.Flags |= OFN_OVERWRITEPROMPT;
-//
-//		return GetSaveFileName(&m_ofn) != 0;
-		return true;
+		return GetSaveFileName(&m_ofn) != 0;
 	}
 }

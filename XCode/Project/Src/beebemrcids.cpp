@@ -406,14 +406,17 @@ ConvID2RC(unsigned int cmdID)
 int
 ConvRC2ID(unsigned int nID)
 {
-	auto cmdID = RC2ID.find(nID);
-	if (cmdID != RC2ID.end())
-	{
-		return cmdID->second;
-	}
-	
-	char* cmdCHR = (char*)&cmdID->second;
-	printf("ConvRC2ID %d %c%c%c%c", nID, cmdCHR[3], cmdCHR[2], cmdCHR[1], cmdCHR[0]);
-	printf(" NOT FOUND\n");
+    auto cmdID = RC2ID.find(nID);
+    if (cmdID != RC2ID.end())
+    {
+        return cmdID->second;
+    }
+    
+    char* cmdCHR = (char*)&cmdID->second;
+    if (cmdCHR[0] != 0)
+    {
+        printf("ConvRC2ID %d %c%c%c%c", nID, cmdCHR[3], cmdCHR[2], cmdCHR[1], cmdCHR[0]);
+        printf(" NOT FOUND\n");
+    }
 	return -1;
 }

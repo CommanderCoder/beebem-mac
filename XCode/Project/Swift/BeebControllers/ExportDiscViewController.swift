@@ -64,7 +64,7 @@ class ExportDiscViewController: NSViewController {
 	
     @IBAction func exportSelected(_ sender : NSButton) {
         
-		print("Exported \(sender)")
+//		print("Exported \(sender)")
 		
 		NSApp.stopModal(withCode: NSApplication.ModalResponse.OK)
         
@@ -72,7 +72,7 @@ class ExportDiscViewController: NSViewController {
         for r in tableView.selectedRowIndexes
         {
             beeblistdata.selectedFiles.append(Int32(r))
-            print(">> \(r)")
+//            print(">> \(r)")
         }
         
     }
@@ -96,12 +96,12 @@ extension ExportDiscViewController: NSTableViewDelegate {
     }
 
     func tableView(_ tableView: NSTableView, rowViewForRow row: Int) -> NSTableRowView? {
-        print("\(#function) \(row) \(beeblistdata.rows[row])")
+//        print("\(#function) \(row) \(beeblistdata.rows[row])")
         return nil
     }
     
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
-        print("\(#function) \(tableColumn!.identifier) \(row) \(beeblistdata.rows[row])")
+//        print("\(#function) \(tableColumn!.identifier) \(row) \(beeblistdata.rows[row])")
 
         if let cell = tableView.makeView(withIdentifier: tableColumn!.identifier, owner: nil) as? NSTableCellView {
             cell.textField?.stringValue = beeblistdata.rows[row]

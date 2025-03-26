@@ -42,109 +42,50 @@ struct OPENFILENAME
 		lpTemplateName As String
 	End Type
 */
-	DWORD lStructSize;
+    HWND hwndOwner;
+    DWORD lStructSize;
 	DWORD nFilterIndex;
 	DWORD nMaxFile;
 	LPCTSTR lpstrFilter;
 	LPCTSTR lpstrFile;
 	LPCTSTR lpstrTitle;
 	LPCTSTR lpstrInitialDir;
+    DWORD Flags;
 };
+
+#define OFN_FILEMUSTEXIST 0x00001000
+#define OFN_PATHMUSTEXIST 0x00000800
+#define OFN_HIDEREADONLY 0x00000004
+#define OFN_OVERWRITEPROMPT 0x00000002
+#define OFN_ALLOWMULTISELECT 0x00000200
+#define OFN_EXPLORER 0x00080000
 
 class FileDialog
 {
-public:
-	FileDialog(HWND hwndOwner, LPTSTR result, DWORD resultLength,
-			   LPCTSTR initialFolder, LPCTSTR filter);
-	FileDialog(const FileDialog&) = delete;
-	FileDialog& operator=(FileDialog&) = delete;
+	public:
+        FileDialog(HWND hwndOwner, LPTSTR Result, DWORD ResultLength,
+                   LPCTSTR InitialFolder, LPCTSTR Filter);
+        FileDialog(const FileDialog&) = delete;
+        FileDialog& operator=(FileDialog&) = delete;
 
-	// Prepare dialog
-	void SetFilterIndex(DWORD index)
-	{
-		m_ofn.nFilterIndex = index;
-	}
+	public:
+		// Prepare dialog
+		void SetFilterIndex(DWORD Index);
+		void AllowMultiSelect();
+		void NoOverwritePrompt();
+		void SetTitle(LPCTSTR Title);
 
-	void AllowMultiSelect()
-	{
-		multiSelect = true;
-//		m_ofn.Flags |= OFN_ALLOWMULTISELECT | OFN_EXPLORER;
-	}
-    
-    void NoOverwritePrompt()
-    {
-//        m_ofn.Flags &= ~OFN_OVERWRITEPROMPT;
-    }
+		// Show dialog
+		bool Open();
+		bool Save();
 
+		// Get results
+		DWORD GetFilterIndex() const;
 
-	void SetTitle(LPCTSTR title)
-	{
-		m_ofn.lpstrTitle = title;
-	}
+	private:
+		OPENFILENAME m_ofn;
 
-	// Show dialog
-	bool Open()
-	{
-		// show folder select
-//		if (strlen(m_ofn.lpstrFile) == 0)
-//		{
-//			bool err = swift_SelectFolder(m_ofn.lpstrFile, _MAX_PATH, "Choose a Folder");
-//			return !err;
-//		}
-//		else
-		{
-			bool err = swift_GetFilesWithPreview(m_ofn.lpstrFile, m_ofn.nMaxFile, m_ofn.lpstrInitialDir, multiSelect, m_ofn.lpstrFilter);
-			return !err;
-		}
-	}
-	
-	int SelectFilterFromExt(const char* filename)
-	{
-		const char *Ext = strrchr(filename, '.');
-		if (Ext != nullptr)
-		{
-			if (_stricmp(Ext + 1, "ssd") == 0)
-			{
-				return 1;
-			}
-			else if (_stricmp(Ext + 1, "dsd") == 0)
-			{
-				return 2;
-			}
-			else if (_stricmp(Ext + 1, "adf") == 0)
-			{
-				return 5;
-			}
-			else if (_stricmp(Ext + 1, "adl") == 0)
-			{
-				return 6;
-			}
-		}
-		return 0;
-	}
-
-	bool Save()
-	{
-		bool Result = swift_SaveFile(m_ofn.lpstrFile, 256, m_ofn.lpstrFilter, m_ofn.lpstrInitialDir);
-
-		// lpstrFile will have changed value
-		m_ofn.nFilterIndex = SelectFilterFromExt(m_ofn.lpstrFile);
-
-		return Result;
-	}
-
-	// Get results
-	DWORD GetFilterIndex() const
-	{
-		return m_ofn.nFilterIndex;
-	}
-
-private:
-	OPENFILENAME m_ofn;
-	
-	bool ShowDialog(bool open);
-
-	bool multiSelect;
+		bool ShowDialog(bool Open);
 };
 
 
