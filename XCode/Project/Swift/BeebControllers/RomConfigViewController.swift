@@ -14,7 +14,7 @@ class RomConfigViewController: NSViewController
 
     private var selectedRow : Int = 0
 
-    var rows = 16
+    var rows = 17 // 16 slots + 1 for the OS
 
     
     @IBOutlet weak var tableView: NSTableView!
