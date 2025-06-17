@@ -1,0 +1,9 @@
+
+check Teletext; check SetSocketBlocking
+
+why does audio give an error about audio not starting if airpod NOT plugged in.
+
+test the ECONET
+
+Work on the debugger
+

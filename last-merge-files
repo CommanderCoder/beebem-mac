@@ -1,0 +1,38 @@
+Look for DIALOGs and for BeebWin, BeebWinIo
+
+
+
+
+
++++ b/Help/gettingstarted.html
++++ b/Src/6502core.cpp
++++ b/Src/AviWriter.cpp
++++ b/Src/AviWriter.h
++++ b/Src/BeebMem.cpp
+    +++ b/Src/BeebWin.cpp
+    +++ b/Src/BeebWin.h
++++ b/Src/BeebWinIo.cpp
++++ b/Src/Csw.cpp
+    +++ b/Src/Dialog.h
++++ b/Src/Econet.cpp
+    +++ b/Src/FileDialog.h
++++ b/Src/FileType.cpp
++++ b/Src/FileUtils.cpp
++++ b/Src/IP232.cpp
++++ b/Src/Main.cpp
++++ b/Src/Music5000.cpp
++++ b/Src/SerialPort.cpp
++++ b/Src/SerialPort.h
++++ b/Src/Socket.cpp
++++ b/Src/Sound.cpp
++++ b/Src/SoundStreamer.cpp
++++ b/Src/SprowCoPro.cpp
++++ b/Src/UserVia.cpp
++++ b/Src/Video.cpp
++++ b/Src/WindowUtils.cpp
++++ b/XCode/Project/BeebEm.xcodeproj/project.pbxproj
++++ b/XCode/Project/Src/MacBridge/BeebEm-Bridging-Keyboard.cpp
++++ b/XCode/Project/Src/MacDialogs/FileDialog-mac.hpp
++++ b/XCode/Project/Src/MacDialogs/TapeControlDialog-mac.cpp
++++ b/XCode/Project/Src/apples.cpp
++++ b/XCode/Project/Src/apples.h

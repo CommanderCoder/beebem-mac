@@ -698,6 +698,9 @@ void BeebWin::Shutdown()
 	SerialClose();
 	CloseTape();
 
+	EconetEnabled = false;
+	EconetReset();
+
 	WSACleanup();
 
 	if (m_WriteInstructionCounts)
@@ -836,7 +839,10 @@ void BeebWin::ResetBeebSystem(Model NewModelType, bool LoadRoms)
 	VideoInit();
 	SetDiscWriteProtects();
 	Disc8271Reset();
-	if (EconetEnabled) EconetReset();	//Rob:
+
+	EconetReset();
+	UpdateEconetMenu();
+
 	Reset1770();
 	AtoDInit();
 	SetRomMenu();
@@ -983,7 +989,8 @@ void BeebWin::Break()
 		Reset1770();
 	}
 
-	if (EconetEnabled) EconetReset();//Rob
+	EconetReset();
+	UpdateEconetMenu();
 
 	if (MachineType != Model::MasterET)
 	{

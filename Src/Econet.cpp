@@ -24,10 +24,10 @@ Boston, MA  02110-1301, USA.
 // Mike Wyatt - further development, Dec 2005
 // AUN by Rob Jun/Jul 2009
 //
-//
 // Search TODO for some issues that need addressing.
 //
-//
+// Resources:
+// * http://www.riscos.com/support/developers/prm/aun.html
 
 #include <windows.h>
 
@@ -158,13 +158,22 @@ const unsigned char STATUS_REG2_RX_DATA_AVAILABLE              = 0x80;
 
 // Configuration Options.
 // These, among others, are overridden in Econet.cfg, see ReadNetwork()
+const bool DEFAULT_AUN_MODE = false;
+const bool DEFAULT_LEARN_MODE = false;
+const bool DEFAULT_STRICT_AUN_MODE = false;
+const bool DEFAULT_SINGLE_SOCKET = true;
+const int DEFAULT_FLAG_FILL_TIMEOUT = 500000;
+const int DEFAULT_SCOUT_ACK_TIMEOUT = 500;
+const unsigned int DEFAULT_TIME_BETWEEN_BYTES = 128;
+const unsigned int DEFAULT_FOUR_WAY_STAGE_TIMEOUT = 500000;
+const bool DEFAULT_MASSAGE_NETWORKS = false;
 
-static bool AUNMode = false; // Use AUN style networking
-static bool LearnMode = false; // Add receipts from unknown hosts to network table
-static bool StrictAUNMode = false; // Assume network ip=stn number when sending to unknown hosts
-static bool SingleSocket = true; // Use same socket for Send and receive
-static unsigned int FourWayStageTimeout = 500000;
-static bool MassageNetworks = false;  // massage network numbers on send/receive (add/sub 128)
+static bool AUNMode = DEFAULT_AUN_MODE; // Use Acorn Universal Networking (AUN) style networking
+static bool LearnMode = DEFAULT_LEARN_MODE; // Add receipts from unknown hosts to network table
+static bool StrictAUNMode = DEFAULT_STRICT_AUN_MODE; // Assume network ip=stn number when sending to unknown hosts
+static bool SingleSocket = DEFAULT_SINGLE_SOCKET; // Use same socket for Send and receive
+static unsigned int FourWayStageTimeout = DEFAULT_FOUR_WAY_STAGE_TIMEOUT;
+static bool MassageNetworks = DEFAULT_MASSAGE_NETWORKS; // Massage network numbers on send/receive (add/sub 128)
 
 static int inmask, outmask;
 
@@ -184,13 +193,13 @@ static const unsigned char powers[4] = { 1, 2, 4, 8 };
 // during data transmission - more than 5 are flags or errors)
 // 6854 datasheet has max clock frequency of 1.5MHz for the B version.
 // 64 cycles seems to be a bit fast for 'netmon' prog to keep up - set to 128.
-static unsigned int TimeBetweenBytes = 128;
+static unsigned int TimeBetweenBytes = DEFAULT_TIME_BETWEEN_BYTES;
 
 // Station Configuration settings:
 // You specify station number on command line.
 // This allows multiple different instances of the emulator to be run and
-// to communicate with each other.  Note that you STILL need to have them
-// all listed in Econet.cfg so each one knows where the other area.
+// to communicate with each other. Note that you STILL need to have them
+// all listed in Econet.cfg so each one knows where the others are.
 unsigned char EconetStationID = 0; // default Station ID
 static u_short EconetListenPort = 0; // default Listen port
 #ifndef __APPLE__
@@ -207,15 +216,15 @@ const u_short DEFAULT_AUN_PORT = 32768;
 
 // Written in 2004:
 // we will be using Econet over Ethernet as per AUN,
-// however I've not got a real acorn ethernet machine to see how
-// it actually works!  The only details I can find is it is:
+// however I've not got a real Acorn ethernet machine to see how
+// it actually works! The only details I can find is it is:
 // "standard econet encpsulated in UDP to port 32768" and that
 // Addressing defaults to "1.0.net.stn" where net >= 128 for ethernet.
 // but can be overridden, so we won't worry about that.
 
 // 2009: Now I come back to this, I know the format ... :-)
 // and sure enough, it's pretty simple.
-// It's translating the different protocols that was harder..
+// It's translating the different protocols that was harder.
 
 enum class AUNType : unsigned char {
 	Broadcast = 1,
@@ -284,7 +293,7 @@ struct LongEconetPacket
 // before transmission starts. Data is sent immediately it's put into
 // the first slot.
 
-// Does econet send multiple packets for big transfers, or just one huge
+// Does Econet send multiple packets for big transfers, or just one huge
 // packet?
 // What's MTU on econet? Depends on clock speed but its big (e.g. 100K).
 // As we are using UDP, we will construct a 2048 byte buffer, accept data
@@ -292,11 +301,11 @@ struct LongEconetPacket
 // similarly, and dribble it back into the emulated 68B54.
 // We should thus never suffer underrun errors....
 // --we do actually flag an underrun, if data exceeds the size of the buffer.
-// -- sniffed AUN between live arcs seems to max out at 1288 bytes (1280+header)
-// --- bigger packers ARE possible - UDP fragments & reassembles transparently.. doh..
+// -- sniffed AUN between live Arcs seems to max out at 1288 bytes (1280+header)
+// --- bigger packets ARE possible - UDP fragments & reassembles transparently.. doh..
 
 // 64K max.. can't see any transfers being needed larger than this too often!
-// (and that's certainly larger than acorn bridges can cope with.)
+// (and that's certainly larger than Acorn bridges can cope with.)
 const int ETHERNET_BUFFER_SIZE = 65536;
 
 struct EthernetPacket
@@ -324,11 +333,11 @@ struct EthernetPacket
 	unsigned int destnet;
 };
 
-// buffers used to construct packets for sending out via UDP
+// Buffers used to construct packets for sending out via UDP
 static EthernetPacket EconetRx;
 static EthernetPacket EconetTx;
 
-// buffers used to construct packets sent to/received from bbc micro
+// Buffers used to construct packets sent to/received from BBC micro
 
 struct EconetPacket
 {
@@ -348,10 +357,10 @@ struct EconetPacket
 static EconetPacket BeebTx;
 static EconetPacket BeebRx;
 
-static unsigned char BeebTxCopy[6]; // size of LongEconetPacket structure
+static unsigned char BeebTxCopy[sizeof(LongEconetPacket)];
 
 // Holds data from Econet.cfg file
-struct ECOLAN { // what we we need to find a beeb?
+struct ECOLAN { // What do we need to find a beeb?
 	unsigned char station;
 	unsigned char network;
 #ifndef __APPLE__
@@ -378,14 +387,14 @@ struct NetStn {
 
 static NetStn LastError;
 
-const int NETWORK_TABLE_LENGTH = 512; // total number of hosts we can know about
-const int AUN_TABLE_LENGTH = 128; // number of disparate network in AUNMap
-static ECOLAN network[NETWORK_TABLE_LENGTH]; // list of my friends! :-)
+const int NETWORK_TABLE_LENGTH = 512; // Total number of hosts we can know about
+const int AUN_TABLE_LENGTH = 128; // number of disparate networkS in AUNMap
+static ECOLAN network[NETWORK_TABLE_LENGTH]; // List of my friends! :-)
 static AUNTAB aunnet[AUN_TABLE_LENGTH]; // AUNMap file for guess mode.
 
-static int networkp = 0; // how many friends do I have?
-static int aunnetp = 0;  // now many networks do i know about?
-static int myaunnet = 0; // aunnet table entry that I match. should be -1 as 0 is valid..
+static int networkp = 0; // How many friends do I have?
+static int aunnetp = 0;  // How many networks do i know about?
+static int myaunnet = 0; // aunnet table entry that I match. should be -1 as 0 is valid
 
 static unsigned char irqcause;   // flag to indicate cause of irq sr1b7
 static unsigned char sr1b2cause; // flag to indicate cause of irq sr1b2
@@ -408,10 +417,10 @@ char AUNMapPath[MAX_PATH];
 
 static bool FlagFillActive; // Flag fill state
 int EconetFlagFillTimeoutTrigger; // Trigger point for flag fill
-int EconetFlagFillTimeout = 500000; // Cycles for flag fill timeout // added cfg file to override this
-static int EconetSCACKtrigger; // Trigger point for scout ack
-static int EconetSCACKtimeout = 500; // Cycles to delay before sending ack to scout (aun mode only)
-static int Econet4Wtrigger;
+int EconetFlagFillTimeout = DEFAULT_FLAG_FILL_TIMEOUT; // Cycles for flag fill timeout // added cfg file to override this
+static int EconetScoutAckTrigger; // Trigger point for scout ack
+static int EconetScoutAckTimeout = DEFAULT_SCOUT_ACK_TIMEOUT; // Cycles to delay before sending ack to scout (AUN mode only)
+static int EconetFourWayTrigger;
 
 // Device and temp copy!
 static MC6854 ADLC;
@@ -419,10 +428,17 @@ static MC6854 ADLCtemp;
 
 //---------------------------------------------------------------------------
 
-static void ReadNetwork();
+static bool ReadNetwork();
 static bool EconetPoll_real();
 static void DebugDumpADLC();
 static void EconetError(const char *Format, ...);
+
+//---------------------------------------------------------------------------
+
+static bool IsBroadcastStation(unsigned int Station)
+{
+	return Station == 0 || Station == 255;
+}
 
 //---------------------------------------------------------------------------
 
@@ -511,7 +527,28 @@ static ECOLAN* AddHost(sockaddr_in* pAddress)
 
 //---------------------------------------------------------------------------
 
-void EconetReset()
+static void EconetCloseSockets()
+{
+	// In single socket mode, SendSocket == ListenSocket
+	if (SendSocket != INVALID_SOCKET && SendSocket != ListenSocket)
+	{
+		CloseSocket(SendSocket);
+	}
+
+	if (ListenSocket != INVALID_SOCKET)
+	{
+		CloseSocket(ListenSocket);
+	}
+
+	SendSocket = INVALID_SOCKET;
+	ListenSocket = INVALID_SOCKET;
+
+	ReceiverSocketsOpen = false;
+}
+
+//---------------------------------------------------------------------------
+
+bool EconetReset()
 {
 	if (DebugEnabled)
 	{
@@ -560,34 +597,30 @@ void EconetReset()
 	FlagFillActive = false;
 	EconetFlagFillTimeoutTrigger = 0;
 
-	// kill anything that was in use
-	if (ReceiverSocketsOpen)
-	{
-		if (!SingleSocket)
-		{
-			CloseSocket(SendSocket);
-		}
-
-		CloseSocket(ListenSocket);
-		ReceiverSocketsOpen = false;
-	}
+	// Kill anything that was in use
+	EconetCloseSockets();
 
 	// Stop here if not enabled
 	if (!EconetEnabled)
-		return;
-
-	// Read in Econet.cfg and AUNMap.  Done here so can refresh it on Break.
-	ReadNetwork();
-
-	//----------------------
-	// Create a SOCKET for listening for incoming connection requests.
-	ListenSocket = socket(AF_INET, SOCK_DGRAM, 0);
-	if (ListenSocket == INVALID_SOCKET) {
-		EconetError("Econet: Failed to open listening socket (error %ld)", GetLastSocketError());
-		return;
+	{
+		return true;
 	}
 
-	//----------------------
+	// Read in Econet.cfg and AUNMap. Done here so can refresh it on Break.
+	if (!ReadNetwork())
+	{
+		goto Fail;
+	}
+
+	// Create a SOCKET for listening for incoming connection requests.
+	ListenSocket = socket(AF_INET, SOCK_DGRAM, 0);
+
+	if (ListenSocket == INVALID_SOCKET)
+	{
+		EconetError("Econet: Failed to open listening socket (error %ld)", GetLastSocketError());
+		goto Fail;
+	}
+
 	// The sockaddr_in structure specifies the address family,
 	// IP address, and port for the socket that is being bound.
 	sockaddr_in service;
@@ -609,7 +642,7 @@ void EconetReset()
 		else
 		{
 			EconetError("Econet: Failed to find station %d in Econet.cfg", EconetStationID);
-			return;
+			goto Fail;
 		}
 
 		service.sin_port = htons(EconetListenPort);
@@ -618,9 +651,7 @@ void EconetReset()
 		if (bind(ListenSocket, (SOCKADDR*)&service, sizeof(service)) == SOCKET_ERROR)
 		{
 			EconetError("Econet: Failed to bind to port %d (error %ld)", EconetListenPort, GetLastSocketError());
-			CloseSocket(ListenSocket);
-			ListenSocket = INVALID_SOCKET;
-			return;
+			goto Fail;
 		}
 	}
 	else
@@ -665,7 +696,7 @@ void EconetReset()
 
 			if (EconetListenPort == 0)
 			{
-				// still can't find one ... strict mode?
+				// Still can't find one ... strict mode?
 
 				if (AUNMode && StrictAUNMode && networkp < NETWORK_TABLE_LENGTH)
 				{
@@ -692,9 +723,14 @@ void EconetReset()
 								if (bind(ListenSocket, (SOCKADDR*)&service, sizeof(service)) == 0)
 								{
 									myaunnet = j;
-									network[networkp].inet_addr = EconetListenIP = IN_ADDR(localaddr);
-									network[networkp].port = EconetListenPort = DEFAULT_AUN_PORT;
-									network[networkp].station = EconetStationID = IN_ADDR(localaddr) >> 24;
+
+									EconetListenIP = IN_ADDR(localaddr);
+									EconetListenPort = DEFAULT_AUN_PORT;
+									EconetStationID = IN_ADDR(localaddr) >> 24;
+
+									network[networkp].inet_addr = EconetListenIP;
+									network[networkp].port = EconetListenPort;
+									network[networkp].station = EconetStationID;
 									network[networkp].network = aunnet[j].network;
 									networkp++;
 								}
@@ -706,14 +742,14 @@ void EconetReset()
 				if (EconetStationID == 0)
 				{
 					EconetError("Econet: Failed to find free station/port to bind to");
-					return;
+					goto Fail;
 				}
 			}
 		}
 		else
 		{
 			EconetError("Econet: Failed to resolve local IP address");
-			return;
+			goto Fail;
 		}
 	}
 
@@ -739,16 +775,14 @@ void EconetReset()
 	{
 		SendSocket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 
-		if (SendSocket == INVALID_SOCKET) {
+		if (SendSocket == INVALID_SOCKET)
+		{
 			EconetError("Econet: Failed to open sending socket (error %ld)", GetLastSocketError());
-			CloseSocket(ListenSocket);
-			ListenSocket = INVALID_SOCKET;
-			return;
+			goto Fail;
 		}
 	}
 
-	// this call is what allows broadcast packets to be sent:
-#ifndef __APPLE__
+	// This call is what allows broadcast packets to be sent:
 	const char broadcast = '1';
 #else
 	const int broadcast = 1;
@@ -757,9 +791,7 @@ void EconetReset()
 	if (setsockopt(SendSocket, SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof(broadcast)) == -1)
 	{
 		EconetError("Econet: Failed to set socket for broadcasts (error %ld)", GetLastSocketError());
-		CloseSocket(ListenSocket);
-		ListenSocket = INVALID_SOCKET;
-		return;
+		goto Fail;
 	}
 
 	ReceiverSocketsOpen = true;
@@ -768,6 +800,14 @@ void EconetReset()
 	SetTrigger(TimeBetweenBytes, EconetTrigger);
 
 	EconetStateChanged = true;
+
+	return true;
+
+Fail:
+	EconetCloseSockets();
+
+	EconetEnabled = false;
+	return false;
 }
 
 //---------------------------------------------------------------------------
@@ -801,22 +841,27 @@ static void ParseConfigLine(const std::string& Line, std::vector<std::string>& T
 
 // Read Econet.cfg file into network table
 
-static void ReadEconetConfigFile()
+static bool ReadEconetConfigFile()
 {
 	std::ifstream Input(EconetCfgPath);
 
 	if (!Input)
 	{
 		EconetError("Econet: Failed to open configuration file:\n  %s", EconetCfgPath);
-		return;
+		return false;
 	}
+
+	bool Success = true;
 
 	networkp = 0;
 
 	std::string Line;
+	int LineCounter = 0;
 
 	while (std::getline(Input, Line))
 	{
+		LineCounter++;
+
 		trim(Line);
 
 		// Skip blank lines and comments
@@ -866,12 +911,16 @@ static void ReadEconetConfigFile()
 				}
 				catch (const std::exception&)
 				{
-					EconetError("Invalid value in Econet config file:\n  %s", EconetCfgPath);
+					EconetError("Invalid value in Econet config file:\n  %s (Line %d)", EconetCfgPath, LineCounter);
+					Success = false;
+					break;
 				}
 			}
 			else
 			{
-				EconetError("Too many network entries in Econet config file:\n  %s", EconetCfgPath);
+				EconetError("Too many network entries in Econet config file:\n  %s (Line %d)", EconetCfgPath, LineCounter);
+				Success = false;
+				break;
 			}
 		}
 		else if (Tokens.size() == 2)
@@ -903,7 +952,7 @@ static void ReadEconetConfigFile()
 				}
 				else if (StrCaseCmp(Key.c_str(), "SCACKTIMEOUT") == 0)
 				{
-					EconetSCACKtimeout = std::stoi(Value);
+					EconetScoutAckTimeout = std::stoi(Value);
 				}
 				else if (StrCaseCmp(Key.c_str(), "TIMEBETWEENBYTES") == 0)
 				{
@@ -919,37 +968,46 @@ static void ReadEconetConfigFile()
 				}
 				else
 				{
-					EconetError("Unknown entry in Econet config file: %s\n  %s", Key.c_str(), EconetCfgPath);
+					EconetError("Unknown entry in Econet config file: %s\n  %s (Line %d)", Key.c_str(), EconetCfgPath, LineCounter);
 				}
 			}
 			catch (const std::exception&)
 			{
-				EconetError("Invalid value in Econet config file: %s\n  %s", Value.c_str(), EconetCfgPath);
+				EconetError("Invalid value in Econet config file: %s\n  %s (Line %d)", Value.c_str(), EconetCfgPath, LineCounter);
+				Success = false;
+				break;
 			}
 		}
 	}
 
 	network[networkp].station = 0;
+
+	return Success;
 }
 
 //---------------------------------------------------------------------------
 
-static void ReadAUNConfigFile()
+static bool ReadAUNConfigFile()
 {
 	std::ifstream Input(AUNMapPath);
 
 	if (!Input)
 	{
 		EconetError("Econet: Failed to open configuration file:\n  %s", AUNMapPath);
-		return;
+		return false;
 	}
+
+	bool Success = true;
 
 	aunnetp = 0;
 
 	std::string Line;
+	int LineCounter = 0;
 
 	while (std::getline(Input, Line))
 	{
+		LineCounter++;
+
 		trim(Line);
 
 		// Skip blank lines and comments
@@ -986,7 +1044,7 @@ static void ReadAUNConfigFile()
 						                   aunnet[aunnetp].network, aunnet[aunnetp].inet_addr);
 					}
 
-					// note which network we are a part of.. this wont work on first run as listenip not set!
+					// Note which network we are a part of. This won't work on first run as EconetListenIP not set!
 					if (aunnet[aunnetp].inet_addr == (EconetListenIP & 0x00FFFFFF))
 					{
 						myaunnet = aunnetp;
@@ -1001,27 +1059,46 @@ static void ReadAUNConfigFile()
 				}
 				catch (const std::exception&)
 				{
-					EconetError("Invalid value in Econet config file:\n  %s", EconetCfgPath);
+					EconetError("Invalid value in Econet config file:\n  %s (Line %d)", EconetCfgPath, LineCounter);
+					Success = false;
+					break;
 				}
 			}
 			else
 			{
-				EconetError("Too many entries in Econet config file:\n  %s", EconetCfgPath);
+				EconetError("Too many entries in Econet config file:\n  %s (Line %d)", EconetCfgPath, LineCounter);
+				Success = false;
+				break;
 			}
 		}
 	}
 
 	aunnet[aunnetp].network = 0; // terminate table. 0 is always local so should not be in file.
+
+	return Success;
 }
 
 //---------------------------------------------------------------------------
 
-static void ReadNetwork()
+static bool ReadNetwork()
 {
+	AUNMode = DEFAULT_AUN_MODE;
+	LearnMode = DEFAULT_LEARN_MODE;
+	StrictAUNMode = DEFAULT_STRICT_AUN_MODE;
+	SingleSocket = DEFAULT_SINGLE_SOCKET;
+	EconetFlagFillTimeout = DEFAULT_FLAG_FILL_TIMEOUT;
+	EconetScoutAckTimeout = DEFAULT_SCOUT_ACK_TIMEOUT;
+	TimeBetweenBytes = DEFAULT_TIME_BETWEEN_BYTES;
+	FourWayStageTimeout = DEFAULT_FOUR_WAY_STAGE_TIMEOUT;
+	MassageNetworks = DEFAULT_MASSAGE_NETWORKS;
+
 	networkp = 0;
 	network[0].station = 0;
 
-	ReadEconetConfigFile();
+	if (!ReadEconetConfigFile())
+	{
+		return false;
+	}
 
 	if (MassageNetworks)
 	{
@@ -1040,8 +1117,10 @@ static void ReadNetwork()
 	// Don't bother reading file if not using AUN.
 	if (AUNMode)
 	{
-		ReadAUNConfigFile();
+		return ReadAUNConfigFile();
 	}
+
+	return true;
 }
 
 //---------------------------------------------------------------------------
@@ -1418,7 +1497,7 @@ bool EconetPoll_real() // return NMI status
 					int SendLen = 0;
 					int i = 0;
 
-					if (AUNMode && (BeebTx.eh.deststn == 255 || BeebTx.eh.deststn ==  0)) // broadcast!
+					if (AUNMode && IsBroadcastStation(BeebTx.eh.deststn))
 					{
 						// TODO something
 						// Somewhere that I cannot now find suggested that
@@ -1436,13 +1515,12 @@ bool EconetPoll_real() // return NMI status
 					else
 					{
 						do {
-							// does the packet match this network table entry?
-							// SendMe = false;
+							// Does the packet match this network table entry?
 							// // check for 0.stn and mynet.stn.
-							// aunnet wont be populated if not in aun mode, but we don't need to not check
-							// it because it won't matter..
+							// aunnet won't be populated if not in AUN mode, but we don't need to not check
+							// it because it won't matter.
 							if ((network[i].network == BeebTx.eh.destnet ||
-							     network[i].network == aunnet[myaunnet].network) &&
+							    (network[i].network == aunnet[myaunnet].network && network[i].network != 0)) &&
 							    network[i].station == BeebTx.eh.deststn)
 							{
 								SendMe = true;
@@ -1575,7 +1653,7 @@ bool EconetPoll_real() // return NMI status
 
 								EconetTx.Pointer = j;
 
-								if (EconetTx.deststn == 255 || EconetTx.deststn == 0)
+								if (IsBroadcastStation(EconetTx.deststn))
 								{
 									EconetTx.ah.type = AUNType::Broadcast;
 									fourwaystage = FourWayStage::WaitForIdle; // no response to broadcasts...
@@ -1600,7 +1678,7 @@ bool EconetPoll_real() // return NMI status
 									//if (DebugEnabled)
 									DebugDisplayTrace(DebugType::Econet, true, "Econet: Set FWS_SCOUTSENT");
 									// dont send anything but set wait anyway
-									SetTrigger(EconetSCACKtimeout, EconetSCACKtrigger);
+									SetTrigger(EconetScoutAckTimeout, EconetScoutAckTrigger);
 									//if (DebugEnabled)
 									DebugDisplayTrace(DebugType::Econet, true, "Econet: SCACKtimer set");
 								} // else BROADCAST !!!!
@@ -1611,7 +1689,7 @@ bool EconetPoll_real() // return NMI status
 								fourwaystage = FourWayStage::ScoutAckSent;
 								//if (DebugEnabled)
 								DebugDisplayTrace(DebugType::Econet, true, "Econet: Set FWS_SCACKSENT");
-								SetTrigger(EconetSCACKtimeout, EconetSCACKtrigger);
+								SetTrigger(EconetScoutAckTimeout, EconetScoutAckTrigger);
 								//if (DebugEnabled)
 								DebugDisplayTrace(DebugType::Econet, true, "Econet: SCACKtimer set");
 								break;
@@ -1663,12 +1741,15 @@ bool EconetPoll_real() // return NMI status
 								break;
 							}
 
-							if (sendto(SendSocket, (char *)&EconetTx, SendLen, 0,
-							           (SOCKADDR *)&RecvAddr, sizeof(RecvAddr)) == SOCKET_ERROR)
+							if (SendMe)
 							{
-								EconetError("Econet: Failed to send packet to station %d (%s port %u)",
-								            (unsigned int)network[i].station,
-								            IpAddressStr(network[i].inet_addr), (unsigned int)network[i].port);
+								if (sendto(SendSocket, (char *)&EconetTx, SendLen, 0,
+								           (SOCKADDR *)&RecvAddr, sizeof(RecvAddr)) == SOCKET_ERROR)
+								{
+									EconetError("Econet: Failed to send packet to station %d (%s port %u)",
+									            (unsigned int)network[i].station,
+									            IpAddressStr(network[i].inet_addr), (unsigned int)network[i].port);
+								}
 							}
 						}
 						else
@@ -1756,7 +1837,7 @@ bool EconetPoll_real() // return NMI status
 			{
 				int j = 0;
 
-				// still nothing in buffers (and thus nothing in Econetrx buffer)
+				// still nothing in buffers (and thus nothing in EconetRx buffer)
 				ADLC.control1 &= ~CONTROL_REG1_RX_FRAME_DISCONTINUE; // reset discontinue flag
 
 				// wait for cpu to clear FV flag from last frame received
@@ -1872,7 +1953,7 @@ bool EconetPoll_real() // return NMI status
 											{
 												case AUNType::Broadcast:
 													BeebRx.eh.deststn = 255; // wasn't just for us..
-													BeebRx.eh.destnet = 0; // TODO check if not net 0.. does it make a difference?
+													BeebRx.eh.destnet = 255;
 													j = 6;
 													for (unsigned int i = 0; i < RetVal - sizeof(EconetRx.ah); i++, j++) {
 														BeebRx.buff[j] = EconetRx.buff[i];
@@ -1987,9 +2068,10 @@ bool EconetPoll_real() // return NMI status
 									BeebRx.Pointer = 0;
 								}
 
-								if ((BeebRx.eh.deststn == EconetStationID ||
-								    BeebRx.eh.deststn == 255 ||
-								    BeebRx.eh.deststn == 0) && BeebRx.BytesInBuffer > 0)
+
+
+								if ((BeebRx.eh.deststn == EconetStationID || IsBroadcastStation(BeebRx.eh.deststn)) &&
+								    BeebRx.BytesInBuffer > 0)
 								{
 									// Peer sent us packet - no longer in flag fill
 									FlagFillActive = false;
@@ -2024,7 +2106,7 @@ bool EconetPoll_real() // return NMI status
 
 					// this bit fakes the bits of the 4-way handshake that AUN doesn't do.
 
-					if (AUNMode && EconetSCACKtrigger > TotalCycles)
+					if (AUNMode && EconetScoutAckTrigger > TotalCycles)
 					{
 						switch (fourwaystage) {
 #ifdef __APPLE__
@@ -2135,25 +2217,27 @@ bool EconetPoll_real() // return NMI status
 		&& BeebRx.BytesInBuffer == 0
 		&& ADLC.rxfptr == 0
 		&& ADLC.txfptr == 0 // ??
-		// && EconetSCACKtrigger > TotalCycles
+		// && EconetScoutAckTrigger > TotalCycles
 		)
 	{
 		fourwaystage = FourWayStage::Idle;
-		Econet4Wtrigger = 0;
-		EconetSCACKtrigger = 0;
+		EconetFourWayTrigger = 0;
+		EconetScoutAckTrigger = 0;
 		FlagFillActive = false;
 	}
 
 	// timeout four way handshake - for when we get lost..
-	if (Econet4Wtrigger == 0)
+	if (EconetFourWayTrigger == 0)
 	{
 		if (fourwaystage != FourWayStage::Idle)
-			SetTrigger(FourWayStageTimeout, Econet4Wtrigger);
+		{
+			SetTrigger(FourWayStageTimeout, EconetFourWayTrigger);
+		}
 	}
-	else if (Econet4Wtrigger <= TotalCycles)
+	else if (EconetFourWayTrigger <= TotalCycles)
 	{
-		EconetSCACKtrigger = 0;
-		Econet4Wtrigger = 0;
+		EconetScoutAckTrigger = 0;
+		EconetFourWayTrigger = 0;
 		fourwaystage = FourWayStage::Idle;
 
 		//if (DebugEnabled)
