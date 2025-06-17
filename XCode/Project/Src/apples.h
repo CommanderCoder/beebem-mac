@@ -300,7 +300,7 @@ struct in_addr_econet {
 	} S_un_w;
 	in_addr_t S_addr;
   } S_un;
-  u_long s_addr;
+  in_addr_t s_addr;
 };
 typedef unsigned short USHORT;
 typedef struct in_addr IN_ADDR;

@@ -52,9 +52,10 @@ void memcpy_localaddr(struct in_addr_econet* localaddr, char* addr, size_t l)
 {
 	struct in_addr apples_localaddr;
 	memcpy(&apples_localaddr, addr, l);
-	localaddr->S_un.S_addr = apples_localaddr.s_addr;
+	localaddr->S_un.S_addr = IN_ADDR(apples_localaddr);
 }
 #endif
+
 // Emulated 6854 ADLC control registers.
 // control1_b0 is AC
 // this splits register address 0x01 as control2 and control3
@@ -547,6 +548,16 @@ static void EconetCloseSockets()
 }
 
 //---------------------------------------------------------------------------
+bool EconetResetFailed()
+{
+    // Jumping over variable declarations is not advised.
+    // Removed 'goto Fail;' in favour of a terminating function
+
+    EconetCloseSockets();
+
+    EconetEnabled = false;
+    return false;
+}
 
 bool EconetReset()
 {
@@ -609,7 +620,7 @@ bool EconetReset()
 	// Read in Econet.cfg and AUNMap. Done here so can refresh it on Break.
 	if (!ReadNetwork())
 	{
-		goto Fail;
+		return EconetResetFailed();
 	}
 
 	// Create a SOCKET for listening for incoming connection requests.
@@ -618,7 +629,7 @@ bool EconetReset()
 	if (ListenSocket == INVALID_SOCKET)
 	{
 		EconetError("Econet: Failed to open listening socket (error %ld)", GetLastSocketError());
-		goto Fail;
+		return EconetResetFailed();
 	}
 
 	// The sockaddr_in structure specifies the address family,
@@ -642,7 +653,7 @@ bool EconetReset()
 		else
 		{
 			EconetError("Econet: Failed to find station %d in Econet.cfg", EconetStationID);
-			goto Fail;
+			return EconetResetFailed();
 		}
 
 		service.sin_port = htons(EconetListenPort);
@@ -651,7 +662,7 @@ bool EconetReset()
 		if (bind(ListenSocket, (SOCKADDR*)&service, sizeof(service)) == SOCKET_ERROR)
 		{
 			EconetError("Econet: Failed to bind to port %d (error %ld)", EconetListenPort, GetLastSocketError());
-			goto Fail;
+			return EconetResetFailed();
 		}
 	}
 	else
@@ -742,14 +753,14 @@ bool EconetReset()
 				if (EconetStationID == 0)
 				{
 					EconetError("Econet: Failed to find free station/port to bind to");
-					goto Fail;
+					return EconetResetFailed();
 				}
 			}
 		}
 		else
 		{
 			EconetError("Econet: Failed to resolve local IP address");
-			goto Fail;
+			return EconetResetFailed();
 		}
 	}
 
@@ -778,11 +789,12 @@ bool EconetReset()
 		if (SendSocket == INVALID_SOCKET)
 		{
 			EconetError("Econet: Failed to open sending socket (error %ld)", GetLastSocketError());
-			goto Fail;
+			return EconetResetFailed();
 		}
 	}
 
 	// This call is what allows broadcast packets to be sent:
+#ifndef __APPLE__
 	const char broadcast = '1';
 #else
 	const int broadcast = 1;
@@ -791,7 +803,7 @@ bool EconetReset()
 	if (setsockopt(SendSocket, SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof(broadcast)) == -1)
 	{
 		EconetError("Econet: Failed to set socket for broadcasts (error %ld)", GetLastSocketError());
-		goto Fail;
+		return EconetResetFailed();
 	}
 
 	ReceiverSocketsOpen = true;
@@ -802,12 +814,6 @@ bool EconetReset()
 	EconetStateChanged = true;
 
 	return true;
-
-Fail:
-	EconetCloseSockets();
-
-	EconetEnabled = false;
-	return false;
 }
 
 //---------------------------------------------------------------------------
