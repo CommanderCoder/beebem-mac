@@ -184,8 +184,7 @@ func GetFileType(_ dictionary : [String:String]) -> [String]
 func swift_GetFilesWithPreview(filepath : UnsafeMutablePointer<CChar>, bytes: Int, directory : UnsafeMutablePointer<CChar>, multiFiles : Bool = false, filefilter : UnsafePointer<CUnsignedChar>, title : UnsafeMutablePointer<CChar>?) -> Int
 {
     let dialog = NSOpenPanel()
-	let fileFilterBytes = UnsafeBufferPointer(start: filefilter, count: 1000) // 1000 should be large enough!s
-    let filters = String(bytes:fileFilterBytes, encoding: .ascii)!
+    let filters = String(cString: filefilter);
     let filter_patterns = GetContentDictionary(filterString: filters)
     // FUTURE - need to expand the path if it includes ~
     //    let launcherLogPath = NSString("~/Documents").expandingTildeInPath
@@ -217,11 +216,11 @@ func swift_GetFilesWithPreview(filepath : UnsafeMutablePointer<CChar>, bytes: In
     dialog.directoryURL = NSURL.fileURL(withPath: launcherLogPath, isDirectory: true)
     dialog.canCreateDirectories = true
 	
-	if #available(macOS 11.0, *) {
-		dialog.allowedContentTypes = GetContentType(filter_patterns) ?? []
-	} else {
-		dialog.allowedFileTypes = GetFileType(filter_patterns)
-	}
+    if #available(macOS 11.0, *) {
+        dialog.allowedContentTypes = GetContentType(filter_patterns) ?? []
+    } else {
+        dialog.allowedFileTypes = GetFileType(filter_patterns)
+    }
 
     // open the LOAD dialog
     if (dialog.runModal() == NSApplication.ModalResponse.OK) {
