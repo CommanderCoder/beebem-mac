@@ -35,3 +35,4 @@ Src/BeebEm/x64/Release
 **/.DS_Store
 XCode/Installer/BeebEm-mac-beta.*.dmg
 XCode/Installer/BeebEm-mac-beta.*.zip
+XCode/Installer/BeebEm*
