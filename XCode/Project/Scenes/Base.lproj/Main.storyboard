@@ -1749,13 +1749,13 @@
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9I4-Yf-xHc">
-                                <rect key="frame" x="20" y="68" width="328" height="445"/>
+                                <rect key="frame" x="20" y="120" width="329" height="393"/>
                                 <clipView key="contentView" id="bxb-nq-r68">
-                                    <rect key="frame" x="1" y="1" width="326" height="443"/>
+                                    <rect key="frame" x="1" y="1" width="327" height="391"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" multipleSelection="NO" emptySelection="NO" autosaveColumns="NO" typeSelect="NO" rowSizeStyle="automatic" headerView="Ghv-5L-cAi" viewBased="YES" id="o6K-RA-peU">
-                                            <rect key="frame" x="0.0" y="0.0" width="326" height="418"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="327" height="366"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <size key="intercellSpacing" width="3" height="2"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -1810,7 +1810,7 @@
                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                     <prototypeCellViews>
                                                         <tableCellView id="eE8-AA-waO">
-                                                            <rect key="frame" x="128.5" y="1" width="48" height="17"/>
+                                                            <rect key="frame" x="129" y="1" width="48" height="17"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="5fe-H1-wPI">
@@ -1846,7 +1846,7 @@
                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                     <prototypeCellViews>
                                                         <tableCellView id="EWX-Zl-Tw2">
-                                                            <rect key="frame" x="179.5" y="1" width="104" height="17"/>
+                                                            <rect key="frame" x="180" y="1" width="104" height="17"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="b9D-R5-OPq">
@@ -1882,15 +1882,15 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                                 <tableHeaderView key="headerView" wantsLayer="YES" id="Ghv-5L-cAi">
-                                    <rect key="frame" x="0.0" y="0.0" width="326" height="25"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="327" height="25"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableHeaderView>
                             </scrollView>
                             <stackView identifier="td2" distribution="fill" orientation="vertical" alignment="leading" spacing="11" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eVa-Xz-rUt" userLabel="controls">
-                                <rect key="frame" x="356" y="270" width="88" height="243"/>
+                                <rect key="frame" x="357" y="270" width="87" height="243"/>
                                 <subviews>
                                     <button identifier="tpld" verticalHuggingPriority="750" horizontalCompressionResistancePriority="749" translatesAutoresizingMaskIntoConstraints="NO" id="Ss3-dr-aGW">
-                                        <rect key="frame" x="-2" y="211" width="97" height="32"/>
+                                        <rect key="frame" x="-3" y="211" width="97" height="32"/>
                                         <buttonCell key="cell" type="push" title="Load Tape" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="qgg-Nq-lFe">
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                             <font key="font" metaFont="system"/>
@@ -2036,10 +2036,10 @@
                                 </customSpacing>
                             </stackView>
                             <stackView distribution="fill" orientation="horizontal" alignment="centerY" spacing="3" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mbP-gz-4lx" userLabel="tapename">
-                                <rect key="frame" x="20" y="44" width="104" height="16"/>
+                                <rect key="frame" x="20" y="44" width="104" height="68"/>
                                 <subviews>
                                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Dr1-uc-qH4">
-                                        <rect key="frame" x="-2" y="0.0" width="62" height="16"/>
+                                        <rect key="frame" x="-2" y="26" width="62" height="16"/>
                                         <textFieldCell key="cell" lineBreakMode="clipping" title="Tape File:" id="3fx-42-U2z">
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -2047,7 +2047,7 @@
                                         </textFieldCell>
                                     </textField>
                                     <textField identifier="tpnm" focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="sSm-cg-yfW">
-                                        <rect key="frame" x="59" y="0.0" width="47" height="16"/>
+                                        <rect key="frame" x="59" y="26" width="47" height="16"/>
                                         <textFieldCell key="cell" lineBreakMode="clipping" title="[name]" id="Ybr-x7-PGE">
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
