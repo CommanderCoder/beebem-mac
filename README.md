@@ -37,7 +37,7 @@ Now build.
 
 ### Distributions
 
-To build a distribution, use **Archive** in XCode to create the application.  In the Organizer select **Distribute App** and then **Copy App**.  Save the beebem app to a distribution folder somewhere (say, `XCode/Installer/`).  From a Terminal, navigate to `XCode/Installer/` and run
+To build a distribution, use **Archive** in XCode to create the application.  In the Organizer select **Distribute App** (and then **Custom**) and then **Copy App**.  Save the beebem app to a distribution folder somewhere (say, `XCode/Installer/`).  From a Terminal, navigate to `XCode/Installer/` and run
 ```
    ./create_distribution.zsh <beebem_distribution_folder>
 ```
