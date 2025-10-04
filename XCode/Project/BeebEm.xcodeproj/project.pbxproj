@@ -45,6 +45,8 @@
 		DC69C9F72BF2BDC700610067 /* BeebEm-KeyboardLinks.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC69C9F62BF2BDC700610067 /* BeebEm-KeyboardLinks.swift */; };
 		DC69C9FA2BF2BDE100610067 /* KeyboardLinksDialog-mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC69C9F82BF2BDE100610067 /* KeyboardLinksDialog-mac.cpp */; };
 		DC69C9FD2BF2C87A00610067 /* BeebEm-Bridging-KeyboardLinks.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC69C9FB2BF2C87A00610067 /* BeebEm-Bridging-KeyboardLinks.cpp */; };
+		DC709E4A2E91AF80006DA7CA /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC709E492E91AF80006DA7CA /* SettingsViewController.swift */; };
+		DC709E4C2E91AFCD006DA7CA /* BeebEm-Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC709E4B2E91AFCD006DA7CA /* BeebEm-Settings.swift */; };
 		DC74E1CE2C29D88C006826EE /* FileType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC74E1CB2C29D88C006826EE /* FileType.cpp */; };
 		DC74E1CF2C29D88C006826EE /* Registry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC74E1CD2C29D88C006826EE /* Registry.cpp */; };
 		DC7E1E622BCE53E000494CBE /* BeebEm-Bridging-IO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC7E1E602BCE53E000494CBE /* BeebEm-Bridging-IO.cpp */; };
@@ -372,6 +374,8 @@
 		DC69C9F82BF2BDE100610067 /* KeyboardLinksDialog-mac.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "KeyboardLinksDialog-mac.cpp"; sourceTree = "<group>"; };
 		DC69C9F92BF2BDE100610067 /* KeyboardLinksDialog-mac.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "KeyboardLinksDialog-mac.hpp"; sourceTree = "<group>"; };
 		DC69C9FB2BF2C87A00610067 /* BeebEm-Bridging-KeyboardLinks.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "BeebEm-Bridging-KeyboardLinks.cpp"; sourceTree = "<group>"; };
+		DC709E492E91AF80006DA7CA /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		DC709E4B2E91AFCD006DA7CA /* BeebEm-Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BeebEm-Settings.swift"; sourceTree = "<group>"; };
 		DC74E1CB2C29D88C006826EE /* FileType.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FileType.cpp; path = ../../../Src/FileType.cpp; sourceTree = "<group>"; };
 		DC74E1CC2C29D88C006826EE /* FileType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FileType.h; path = ../../../Src/FileType.h; sourceTree = "<group>"; };
 		DC74E1CD2C29D88C006826EE /* Registry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Registry.cpp; path = ../../../Src/Registry.cpp; sourceTree = "<group>"; };
@@ -776,6 +780,7 @@
 				DCE94C162BD310C600A5C12A /* BeebEm-Sound.swift */,
 				DC907EB32BB5BB7700523116 /* BeebEm-TapeControl.swift */,
 				DCD283FE2BE8D17400ABD9F8 /* BeebEm-Debug.swift */,
+				DC709E4B2E91AFCD006DA7CA /* BeebEm-Settings.swift */,
 				DC9427AB2BF038090012C4E4 /* BeebEm-SerialPort.swift */,
 				DC9427AD2BF0386C0012C4E4 /* BeebEm-Teletext.swift */,
 				DC69C9F62BF2BDC700610067 /* BeebEm-KeyboardLinks.swift */,
@@ -968,6 +973,7 @@
 				DC1DBA152BB8CF0500AAB22F /* RomConfigViewController.swift */,
 				DC1DBA162BB8CF0500AAB22F /* TapeControlViewController.swift */,
 				DCD284012BE8D22C00ABD9F8 /* DebuggerViewController.swift */,
+				DC709E492E91AF80006DA7CA /* SettingsViewController.swift */,
 				DC904DA12BCF3CD60069DCDF /* ExportDiscViewController.swift */,
 				DC9427A92BF037900012C4E4 /* SelectKeyViewController.swift */,
 				DC9427AF2BF038B90012C4E4 /* TeletextViewController.swift */,
@@ -1091,6 +1097,7 @@
 				DCD284052BE8D2D400ABD9F8 /* BeebEm-Debugger.cpp in Sources */,
 				DCDC73062BBE043A00D83402 /* Acorn.cpp in Sources */,
 				DCDC73142BBE198A00D83402 /* TapeMap.cpp in Sources */,
+				DC709E4A2E91AF80006DA7CA /* SettingsViewController.swift in Sources */,
 				DCDC73352BC0A73600D83402 /* DiscEdit.cpp in Sources */,
 				DC907ECA2BB6D76F00523116 /* Colour.swift in Sources */,
 				DCDC732F2BBF5EF600D83402 /* AtoDConv.cpp in Sources */,
@@ -1113,6 +1120,7 @@
 				DCDC73472BC0B5C200D83402 /* Teletext.cpp in Sources */,
 				DCB4EBCA2BD5BD02002AEA8A /* BeebEm-Bridging-BreakoutBox.cpp in Sources */,
 				DCDC733C2BC0ACE200D83402 /* Log.cpp in Sources */,
+				DC709E4C2E91AFCD006DA7CA /* BeebEm-Settings.swift in Sources */,
 				DCDC734B2BC0B78E00D83402 /* UefState.cpp in Sources */,
 				DC9427B02BF038B90012C4E4 /* TeletextViewController.swift in Sources */,
 				DCD283FF2BE8D17400ABD9F8 /* BeebEm-Debug.swift in Sources */,

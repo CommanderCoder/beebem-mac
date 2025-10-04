@@ -21,11 +21,13 @@ import Cocoa
 	case tapeControl
 	case debugWindow
 	case teletextSelect
+    case settingsWindow // for MACos Only
 }
 
 var allViews = [
 	Dialogs.breakoutBox : breakoutBoxView,
 	Dialogs.tapeControl : tapeControlView,
+    Dialogs.settingsWindow : settingsControlView,
 	Dialogs.debugWindow : dbgControlView,
 	Dialogs.serialPort : serialPortView,
 	Dialogs.teletextSelect : teletextView,
@@ -39,6 +41,7 @@ var allViews = [
 var allStoryboardNames = [
 	Dialogs.breakoutBox : "BreakoutBoxSB",
 	Dialogs.tapeControl : "TapeControlSB",
+    Dialogs.settingsWindow : "SettingsSB",
 	Dialogs.debugWindow : "DebuggerSB",
 	Dialogs.serialPort : "SerialPortSB",
 	Dialogs.teletextSelect : "TeletextSB",

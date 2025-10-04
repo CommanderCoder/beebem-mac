@@ -387,6 +387,14 @@ BeebWin::BeebWin()
 
 	// Debug
 	m_WriteInstructionCounts = false;
+    
+#ifdef __APPLE__
+    // Settings
+    m_BlackBackground = false;
+    m_PanelOff = false;
+    swift_SetBlackBackground(m_BlackBackground);
+    swift_SetPanelOff(m_PanelOff);
+#endif
 }
 
 /****************************************************************************/

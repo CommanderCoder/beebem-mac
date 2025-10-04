@@ -623,6 +623,9 @@ public:
 	void LoadDiskPreferences();
 	void LoadUserPortRTCPreferences();
 	void LoadDebugPreferences();
+#ifdef __APPLE__
+    void LoadSettingsPreferences();
+#endif
 	void LoadKeyMapPreferences();
 	void LoadAutoSavePreferences();
 	void LoadCMOSPreferences();
@@ -871,6 +874,12 @@ public:
 
 	// Debug
 	bool m_WriteInstructionCounts;
+    
+#ifdef __APPLE__
+    // Settings
+    bool m_BlackBackground;
+    bool m_PanelOff;
+#endif
 };
 
 class CArm;

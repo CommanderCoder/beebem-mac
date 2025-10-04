@@ -557,6 +557,10 @@ extern "C" int swift_SelectedFiles ( int fileSelected[], int max);
 extern "C" int swift_Report ( const char* message, const char* title, int buttonType);
 
 
+extern "C" void swift_SetBlackBackground(bool b);
+extern "C" void swift_SetPanelOff(bool b);
+
+
 #define MB_ICONERROR 0
 #define MB_ICONWARNING 1
 #define MB_ICONINFORMATION 2

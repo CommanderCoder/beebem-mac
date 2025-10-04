@@ -87,3 +87,18 @@ extern "C" void beeb_consumer() {
    
   lock.unlock();
 }
+
+
+extern "C" void beeb_setPanelOff(char val)
+{
+    mainWin->m_PanelOff = val;
+    swift_SetPanelOff(val);
+}
+
+extern "C" void beeb_setBlackBackground(char val)
+{
+    mainWin->m_BlackBackground = val;
+    swift_SetBlackBackground(val);
+}
+
+

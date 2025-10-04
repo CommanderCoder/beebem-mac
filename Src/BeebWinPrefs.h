@@ -175,6 +175,12 @@ const char* const CFG_USER_PORT_RTC_REGISTERS      = "UserPortRTCRegisters";
 // Debug
 const char* const CFG_WRITE_INSTRUCTION_COUNTS     = "WriteInstructionCounts";
 
+#ifdef __APPLE__
+// Settings
+const char* const CFG_BLACKBG     = "MACOS_BlackBackground";
+const char* const CFG_PANELOFF    = "MACOS_PanelOff";
+#endif
+
 // Key mappings
 const char* const CFG_KEY_MAP_AS                   = "KeyMapAS";
 const char* const CFG_KEY_MAP_FUNC                 = "KeyMapFunc";

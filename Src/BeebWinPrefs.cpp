@@ -324,6 +324,9 @@ void BeebWin::LoadPreferences()
 	LoadDiskPreferences();
 	LoadUserPortRTCPreferences();
 	LoadDebugPreferences();
+#ifdef __APPLE__
+    LoadSettingsPreferences();
+#endif
 	LoadKeyMapPreferences();
 	LoadAutoSavePreferences();
 	LoadCMOSPreferences();
@@ -1536,6 +1539,18 @@ void BeebWin::LoadDebugPreferences()
 	m_Preferences.GetBoolValue(CFG_WRITE_INSTRUCTION_COUNTS, m_WriteInstructionCounts, false);
 }
 
+#ifdef __APPLE__
+void BeebWin::LoadSettingsPreferences()
+{
+    m_Preferences.GetBoolValue(CFG_BLACKBG, m_BlackBackground, false);
+    m_Preferences.GetBoolValue(CFG_PANELOFF, m_PanelOff, false);
+
+    swift_SetBlackBackground(m_BlackBackground);
+    swift_SetPanelOff(m_PanelOff);
+}
+#endif
+
+
 /****************************************************************************/
 
 void BeebWin::LoadKeyMapPreferences()
@@ -1865,6 +1880,12 @@ void BeebWin::SavePreferences(bool saveAll)
 
 		// Debug
 		m_Preferences.SetBoolValue(CFG_WRITE_INSTRUCTION_COUNTS, m_WriteInstructionCounts);
+
+#ifdef __APPLE__
+        // Settings
+        m_Preferences.SetBoolValue(CFG_BLACKBG, m_BlackBackground);
+        m_Preferences.SetBoolValue(CFG_PANELOFF, m_PanelOff);
+#endif
 
 		// Key mappings
 		m_Preferences.SetBoolValue(CFG_KEY_MAP_AS, m_KeyMapAS);

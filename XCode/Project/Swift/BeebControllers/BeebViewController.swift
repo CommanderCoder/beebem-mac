@@ -60,6 +60,9 @@ class BeebViewController: NSViewController {
 	@IBOutlet weak var HD3LED: NSImageView!
 	@IBOutlet weak var FD0LED: NSImageView!
 	@IBOutlet weak var FD1LED: NSImageView!
+    
+    @IBOutlet weak var OuterBox: NSBox!
+    @IBOutlet weak var LEDsStack: NSStackView!
 
 
 	// screen

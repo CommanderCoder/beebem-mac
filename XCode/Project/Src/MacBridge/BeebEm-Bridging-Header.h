@@ -39,6 +39,9 @@ int beeb_main(long argc, char *argv[]);
 void beeb_MainCpuLoop();
 int beeb_end();
 
+void beeb_setPanelOff(char val);
+void beeb_setBlackBackground(char val);
+
 // Exposed to KeyboardMappingViewController [User Keyboard]
 void beeb_UserKeyboardClosed();
 long beeb_UKHandleCommand(unsigned int cmdID);

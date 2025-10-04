@@ -55,5 +55,14 @@ class AppDelegate: NSObject, NSApplicationDelegate
     
     @IBOutlet weak var tapeControlMenuItem: NSMenuItem!
 
+    // this is triggered by CMD-, settings menu
+    @IBAction func showSettingsWindow(_ sender: Any) {
+        // NOTE: settingsControlWindow is created in SettingsViewController
+
+        if let window = settingsControlWindow.window {
+            // Bring the window to the front
+            window.makeKeyAndOrderFront(sender)
+        }
+    }
     
 }
