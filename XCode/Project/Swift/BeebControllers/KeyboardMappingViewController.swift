@@ -31,12 +31,11 @@ class KeyboardMappingViewController: NSViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do view setup here.
         
+        // map all NSbuttons in keyboardBtns to 'kdbbtnPressed'
         for case let btn as NSButton in keyboardBtns.subviewsRecursive() {
-            
-            print("\(btn.title) {\(btn.identifier?.rawValue ?? "unknown")}")
-            btn.action = #selector(kbdbtnPressed)
+                        btn.action = #selector(kbdbtnPressed)
+            //            print("Mapped key \(btn.title) {\(btn.identifier?.rawValue ?? "unknown")}")
         }
 
     }
@@ -44,7 +43,7 @@ class KeyboardMappingViewController: NSViewController {
     @objc
     func kbdbtnPressed(sender: NSButton!)
     {
-        print("\(sender.title) Pressed {\(sender.identifier?.rawValue ?? "unknown")}")
+//        print("\(sender.title) Pressed {\(sender.identifier?.rawValue ?? "unknown")}")
         UKHandleCommand(sender)
     }
         

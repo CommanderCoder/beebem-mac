@@ -44,12 +44,11 @@ class BreakoutBoxViewController: NSViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do view setup here.
-        
+
+        // map all the NSButton bits on breakoutbox to kbdbtnPressed
         for case let btn as NSButton in btnBits.subviewsRecursive() {
-            
-            print("\(btn.title) {\(btn.identifier?.rawValue ?? "unknown")}")
             btn.action = #selector(kbdbtnPressed)
+//            print("Mapped bits \(btn.title) {\(btn.identifier?.rawValue ?? "unknown")}")
         }
         
 //        bbViewControllerInstance = self
@@ -58,7 +57,7 @@ class BreakoutBoxViewController: NSViewController {
     @objc
     func kbdbtnPressed(sender: NSButton!)
     {
-        print("\(sender.title) Pressed {\(sender.identifier?.rawValue ?? "unknown")}")
+//        print("\(sender.title) Pressed {\(sender.identifier?.rawValue ?? "unknown")}")
         BBHandleCommand(sender)
     }
 

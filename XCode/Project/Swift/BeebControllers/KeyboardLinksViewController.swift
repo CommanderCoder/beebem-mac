@@ -30,7 +30,6 @@ class KeyboardLinksViewController: NSViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		// Do view setup here.
 		
 //		for case let btn as NSButton in btnBits.subviewsRecursive() {
 //			
