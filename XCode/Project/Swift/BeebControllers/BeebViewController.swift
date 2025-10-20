@@ -38,7 +38,11 @@ class BeebViewController: NSViewController {
 	var screenFilename : String?
 
 	var BeebReady : Bool = false
-	
+
+	// Tracks if BBC has initialized LEDs (indicates boot complete) and there it
+	// safe to assume that Caps Lock sync can be performed
+	private var bbcLedsInitialized = false
+
 	//    var timer: Timer = Timer()
 
 	
@@ -317,6 +321,17 @@ extension BeebViewController
 	
 	func LEDs_update()
 	{
+		// Detect first LED update - indicates BBC MOS has initialized the
+		// keyboard LEDs and will be responsive to Caps Lock changes
+		// This is the right moment to sync Caps Lock states
+		if !bbcLedsInitialized && !CBridge.leds.isEmpty {
+			bbcLedsInitialized = true
+
+			// BBC has now initialized - safe to sync Caps Lock
+			let macCapsLockIsOn = NSEvent.modifierFlags.contains(.capsLock)
+			beeb_syncCapsLockState(macCapsLockIsOn ? 1 : 0)
+		}
+
 		WIPlabel.stringValue = CBridge.windowTitle
 
 		if #available(OSX 10.14, *) {
@@ -345,10 +360,24 @@ extension BeebViewController
 
 
 extension BeebViewController: NSWindowDelegate {
-    
-    // This method is called just before the window is closed.
-    func windowWillClose(_ notification: Notification) {
-        // if the BeebViewController goes, then just stop the app.
-        NSApp.terminate(self)
-    }
+
+// This method is called when the window gains focus (becomes key window)
+	func windowDidBecomeKey(_ notification: Notification) {
+		// Sync Caps Lock states when window gains focus
+		// This ensures Mac and BBC Caps Lock stay synchronized even if
+		// the user changed Mac Caps Lock while BeebEm was not focused
+		let currentModifiers = NSEvent.modifierFlags
+		let macCapsLockIsOn = currentModifiers.contains(.capsLock)
+
+		beeb_syncCapsLockState(macCapsLockIsOn ? 1 : 0)
+
+		// Reset modifier tracking to prevent stale state detection
+		beeb_resetModifierTracking(Int(currentModifiers.rawValue))
+	}
+
+	// This method is called just before the window is closed.
+	func windowWillClose(_ notification: Notification) {
+		// if the BeebViewController goes, then just stop the app.
+		NSApp.terminate(self)
+	}
 }
