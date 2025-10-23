@@ -159,9 +159,9 @@ VK_F7, // F7
 VK_F8, // F8
 VK_F9, // F9
 0,
-VK_END, // f11
+VK_END, // [COPY - F11] 103
 0,
-VK_F13, //[BREAK - F13] 105
+VK_F11, // [SHIFT LOCK - F13] 105
 0,
 0,
 0,
