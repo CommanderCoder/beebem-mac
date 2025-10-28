@@ -105,3 +105,14 @@ public func swift_SetMachineType(_ type: MachineModel)
 
 	CBridge.machineType = mtf
 }
+
+@_cdecl("swift_userDidPressCapsLock")
+public func swift_userDidPressCapsLock()
+{
+	// Notify BeebViewController that user pressed Caps Lock
+	// This is called from the C++ bridge when user presses physical Caps Lock
+	NotificationCenter.default.post(
+		name: NSNotification.Name("UserDidPressCapsLock"),
+		object: nil
+	)
+}

@@ -43,6 +43,12 @@ class BeebViewController: NSViewController {
 	// safe to assume that Caps Lock sync can be performed
 	private var bbcLedsInitialized = false
 
+	// Caps Lock synchronization state (Logical mode only)
+	private var bbcCapsLockLegitimateState = false      // Last known state from user keypress
+	private var bbcCapsLockPendingState = false         // State pending debounce confirmation
+	private var bbcCapsLockStateChangeTime: TimeInterval = 0  // Time of last LED state change
+	private var bbcCapsLockLastSyncTime: TimeInterval = 0     // Time of last sync operation
+
 	//    var timer: Timer = Timer()
 
 	
@@ -173,11 +179,17 @@ class BeebViewController: NSViewController {
         if let window = view.window {
             // set the delegate to respond to window being closed
             window.delegate = self
-            
+
             window.acceptsMouseMovedEvents = true
         }
-        
-        
+
+        // Observe user Caps Lock presses for legitimate state tracking
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(userDidPressCapsLock),
+            name: NSNotification.Name("UserDidPressCapsLock"),
+            object: nil
+        )
 
 	}
     
@@ -240,11 +252,14 @@ class BeebViewController: NSViewController {
 
 
     deinit {
+		// Remove notification observer
+		NotificationCenter.default.removeObserver(self)
+
 		if (!BeebReady)
 		{
 			return
 		}
-		
+
         //  Stop the display link.  A better place to stop the link is in
         //  the viewController or windowController within functions such as
         //  windowWillClose(_:)
@@ -252,9 +267,18 @@ class BeebViewController: NSViewController {
         CVDisplayLinkStop(displayLink!)
 
 //        timer.invalidate()
-        
+
         end_cpu()
     }
+
+	// Called when user presses Caps Lock key (notified from C++ bridge)
+	@objc func userDidPressCapsLock() {
+		// Toggle legitimate state
+		bbcCapsLockLegitimateState.toggle()
+		// Reset pending state since this is a known good change
+		bbcCapsLockPendingState = bbcCapsLockLegitimateState
+		bbcCapsLockStateChangeTime = 0  // Clear any pending debounce
+	}
 
 
     private var width : Int = 0
@@ -330,7 +354,11 @@ extension BeebViewController
 			// BBC has now initialized - safe to sync Caps Lock
 			let macCapsLockIsOn = NSEvent.modifierFlags.contains(.capsLock)
 			beeb_syncCapsLockState(macCapsLockIsOn ? 1 : 0)
+			bbcCapsLockLegitimateState = macCapsLockIsOn  // Initialize legitimate state
 		}
+
+		// Check for debounced Caps Lock sync (Logical mode only)
+		checkCapsLockDebounce()
 
 		WIPlabel.stringValue = CBridge.windowTitle
 
@@ -355,6 +383,56 @@ extension BeebViewController
 		}
 	}
 
+	private func checkCapsLockDebounce() {
+		// Only sync in Logical keyboard mapping mode (mode 2)
+		let keyboardMode = beeb_getKeyboardMappingMode()
+		guard keyboardMode == 2 else {  // 2 = Logical mode
+			return
+		}
+
+		// Get current BBC Caps Lock LED state
+		let bbcCapsLockIsOn = CBridge.leds.contains(.CapsLED)
+
+		// Check if LED state differs from legitimate state
+		if bbcCapsLockIsOn != bbcCapsLockLegitimateState {
+			let currentTime = Date().timeIntervalSince1970
+
+			// Check if this is a new state change or continuation
+			if bbcCapsLockIsOn != bbcCapsLockPendingState {
+				// New state - restart debounce timer
+				bbcCapsLockPendingState = bbcCapsLockIsOn
+				bbcCapsLockStateChangeTime = currentTime
+				return
+			}
+
+			// State unchanged - check if debounce period (100ms) has elapsed
+			if currentTime - bbcCapsLockStateChangeTime < 0.1 {
+				return  // Still within debounce period
+			}
+
+			// Check rate limit (500ms since last sync)
+			if currentTime - bbcCapsLockLastSyncTime < 0.5 {
+				return  // Too soon since last sync
+			}
+
+			// Debounce and rate limit passed - trigger re-sync
+			let macCapsLockIsOn = NSEvent.modifierFlags.contains(.capsLock)
+
+			// Only sync if Mac and BBC states differ (avoid unnecessary sync)
+			if macCapsLockIsOn != bbcCapsLockIsOn {
+				beeb_syncCapsLockState(macCapsLockIsOn ? 1 : 0)
+				bbcCapsLockLastSyncTime = currentTime
+				bbcCapsLockLegitimateState = macCapsLockIsOn  // Update to new expected state
+			}
+
+			bbcCapsLockStateChangeTime = 0  // Clear pending state
+		} else {
+			// LED now matches legitimate state - cancel any pending debounce
+			bbcCapsLockPendingState = bbcCapsLockIsOn
+			bbcCapsLockStateChangeTime = 0
+		}
+	}
+
 }
 
 
@@ -370,6 +448,9 @@ extension BeebViewController: NSWindowDelegate {
 		let macCapsLockIsOn = currentModifiers.contains(.capsLock)
 
 		beeb_syncCapsLockState(macCapsLockIsOn ? 1 : 0)
+
+		// Update legitimate state to match after sync
+		bbcCapsLockLegitimateState = macCapsLockIsOn
 
 		// Reset modifier tracking to prevent stale state detection
 		beeb_resetModifierTracking(Int(currentModifiers.rawValue))

@@ -36,6 +36,8 @@ enum {
 #include "SysVia.h"
 extern BeebWin* mainWin;
 
+// Forward declaration for Swift bridge function
+extern "C" void swift_userDidPressCapsLock();
 
 // map from APPLE input: https://eastmanreference.com/complete-list-of-applescript-key-codes
 // to WINDOWS input: https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
@@ -487,6 +489,14 @@ extern "C" void beeb_resetModifierTracking(long currentModifiers)
 	last_wParam = currentModifiers;
 }
 
+// Query current keyboard mapping mode for Caps Lock sync behavior
+extern "C" int beeb_getKeyboardMappingMode()
+{
+	// Return keyboard mapping mode as integer
+	// 0 = User, 1 = Default, 2 = Logical
+	return static_cast<int>(mainWin->m_KeyboardMapping);
+}
+
 // SWIFT calls this to
 extern "C" void beeb_handlekeys(long message, long wParam, long lParam)
 {
@@ -607,6 +617,8 @@ extern "C" void beeb_handlekeys(long message, long wParam, long lParam)
 			if ((diff_wParam & CAPSMASK)!=0)
 			{
 				pressCapsLock();
+				// Notify Swift that user pressed Caps Lock (for legitimate state tracking)
+				swift_userDidPressCapsLock();
 			}
 			
 			last_wParam = wParam;
