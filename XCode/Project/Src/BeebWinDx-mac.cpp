@@ -37,12 +37,12 @@
  */
 
 void BeebWin::InitDX(){}
-void BeebWin::ResetDX(){}
-void BeebWin::ReinitDX(){}
+HRESULT BeebWin::ResetDX(){return 0;}
+HRESULT BeebWin::ReinitDX(){return 0;}
 void BeebWin::ExitDX(){}
 void BeebWin::UpdateSmoothing(){}
-void BeebWin::CloseDX9(){}
-
+void BeebWin::ExitDX9(){}
+void BeebWin::OnDeviceLost(){}
 
 void VideoAddLeds_Mac()
 {
@@ -85,7 +85,7 @@ int_fast16_t m_RGB16[256];
 
 
 /****************************************************************************/
-void BeebWin::updateLines(HDC hDC, int starty, int nlines)
+void BeebWin::UpdateLines(HDC hDC, int starty, int nlines)
 {
 	static bool LastTeletextEnabled = false;
 	static bool First = true;

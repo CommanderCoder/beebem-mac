@@ -366,6 +366,12 @@ BOOL SetWindowText(HWND    hWnd, LPCSTR lpString)
 	return true;
 }
 
+BOOL LoadIcon(HINSTANCE   inst, int a)
+{
+    return true;
+}
+
+
 bool PathIsRelative(const char * winPathString)
 {
 #ifdef HasC17
@@ -473,7 +479,7 @@ bool CreateTimers()
                        ^{ mainWin->HandleKeyboardTimer(); }) &&
 		   createTimer(boottimer,
                        ^{
-                           mainWin->KillBootDiscTimer();
+                           mainWin->OnTimer(BeebWin::TIMER_AUTOBOOT_DELAY);
                            mainWin->DoShiftBreak();
                        });
 }

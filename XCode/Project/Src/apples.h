@@ -65,6 +65,7 @@ typedef uint32_t* HBITMAP; //
 typedef HANDLE HHOOK;
 typedef int32_t INT_PTR; //
 
+#define FAILED(hr) (((HRESULT)(hr)) < 0)
 
 #define CALLBACK /**/
 int GetCurrentThreadId();
@@ -508,6 +509,9 @@ int beebwin_KeyUpDown(long, long,long);
 #define WS_OVERLAPPEDWINDOW -1
 #define WIN_STYLE -1
 #define WM_CLOSE 0x0010
+#define WM_SETICON 0x0080
+#define ICON_BIG 1
+#define MAKEINTRESOURCE(a) ((int)a)
 #define SW_MAXIMIZE -1
 #define SW_RESTORE -1
 #define SW_SHOWNORMAL -1
@@ -516,6 +520,8 @@ DWORD GetWindowLong(HWND wnd, long s);
 void SetWindowLong(HWND m_hWnd, int f, DWORD s);
 BOOL SetWindowText(HWND    hWnd, LPCSTR lpString);
 BOOL SetWindowText(HWND    hWnd, LPTSTR lpString);
+BOOL LoadIcon(HINSTANCE h, int a);
+
 typedef  enum
 {
   DIB_RGB_COLORS = 0x00,
@@ -637,10 +643,12 @@ BOOL KillTimer(HWND hWnd, UINT_PTR  nIDEvent);
 
 
 #define HWND_TOP 0
+#define HWND_NOTOPMOST 0
 #define SWP_NOSIZE 0
 #define SWP_NOMOVE 0
 #define SWP_SHOWWINDOW 0
 #define SWP_NOACTIVATE 0
+#define SWP_FRAMECHANGED 0
 
 BOOL SetWindowPos( HWND hWnd, HWND hWndInsertAfter,
         int  X,int  Y,

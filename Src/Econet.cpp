@@ -164,7 +164,7 @@ const bool DEFAULT_LEARN_MODE = false;
 const bool DEFAULT_STRICT_AUN_MODE = false;
 const bool DEFAULT_SINGLE_SOCKET = true;
 const int DEFAULT_FLAG_FILL_TIMEOUT = 500000;
-const int DEFAULT_SCOUT_ACK_TIMEOUT = 500;
+const int DEFAULT_SCOUT_ACK_TIMEOUT = 5000;
 const unsigned int DEFAULT_TIME_BETWEEN_BYTES = 128;
 const unsigned int DEFAULT_FOUR_WAY_STAGE_TIMEOUT = 500000;
 const bool DEFAULT_MASSAGE_NETWORKS = false;
@@ -956,7 +956,8 @@ static bool ReadEconetConfigFile()
 				{
 					EconetFlagFillTimeout = std::stoi(Value);
 				}
-				else if (StrCaseCmp(Key.c_str(), "SCACKTIMEOUT") == 0)
+				else if (StrCaseCmp(Key.c_str(), "SCACKTIMEOUT") == 0 ||
+				         StrCaseCmp(Key.c_str(), "SCOUTACKTIMEOUT") == 0)
 				{
 					EconetScoutAckTimeout = std::stoi(Value);
 				}

@@ -22,7 +22,9 @@ Boston, MA  02110-1301, USA.
 
 #include <windows.h>
 #include <ddraw.h>
+#include <d3dx9math.h>
 
+#include <assert.h>
 #include <stdio.h>
 
 #include "BeebWin.h"
@@ -34,9 +36,9 @@ Boston, MA  02110-1301, USA.
 #include "Messages.h"
 #include "Resource.h"
 
-// #define DEBUG_DX9
+#define DEBUG_DX9
 
-typedef HRESULT (WINAPI* LPDIRECTDRAWCREATE)(GUID FAR *lpGUID, LPDIRECTDRAW FAR *lplpDD, IUnknown FAR *pUnkOuter);
+typedef HRESULT (WINAPI* LPDIRECTDRAWCREATE)(GUID* pGUID, IDirectDraw** ppDirectDraw, IUnknown* pUnkOuter);
 
 /****************************************************************************/
 
@@ -67,123 +69,92 @@ static void D3DMatrixIdentity(D3DMATRIX *pMatrix)
 
 void BeebWin::InitDX()
 {
-	HRESULT hResult = E_FAIL;
-
 	if (m_DisplayRenderer == DisplayRendererType::DirectX9)
 	{
-		hResult = InitD3DDevice();
+		HRESULT hResult = InitDX9();
 
 		if (FAILED(hResult))
 		{
 			Report(MessageType::Error, "DirectX9 initialisation failed\nFailure code %X\nTrying DirectDraw",
 			       hResult);
 
-			PostMessage(m_hWnd, WM_COMMAND, IDM_DISPDDRAW, 0);
+			m_DisplayRenderer = DisplayRendererType::DirectDraw;
 		}
 	}
-	else if (m_DisplayRenderer == DisplayRendererType::DirectDraw)
+
+	if (m_DisplayRenderer == DisplayRendererType::DirectDraw)
 	{
-		hResult = InitDirectDraw();
+		HRESULT hResult = InitDirectDraw();
 
 		if (FAILED(hResult))
 		{
 			Report(MessageType::Error, "DirectDraw initialisation failed\nFailure code %X\nSwitching to GDI",
 			       hResult);
 
-			PostMessage(m_hWnd, WM_COMMAND, IDM_DISPGDI, 0);
+			m_DisplayRenderer = DisplayRendererType::GDI;
 		}
-	}
-
-	if (SUCCEEDED(hResult))
-	{
-		m_CurrentDisplayRenderer = m_DisplayRenderer;
 	}
 }
 
 /****************************************************************************/
 
-void BeebWin::ResetDX()
+HRESULT BeebWin::ResetDX()
 {
 	#ifdef DEBUG_DX9
 	DebugTrace("BeebWin::ResetDX\n");
 	#endif
 
-	m_DXResetPending = false;
+	HRESULT hResult = S_OK;
 
-	if (m_CurrentDisplayRenderer == DisplayRendererType::DirectX9)
+	if (m_DisplayRenderer == DisplayRendererType::DirectX9)
 	{
-		CloseD3DDevice();
+		ExitDX9();
 
-		// Need to let message loop run before re-initialising DX otherwise
-		// odd artifacts are seen when changing window size.
-		PostMessage(m_hWnd, WM_REINITDX, 0, 0);
+		hResult = ReinitDX();
 	}
-	else if (m_CurrentDisplayRenderer == DisplayRendererType::DirectDraw)
+	else if (m_DisplayRenderer == DisplayRendererType::DirectDraw)
 	{
-		CloseSurfaces();
-		ReinitDX();
+		ExitDirectDraw();
+
+		hResult = ReinitDX();
 	}
+
+	return hResult;
 }
 
 /****************************************************************************/
 
-void BeebWin::ReinitDX()
+HRESULT BeebWin::ReinitDX()
 {
 	#ifdef DEBUG_DX9
 	DebugTrace("BeebWin::ReinitDX\n");
 	#endif
 
-	HRESULT hResult = DD_OK;
+	HRESULT hResult = S_OK;
 
 	if (m_DisplayRenderer == DisplayRendererType::DirectX9)
 	{
-		hResult = InitD3DDevice();
+		hResult = InitDX9();
 	}
 	else if (m_DisplayRenderer == DisplayRendererType::DirectDraw)
 	{
-		hResult = InitSurfaces();
+		hResult = InitDirectDraw();
 	}
 
-	if (FAILED(hResult))
-	{
-		Report(MessageType::Error, "DirectX failure re-initialising\nFailure code %X\nSwitching to GDI",
-		       hResult);
-
-		PostMessage(m_hWnd, WM_COMMAND, IDM_DISPGDI, 0);
-	}
-
-	m_CurrentDisplayRenderer = m_DisplayRenderer;
+	return hResult;
 }
 
 /****************************************************************************/
 
 void BeebWin::ExitDX()
 {
-	if (m_CurrentDisplayRenderer == DisplayRendererType::DirectX9)
+	if (m_DisplayRenderer == DisplayRendererType::DirectX9)
 	{
-		CloseD3DDevice();
+		ExitDX9();
 	}
-	else if (m_CurrentDisplayRenderer == DisplayRendererType::DirectDraw)
+	else if (m_DisplayRenderer == DisplayRendererType::DirectDraw)
 	{
-		CloseSurfaces();
-
-		if (m_DD2 != nullptr)
-		{
-			m_DD2->Release();
-			m_DD2 = nullptr;
-		}
-
-		if (m_DD != nullptr)
-		{
-			m_DD->Release();
-			m_DD = nullptr;
-		}
-
-		if (m_hInstDDraw != nullptr)
-		{
-			FreeLibrary(m_hInstDDraw);
-			m_hInstDDraw = nullptr;
-		}
+		ExitDirectDraw();
 	}
 }
 
@@ -193,38 +164,85 @@ HRESULT BeebWin::InitDirectDraw()
 {
 	HRESULT hResult = DDERR_GENERIC;
 
-	m_hInstDDraw = nullptr;
-	m_DD = nullptr;
-	m_DD2 = nullptr;
-	m_Clipper = nullptr;
-	m_DDS2One = nullptr;
-	m_DDSOne = nullptr;
-	m_DDS2Primary = nullptr;
-	m_DDSPrimary = nullptr;
+	assert(m_hInstDDraw == nullptr);
+	assert(m_DD == nullptr);
+	assert(m_DD2 == nullptr);
+	assert(m_Clipper == nullptr);
+	assert(m_DDS2One == nullptr);
+	assert(m_DDSOne == nullptr);
+	assert(m_DDS2Primary == nullptr);
+	assert(m_DDSPrimary == nullptr);
 
 	m_hInstDDraw = LoadLibrary("ddraw.dll");
 
-	if (m_hInstDDraw != nullptr)
+	if (m_hInstDDraw == nullptr)
 	{
-		LPDIRECTDRAWCREATE DirectDrawCreate = (LPDIRECTDRAWCREATE)GetProcAddress(m_hInstDDraw, "DirectDrawCreate");
-
-		if (DirectDrawCreate != nullptr)
-		{
-			hResult = DirectDrawCreate(nullptr, &m_DD, nullptr);
-
-			if (SUCCEEDED(hResult))
-			{
-				hResult = m_DD->QueryInterface(IID_IDirectDraw2, (LPVOID*)&m_DD2);
-			}
-
-			if (SUCCEEDED(hResult))
-			{
-				hResult = InitSurfaces();
-			}
-		}
+		goto Fail;
 	}
 
+	LPDIRECTDRAWCREATE DirectDrawCreate = (LPDIRECTDRAWCREATE)GetProcAddress(m_hInstDDraw, "DirectDrawCreate");
+
+	if (DirectDrawCreate == nullptr)
+	{
+		goto Fail;
+	}
+
+	hResult = DirectDrawCreate(nullptr, &m_DD, nullptr);
+
+	if (FAILED(hResult))
+	{
+		goto Fail;
+	}
+
+	hResult = m_DD->QueryInterface(IID_IDirectDraw2, (LPVOID*)&m_DD2);
+
+	if (FAILED(hResult))
+	{
+		goto Fail;
+	}
+
+	hResult = InitSurfaces();
+
+	if (FAILED(hResult))
+	{
+		goto Fail;
+	}
+
+	m_DXInit = true;
+
 	return hResult;
+
+Fail:
+	ExitDirectDraw();
+
+	return hResult;
+}
+
+/****************************************************************************/
+
+void BeebWin::ExitDirectDraw()
+{
+	ResetSurfaces();
+
+	if (m_DD2 != nullptr)
+	{
+		m_DD2->Release();
+		m_DD2 = nullptr;
+	}
+
+	if (m_DD != nullptr)
+	{
+		m_DD->Release();
+		m_DD = nullptr;
+	}
+
+	if (m_hInstDDraw != nullptr)
+	{
+		FreeLibrary(m_hInstDDraw);
+		m_hInstDDraw = nullptr;
+	}
+
+	m_DXInit = false;
 }
 
 /****************************************************************************/
@@ -242,75 +260,98 @@ HRESULT BeebWin::InitSurfaces()
 		hResult = m_DD2->SetCooperativeLevel(m_hWnd, DDSCL_NORMAL);
 	}
 
-	if (SUCCEEDED(hResult))
+	if (FAILED(hResult))
 	{
-		if (m_FullScreen)
+		goto Fail;
+	}
+
+	if (m_FullScreen)
+	{
+		hResult = m_DD2->SetDisplayMode(m_XDXSize, m_YDXSize, 32, 0, 0);
+
+		if (FAILED(hResult))
 		{
-			hResult = m_DD2->SetDisplayMode(m_XDXSize, m_YDXSize, 32, 0, 0);
+			goto Fail;
 		}
 	}
 
-	if (SUCCEEDED(hResult))
+	DDSURFACEDESC ddsd;
+	ddsd.dwSize = sizeof(ddsd);
+	ddsd.dwFlags = DDSD_CAPS;
+	ddsd.ddsCaps.dwCaps = DDSCAPS_PRIMARYSURFACE;
+	hResult = m_DD2->CreateSurface(&ddsd, &m_DDSPrimary, nullptr);
+
+	if (FAILED(hResult))
 	{
-		DDSURFACEDESC ddsd;
-		ddsd.dwSize = sizeof(ddsd);
-		ddsd.dwFlags = DDSD_CAPS;
-		ddsd.ddsCaps.dwCaps = DDSCAPS_PRIMARYSURFACE;
-		hResult = m_DD2->CreateSurface(&ddsd, &m_DDSPrimary, nullptr);
+		goto Fail;
 	}
 
-	if (SUCCEEDED(hResult))
+	hResult = m_DDSPrimary->QueryInterface(IID_IDirectDrawSurface2, (LPVOID*)&m_DDS2Primary);
+
+	if (FAILED(hResult))
 	{
-		hResult = m_DDSPrimary->QueryInterface(IID_IDirectDrawSurface2, (LPVOID*)&m_DDS2Primary);
+		goto Fail;
 	}
 
-	if (SUCCEEDED(hResult))
+	hResult = m_DD2->CreateClipper(0, &m_Clipper, NULL);
+
+	if (FAILED(hResult))
 	{
-		hResult = m_DD2->CreateClipper(0, &m_Clipper, NULL);
+		goto Fail;
 	}
 
-	if (SUCCEEDED(hResult))
+	hResult = m_Clipper->SetHWnd(0, m_hWnd);
+
+	if (FAILED(hResult))
 	{
-		hResult = m_Clipper->SetHWnd(0, m_hWnd);
+		goto Fail;
 	}
 
-	if (SUCCEEDED(hResult))
+	hResult = m_DDS2Primary->SetClipper(m_Clipper);
+
+	ZeroMemory(&ddsd, sizeof(ddsd));
+
+	ddsd.dwSize = sizeof(ddsd);
+	ddsd.dwFlags = DDSD_CAPS | DDSD_HEIGHT | DDSD_WIDTH;
+	ddsd.ddsCaps.dwCaps = DDSCAPS_OFFSCREENPLAIN;
+
+	if (m_DXSmoothing && (!m_DXSmoothMode7Only || TeletextEnabled))
 	{
-		hResult = m_DDS2Primary->SetClipper(m_Clipper);
+		ddsd.ddsCaps.dwCaps |= DDSCAPS_VIDEOMEMORY;
+	}
+	else
+	{
+		ddsd.ddsCaps.dwCaps |= DDSCAPS_SYSTEMMEMORY;
 	}
 
-	if (SUCCEEDED(hResult))
+	ddsd.dwWidth = 800;
+	ddsd.dwHeight = 512;
+
+	hResult = m_DD2->CreateSurface(&ddsd, &m_DDSOne, nullptr);
+
+	if (FAILED(hResult))
 	{
-		DDSURFACEDESC ddsd;
-		ZeroMemory(&ddsd, sizeof(ddsd));
-		ddsd.dwSize = sizeof(ddsd);
-		ddsd.dwFlags = DDSD_CAPS | DDSD_HEIGHT | DDSD_WIDTH;
-		ddsd.ddsCaps.dwCaps = DDSCAPS_OFFSCREENPLAIN;
-		if (m_DXSmoothing && (!m_DXSmoothMode7Only || TeletextEnabled))
-			ddsd.ddsCaps.dwCaps |= DDSCAPS_VIDEOMEMORY;
-		else
-			ddsd.ddsCaps.dwCaps |= DDSCAPS_SYSTEMMEMORY;
-		ddsd.dwWidth = 800;
-		ddsd.dwHeight = 512;
-		hResult = m_DD2->CreateSurface(&ddsd, &m_DDSOne, nullptr);
+		goto Fail;
 	}
 
-	if (SUCCEEDED(hResult))
+	hResult = m_DDSOne->QueryInterface(IID_IDirectDrawSurface2, (LPVOID *)&m_DDS2One);
+
+	if (FAILED(hResult))
 	{
-		hResult = m_DDSOne->QueryInterface(IID_IDirectDrawSurface2, (LPVOID *)&m_DDS2One);
+		goto Fail;
 	}
 
-	if (SUCCEEDED(hResult))
-	{
-		m_DXInit = true;
-	}
+	return hResult;
+
+Fail:
+	ExitDirectDraw();
 
 	return hResult;
 }
 
 /****************************************************************************/
 
-void BeebWin::CloseSurfaces()
+void BeebWin::ResetSurfaces()
 {
 	if (m_Clipper)
 	{
@@ -341,85 +382,49 @@ void BeebWin::CloseSurfaces()
 		m_DDSPrimary->Release();
 		m_DDSPrimary = nullptr;
 	}
-
-	m_DXInit = false;
 }
 
 /****************************************************************************/
 
-bool BeebWin::InitDX9()
+HRESULT BeebWin::InitDX9()
 {
 	#ifdef DEBUG_DX9
 	DebugTrace("BeebWin::InitDX9\n");
 	#endif
+
+	CUSTOMVERTEX * pVertices = nullptr;
+	HRESULT hResult = D3D_OK;
+	D3DXMATRIX Ortho2D;
+	D3DXMATRIX Ident;
+
+	assert(m_pD3D == nullptr);
+	assert(m_pd3dDevice == nullptr);
+	assert(m_pVB == nullptr);
+	assert(m_pTexture == nullptr);
 
 	// Create the D3D object.
 	m_pD3D = Direct3DCreate9(D3D_SDK_VERSION);
 
 	if (m_pD3D == nullptr)
 	{
-		return false;
+		hResult = E_FAIL;
+		goto Fail;
 	}
 
-	#ifdef DEBUG_DX9
+#if 0
 
-	D3DDISPLAYMODE d3dMode;
 	UINT nModes = m_pD3D->GetAdapterModeCount(D3DADAPTER_DEFAULT, D3DFMT_X8R8G8B8);
+
 	for (UINT Mode = 0; Mode < nModes; ++Mode)
 	{
-		m_pD3D->EnumAdapterModes(D3DADAPTER_DEFAULT, D3DFMT_X8R8G8B8,
-		                         Mode, &d3dMode);
+		D3DDISPLAYMODE d3dMode;
+		hResult = m_pD3D->EnumAdapterModes(D3DADAPTER_DEFAULT, D3DFMT_X8R8G8B8,
+		                                   Mode, &d3dMode);
 		DebugTrace("D3D Mode: %d x %d, refresh %d\n",
 		           d3dMode.Width, d3dMode.Height, d3dMode.RefreshRate);
 	}
 
-	#endif
-
-	return true;
-}
-
-/****************************************************************************/
-
-void BeebWin::CloseDX9()
-{
-	#ifdef DEBUG_DX9
-	DebugTrace("BeebWin::CloseDX9\n");
-	#endif
-
-	if (m_pD3D != nullptr)
-	{
-		m_pD3D->Release();
-		m_pD3D = nullptr;
-	}
-}
-
-/****************************************************************************/
-
-HRESULT BeebWin::InitD3DDevice()
-{
-	#ifdef DEBUG_DX9
-	DebugTrace("BeebWin::InitD3DDevice\n");
-	#endif
-
-	HRESULT hResult = D3D_OK;
-
-	CUSTOMVERTEX* pVertices = nullptr;
-	m_pd3dDevice = nullptr;
-	m_pVB = nullptr;
-	m_pTexture = nullptr;
-
-	D3DMATRIX Ortho2D;
-	D3DMATRIX Ident;
-
-	// Create the D3D object on first use.
-	if (m_pD3D == nullptr)
-	{
-		if (!InitDX9())
-		{
-			hResult = E_FAIL;
-			goto Fail;
-		}
-	}
+#endif
 
 	// Find the monitor index based on the window BeebEm is currently on
 	// as needed to pass to CreateDevice().
@@ -437,11 +442,8 @@ HRESULT BeebWin::InitD3DDevice()
 		}
 	}
 
-	D3DCAPS9 DeviceCaps;
-	m_pD3D->GetDeviceCaps(Adapter, D3DDEVTYPE_HAL, &DeviceCaps);
-
 	D3DDISPLAYMODE DisplayMode;
-    m_pD3D->GetAdapterDisplayMode(Adapter, &DisplayMode);
+	m_pD3D->GetAdapterDisplayMode(Adapter, &DisplayMode);
 
 	// Set up the structure used to create the D3DDevice.
 	D3DPRESENT_PARAMETERS d3dpp;
@@ -466,29 +468,18 @@ HRESULT BeebWin::InitD3DDevice()
 	d3dpp.hDeviceWindow = m_hWnd;
 	d3dpp.EnableAutoDepthStencil = FALSE;
 
-	DWORD BehaviourFlags = 0;
-
-	if (DeviceCaps.DevCaps & D3DDEVCAPS_HWTRANSFORMANDLIGHT)
-	{
-		BehaviourFlags |= D3DCREATE_HARDWARE_VERTEXPROCESSING;
-	}
-	else
-	{
-		BehaviourFlags |= D3DCREATE_SOFTWARE_VERTEXPROCESSING;
-	}
-
 	// Create the D3DDevice
 	hResult = m_pD3D->CreateDevice(Adapter,
 	                               D3DDEVTYPE_HAL,
 	                               m_hWnd, // hFocusWindow
-	                               BehaviourFlags,
+	                               D3DCREATE_SOFTWARE_VERTEXPROCESSING,
 	                               &d3dpp,
 	                               &m_pd3dDevice);
 
 	if (FAILED(hResult))
 	{
 		#ifdef DEBUG_DX9
-		DebugTrace("CreateDevice failed %08X\n", hResult);
+		DebugTrace("IDirect3D9::CreateDevice failed\n");
 		#endif
 
 		goto Fail;
@@ -508,20 +499,18 @@ HRESULT BeebWin::InitD3DDevice()
 	m_pd3dDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
 	m_pd3dDevice->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
 
-	DebugTrace("m_pD3D->CreateVertexBuffer\n");
-
 	// Create the vertex buffer.
 	hResult = m_pd3dDevice->CreateVertexBuffer(4 * sizeof(CUSTOMVERTEX),
-		                                       0, // Usage
-		                                       D3DFVF_CUSTOMVERTEX,
-		                                       D3DPOOL_MANAGED,
-		                                       &m_pVB,
-		                                       nullptr);
+	                                           0, // Usage
+	                                           D3DFVF_CUSTOMVERTEX,
+	                                           D3DPOOL_MANAGED,
+	                                           &m_pVB,
+	                                           nullptr);
 
 	if (FAILED(hResult))
 	{
 		#ifdef DEBUG_DX9
-		DebugTrace("CreateVertexBuffer failed %08X\n", hResult);
+		DebugTrace("IDirect3D9::CreateVertexBuffer failed\n");
 		#endif
 
 		goto Fail;
@@ -534,43 +523,43 @@ HRESULT BeebWin::InitD3DDevice()
 	if (FAILED(hResult))
 	{
 		#ifdef DEBUG_DX9
-		DebugTrace("VertexBuffer Lock failed %08X\n", hResult);
+		DebugTrace("IDirect3DVertexBuffer9::Lock failed\n");
 		#endif
 
 		goto Fail;
 	}
 
-	pVertices[0].position = {0.0f, -511.0f, 0.0f};
-	pVertices[0].color    = D3DCOLOR_RGBA(255, 255, 255, 0);
-	pVertices[0].tu       = 0.0f;
-	pVertices[0].tv       = 1.0f;
+	pVertices[0].position = D3DXVECTOR3(0.0f, -511.0f, 0.0f);
+	pVertices[0].color = 0x00ffffff;
+	pVertices[0].tu = 0.0f;
+	pVertices[0].tv = 1.0f;
 
-	pVertices[1].position = {0.0f, 0.0f, 0.0f};
-	pVertices[1].color    = D3DCOLOR_RGBA(255, 255, 255, 0);
-	pVertices[1].tu       = 0.0f;
-	pVertices[1].tv       = 0.0f;
+	pVertices[1].position = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	pVertices[1].color = 0x00ffffff;
+	pVertices[1].tu = 0.0f;
+	pVertices[1].tv = 0.0f;
 
-	pVertices[2].position = {799.0f, -511.0f, 0.0f};
-	pVertices[2].color    = D3DCOLOR_RGBA(255, 255, 255, 0);
-	pVertices[2].tu       = 1.0f;
-	pVertices[2].tv       = 1.0f;
+	pVertices[2].position = D3DXVECTOR3(799.0f, -511.0f, 0.0f);
+	pVertices[2].color = 0x00ffffff;
+	pVertices[2].tu = 1.0f;
+	pVertices[2].tv = 1.0f;
 
-	pVertices[3].position = {799.0f, 0.0f, 0.0f};
-	pVertices[3].color    = D3DCOLOR_RGBA(255, 255, 255, 0);
-	pVertices[3].tu       = 1.0f;
-	pVertices[3].tv       = 0.0f;
+	pVertices[3].position = D3DXVECTOR3(799.0f, 0.0f, 0.0f);
+	pVertices[3].color = 0x00ffffff;
+	pVertices[3].tu = 1.0f;
+	pVertices[3].tv = 0.0f;
 
 	m_pVB->Unlock();
 
 	// Set up matrices
 	//D3DXMatrixOrthoOffCenterLH(&Ortho2D, 0.0f, 800.0f, -512.0f, 0.0f, 0.0f, 1.0f);
-	D3DMatrixIdentity(&Ortho2D);
-	// const float l = 0.0f;
-	const float r = 800.0f;
-	const float b = -512.0f;
-	const float t = 0.0f;
-	const float zn = 0.0f;
-	const float zf = 1.0f;
+	D3DXMatrixIdentity(&Ortho2D);
+	// float l = 0.0f;
+	float r = 800.0f;
+	float b = -512.0f;
+	float t = 0.0f;
+	float zn = 0.0f;
+	float zf = 1.0f;
 	Ortho2D._11 = 2.0f / (r - 1.0f);
 	Ortho2D._22 = 2.0f / (t - b);
 	Ortho2D._33 = 1.0f / (zf - zn);
@@ -580,12 +569,12 @@ HRESULT BeebWin::InitD3DDevice()
 
 	m_pd3dDevice->SetTransform(D3DTS_PROJECTION, &Ortho2D);
 
-	D3DMatrixIdentity(&Ident);
+	D3DXMatrixIdentity(&Ident);
 	m_pd3dDevice->SetTransform(D3DTS_VIEW, &Ident);
 	m_pd3dDevice->SetTransform(D3DTS_WORLD, &Ident);
 
 	// Identity matrix will fill window with our texture
-	D3DMatrixIdentity(&m_TextureMatrix);
+	D3DXMatrixIdentity(&m_TextureMatrix);
 
 	hResult = m_pd3dDevice->CreateTexture(800,
 	                                      512,
@@ -599,28 +588,29 @@ HRESULT BeebWin::InitD3DDevice()
 	if (FAILED(hResult))
 	{
 		#ifdef DEBUG_DX9
-		DebugTrace("CreateTexture failed %08X\n", hResult);
+		DebugTrace("IDirect3D9::CreateTexture failed\n");
 		#endif
 
 		goto Fail;
 	}
 
 	m_DXInit = true;
+	m_DX9State = DX9State::OK;
 
-	return hResult;
+	return S_OK;
 
 Fail:
-	CloseD3DDevice();
+	ExitDX9();
 
 	return hResult;
 }
 
 /****************************************************************************/
 
-void BeebWin::CloseD3DDevice()
+void BeebWin::ExitDX9()
 {
 	#ifdef DEBUG_DX9
-	DebugTrace("BeebWin::CloseD3DDevice\n");
+	DebugTrace("BeebWin::ExitDX9\n");
 	#endif
 
 	if (m_pTexture != nullptr)
@@ -639,6 +629,12 @@ void BeebWin::CloseD3DDevice()
 	{
 		m_pd3dDevice->Release();
 		m_pd3dDevice = nullptr;
+	}
+
+	if (m_pD3D != nullptr)
+	{
+		m_pD3D->Release();
+		m_pD3D = nullptr;
 	}
 
 	m_DXInit = false;
@@ -698,15 +694,12 @@ void BeebWin::RenderDX9()
 		DebugTrace("BeebWin::RenderDX9 - D3DERR_DEVICELOST\n");
 		#endif
 
-		// Can be generated when switching in/out of fullscreen - need to reset
-		m_DXDeviceLost = true;
+		m_DX9State = DX9State::DeviceLost;
 		PostMessage(m_hWnd, WM_DIRECTX9_DEVICE_LOST, 0, 0);
 	}
 }
 
 /****************************************************************************/
-
-// WM_DIRECTX9_DEVICE_LOST message handler.
 
 void BeebWin::OnDeviceLost()
 {
@@ -714,46 +707,63 @@ void BeebWin::OnDeviceLost()
 	DebugTrace("BeebWin::OnDeviceLost\n");
 	#endif
 
-	if (m_pd3dDevice != nullptr)
+	assert(m_pd3dDevice != nullptr);
+
+	HRESULT hResult = m_pd3dDevice->TestCooperativeLevel();
+
+	if (hResult == D3DERR_DEVICELOST)
 	{
-		HRESULT hResult = m_pd3dDevice->TestCooperativeLevel();
+		#ifdef DEBUG_DX9
+		DebugTrace("TestCooperativeLevel returned D3DERR_DEVICELOST\n");
+		#endif
 
-		if (hResult == D3DERR_DEVICELOST)
+		// The device has been lost but cannot be reset at this time.
+		// Therefore, rendering is not possible. Wait a while and try again.
+		SetTimer(m_hWnd, TIMER_DEVICE_LOST, 500, nullptr);
+	}
+	else if (hResult == D3DERR_DEVICENOTRESET)
+	{
+		#ifdef DEBUG_DX9
+		DebugTrace("TestCooperativeLevel returned D3DERR_DEVICENOTRESET\n");
+		#endif
+
+		ExitDX9();
+
+		hResult = InitDX9();
+
+		if (SUCCEEDED(hResult))
 		{
-			#ifdef DEBUG_DX9
-			DebugTrace("D3DERR_DEVICELOST\n");
-			#endif
-
-			// The device has been lost but cannot be reset at this time.
-			// Therefore, rendering is not possible.
-			::Sleep(100);
-			PostMessage(m_hWnd, WM_DIRECTX9_DEVICE_LOST, 0, 0);
+			m_DX9State = DX9State::OK;
 		}
-		else if (hResult == D3DERR_DEVICENOTRESET)
+		else
 		{
-			#ifdef DEBUG_DX9
-			DebugTrace("D3DERR_DEVICENOTRESET\n");
-			#endif
-
-			// The device has been lost but can be reset at this time.
-			m_DXDeviceLost = false;
-			ResetDX();
-			ResetTiming();
+			DirectX9Failed(hResult);
 		}
-		else if (hResult == D3DERR_DRIVERINTERNALERROR)
-		{
-			#ifdef DEBUG_DX9
-			DebugTrace("D3DERR_DRIVERINTERNALERROR\n");
-			#endif
+	}
+	else
+	{
+		#ifdef DEBUG_DX9
+		DebugTrace("TestCooperativeLevel returned %08X\n", hResult);
+		#endif
 
-			PostMessage(m_hWnd, WM_COMMAND, IDM_DISPGDI, 0);
-		}
+		DirectX9Failed(hResult);
 	}
 }
 
 /****************************************************************************/
 
-void BeebWin::updateLines(HDC hDC, int StartY, int NLines)
+void BeebWin::DirectX9Failed(HRESULT hResult)
+{
+	Report(MessageType::Error,
+	       "DirectX9 renderer failed\nFailure code %X\nSwitching to GDI",
+	       hResult);
+
+	PostMessage(m_hWnd, WM_COMMAND, IDM_DISPGDI, 0);
+}
+
+/****************************************************************************/
+
+void BeebWin::UpdateLines(HDC hDC, int StartY, int NLines)
 {
 	static bool LastTeletextEnabled = false;
 	static bool First = true;
@@ -861,7 +871,10 @@ void BeebWin::updateLines(HDC hDC, int StartY, int NLines)
 
 		if (m_DisplayRenderer == DisplayRendererType::DirectX9)
 		{
-			if (m_DXDeviceLost) return;
+			if (m_DX9State != DX9State::OK)
+			{
+				return;
+			}
 
 			IDirect3DSurface9 *pSurface;
 			HRESULT hResult = m_pTexture->GetSurfaceLevel(0, &pSurface);
@@ -883,8 +896,8 @@ void BeebWin::updateLines(HDC hDC, int StartY, int NLines)
 					// D3DXMatrixScaling(&m_TextureMatrix,
 					//                   800.0f / (float)width, 512.0f / (float)height, 1.0f);
 					D3DMatrixIdentity(&m_TextureMatrix);
-					m_TextureMatrix._11 = 800.0f/(float)width;
-					m_TextureMatrix._22 = 512.0f/(float)height;
+					m_TextureMatrix._11 = 800.0f / (float)width;
+					m_TextureMatrix._22 = 512.0f / (float)height;
 
 					if (m_FullScreen && m_MaintainAspectRatio)
 					{
@@ -908,10 +921,12 @@ void BeebWin::updateLines(HDC hDC, int StartY, int NLines)
 
 			if (FAILED(hResult))
 			{
-				Report(MessageType::Error, "DirectX failure while updating screen\nFailure code %X\nSwitching to GDI",
-				       hResult);
+				#ifdef DEBUG_DX9
+				DebugTrace("RenderDX9 returned %08X\n", hResult);
+				#endif
 
-				PostMessage(m_hWnd, WM_COMMAND, IDM_DISPGDI, 0);
+				m_DX9State = DX9State::DeviceLost;
+				PostMessage(m_hWnd, WM_DIRECTX9_DEVICE_LOST, 0, 0);
 			}
 		}
 		else
@@ -938,11 +953,12 @@ void BeebWin::updateLines(HDC hDC, int StartY, int NLines)
 
 				// Work out where on screen to blit image
 				RECT destRect;
-				RECT srcRect;
+				GetClientRect(m_hWnd, &destRect);
+
 				POINT pt;
-				GetClientRect( m_hWnd, &destRect );
 				pt.x = pt.y = 0;
-				ClientToScreen( m_hWnd, &pt );
+				ClientToScreen(m_hWnd, &pt);
+
 				OffsetRect(&destRect, pt.x, pt.y);
 
 				if (m_FullScreen && m_MaintainAspectRatio)
@@ -957,6 +973,7 @@ void BeebWin::updateLines(HDC hDC, int StartY, int NLines)
 				}
 
 				// Blit the whole of the secondary buffer onto the screen
+				RECT srcRect;
 				srcRect.left   = 0;
 				srcRect.top    = 0;
 				srcRect.right  = TeletextEnabled ? 552 : ActualScreenWidth;
@@ -1144,7 +1161,7 @@ void BeebWin::UpdateSmoothing()
 			m_pd3dDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
 		}
 	}
-	else
+	else if (m_DisplayRenderer == DisplayRendererType::DirectDraw)
 	{
 		if (m_DDS2One != nullptr)
 		{

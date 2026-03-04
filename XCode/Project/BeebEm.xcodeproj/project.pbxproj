@@ -473,6 +473,7 @@
 		DCDC73122BBE192200D83402 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		DCDC73182BBE1B9F00D83402 /* commctrl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = commctrl.h; sourceTree = "<group>"; };
 		DCE5AD272C3D15AF0080AD01 /* Credits.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = Credits.rtf; path = BeebEm/Credits.rtf; sourceTree = "<group>"; };
+		DCE737452F581FB600796908 /* d3dx9math.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = d3dx9math.h; sourceTree = "<group>"; };
 		DCE94C142BD3109500A5C12A /* BeebEm-Menu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BeebEm-Menu.swift"; sourceTree = "<group>"; };
 		DCE94C162BD310C600A5C12A /* BeebEm-Sound.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BeebEm-Sound.swift"; sourceTree = "<group>"; };
 		DCE94C182BD3117200A5C12A /* BeebEm-Files.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BeebEm-Files.swift"; sourceTree = "<group>"; };
@@ -710,6 +711,7 @@
 		DC0997A62BBAA65E00A109A5 /* windows_stubs */ = {
 			isa = PBXGroup;
 			children = (
+				DCE737452F581FB600796908 /* d3dx9math.h */,
 				DC0997A72BBAA68600A109A5 /* d3d9.h */,
 				DC0997A82BBAA6A300A109A5 /* ddraw.h */,
 				DC0997A52BBAA5D500A109A5 /* windows.h */,

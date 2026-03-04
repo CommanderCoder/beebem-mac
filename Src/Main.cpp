@@ -71,6 +71,8 @@ int mainInit()
 		return 1;
 	}
 
+	OpenLog();
+
 	if (!mainWin->Initialise())
 	{
 		delete mainWin;
@@ -154,6 +156,8 @@ int mainEnd()
 	CloseLog();
 
 	delete mainWin;
+
+	CloseLog();
 
 	return 0;
 }
