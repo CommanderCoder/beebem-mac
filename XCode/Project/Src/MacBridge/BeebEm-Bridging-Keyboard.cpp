@@ -51,7 +51,7 @@ extern BeebWin* mainWin;
  * 0x40  CapsLck   A     X     F    Y    J    K    @    :*   Return  KP /   KP Del KP .
  * 0x50  ShiftLck  S     C     G    H    N    L    ;+   ]}   Delete  KP #   KP *   KP ,
  * 0x60  Tab       Z     SPC   V    B    M    <,   >.   /?   Copy    KP 0   KP 1   KP 3
- * 0x70  ESC       f1    f2    f3   f5   f6   f8   f9   \    Right   KP 4   KP 5   KP 2
+ * 0x70  ESC       f1    f2    f3   f5   f6   f8   f9   \|   Right   KP 4   KP 5   KP 2
  */
 
 int kmap[] =
