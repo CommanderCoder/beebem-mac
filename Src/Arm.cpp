@@ -152,7 +152,7 @@ void CArm::exec(int count)
 
 				Arm_disassemble(pc, ci, disassembly);
 
-				sprintf(addressS, "0x%08x : %02x %02x %02x %02x ", pc,
+				snprintf(addressS, sizeof(addressS), "0x%08x : %02x %02x %02x %02x ", pc,
 				        ci & 0xff, (ci >> 8) & 0xff, (ci >> 16) & 0xff, (ci >> 24) & 0xff );
 			}
 			else
@@ -161,7 +161,7 @@ void CArm::exec(int count)
 
 				Arm_disassemble(pc - 4, ci, disassembly);
 
-				sprintf(addressS, "0x%08x : %02x %02x %02x %02x ", pc - 4,
+				snprintf(addressS, sizeof(addressS), "0x%08x : %02x %02x %02x %02x ", pc - 4,
 				        ci & 0xff, (ci >> 8) & 0xff, (ci >> 16) & 0xff, (ci >> 24) & 0xff );
 			}
 

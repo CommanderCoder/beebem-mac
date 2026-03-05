@@ -446,7 +446,11 @@ static bool IsBroadcastStation(unsigned int Station)
 static const char* IpAddressStr(unsigned long inet_addr)
 {
 	in_addr in;
-	IN_ADDR(in) = inet_addr;
+#ifdef __APPLE__
+    IN_ADDR(in) = (unsigned int) inet_addr;
+#else
+    IN_ADDR(in) = inet_addr;
+#endif
 
 	return inet_ntoa(in);
 }
@@ -460,7 +464,7 @@ static std::string BytesToString(const unsigned char* pData, int Length)
 	for (int i = 0; i < Length; i++)
 	{
 		char sz[10];
-		sprintf(sz, " %02X", pData[i]);
+		snprintf(sz, sizeof(sz), " %02X", pData[i]);
 
 		str += sz;
 	}

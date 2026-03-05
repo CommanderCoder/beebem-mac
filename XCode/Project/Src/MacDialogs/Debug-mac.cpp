@@ -2084,7 +2084,7 @@ void DebugLoadLabels(const char* filename)
 			DebugChompString(buf);
 
 			int addr;
-			char name[64];
+			char name[65]; // 64 + NUL
 
 			// Example: al FFEE .oswrch
 			if (sscanf(buf, "%*s %x .%64s", &addr, name) != 2)

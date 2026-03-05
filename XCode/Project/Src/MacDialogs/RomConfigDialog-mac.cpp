@@ -256,7 +256,9 @@ bool RomConfigDialog::WM_INITDIALOG()
 }
 
 #define CBN_SELCHANGE 1
-#define ComboBox_GetCurSel(_x_) model
+
+int ComboBox_GetCurrentSelection(HWND n, int m) { return m; }
+#define ComboBox_GetCurSel(_x_) ComboBox_GetCurrentSelection(_x_, model)
 			
 bool RomConfigDialog::WM_COMMAND(WPARAM wParam)
 {

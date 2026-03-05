@@ -64,7 +64,7 @@ void WriteLog(const char *fmt, ...)
 		va_start(argptr, fmt);
 
 		char buff[256];
-		vsprintf(buff, fmt, argptr);
+		vsnprintf(buff, sizeof(buff), fmt, argptr);
 
 		va_end(argptr);
 

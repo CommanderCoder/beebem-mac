@@ -60,7 +60,11 @@ using std::max;
 #include "AboutDialog.h"
 #include "Arm.h"
 #include "AtoDConv.h"
+#ifdef __APPLE__
+#include "AviWriter.h"
+#else
 #include "AVIWriter.h"
+#endif
 #include "BeebMem.h"
 #include "Debug.h"
 #include "DebugTrace.h"
@@ -1935,10 +1939,12 @@ void BeebWin::UpdateSFXMenu()
 
 /****************************************************************************/
 
+#ifndef __APPLE__
 static const unsigned char CFG_DISABLE_WINDOWS_KEYS[24] =
 {
 	00,00,00,00,00,00,00,00,03,00,00,00,00,00,0x5B,0xE0,00,00,0x5C,0xE0,00,00,00,00
 };
+#endif
 
 void BeebWin::DisableWindowsKeys()
 {
@@ -3184,11 +3190,11 @@ void BeebWin::ToggleFullScreen()
 			const char* Format = "Unable to enter full screen mode. Failure code %X";
 
 			// Calculate required length, +1 is for NUL terminator
-            const int length = _vscprintf(Format, (char*)hResult) + 1;
+			const int length = snprintf(nullptr, 0, Format, static_cast<unsigned int>(hResult)) + 1;
 
 			char* Buffer = (char*)malloc(length);
 
-			sprintf(Buffer, Format, hResult);
+			sprintf(Buffer, Format, static_cast<unsigned int>(hResult));
 
 			PostMessage(m_hWnd, WM_REPORT_ERROR, 0, reinterpret_cast<LPARAM>(Buffer));
 		}

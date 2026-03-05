@@ -44,7 +44,7 @@ using std::max;
 
 #include "BeebWin.h"
 #include "6502core.h"
-#ifndef __APPLE__
+#ifdef __APPLE__
 #include "AviWriter.h"
 #else
 #include "AVIWriter.h"
@@ -1233,8 +1233,8 @@ void BeebWin::QuickSave()
 	// Bump old quicksave files down
 	for (int i = 1; i <= 9; ++i)
 	{
-		char FileName[100];
 #ifndef __APPLE__
+        char FileName[100];
 		sprintf(FileName, "quicksave%d.uefstate", i);
 
 		strcpy(FileName1, m_UserDataPath);
@@ -1999,7 +1999,7 @@ void BeebWin::ImportDiscFiles(int menuId)
 	{
 		char szErrStr[500];
 
-		Success = dfs_import_file(DiscInfo[Drive].FileName, Heads, Side, &dfsCat, fileNames[i], szExportPath, szErrStr);
+		Success = dfs_import_file(DiscInfo[Drive].FileName, Heads, Side, &dfsCat, fileNames[i], szExportPath, szErrStr, sizeof(szErrStr));
 
 		if (Success)
 		{

@@ -69,7 +69,8 @@ bool dfs_export_file(const char *szDiscFile,
                      int side,
                      const DFS_FILE_ATTR* attr,
                      const char *szExportFolder,
-                     char *szErrStr);
+                     char *szErrStr,
+                     size_t ErrStrSize);
 
 bool dfs_import_file(const char *szDiscFile,
                      int numSides,
@@ -77,6 +78,7 @@ bool dfs_import_file(const char *szDiscFile,
                      DFS_DISC_CATALOGUE *dfsCat,
                      const char *szFile,
                      const char *szImportFolder,
-                     char *szErrStr);
+                     char *szErrStr,
+                     size_t ErrStrSize);
 
 #endif

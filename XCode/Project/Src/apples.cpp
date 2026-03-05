@@ -157,9 +157,9 @@ char* _strerror(const char *strErrMsg)
 {
 	static char errorstring[256];
 	if (strErrMsg != NULL)
-		sprintf(errorstring, "%s : %s", strErrMsg, strerror(errno));
+		snprintf(errorstring, sizeof(errorstring), "%s : %s", strErrMsg, strerror(errno));
 	else
-		sprintf(errorstring, "%s\n", strerror(errno));
+		snprintf(errorstring, sizeof(errorstring), "%s\n", strerror(errno));
 	return errorstring;
 }
 
@@ -209,9 +209,9 @@ void _makepath(char *path,
 	char fpath[_MAX_PATH];
 	strcpy(fpath, fname);
 	if (fname && ext)
-		sprintf(path, "%s/%s.%s", dir,fpath,ext);
+		snprintf(path, _MAX_PATH, "%s/%s.%s", dir, fpath, ext);
 	else
-		sprintf(path, "%s/", dir);
+		snprintf(path, _MAX_PATH, "%s/", dir);
 }
 
 //SHFOLDERAPI

@@ -192,7 +192,8 @@ bool dfs_export_file(const char *szDiscFile,
                      int side,
                      const DFS_FILE_ATTR* attr,
                      const char *szLocalFileName,
-                     char *szErrStr)
+                     char *szErrStr,
+                     size_t ErrStrSize)
 {
 	bool success = true;
 	unsigned char buffer[DFS_SECTOR_SIZE];
@@ -201,7 +202,7 @@ bool dfs_export_file(const char *szDiscFile,
 
 	if (discfd == nullptr)
 	{
-		sprintf(szErrStr, "Failed to open disc file:\n  %s", szDiscFile);
+		snprintf(szErrStr, ErrStrSize, "Failed to open disc file:\n  %s", szDiscFile);
 		return false;
 	}
 
@@ -209,7 +210,7 @@ bool dfs_export_file(const char *szDiscFile,
 
 	if (filefd == NULL)
 	{
-		sprintf(szErrStr, "Failed to open file for writing:\n  %s", szLocalFileName);
+		snprintf(szErrStr, ErrStrSize, "Failed to open file for writing:\n  %s", szLocalFileName);
 		success = false;
 	}
 	else
@@ -251,7 +252,7 @@ bool dfs_export_file(const char *szDiscFile,
 			if (fseek(discfd, offset, SEEK_SET) != 0 ||
 			    fread(buffer, 1, (size_t)n, discfd) != n)
 			{
-				sprintf(szErrStr, "Failed to read data from:\n  %s", szDiscFile);
+				snprintf(szErrStr, ErrStrSize, "Failed to read data from:\n  %s", szDiscFile);
 				success = false;
 			}
 			else
@@ -259,7 +260,7 @@ bool dfs_export_file(const char *szDiscFile,
 				// Export to file
 				if (fwrite(buffer, 1, (size_t)n, filefd) != n)
 				{
-					sprintf(szErrStr, "Failed to write data to:\n  %s", szLocalFileName);
+					snprintf(szErrStr, ErrStrSize, "Failed to write data to:\n  %s", szLocalFileName);
 					success = false;
 				}
 			}
@@ -279,7 +280,7 @@ bool dfs_export_file(const char *szDiscFile,
 
 			if (filefd == NULL)
 			{
-				sprintf(szErrStr, "Failed to open file for writing:\n  %s", InfFileName.c_str());
+				snprintf(szErrStr, ErrStrSize, "Failed to open file for writing:\n  %s", InfFileName.c_str());
 				success = false;
 			}
 			else
@@ -343,7 +344,8 @@ bool dfs_import_file(const char *szDiscFile,
                      DFS_DISC_CATALOGUE *dfsCat,
                      const char *szFile,
                      const char *szImportFolder,
-                     char *szErrStr)
+                     char *szErrStr,
+                     size_t ErrStrSize)
 {
 	bool success = true;
 
@@ -359,7 +361,7 @@ bool dfs_import_file(const char *szDiscFile,
 	FILE *discfd = fopen(szDiscFile, "rb+");
 	if (discfd == NULL)
 	{
-		sprintf(szErrStr, "Failed to open disc file for writing:\n  %s", szDiscFile);
+		snprintf(szErrStr, ErrStrSize, "Failed to open disc file for writing:\n  %s", szDiscFile);
 		return false;
 	}
 
@@ -383,7 +385,7 @@ bool dfs_import_file(const char *szDiscFile,
 	{
 		if (fscanf(filefd, "%9s %X %X", dfsname, (unsigned int*)&loadAddr, (unsigned int*)&execAddr) < 1)
 		{
-			sprintf(szErrStr, "Failed to read file attributes from:\n  %s", infname);
+			snprintf(szErrStr, ErrStrSize, "Failed to read file attributes from:\n  %s", infname);
 			success = false;
 		}
 
@@ -426,7 +428,7 @@ bool dfs_import_file(const char *szDiscFile,
 
 		if (i == 0)
 		{
-			sprintf(szErrStr, "Failed to create DFS file name for:\n  %s", szFile);
+			snprintf(szErrStr, ErrStrSize, "Failed to create DFS file name for:\n  %s", szFile);
 			success = false;
 		}
 	}
@@ -440,7 +442,7 @@ bool dfs_import_file(const char *szDiscFile,
 
 			if (filefd == NULL)
 			{
-				sprintf(szErrStr, "Failed to open file:\n  %s", filename);
+				snprintf(szErrStr, ErrStrSize, "Failed to open file:\n  %s", filename);
 				success = false;
 			}
 			else
@@ -457,7 +459,7 @@ bool dfs_import_file(const char *szDiscFile,
 
 		if (fileLen >= 0x80000)
 		{
-			sprintf(szErrStr, "File too large to import:\n  %s", filename);
+			snprintf(szErrStr, ErrStrSize, "File too large to import:\n  %s", filename);
 			success = false;
 		}
 	}
@@ -485,7 +487,7 @@ bool dfs_import_file(const char *szDiscFile,
 		if ((dfsCat->watford62 && dfsCat->numFiles >= 62) ||
 		    (!dfsCat->watford62 && dfsCat->numFiles >= 31))
 		{
-			sprintf(szErrStr, "Catalogue full, cannot import %s", szFile);
+			snprintf(szErrStr, ErrStrSize, "Catalogue full, cannot import %s", szFile);
 			success = false;
 		}
 	}
@@ -518,7 +520,7 @@ bool dfs_import_file(const char *szDiscFile,
 			// Space at end of disc?
 			if ((dfsCat->numSectors - startSector) < numSectors)
 			{
-				sprintf(szErrStr, "Insufficient space to import %s", szFile);
+				snprintf(szErrStr, ErrStrSize, "Insufficient space to import %s", szFile);
 				success = false;
 			}
 		}
@@ -533,7 +535,7 @@ bool dfs_import_file(const char *szDiscFile,
 
 		if (filefd == NULL)
 		{
-			sprintf(szErrStr, "Failed to open file:\n  %s", filename);
+			snprintf(szErrStr, ErrStrSize, "Failed to open file:\n  %s", filename);
 			success = false;
 		}
 		else
@@ -565,7 +567,7 @@ bool dfs_import_file(const char *szDiscFile,
 
 				if (fread(buffer, 1, (size_t)n, filefd) != n)
 				{
-					sprintf(szErrStr, "Failed to read data from:\n  %s", filename);
+					snprintf(szErrStr, ErrStrSize, "Failed to read data from:\n  %s", filename);
 					success = false;
 				}
 				else
@@ -574,7 +576,7 @@ bool dfs_import_file(const char *szDiscFile,
 					if (fseek(discfd, offset, SEEK_SET) != 0 ||
 					    fwrite(buffer, 1, DFS_SECTOR_SIZE, discfd) != DFS_SECTOR_SIZE)
 					{
-						sprintf(szErrStr, "Failed to write data to:\n  %s", szDiscFile);
+						snprintf(szErrStr, ErrStrSize, "Failed to write data to:\n  %s", szDiscFile);
 						success = false;
 					}
 				}
@@ -600,7 +602,7 @@ bool dfs_import_file(const char *szDiscFile,
 
 		if (fseek(discfd, offset, SEEK_SET) != 0)
 		{
-			sprintf(szErrStr, "Failed to seek in file:\n  %s", szDiscFile);
+			snprintf(szErrStr, ErrStrSize, "Failed to seek in file:\n  %s", szDiscFile);
 			success = false;
 		}
 		else
@@ -610,7 +612,7 @@ bool dfs_import_file(const char *szDiscFile,
 			if (fread(buffer, 1, DFS_SECTOR_SIZE * numSectors, discfd) !=
 			    (DFS_SECTOR_SIZE * numSectors))
 			{
-				sprintf(szErrStr, "Failed to read catalogue from:\n  %s", szDiscFile);
+				snprintf(szErrStr, ErrStrSize, "Failed to read catalogue from:\n  %s", szDiscFile);
 				success = false;
 			}
 			else
@@ -643,13 +645,13 @@ bool dfs_import_file(const char *szDiscFile,
 				// Write catalogue sectors back to file
 				if (fseek(discfd, offset, SEEK_SET) != 0)
 				{
-					sprintf(szErrStr, "Failed to seek in file:\n  %s", szDiscFile);
+					snprintf(szErrStr, ErrStrSize, "Failed to seek in file:\n  %s", szDiscFile);
 					success = false;
 				}
 				else if (fwrite(buffer, 1, DFS_SECTOR_SIZE * numSectors, discfd) !=
 				         (DFS_SECTOR_SIZE * numSectors))
 				{
-					sprintf(szErrStr, "Failed to write catalogue to:\n  %s", szDiscFile);
+					snprintf(szErrStr, ErrStrSize, "Failed to write catalogue to:\n  %s", szDiscFile);
 					success = false;
 				}
 			}

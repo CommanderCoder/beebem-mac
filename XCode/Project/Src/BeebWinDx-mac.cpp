@@ -350,12 +350,12 @@ void BeebWin::DisplayTiming()
 	{
 		if (m_MouseCaptured)
 		{
-			sprintf(m_szTitle, "%s  Speed: %2.2f  fps: %2d  %s",
+			snprintf(m_szTitle, sizeof(m_szTitle), "%s  Speed: %2.2f  fps: %2d  %s",
 					WindowTitle, m_RelativeSpeed, (int)m_FramesPerSecond, pszReleaseCaptureMessage);
 		}
 		else
 		{
-			sprintf(m_szTitle, "%s  Speed: %2.2f  fps: %2d",
+			snprintf(m_szTitle, sizeof(m_szTitle), "%s  Speed: %2.2f  fps: %2d",
 					WindowTitle, m_RelativeSpeed, (int)m_FramesPerSecond);
 		}
 		SetWindowText(m_hWnd, m_szTitle);
@@ -372,7 +372,7 @@ void BeebWin::UpdateWindowTitle()
 	{
 		if (m_MouseCaptured)
 		{
-			sprintf(m_szTitle, "%s  %s",
+			snprintf(m_szTitle, sizeof(m_szTitle), "%s  %s",
 					WindowTitle, pszReleaseCaptureMessage);
 		}
 		else

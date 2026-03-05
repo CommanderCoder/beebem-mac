@@ -651,11 +651,11 @@ void UEFTapeImage::CreateTapeMap(std::vector<TapeMapEntry>& TapeMap)
 
 						if (!name.empty())
 						{
-							sprintf(desc, "%-12s %02X  Length %04X", name.c_str(), blk_num, blk);
+							snprintf(desc, sizeof(desc), "%-12s %02X  Length %04X", name.c_str(), blk_num, blk);
 						}
 						else
 						{
-							sprintf(desc, "<No name>    %02X  Length %04X", blk_num, blk);
+							snprintf(desc, sizeof(desc), "<No name>    %02X  Length %04X", blk_num, blk);
 						}
 
 						TapeMap.emplace_back(desc, start_time);
@@ -678,7 +678,7 @@ void UEFTapeImage::CreateTapeMap(std::vector<TapeMapEntry>& TapeMap)
 							TapeMap.back().time = start_time;
 						}
 
-						sprintf(desc, "Non-standard %02X  Length %04X", blk_num, blk);
+						snprintf(desc, sizeof(desc), "Non-standard %02X  Length %04X", blk_num, blk);
 						TapeMap.emplace_back(desc, start_time);
 						std_last_block = false;
 					}

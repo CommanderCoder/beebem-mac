@@ -349,7 +349,7 @@ bool ExportFileDialog::ExportFile(DFS_FILE_ATTR* DfsAttrs, const char* LocalFile
 {
 	char szErrStr[512];
 
-	if (dfs_export_file(m_DiscFile, m_NumSides, m_Side, DfsAttrs, LocalFileName, szErrStr))
+	if (dfs_export_file(m_DiscFile, m_NumSides, m_Side, DfsAttrs, LocalFileName, szErrStr, sizeof(szErrStr)))
 	{
 		return true;
 	}
