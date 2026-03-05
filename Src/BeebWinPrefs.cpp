@@ -1184,7 +1184,7 @@ void BeebWin::LoadSerialPortPreferences(int Version)
 			sscanf(m_SerialPort.c_str(), "%x", &Port);
 
 			char PortName[20];
-			sprintf(PortName, "COM%u", Port);
+			snprintf(PortName, sizeof(PortName), "COM%u", Port);
 			m_SerialPort = PortName;
 		}
 	}
@@ -1314,7 +1314,7 @@ void BeebWin::LoadTeletextAdapterPreferences(int Version)
 
 	for (int ch = 0; ch < TELETEXT_CHANNEL_COUNT; ch++)
 	{
-		sprintf(key, CFG_TELETEXT_FILE, ch);
+		snprintf(key, sizeof(key), CFG_TELETEXT_FILE, ch);
 
 		if (!m_Preferences.GetStringValue(key, TeletextFileName[ch]))
 		{
@@ -1332,7 +1332,7 @@ void BeebWin::LoadTeletextAdapterPreferences(int Version)
 
 		if (Version >= 3)
 		{
-			sprintf(key, CFG_TELETEXT_IP, ch);
+			snprintf(key, sizeof(key), CFG_TELETEXT_IP, ch);
 
 			if (m_Preferences.GetStringValue(key, TeletextIPAddress))
 			{
@@ -1345,7 +1345,7 @@ void BeebWin::LoadTeletextAdapterPreferences(int Version)
 		}
 		else
 		{
-			sprintf(key, CFG_TELETEXT_IP_OLD, ch);
+			snprintf(key, sizeof(key), CFG_TELETEXT_IP_OLD, ch);
 
 			if (m_Preferences.GetStringValue(key, TeletextIPAddress))
 			{
@@ -1361,7 +1361,7 @@ void BeebWin::LoadTeletextAdapterPreferences(int Version)
 		{
 			int Value;
 
-			sprintf(key, CFG_TELETEXT_PORT, ch);
+			snprintf(key, sizeof(key), CFG_TELETEXT_PORT, ch);
 
 			// From BeebEm 4.20, port numbers are stored in decimal.
 			m_Preferences.GetDecimalValue(key, Value, TELETEXT_BASE_PORT + ch);
@@ -1379,7 +1379,7 @@ void BeebWin::LoadTeletextAdapterPreferences(int Version)
 		{
 			DWORD Value;
 
-			sprintf(key, CFG_TELETEXT_PORT_OLD, ch);
+			snprintf(key, sizeof(key), CFG_TELETEXT_PORT_OLD, ch);
 
 			m_Preferences.GetDWORDValue(key, Value, TELETEXT_BASE_PORT + ch);
 
@@ -1667,7 +1667,7 @@ void BeebWin::LoadFilePathPreferences()
 	for (int machine = 0; machine < static_cast<int>(Model::Master128); ++machine)
 	{
 		char CfgName[256];
-		sprintf(CfgName, CFG_FDC_DLL, machine);
+		snprintf(CfgName, sizeof(CfgName), CFG_FDC_DLL, machine);
 
 		if (!m_Preferences.HasValue(CfgName))
 		{
@@ -1846,15 +1846,15 @@ void BeebWin::SavePreferences(bool saveAll)
 
 		for (int ch = 0; ch < TELETEXT_CHANNEL_COUNT; ch++)
 		{
-			sprintf(key, CFG_TELETEXT_FILE, ch);
+			snprintf(key, sizeof(key), CFG_TELETEXT_FILE, ch);
 			m_Preferences.SetStringValue(key, TeletextFileName[ch]);
-			sprintf(key, CFG_TELETEXT_PORT, ch);
+			snprintf(key, sizeof(key), CFG_TELETEXT_PORT, ch);
 			m_Preferences.SetDecimalValue(key, TeletextPort[ch]);
-			sprintf(key, CFG_TELETEXT_PORT_OLD, ch);
+			snprintf(key, sizeof(key), CFG_TELETEXT_PORT_OLD, ch);
 			m_Preferences.EraseValue(key);
-			sprintf(key, CFG_TELETEXT_IP, ch);
+			snprintf(key, sizeof(key), CFG_TELETEXT_IP, ch);
 			m_Preferences.SetStringValue(key, TeletextIP[ch]);
-			sprintf(key, CFG_TELETEXT_IP_OLD, ch);
+			snprintf(key, sizeof(key), CFG_TELETEXT_IP_OLD, ch);
 			m_Preferences.EraseValue(key);
 		}
 

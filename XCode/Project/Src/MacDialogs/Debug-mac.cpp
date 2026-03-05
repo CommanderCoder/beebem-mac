@@ -18,6 +18,7 @@
 #include <windows.h>
 
 #include <ctype.h>
+#include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
 
@@ -66,6 +67,36 @@ constexpr int ILL = 0x80000;
 constexpr int ADRMASK = IMM | ABS | ACC | IMP | INX | INY | ZPX | ABX | ABY | REL | IND | ZPY | ZPG | ZPR | ILL;
 
 constexpr int MAX_BUFFER = 65536;
+
+static char* AppendToBuffer(char* buffer, size_t bufferSize, char* cursor, const char* format, ...)
+{
+    if (bufferSize == 0 || cursor < buffer || cursor >= buffer + bufferSize)
+    {
+        return cursor;
+    }
+
+    const size_t offset = static_cast<size_t>(cursor - buffer);
+    const size_t remaining = bufferSize - offset;
+
+    va_list args;
+    va_start(args, format);
+    const int written = vsnprintf(cursor, remaining, format, args);
+    va_end(args);
+
+    if (written <= 0)
+    {
+        return cursor;
+    }
+
+    const size_t advance = static_cast<size_t>(written);
+
+    if (advance >= remaining)
+    {
+        return buffer + bufferSize - 1;
+    }
+
+    return cursor + advance;
+}
 
 bool DebugEnabled = false; // Debug dialog visible
 static DebugType DebugSource = DebugType::None; // Debugging active?
@@ -1571,22 +1602,22 @@ static void DebugUpdateWatches(bool all)
 
 			if (WatchDecimal)
 			{
-				sprintf(str, "%s%04X %s=%d (%c)", (Watches[i].host ? "" : "p"), Watches[i].start, Watches[i].name.c_str(), Watches[i].value, Watches[i].type);
+				snprintf(str, sizeof(str), "%s%04X %s=%d (%c)", (Watches[i].host ? "" : "p"), Watches[i].start, Watches[i].name.c_str(), Watches[i].value, Watches[i].type);
 			}
 			else
 			{
 				switch (Watches[i].type)
 				{
 					case 'b':
-						sprintf(str, "%s%04X %s=$%02X", Watches[i].host ? "" : "p", Watches[i].start, Watches[i].name.c_str(), Watches[i].value);
+						snprintf(str, sizeof(str), "%s%04X %s=$%02X", Watches[i].host ? "" : "p", Watches[i].start, Watches[i].name.c_str(), Watches[i].value);
 						break;
 
 					case 'w':
-						sprintf(str, "%s%04X %s=$%04X", Watches[i].host ? "" : "p", Watches[i].start, Watches[i].name.c_str(), Watches[i].value);
+						snprintf(str, sizeof(str), "%s%04X %s=$%04X", Watches[i].host ? "" : "p", Watches[i].start, Watches[i].name.c_str(), Watches[i].value);
 						break;
 
 					case 'd':
-						sprintf(str, "%s%04X %s=$%08X", Watches[i].host ? "" : "p", Watches[i].start, Watches[i].name.c_str(), Watches[i].value);
+						snprintf(str, sizeof(str), "%s%04X %s=$%08X", Watches[i].host ? "" : "p", Watches[i].start, Watches[i].name.c_str(), Watches[i].value);
 						break;
 				}
 			}
@@ -1763,7 +1794,7 @@ bool DebugDisassembler(int addr,
 		Z80_Disassemble(addr, buff);
 
 		Disp_RegSet1(str);
-		sprintf(str + strlen(str), " %s", buff);
+		AppendToBuffer(str, sizeof(str), str + strlen(str), " %s", buff);
 
 		DebugDisplayInfo(str);
 		Disp_RegSet2(str);
@@ -1808,11 +1839,11 @@ static void DebugLookupSWRAddress(AddrInfo* addrInfo)
 	// Try ROM info:
 	if (ReadRomInfo(ROMSEL, &rom))
 	{
-		sprintf(desc, "%s bank %d: %.80s", ROMType, ROMSEL, rom.Title);
+		snprintf(desc, sizeof(desc), "%s bank %d: %.80s", ROMType, ROMSEL, rom.Title);
 	}
 	else
 	{
-		sprintf(desc, "%s bank %d", ROMType, ROMSEL);
+		snprintf(desc, sizeof(desc), "%s bank %d", ROMType, ROMSEL);
 	}
 
 	addrInfo->desc = desc;
@@ -1833,7 +1864,7 @@ static bool DebugLookupAddress(int addr, AddrInfo* addrInfo)
 				addrInfo->end   = MemoryMaps[ROMSEL][i].end;
 
 				char desc[100];
-				sprintf(desc, "%.99s", ReadRomInfo(ROMSEL, &rom) ? rom.Title : "ROM");
+				snprintf(desc, sizeof(desc), "%.99s", ReadRomInfo(ROMSEL, &rom) ? rom.Title : "ROM");
 				addrInfo->desc = desc;
 
 				return true;
@@ -2354,7 +2385,7 @@ static void DebugParseCommand(char *command)
 						DebugDisplayInfoF("Error: Label %s not found", label);
 						return;
 					}
-					sprintf(addrStr, " %04X", addr);
+					snprintf(addrStr, sizeof(addrStr), " %04X", addr);
 					strncat(info, addrStr, _countof(addrStr));
 					args += strnlen(label,_countof(label)) + 1;
 				}
@@ -3110,7 +3141,7 @@ static bool DebugCmdWatch(const char* args)
 
 			w.name = name;
 
-			sprintf(info, "%s%04X", (w.host ? "" : "p"), w.start);
+			snprintf(info, sizeof(info), "%s%04X", (w.host ? "" : "p"), w.start);
 
 			// Check if watch in list
 			i = (int)SendMessage(hwndW, LB_FINDSTRING, 0, (LPARAM)info);
@@ -3165,7 +3196,7 @@ static bool DebugCmdToggleBreak(const char* args)
 			// Check if BP in list
 
 			char info[64];
-			sprintf(info, "%04X", bp.start);
+			snprintf(info, sizeof(info), "%04X", bp.start);
 
 			int i = (int)SendMessage(hwndBP, LB_FINDSTRING, 0, (LPARAM)info);
 
@@ -3193,11 +3224,11 @@ static bool DebugCmdToggleBreak(const char* args)
 
 				if (bp.end >= 0)
 				{
-					sprintf(info, "%04X-%04X %s", bp.start, bp.end, bp.name.c_str());
+					snprintf(info, sizeof(info), "%04X-%04X %s", bp.start, bp.end, bp.name.c_str());
 				}
 				else
 				{
-					sprintf(info, "%04X %s", bp.start, bp.name.c_str());
+					snprintf(info, sizeof(info), "%04X %s", bp.start, bp.name.c_str());
 				}
 
 				SendMessage(hwndBP, LB_ADDSTRING, 0, (LPARAM)info);
@@ -3252,7 +3283,7 @@ int DebugDisassembleInstruction(int addr, bool host, char *opstr)
 
 	char *s = opstr;
 
-	s += sprintf(s, "%04X ", addr);
+	s = AppendToBuffer(opstr, MAX_BUFFER, s, "%04X ", addr);
 
 	int opcode = DebugReadMem(addr, host);
 
@@ -3262,16 +3293,16 @@ int DebugDisassembleInstruction(int addr, bool host, char *opstr)
 
 	switch (ip->bytes) {
 		case 1:
-			s += sprintf(s, "%02X        ",
+			s = AppendToBuffer(opstr, MAX_BUFFER, s, "%02X        ",
 						 DebugReadMem(addr, host));
 			break;
 		case 2:
-			s += sprintf(s, "%02X %02X     ",
+			s = AppendToBuffer(opstr, MAX_BUFFER, s, "%02X %02X     ",
 						 DebugReadMem(addr, host),
 						 DebugReadMem(addr + 1, host));
 			break;
 		case 3:
-			s += sprintf(s, "%02X %02X %02X  ",
+			s = AppendToBuffer(opstr, MAX_BUFFER, s, "%02X %02X %02X  ",
 						 DebugReadMem(addr, host),
 						 DebugReadMem(addr + 1, host),
 						 DebugReadMem(addr + 2, host));
@@ -3279,10 +3310,10 @@ int DebugDisassembleInstruction(int addr, bool host, char *opstr)
 	}
 
 	if (!host) {
-		s += sprintf(s, "            ");
+		s = AppendToBuffer(opstr, MAX_BUFFER, s, "            ");
 	}
 
-	s += sprintf(s, "%s ", ip->opcode);
+	s = AppendToBuffer(opstr, MAX_BUFFER, s, "%s ", ip->opcode);
 	addr++;
 
 	switch (ip->bytes)
@@ -3326,48 +3357,48 @@ int DebugDisassembleInstruction(int addr, bool host, char *opstr)
 	switch (ip->flag & ADRMASK)
 	{
 	case IMM:
-		s += sprintf(s, "#%0*X    ", l, operand);
+		s = AppendToBuffer(opstr, MAX_BUFFER, s, "#%0*X    ", l, operand);
 		break;
 	case REL:
 	case ABS:
 	case ZPG:
-		s += sprintf(s, "%0*X     ", l, operand);
+		s = AppendToBuffer(opstr, MAX_BUFFER, s, "%0*X     ", l, operand);
 		break;
 	case IND:
-		s += sprintf(s, "(%0*X)   ", l, operand);
+		s = AppendToBuffer(opstr, MAX_BUFFER, s, "(%0*X)   ", l, operand);
 		break;
 	case ABX:
 	case ZPX:
-		s += sprintf(s, "%0*X,X   ", l, operand);
+		s = AppendToBuffer(opstr, MAX_BUFFER, s, "%0*X,X   ", l, operand);
 		break;
 	case ABY:
 	case ZPY:
-		s += sprintf(s, "%0*X,Y   ", l, operand);
+		s = AppendToBuffer(opstr, MAX_BUFFER, s, "%0*X,Y   ", l, operand);
 		break;
 	case INX:
-		s += sprintf(s, "(%0*X,X) ", l, operand);
+		s = AppendToBuffer(opstr, MAX_BUFFER, s, "(%0*X,X) ", l, operand);
 		break;
 	case INY:
-		s += sprintf(s, "(%0*X),Y ", l, operand);
+		s = AppendToBuffer(opstr, MAX_BUFFER, s, "(%0*X),Y ", l, operand);
 		break;
 	case ACC:
-		s += sprintf(s, "A        ");
+		s = AppendToBuffer(opstr, MAX_BUFFER, s, "A        ");
 		break;
 	case ZPR:
-		s += sprintf(s, "%02X,%04X ", zpaddr, operand);
+		s = AppendToBuffer(opstr, MAX_BUFFER, s, "%02X,%04X ", zpaddr, operand);
 		break;
 	case IMP:
 	default:
-		s += sprintf(s, "         ");
+		s = AppendToBuffer(opstr, MAX_BUFFER, s, "         ");
 		break;
 	}
 
 	if (l == 2) {
-		s += sprintf(s, "  ");
+		s = AppendToBuffer(opstr, MAX_BUFFER, s, "  ");
 	}
 
 	if (host) {
-		s += sprintf(s, "            ");
+		s = AppendToBuffer(opstr, MAX_BUFFER, s, "            ");
 	}
 
 	return ip->bytes;
@@ -3386,7 +3417,7 @@ int DebugDisassembleInstructionWithCPUStatus(int addr,
 
 	char* p = opstr + strlen(opstr);
 
-	p += sprintf(p, "A=%02X X=%02X Y=%02X S=%02X ", Accumulator, XReg, YReg, StackReg);
+	p = AppendToBuffer(opstr, MAX_BUFFER, p, "A=%02X X=%02X Y=%02X S=%02X ", Accumulator, XReg, YReg, StackReg);
 
 	*p++ = (PSR & FlagC) ? 'C' : '.';
 	*p++ = (PSR & FlagZ) ? 'Z' : '.';
@@ -3423,21 +3454,21 @@ static int DebugDisassembleCommand(int addr, int count, bool host)
 			char buff[64];
 			int Len = Z80_Disassemble(addr, buff);
 
-			s += sprintf(s, "%04X ", addr);
+			s = AppendToBuffer(opstr, MAX_BUFFER, s, "%04X ", addr);
 
 			switch (Len)
 			{
 				case 1:
-					s += sprintf(s, "%02X           ", DebugReadMem(addr, host));
+					s = AppendToBuffer(opstr, sizeof(opstr), s, "%02X           ", DebugReadMem(addr, host));
 					break;
 				case 2:
-					s += sprintf(s, "%02X %02X        ", DebugReadMem(addr, host), DebugReadMem(addr+1, host));
+					s = AppendToBuffer(opstr, sizeof(opstr), s, "%02X %02X        ", DebugReadMem(addr, host), DebugReadMem(addr+1, host));
 					break;
 				case 3:
-					s += sprintf(s, "%02X %02X %02X     ", DebugReadMem(addr, host), DebugReadMem(addr+1, host), DebugReadMem(addr+2, host));
+					s = AppendToBuffer(opstr, sizeof(opstr), s, "%02X %02X %02X     ", DebugReadMem(addr, host), DebugReadMem(addr+1, host), DebugReadMem(addr+2, host));
 					break;
 				case 4:
-					s += sprintf(s, "%02X %02X %02X %02X  ", DebugReadMem(addr, host), DebugReadMem(addr+1, host), DebugReadMem(addr+2, host), DebugReadMem(addr+3, host));
+					s = AppendToBuffer(opstr, sizeof(opstr), s, "%02X %02X %02X %02X  ", DebugReadMem(addr, host), DebugReadMem(addr+1, host), DebugReadMem(addr+2, host), DebugReadMem(addr+3, host));
 					break;
 			}
 
@@ -3474,20 +3505,20 @@ static void DebugMemoryDump(int addr, int count, bool host)
 	{
 		char info[80];
 		char* p = info;
-		p += sprintf(p, "%04X  ", a);
+		p = AppendToBuffer(info, sizeof(info), p, "%04X  ", a);
 
 		if (host && a >= 0xfc00 && a < 0xff00)
 		{
-			p += sprintf(p, "IO space");
+			p = AppendToBuffer(info, sizeof(info), p, "IO space");
 		}
 		else
 		{
 			for (int b = 0; b < 16; ++b)
 			{
 				if (!host && (a+b) >= 0xfef8 && (a+b) < 0xff00 && !(TubeType == TubeDevice::AcornZ80 || TubeType == TubeDevice::TorchZ80))
-					p += sprintf(p, "IO ");
+					p = AppendToBuffer(info, sizeof(info), p, "IO ");
 				else
-					p += sprintf(p, "%02X ", DebugReadMem(a+b, host));
+					p = AppendToBuffer(info, sizeof(info), p, "%02X ", DebugReadMem(a+b, host));
 			}
 
 			for (int b = 0; b < 16; ++b)

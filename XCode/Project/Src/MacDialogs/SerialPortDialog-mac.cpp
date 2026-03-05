@@ -90,7 +90,7 @@ bool SerialPortDialog::WM_INITDIALOG()
 		SetDlgItemText(IDC_IP_ADDRESS, m_IPAddress);
 
 		char sz[20];
-		sprintf(sz, "%d", m_IPPort);
+		snprintf(sz, sizeof(sz), "%d", m_IPPort);
 //		SetWindowText(GetDlgItem(m_hwnd, IDC_IP_PORT), sz);
 		::SetDlgItemText(m_hwnd, IDC_IP_PORT, sz);
 

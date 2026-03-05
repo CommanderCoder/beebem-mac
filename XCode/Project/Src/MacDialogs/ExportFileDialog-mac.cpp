@@ -104,14 +104,14 @@ int LVInsertItemEF(HWND hWnd, UINT uRow, UINT uCol, const char* pszText, LPARAM 
 {
 	for (int c=0;c<6;c++)
 		dfsNames[uRow][c] = (char*)malloc(100);
-	sprintf(dfsNames[uRow][uCol], "%-7s", pszText);
+	snprintf(dfsNames[uRow][uCol], 100, "%-7s", pszText);
 	return 0;
 }
 
 
 void LVSetItemTextEF(HWND hWnd, UINT uRow, UINT uCol, const LPTSTR pszText)
 {
-	sprintf(dfsNames[uRow][uCol], "%-7s", pszText);
+	snprintf(dfsNames[uRow][uCol], 100, "%-7s", pszText);
 }
 
 bool ExportFileDialog::DoModal()
@@ -141,13 +141,13 @@ bool ExportFileDialog::WM_INITDIALOG()
 					 reinterpret_cast<LPARAM>(&Entry));
 
 		char str[100];
-		sprintf(str, "%06X", Entry.DfsAttrs.loadAddr & 0xffffff);
+		snprintf(str, sizeof(str), "%06X", Entry.DfsAttrs.loadAddr & 0xffffff);
 		LVSetItemTextEF(m_hwndListView, Row, 1, str);
 
-		sprintf(str, "%06X", Entry.DfsAttrs.execAddr & 0xffffff);
+		snprintf(str, sizeof(str), "%06X", Entry.DfsAttrs.execAddr & 0xffffff);
 		LVSetItemTextEF(m_hwndListView, Row, 2, str);
 
-		sprintf(str, "%06X", Entry.DfsAttrs.length);
+		snprintf(str, sizeof(str), "%06X", Entry.DfsAttrs.length);
 		LVSetItemTextEF(m_hwndListView, Row, 3, str);
 
 		LVSetItemTextEF(m_hwndListView, Row, 4, const_cast<LPTSTR>(Entry.HostFileName.c_str()));

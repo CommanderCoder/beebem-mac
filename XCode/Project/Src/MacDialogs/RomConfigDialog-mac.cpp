@@ -220,7 +220,7 @@ void RomConfigDialog::FillROMList()
 		int Bank = 16 - Row;
 
 		char str[20];
-		sprintf(str, "%02d (%X)", Bank, Bank);
+		snprintf(str, sizeof(str), "%02d (%X)", Bank, Bank);
 
 		LVInsertItem(m_hWndROMList, Row, 0, str, Bank);
 		UpdateROMField(Row);

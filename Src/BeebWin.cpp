@@ -3194,7 +3194,7 @@ void BeebWin::ToggleFullScreen()
 
 			char* Buffer = (char*)malloc(length);
 
-			sprintf(Buffer, Format, static_cast<unsigned int>(hResult));
+			snprintf(Buffer, length, Format, static_cast<unsigned int>(hResult));
 
 			PostMessage(m_hWnd, WM_REPORT_ERROR, 0, reinterpret_cast<LPARAM>(Buffer));
 		}
@@ -4753,7 +4753,7 @@ void BeebWin::HandleCommand(UINT MenuID)
 		if (MachineType != Model::Master128 && MachineType != Model::MasterET)
 		{
 			char CfgName[20];
-			sprintf(CfgName, "FDCDLL%d", static_cast<int>(MachineType));
+			snprintf(CfgName, sizeof(CfgName), "FDCDLL%d", static_cast<int>(MachineType));
 			m_Preferences.SetStringValue(CfgName, "None");
 		}
 		break;
@@ -5188,7 +5188,7 @@ void BeebWin::TogglePause()
 
 	if (m_ShowSpeedAndFPS && m_Paused)
 	{
-		sprintf(m_szTitle, "%s  Paused", WindowTitle);
+		snprintf(m_szTitle, sizeof(m_szTitle), "%s  Paused", WindowTitle);
 		SetWindowText(m_hWnd, m_szTitle);
 	}
 
@@ -6347,7 +6347,7 @@ MessageResult BeebWin::ReportV(MessageType type, const char *format, va_list arg
 
 	if (buffer != nullptr)
 	{
-		vsprintf(buffer, format, args);
+		vsnprintf(buffer, length, format, args);
 
 		UINT Type = 0;
 
