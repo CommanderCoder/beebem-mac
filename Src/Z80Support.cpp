@@ -77,9 +77,8 @@ AF=0000 MZ5H3VNC BC=0000 DE=0000 HL=0000 IX=0000 I=00 PC=0000:00,00,00,00
 AF'0000 MZ5H3VNC BC'0000 DE'0000 HL'0000 IY=0000 R=00 SP=0000:00,00,00,00
 */
 
-constexpr size_t kRegDumpBufferSize = 150;
 
-void Disp_RegSet1(char *str)
+void Disp_RegSet1(char *str, size_t kRegDumpBufferSize)
 {
 	snprintf(str, kRegDumpBufferSize, "AF=%04X ", af[0]);
 	snprintf(str + strlen(str), kRegDumpBufferSize - strlen(str), (af[0] & 128) ? "M" : "P");
@@ -95,7 +94,7 @@ void Disp_RegSet1(char *str)
 	snprintf(str + strlen(str), kRegDumpBufferSize - strlen(str), ":%02X,%02X,%02X,%02X", ReadZ80Mem(pc), ReadZ80Mem(pc + 1), ReadZ80Mem(pc + 2), ReadZ80Mem(pc + 3));
 }
 
-void Disp_RegSet2(char *str)
+void Disp_RegSet2(char *str, size_t kRegDumpBufferSize)
 {
 	snprintf(str, kRegDumpBufferSize, "AF'%04X ", af[1]);
 	snprintf(str + strlen(str), kRegDumpBufferSize - strlen(str), (af[1] & 128) ? "M" : "P");

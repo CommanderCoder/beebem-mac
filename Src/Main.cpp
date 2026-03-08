@@ -79,8 +79,6 @@ int mainInit()
 		return 1;
 	}
 
-	OpenLog();
-
 #ifdef __APPLE__
 	return 0;
 }
@@ -153,7 +151,6 @@ int mainStep()
 int mainEnd()
 {
 #endif
-	CloseLog();
 
 	delete mainWin;
 

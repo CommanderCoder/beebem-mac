@@ -68,6 +68,8 @@ constexpr int ADRMASK = IMM | ABS | ACC | IMP | INX | INY | ZPX | ABX | ABY | RE
 
 constexpr int MAX_BUFFER = 65536;
 
+// replaced     s += sprintf(s, "%04X ", addr); with
+//              s = AppendToBuffer(opstr, MAX_BUFFER, s, "%04X ", addr);
 static char* AppendToBuffer(char* buffer, size_t bufferSize, char* cursor, const char* format, ...)
 {
     if (bufferSize == 0 || cursor < buffer || cursor >= buffer + bufferSize)
@@ -1793,11 +1795,11 @@ bool DebugDisassembler(int addr,
 		char buff[128];
 		Z80_Disassemble(addr, buff);
 
-		Disp_RegSet1(str);
+		Disp_RegSet1(str,150);
 		AppendToBuffer(str, sizeof(str), str + strlen(str), " %s", buff);
 
 		DebugDisplayInfo(str);
-		Disp_RegSet2(str);
+		Disp_RegSet2(str,150);
 	}
 	else
 	{

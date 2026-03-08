@@ -1741,11 +1741,11 @@ bool DebugDisassembler(int addr,
 		char buff[128];
 		Z80_Disassemble(addr, buff);
 
-		Disp_RegSet1(str);
+		Disp_RegSet1(str,150);
 		sprintf(str + strlen(str), " %s", buff);
 
 		DebugDisplayInfo(str);
-		Disp_RegSet2(str);
+		Disp_RegSet2(str,150);
 	}
 	else
 	{
