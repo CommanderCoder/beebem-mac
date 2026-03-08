@@ -124,3 +124,68 @@ void DisableRoundedCorners(HWND hWnd)
 }
 
 /****************************************************************************/
+
+// Resizes a window to a given client area width and height, and optionally
+// sets the window position.
+//
+// Returns true if the window was resized to the given client area width and
+// height, or false otherwise. The return value may be false if the menu now
+// has a different number of rows, the client area size may not be right,
+// so call SetWindowClientSize() again.
+
+bool SetWindowClientSize(HWND hWnd, const WindowPos* pWindowPos)
+{
+	// Get current client area size.
+	RECT ClientRect;
+	GetClientRect(hWnd, &ClientRect);
+
+	int ClientWidth = ClientRect.right - ClientRect.left;
+	int ClientHeight = ClientRect.bottom - ClientRect.top;
+
+	if (pWindowPos->UseCurrentWindowPos)
+	{
+		if (ClientWidth == pWindowPos->ClientWidth &&
+		    ClientHeight == pWindowPos->ClientHeight)
+		{
+			return true; // Nothing to do.
+		}
+	}
+
+	// Get window size.
+	RECT WindowRect;
+	GetWindowRect(hWnd, &WindowRect);
+
+	int WindowWidth = WindowRect.right - WindowRect.left;
+	int WindowHeight = WindowRect.bottom - WindowRect.top;
+
+	// Compute the difference (non-client area)
+	int ExtraWidth = WindowWidth - ClientWidth;
+	int ExtraHeight = WindowHeight - ClientHeight;
+
+	// Compute new window size to match desired client area
+	int NewWindowWidth = pWindowPos->ClientWidth + ExtraWidth;
+	int NewWindowHeight = pWindowPos->ClientHeight + ExtraHeight;
+
+	int WindowX = pWindowPos->UseCurrentWindowPos ? WindowRect.left : pWindowPos->WindowX;
+	int WindowY = pWindowPos->UseCurrentWindowPos ? WindowRect.top : pWindowPos->WindowY;
+
+	// Resize the window
+	SetWindowPos(hWnd,
+	             HWND_NOTOPMOST,
+	             WindowX,
+	             WindowY,
+	             NewWindowWidth,
+	             NewWindowHeight,
+	             SWP_FRAMECHANGED | SWP_SHOWWINDOW);
+
+	// Now check to see if the target client area size was achieved.
+	GetClientRect(hWnd, &ClientRect);
+
+	ClientWidth = ClientRect.right - ClientRect.left;
+	ClientHeight = ClientRect.bottom - ClientRect.top;
+
+	return ClientWidth == pWindowPos->ClientWidth &&
+	       ClientHeight == pWindowPos->ClientHeight;
+}
+
+/****************************************************************************/

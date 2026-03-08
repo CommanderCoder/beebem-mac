@@ -36,20 +36,11 @@ Boston, MA  02110-1301, USA.
 #include "BeebWin.h"
 #include "Debug.h"
 #include "DebugTrace.h"
+#include "Log.h"
 #include "Main.h"
 #include "Sound.h"
 #include "SysVia.h"
 #include "UefState.h"
-
-#ifdef BEEB_DOTIME
-#include <sys/times.h>
-#ifdef SUNOS
-#include <sys/param.h>
-#endif
-#ifdef HPUX
-#include <unistd.h>
-#endif
-#endif
 
 /* Bit assignments in control reg:
    0 - Flash colour (0=first colour, 1=second)
@@ -102,7 +93,6 @@ bool TeletextEnabled = false;
 char TeletextStyle = 1; // Defines whether teletext will skip intermediate lines in order to speed up
 bool TeletextHalfMode = false; // set true to use half-mode (TeletextStyle=1 all the time)
 int CurY=-1;
-FILE *crtclog;
 
 int ova,ovn; // mem ptr buffers
 
@@ -167,6 +157,8 @@ static void LowLevelDoScanLineWideNot4Bytes();
 static void VideoAddCursor(void);
 void AdjustVideo();
 void VideoAddLEDs(void);
+
+#define ENABLE_LOG 0
 
 /*-------------------------------------------------------------------------------------------------------------*/
 
@@ -711,12 +703,18 @@ static void VideoStartOfFrame()
     }
   }
 
-  const int IL_Multiplier = (CRTC_InterlaceAndDelay & 1) ? 2 : 1;
+  // Increment VideoTriggerCount by the number of 2MHz cycles until another
+  // scanline needs doing.
 
-  if (VideoState.InterlaceFrame) {
-    IncTrigger((IL_Multiplier*(CRTC_HorizontalTotal+1)*((VideoULA_ControlReg & 16)?1:2)),VideoTriggerCount); /* Number of 2MHz cycles until another scanline needs doing */
-  } else {
-    IncTrigger(((CRTC_HorizontalTotal+1)*((VideoULA_ControlReg & 16)?1:2)),VideoTriggerCount); /* Number of 2MHz cycles until another scanline needs doing */
+  if (VideoState.InterlaceFrame)
+  {
+    const int InterlaceMultiplier = (CRTC_InterlaceAndDelay & 1) ? 2 : 1;
+
+    IncTrigger((InterlaceMultiplier * (CRTC_HorizontalTotal + 1) * ((VideoULA_ControlReg & 16) ? 1 : 2)), VideoTriggerCount);
+  }
+  else
+  {
+    IncTrigger(((CRTC_HorizontalTotal + 1) * ((VideoULA_ControlReg & 16) ? 1 : 2)), VideoTriggerCount);
   }
 }
 
@@ -803,7 +801,8 @@ static void DoMode7Row(void) {
   unsigned int ForegroundPending=Foreground;
   unsigned int ActualForeground;
   unsigned int Background = 0;
-  bool Flash = false; // i.e. steady
+  bool Flash;
+  bool NextFlash = false; // i.e. steady
   bool DoubleHeight = false; // Normal
   bool Graphics;
   bool NextGraphics = false; // i.e. alpha
@@ -837,6 +836,7 @@ static void DoMode7Row(void) {
     HoldGraphChar=NextHoldGraphChar;
     HoldSeparated=NextHoldSeparated;
     Graphics=NextGraphics;
+    Flash=NextFlash;
     byte=CurrentPtr[CurrentChar];
     if (byte<32) byte+=128; // fix for naughty programs that use 7-bit control codes - Richard Gellman
     if ((byte & 32) && Graphics) {
@@ -859,19 +859,33 @@ static void DoMode7Row(void) {
           break;
 
         case 136: // Flash
-          Flash = true;
+          NextFlash = true;
           break;
 
         case 137: // Steady
+          NextFlash = false;
           Flash = false;
           break;
 
         case 140: // Normal height
+          if (DoubleHeight)
+          {
+              NextHoldGraphChar=32;
+              HoldGraphChar=NextHoldGraphChar;
+          }
           DoubleHeight = false;
           break;
 
         case 141: // Double height
           if (!CurrentLineBottom) NextLineBottom = true;
+
+          // This is supposed to be set-after, but the SAA5050 seems to do
+          // set-at, at least in terms of how it clears the HoldGraphChar.
+          if (!DoubleHeight)
+          {
+              NextHoldGraphChar=32;
+              HoldGraphChar=NextHoldGraphChar;
+          }
           DoubleHeight = true;
           break;
 
@@ -1143,7 +1157,8 @@ void VideoDoScanLine(void) {
         // Clear rest of screen below virtical total
         for (l=VideoState.PixmapLine; l<500/TeletextStyle; ++l)
           mainWin->doHorizLine(0, l, -36, 800);
-        mainWin->updateLines(0,(500/TeletextStyle));
+
+        mainWin->UpdateLines(0, 500 / TeletextStyle);
       }
       VideoState.IsNewTVFrame = true;
       VideoStartOfFrame();
@@ -1161,8 +1176,10 @@ void VideoDoScanLine(void) {
     // Handle VSync
     // RTW - this was moved to the top so that we can correctly set R7=0,
     // i.e. we can catch it before the line counters are incremented
-    if (VideoState.VSyncState) {
-      if (!(--VideoState.VSyncState)) {
+    if (VideoState.VSyncState > 0)
+    {
+      if (--VideoState.VSyncState == 0)
+      {
         SysVIATriggerCA1Int(0);
       }
     }
@@ -1248,12 +1265,16 @@ void VideoDoScanLine(void) {
           startLine = 40;
         }
 
-        mainWin->updateLines(startLine, 256);
+        mainWin->UpdateLines(startLine, 256);
       }
       VideoStartOfFrame();
       AdjustVideo();
-    } else {
-      IncTrigger((CRTC_HorizontalTotal+1)*((VideoULA_ControlReg & 16)?1:2),VideoTriggerCount);
+    }
+	else
+	{
+      // Increment VideoTriggerCount by the number of 2MHz cycles until another
+      // scanline needs doing.
+      IncTrigger((CRTC_HorizontalTotal + 1) * ((VideoULA_ControlReg & 16) ? 1 : 2), VideoTriggerCount);
     }
   } /* Teletext if */
 }
@@ -1295,16 +1316,20 @@ void VideoInit(void) {
   VideoState.IsNewTVFrame = false;
   CurY=-1;
   //AdjustVideo();
-//  crtclog=fopen("/crtc.log","wb");
 }
 
 /*-------------------------------------------------------------------------------------------------------------*/
-void CRTCWrite(int Address, unsigned char Value) {
-  if (Address & 1) {
-    // if (CRTCControlReg<14) { fputc(CRTCControlReg,crtclog); fputc(Value,crtclog); }
-    // if (CRTCControlReg<14) {
-    //     fprintf(crtclog,"%d (%02X) Written to register %d from %04X\n",Value,Value,CRTCControlReg,ProgramCounter);
-    // }
+
+void CRTCWrite(int Address, unsigned char Value)
+{
+  if (Address & 1)
+  {
+    #if ENABLE_LOG
+    if (CRTCControlReg < 14)
+    {
+      WriteLog("CRTC: Write register 0x%X value 0x%02X (%d) from PC=%04X\n", CRTCControlReg, Value, Value, PrePC);
+    }
+    #endif
 
     if (DebugEnabled && CRTCControlReg < 14)
     {
@@ -1313,7 +1338,8 @@ void CRTCWrite(int Address, unsigned char Value) {
                            (int)CRTCControlReg, Value);
     }
 
-    switch (CRTCControlReg) {
+    switch (CRTCControlReg)
+    {
       case 0:
         CRTC_HorizontalTotal = Value;
         AdjustVideo();
@@ -1335,7 +1361,10 @@ void CRTCWrite(int Address, unsigned char Value) {
       case 3:
         CRTC_SyncWidth = Value;
         AdjustVideo();
-        // fprintf(crtclog,"V Sync width: %d\n",(Value>>4)&15);
+
+        #if ENABLE_LOG
+        WriteLog("CRTC: V Sync width: %d\n", (Value >> 4) & 15);
+        #endif
         break;
 
       case 4:
@@ -1345,7 +1374,11 @@ void CRTCWrite(int Address, unsigned char Value) {
 
       case 5:
         CRTC_VerticalTotalAdjust = Value & 0x1f;  // 5 bit register
-        // fprintf(crtclog,"Vertical Total Adjust: %d\n",Value);
+
+        #if ENABLE_LOG
+        WriteLog("CRTC: Vertical Total Adjust: %d\n", Value);
+        #endif
+
         AdjustVideo();
         break;
 
@@ -1377,12 +1410,18 @@ void CRTCWrite(int Address, unsigned char Value) {
 
       case 12:
         CRTC_ScreenStartHigh = Value;
-        // fprintf(crtclog,"Screen now at &%02x%02x\n",Value,CRTC_ScreenStartLow);
+
+        #if ENABLE_LOG
+        WriteLog("CRTC: Screen now at &%02x%02x\n", Value, CRTC_ScreenStartLow);
+        #endif
         break;
 
       case 13:
         CRTC_ScreenStartLow = Value;
-        // fprintf(crtclog,"Screen now at &%02x%02x\n",CRTC_ScreenStartHigh,Value);
+
+        #if ENABLE_LOG
+        WriteLog("CRTC: Screen now at &%02x%02x\n", CRTC_ScreenStartHigh, Value);
+        #endif
         break;
 
       case 14:
@@ -1396,8 +1435,11 @@ void CRTCWrite(int Address, unsigned char Value) {
       default: /* In case the user wrote a duff control register value */
         break;
     }
+
     // DebugTrace("CRTCWrite RegNum=%d Value=%02X\n", CRTCControlReg, Value);
-  } else {
+  }
+  else
+  {
     CRTCControlReg = Value & 0x1f;
   }
 }
@@ -1429,7 +1471,7 @@ unsigned char CRTCRead(int Address)
     return 0;
   }
 
-  return 0; // Keeep MSVC happy $NRM
+  return 0; // Keep MSVC happy $NRM
 }
 
 /*-------------------------------------------------------------------------------------------------------------*/

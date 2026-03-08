@@ -82,8 +82,8 @@ int Z80_Disassemble(int adr, char *s);
 void PrintHex(int PC);
 unsigned char ReadZ80Mem(int pc);
 void WriteZ80Mem(int pc, unsigned char data);
-void Disp_RegSet1(char *str);
-void Disp_RegSet2(char *str);
+void Disp_RegSet1(char *str, size_t Size);
+void Disp_RegSet2(char *str, size_t Size);
 
 void z80_NMI_Interrupt(void);
 void z80_IRQ_Interrupt(void);

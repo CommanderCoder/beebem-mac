@@ -37,12 +37,12 @@
  */
 
 void BeebWin::InitDX(){}
-void BeebWin::ResetDX(){}
-void BeebWin::ReinitDX(){}
+HRESULT BeebWin::ResetDX(){return 0;}
+HRESULT BeebWin::ReinitDX(){return 0;}
 void BeebWin::ExitDX(){}
 void BeebWin::UpdateSmoothing(){}
-void BeebWin::CloseDX9(){}
-
+void BeebWin::ExitDX9(){}
+void BeebWin::OnDeviceLost(){}
 
 void VideoAddLeds_Mac()
 {
@@ -85,7 +85,7 @@ int_fast16_t m_RGB16[256];
 
 
 /****************************************************************************/
-void BeebWin::updateLines(HDC hDC, int starty, int nlines)
+void BeebWin::UpdateLines(HDC hDC, int starty, int nlines)
 {
 	static bool LastTeletextEnabled = false;
 	static bool First = true;
@@ -350,12 +350,12 @@ void BeebWin::DisplayTiming()
 	{
 		if (m_MouseCaptured)
 		{
-			sprintf(m_szTitle, "%s  Speed: %2.2f  fps: %2d  %s",
+			snprintf(m_szTitle, sizeof(m_szTitle), "%s  Speed: %2.2f  fps: %2d  %s",
 					WindowTitle, m_RelativeSpeed, (int)m_FramesPerSecond, pszReleaseCaptureMessage);
 		}
 		else
 		{
-			sprintf(m_szTitle, "%s  Speed: %2.2f  fps: %2d",
+			snprintf(m_szTitle, sizeof(m_szTitle), "%s  Speed: %2.2f  fps: %2d",
 					WindowTitle, m_RelativeSpeed, (int)m_FramesPerSecond);
 		}
 		SetWindowText(m_hWnd, m_szTitle);
@@ -372,7 +372,7 @@ void BeebWin::UpdateWindowTitle()
 	{
 		if (m_MouseCaptured)
 		{
-			sprintf(m_szTitle, "%s  %s",
+			snprintf(m_szTitle, sizeof(m_szTitle), "%s  %s",
 					WindowTitle, pszReleaseCaptureMessage);
 		}
 		else

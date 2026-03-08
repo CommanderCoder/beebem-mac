@@ -169,7 +169,7 @@ static char *decodeDataProcessing(uint32 /* address */, uint32 instruction, char
 	if(useRd[getField(instruction, 21,24)] )
 	{
 		// add destination register
-		sprintf(registerNumber, "r%d", (instruction >> 12) & 0x0F );
+		snprintf(registerNumber, sizeof(registerNumber), "r%d", (instruction >> 12) & 0x0F );
 		strcat(buff, registerNumber);
 	}
 
@@ -182,7 +182,7 @@ static char *decodeDataProcessing(uint32 /* address */, uint32 instruction, char
 			strcat(buff, ",");
 
 		// add first operand register
-		sprintf(registerNumber, "r%d", getField(instruction, 16, 19) );
+		snprintf(registerNumber, sizeof(registerNumber), "r%d", getField(instruction, 16, 19) );
 		strcat(buff, registerNumber);
 	}
 
@@ -206,7 +206,7 @@ static char *decodeDataProcessing(uint32 /* address */, uint32 instruction, char
 
 		// add immediate value
 		char immediateValue[12];
-		sprintf(immediateValue, "#0x%x", actualImmediate);
+		snprintf(immediateValue, sizeof(immediateValue), "#0x%x", actualImmediate);
 		strcat(buff, immediateValue);
 	}
 	else
@@ -214,7 +214,7 @@ static char *decodeDataProcessing(uint32 /* address */, uint32 instruction, char
 		// 2nd operand is register
 
 		// add second operand register (to which the shift is applied) from bits 0-3
-		sprintf(registerNumber, "r%d", instruction & 0x0F );
+		snprintf(registerNumber, sizeof(registerNumber), "r%d", instruction & 0x0F );
 		strcat(buff, registerNumber);
 
 		// if there's any shift at all
@@ -242,7 +242,7 @@ static char *decodeDataProcessing(uint32 /* address */, uint32 instruction, char
 				// shifted by amount in register
 
 				// add register to shift by from bits 8-11
-				sprintf(registerNumber, "r%d", getField(instruction, 8,11) );
+				snprintf(registerNumber, sizeof(registerNumber), "r%d", getField(instruction, 8,11) );
 				strcat(buff, registerNumber);
 			}
 			else
@@ -251,7 +251,7 @@ static char *decodeDataProcessing(uint32 /* address */, uint32 instruction, char
 
 				// add immediate value to shift by from bits 7-11
 				char immediateValue[12];
-				sprintf(immediateValue, "#%d", getField(instruction, 7,11) );
+				snprintf(immediateValue, sizeof(immediateValue), "#%d", getField(instruction, 7,11) );
 				strcat(buff, immediateValue);
 			}
 		} // end of if any shift
@@ -297,11 +297,11 @@ static char *decodeSingleDTImmOffsetPostIndex(uint32 /* address */, uint32 instr
 	char registerNumber[12];
 
 	// add source/destination register from bits 12-15
-	sprintf(registerNumber, "r%d,[", getField(instruction, 12,15) );
+	snprintf(registerNumber, sizeof(registerNumber), "r%d,[", getField(instruction, 12,15) );
 	strcat(buff, registerNumber);
 
 	// add base register from bits 16-19
-	sprintf(registerNumber, "r%d],#", getField(instruction, 16,19) );
+	snprintf(registerNumber, sizeof(registerNumber), "r%d],#", getField(instruction, 16,19) );
 	strcat(buff, registerNumber);
 
 	// add up/down sign from bit 23
@@ -313,7 +313,7 @@ static char *decodeSingleDTImmOffsetPostIndex(uint32 /* address */, uint32 instr
 
 	// add unsigned 12 bit immediate offset from bits 0-11
 	char immediateOffset[12];
-	sprintf(immediateOffset, "%d", getField(instruction, 0,11) );
+	snprintf(immediateOffset, sizeof(immediateOffset), "%d", getField(instruction, 0,11) );
 	strcat(buff, immediateOffset);
 
 	return buff;
@@ -352,11 +352,11 @@ static char *decodeSingleDTImmOffsetPreIndex(uint32 /* address */, uint32 instru
 	char registerNumber[12];
 
 	// add source/destination register from bits 12-15
-	sprintf(registerNumber, "r%d,[", getField(instruction, 12,15) );
+	snprintf(registerNumber, sizeof(registerNumber), "r%d,[", getField(instruction, 12,15) );
 	strcat(buff, registerNumber);
 
 	// add base register from bits 16-19
-	sprintf(registerNumber, "r%d,#", getField(instruction, 16,19) );
+	snprintf(registerNumber, sizeof(registerNumber), "r%d,#", getField(instruction, 16,19) );
 	strcat(buff, registerNumber);
 
 	// add up/down sign from bit 23
@@ -368,7 +368,7 @@ static char *decodeSingleDTImmOffsetPreIndex(uint32 /* address */, uint32 instru
 
 	// add unsigned 12 bit immediate offset from bits 0-11
 	char immediateOffset[12];
-	sprintf(immediateOffset, "%d]", getField(instruction, 0,11) );
+	snprintf(immediateOffset, sizeof(immediateOffset), "%d]", getField(instruction, 0,11) );
 	strcat(buff, immediateOffset);
 
 	// decode write-back from bit 21
@@ -418,18 +418,18 @@ static char *decodeSingleDTRegOffsetPostIndex(uint32 /* address */, uint32 instr
 	char registerNumber[12];
 
 	// add source/destination register from bits 12-15
-	sprintf(registerNumber, "r%d,[", getField(instruction, 12,15) );
+	snprintf(registerNumber, sizeof(registerNumber), "r%d,[", getField(instruction, 12,15) );
 	strcat(buff, registerNumber);
 
 	// add base register from bits 16-19
-	sprintf(registerNumber, "r%d],", getField(instruction, 16,19) );
+	snprintf(registerNumber, sizeof(registerNumber), "r%d],", getField(instruction, 16,19) );
 	strcat(buff, registerNumber);
 
 	// ??? it would seem perverse to have an up/down bit apply to a signed register
 	// however this needs to be confirmed.
 
 	// add offset register from bits 0-3
-	sprintf(registerNumber, "r%d", getField(instruction, 0,3) );
+	snprintf(registerNumber, sizeof(registerNumber), "r%d", getField(instruction, 0,3) );
 	strcat(buff, registerNumber);
 
 	uint32 imm = getField(instruction, 7,11);
@@ -456,7 +456,7 @@ static char *decodeSingleDTRegOffsetPostIndex(uint32 /* address */, uint32 instr
 		// add immediate value to shift by from bits 7-11
 		strcat(buff, "#");
 		char immediateValue[12];
-		sprintf(immediateValue, "%d", imm );
+		snprintf(immediateValue, sizeof(immediateValue), "%d", imm );
 		strcat(buff, immediateValue);
 	}
 
@@ -496,18 +496,18 @@ static char *decodeSingleDTRegOffsetPreIndex(uint32 /* address */, uint32 instru
 	char registerNumber[12];
 
 	// add source/destination register from bits 12-15
-	sprintf(registerNumber, "r%d,[", getField(instruction, 12,15) );
+	snprintf(registerNumber, sizeof(registerNumber), "r%d,[", getField(instruction, 12,15) );
 	strcat(buff, registerNumber);
 
 	// add base register from bits 16-19
-	sprintf(registerNumber, "r%d,", getField(instruction, 16,19) );
+	snprintf(registerNumber, sizeof(registerNumber), "r%d,", getField(instruction, 16,19) );
 	strcat(buff, registerNumber);
 
 	// ??? it would seem perverse to have an up/down bit apply to a signed register
 	// however this needs to be confirmed.
 
 	// add offset register from bits 0-3
-	sprintf(registerNumber, "r%d", getField(instruction, 0,3) );
+	snprintf(registerNumber, sizeof(registerNumber), "r%d", getField(instruction, 0,3) );
 	strcat(buff, registerNumber);
 
 	uint32 imm = getField(instruction, 7,11);
@@ -534,7 +534,7 @@ static char *decodeSingleDTRegOffsetPreIndex(uint32 /* address */, uint32 instru
 		// add immediate value to shift by from bits 7-11
 		strcat(buff, "#");
 		char immediateValue[12];
-		sprintf(immediateValue, "%d", imm );
+		snprintf(immediateValue, sizeof(immediateValue), "%d", imm );
 		strcat(buff, immediateValue);
 	}
 
@@ -591,7 +591,7 @@ static char *decodeBlockDTPostIndex(uint32 /* address */, uint32 instruction, ch
 	char registerNumber[12];
 
 	// decode base register from bits 16-19
-	sprintf(registerNumber, "r%d", getField(instruction, 16,19) );
+	snprintf(registerNumber, sizeof(registerNumber), "r%d", getField(instruction, 16,19) );
 	strcat(buff, registerNumber);
 
 	// decode write-back from bit 21
@@ -655,7 +655,7 @@ static char *decodeBlockDTPreIndex(uint32 /* address */, uint32 instruction, cha
 	char registerNumber[12];
 
 	// decode base register from bits 16-19
-	sprintf(registerNumber, "r%d", getField(instruction, 16,19) );
+	snprintf(registerNumber, sizeof(registerNumber), "r%d", getField(instruction, 16,19) );
 	strcat(buff, registerNumber);
 
 	// decode write-back from bit 21
@@ -711,7 +711,7 @@ static const char *decodeRegisterList(uint32 instruction)
 
 					// next bit not set or dealing with r15
 					// we're at the end of a list
-					sprintf(registerNumber, "r%d",regNumber);
+					snprintf(registerNumber, sizeof(registerNumber), "r%d",regNumber);
 					strcat(registerList, registerNumber);
 
 					commaNeeded = true;
@@ -721,7 +721,7 @@ static const char *decodeRegisterList(uint32 instruction)
 			else
 			{
 				// last reg so end list
-				sprintf(registerNumber, "r%d",regNumber);
+				snprintf(registerNumber, sizeof(registerNumber), "r%d",regNumber);
 				strcat(registerList, registerNumber);
 				run = 0;
 				commaNeeded = true;
@@ -740,7 +740,7 @@ static const char *decodeRegisterList(uint32 instruction)
 					if(commaNeeded)
 						strcat(registerList, ",");
 
-					sprintf(registerNumber, "r%d",regNumber);
+					snprintf(registerNumber, sizeof(registerNumber), "r%d",regNumber);
 					strcat(registerList, registerNumber);
 
 					run++;
@@ -751,7 +751,7 @@ static const char *decodeRegisterList(uint32 instruction)
 						strcat(registerList, ",");
 
 					// next bit not set or we're looking at r15 (end list)
-					sprintf(registerNumber, "r%d",regNumber);
+					snprintf(registerNumber, sizeof(registerNumber), "r%d",regNumber);
 					strcat(registerList, registerNumber);
 
 					run = 0;
@@ -792,7 +792,7 @@ static char *decodeBranch(uint32 address, uint32 instruction, char *buff)
 
 	// output branch address in hex
 	char branchAddressHex[12];
-	sprintf(branchAddressHex, "0x%08x", branchAddress);
+	snprintf(branchAddressHex, sizeof(branchAddressHex), "0x%08x", branchAddress);
 	strcat(buff, branchAddressHex);
 
 	return buff;
@@ -823,7 +823,7 @@ static char *decodeBranchWithLink(uint32 address, uint32 instruction, char *buff
 
 	// output branch address in hex
 	char branchAddressHex[12];
-	sprintf(branchAddressHex, "0x%08x", branchAddress);
+	snprintf(branchAddressHex, sizeof(branchAddressHex), "0x%08x", branchAddress);
 	strcat(buff, branchAddressHex);
 
 	return buff;
@@ -876,12 +876,12 @@ static char *decodeSoftwareInterrupt(uint32 /* address */, uint32 instruction, c
 	} else if (ins >= 256) {
 		ins &= 255;
 		if ( (ins >= 32) && (ins <= 126) ) {
-			sprintf(swiNumber, "WriteI+%c%c%c", 34, ins, 34);
+			snprintf(swiNumber, sizeof(swiNumber), "WriteI+%c%c%c", 34, ins, 34);
 		} else {
-			sprintf(swiNumber, "WriteI+%d", ins);
+			snprintf(swiNumber, sizeof(swiNumber), "WriteI+%d", ins);
 		}
 	} else {
-		sprintf(swiNumber, "0x%02x", ins);
+		snprintf(swiNumber, sizeof(swiNumber), "0x%02x", ins);
 	}
 
 	strcat(buff, swiNumber);
@@ -923,15 +923,15 @@ static char *decodeMultiply(uint32 /* address */, uint32 instruction, char *buff
 	char registerNumber[12];
 
 	// add destination register from bits 16-19
-	sprintf(registerNumber, "r%d,", getField(instruction, 16,19) );
+	snprintf(registerNumber, sizeof(registerNumber), "r%d,", getField(instruction, 16,19) );
 	strcat(buff, registerNumber);
 
 	// add 1st operand register from bits 0-3
-	sprintf(registerNumber, "r%d,", getField(instruction, 0,3) );
+	snprintf(registerNumber, sizeof(registerNumber), "r%d,", getField(instruction, 0,3) );
 	strcat(buff, registerNumber);
 
 	// add 2nd operand register from bits 8-11
-	sprintf(registerNumber, "r%d", getField(instruction, 8,11) );
+	snprintf(registerNumber, sizeof(registerNumber), "r%d", getField(instruction, 8,11) );
 	strcat(buff, registerNumber);
 
 	if(accumulate)
@@ -939,7 +939,7 @@ static char *decodeMultiply(uint32 /* address */, uint32 instruction, char *buff
 		strcat(buff, ",");
 
 		// add 3rd operand register from bits 12-15
-		sprintf(registerNumber, "r%d", getField(instruction, 12,15) );
+		snprintf(registerNumber, sizeof(registerNumber), "r%d", getField(instruction, 12,15) );
 		strcat(buff, registerNumber);
 	}
 
@@ -968,15 +968,15 @@ static char *decodeSingleDataSwap(uint32 /* address */, uint32 instruction, char
 	char registerNumber[12];
 
 	// add destination register from bits 12-15
-	sprintf(registerNumber, "r%d,", getField(instruction, 12,15) );
+	snprintf(registerNumber, sizeof(registerNumber), "r%d,", getField(instruction, 12,15) );
 	strcat(buff, registerNumber);
 
 	// add rm from bits 0-3
-	sprintf(registerNumber, "r%d,[", getField(instruction, 0, 3) );
+	snprintf(registerNumber, sizeof(registerNumber), "r%d,[", getField(instruction, 0, 3) );
 	strcat(buff, registerNumber);
 
 	// add rn from bits 16-19
-	sprintf(registerNumber, "r%d]", getField(instruction, 16, 19) );
+	snprintf(registerNumber, sizeof(registerNumber), "r%d]", getField(instruction, 16, 19) );
 	strcat(buff, registerNumber);
 
 	return buff;

@@ -44,7 +44,7 @@ using std::max;
 
 #include "BeebWin.h"
 #include "6502core.h"
-#ifndef __APPLE__
+#ifdef __APPLE__
 #include "AviWriter.h"
 #else
 #include "AVIWriter.h"
@@ -88,7 +88,7 @@ void BeebWin::SetImageName(const char *DiscName, int Drive, DiscType Type)
 
 	const char* FileName = GetFileNameFromPath(DiscInfo[Drive].FileName);
 
-	sprintf(menuStr, "Eject Disc %d: ", Drive);
+	snprintf(menuStr, sizeof(menuStr), "Eject Disc %d: ", Drive);
 	strncat(menuStr, FileName, maxMenuItemLen-strlen(menuStr));
 	menuStr[maxMenuItemLen] = '\0';
 
@@ -1233,9 +1233,9 @@ void BeebWin::QuickSave()
 	// Bump old quicksave files down
 	for (int i = 1; i <= 9; ++i)
 	{
-		char FileName[100];
 #ifndef __APPLE__
-		sprintf(FileName, "quicksave%d.uefstate", i);
+        char FileName[100];
+		snprintf(FileName, sizeof(FileName), "quicksave%d.uefstate", i);
 
 		strcpy(FileName1, m_UserDataPath);
 		AppendPath(FileName1, "BeebState");
@@ -1249,10 +1249,10 @@ void BeebWin::QuickSave()
 		}
 		else
 		{
-			sprintf(FileName2, "%sBeebState\\quicksave%d.uefstate", m_UserDataPath, i + 1);
+			snprintf(FileName2, sizeof(FileName2), "%sBeebState\\quicksave%d.uefstate", m_UserDataPath, i + 1);
 		}
 #else
-		sprintf(FileName1, "quicksave%d", i);
+		snprintf(FileName1, sizeof(FileName1), "quicksave%d", i);
 		_makepath(FileName1, NULL,DirName,FileName1,"uefstate");
 
 		if (i == 9)
@@ -1261,7 +1261,7 @@ void BeebWin::QuickSave()
 		}
 		else
 		{
-			sprintf(FileName2, "quicksave%d", i + 1);
+			snprintf(FileName2, sizeof(FileName2), "quicksave%d", i + 1);
 			_makepath(FileName2, NULL,DirName,FileName2,"uefstate");
 		}
 #endif
@@ -1420,7 +1420,7 @@ bool BeebWin::LoadFDC(char *DLLName, bool Save)
 	NativeFDC = true;
 
 	char CfgName[20];
-	sprintf(CfgName, "FDCDLL%d", static_cast<int>(MachineType));
+	snprintf(CfgName, sizeof(CfgName), "FDCDLL%d", static_cast<int>(MachineType));
 
 	if (DLLName == nullptr)
 	{
@@ -1999,7 +1999,7 @@ void BeebWin::ImportDiscFiles(int menuId)
 	{
 		char szErrStr[500];
 
-		Success = dfs_import_file(DiscInfo[Drive].FileName, Heads, Side, &dfsCat, fileNames[i], szExportPath, szErrStr);
+		Success = dfs_import_file(DiscInfo[Drive].FileName, Heads, Side, &dfsCat, fileNames[i], szExportPath, szErrStr, sizeof(szErrStr));
 
 		if (Success)
 		{
@@ -2255,7 +2255,7 @@ bool BeebWin::GetImageFile(char *FileName, int Size)
 
 	// A literal \0 in the format string terminates the string so use %c
 	char filter[200];
-	sprintf(filter, "Image File (*%s)%c*%s%c", fileExt, 0, fileExt, 0);
+	snprintf(filter, sizeof(filter), "Image File (*%s)%c*%s%c", fileExt, 0, fileExt, 0);
 
 	FileDialog Dialog(m_hWnd, FileName, Size, DefaultPath, filter);
 
@@ -2305,7 +2305,7 @@ void BeebWin::CaptureBitmap(int SourceX,
 
 		char AutoName[MAX_PATH];
 
-		sprintf(AutoName, "BeebEm_%04d%02d%02d_%02d%02d%02d_%d%s",
+		snprintf(AutoName, sizeof(AutoName), "BeebEm_%04d%02d%02d_%02d%02d%02d_%d%s",
 		        systemTime.wYear, systemTime.wMonth,  systemTime.wDay,
 		        systemTime.wHour, systemTime.wMinute, systemTime.wSecond,
 		        systemTime.wMilliseconds / 100,

@@ -64,15 +64,16 @@ void WriteLog(const char *fmt, ...)
 		va_start(argptr, fmt);
 
 		char buff[256];
-		vsprintf(buff, fmt, argptr);
+		vsnprintf(buff, sizeof(buff), fmt, argptr);
 
 		va_end(argptr);
 
 		SYSTEMTIME tim;
 		GetLocalTime(&tim);
+
 		fprintf(LogFile, "[%02d-%3s-%02d %02d:%02d:%02d.%03d] ",
 		        tim.wDay, mon[tim.wMonth - 1], tim.wYear % 100, tim.wHour, tim.wMinute, tim.wSecond, tim.wMilliseconds);
 
-		fprintf(LogFile, "%s", buff);
+		fputs(buff, LogFile);
 	}
 }

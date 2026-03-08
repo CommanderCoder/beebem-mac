@@ -684,7 +684,7 @@ void BeebWin::LoadDisplayPreferences(int Version)
 
 		m_Preferences.GetStringValue(CFG_DX_FULL_SCREEN_MODE, Value, DirectXFullScreenModeStr[0]);
 
-		m_DDFullScreenMode = static_cast<DirectXFullScreenMode>(FindEnum(Value, DirectXFullScreenModeStr, 0));
+		m_DirectXFullScreenMode = static_cast<DirectXFullScreenMode>(FindEnum(Value, DirectXFullScreenModeStr, 0));
 	}
 	else
 	{
@@ -695,20 +695,20 @@ void BeebWin::LoadDisplayPreferences(int Version)
 
 		switch (Value)
 		{
-			case 40102: default: m_DDFullScreenMode = DirectXFullScreenMode::ScreenResolution; break;
-			case 40099:          m_DDFullScreenMode = DirectXFullScreenMode::_640x480; break;
-			case 40279:          m_DDFullScreenMode = DirectXFullScreenMode::_720x576; break;
-			case 40280:          m_DDFullScreenMode = DirectXFullScreenMode::_800x600; break;
-			case 40100:          m_DDFullScreenMode = DirectXFullScreenMode::_1024x768; break;
-			case 40288:          m_DDFullScreenMode = DirectXFullScreenMode::_1280x720; break;
-			case 40101:          m_DDFullScreenMode = DirectXFullScreenMode::_1280x1024; break;
-			case 40221:          m_DDFullScreenMode = DirectXFullScreenMode::_1280x768; break;
-			case 40222:          m_DDFullScreenMode = DirectXFullScreenMode::_1280x960; break;
-			case 40223:          m_DDFullScreenMode = DirectXFullScreenMode::_1440x900; break;
-			case 40224:          m_DDFullScreenMode = DirectXFullScreenMode::_1600x1200; break;
-			case 40289:          m_DDFullScreenMode = DirectXFullScreenMode::_1920x1080; break;
-			case 40294:          m_DDFullScreenMode = DirectXFullScreenMode::_2560x1440; break;
-			case 40295:          m_DDFullScreenMode = DirectXFullScreenMode::_3840x2160; break;
+			case 40102: default: m_DirectXFullScreenMode = DirectXFullScreenMode::ScreenResolution; break;
+			case 40099:          m_DirectXFullScreenMode = DirectXFullScreenMode::_640x480; break;
+			case 40279:          m_DirectXFullScreenMode = DirectXFullScreenMode::_720x576; break;
+			case 40280:          m_DirectXFullScreenMode = DirectXFullScreenMode::_800x600; break;
+			case 40100:          m_DirectXFullScreenMode = DirectXFullScreenMode::_1024x768; break;
+			case 40288:          m_DirectXFullScreenMode = DirectXFullScreenMode::_1280x720; break;
+			case 40101:          m_DirectXFullScreenMode = DirectXFullScreenMode::_1280x1024; break;
+			case 40221:          m_DirectXFullScreenMode = DirectXFullScreenMode::_1280x768; break;
+			case 40222:          m_DirectXFullScreenMode = DirectXFullScreenMode::_1280x960; break;
+			case 40223:          m_DirectXFullScreenMode = DirectXFullScreenMode::_1440x900; break;
+			case 40224:          m_DirectXFullScreenMode = DirectXFullScreenMode::_1600x1200; break;
+			case 40289:          m_DirectXFullScreenMode = DirectXFullScreenMode::_1920x1080; break;
+			case 40294:          m_DirectXFullScreenMode = DirectXFullScreenMode::_2560x1440; break;
+			case 40295:          m_DirectXFullScreenMode = DirectXFullScreenMode::_3840x2160; break;
 		}
 	}
 
@@ -1184,7 +1184,7 @@ void BeebWin::LoadSerialPortPreferences(int Version)
 			sscanf(m_SerialPort.c_str(), "%x", &Port);
 
 			char PortName[20];
-			sprintf(PortName, "COM%u", Port);
+			snprintf(PortName, sizeof(PortName), "COM%u", Port);
 			m_SerialPort = PortName;
 		}
 	}
@@ -1314,7 +1314,7 @@ void BeebWin::LoadTeletextAdapterPreferences(int Version)
 
 	for (int ch = 0; ch < TELETEXT_CHANNEL_COUNT; ch++)
 	{
-		sprintf(key, CFG_TELETEXT_FILE, ch);
+		snprintf(key, sizeof(key), CFG_TELETEXT_FILE, ch);
 
 		if (!m_Preferences.GetStringValue(key, TeletextFileName[ch]))
 		{
@@ -1332,7 +1332,7 @@ void BeebWin::LoadTeletextAdapterPreferences(int Version)
 
 		if (Version >= 3)
 		{
-			sprintf(key, CFG_TELETEXT_IP, ch);
+			snprintf(key, sizeof(key), CFG_TELETEXT_IP, ch);
 
 			if (m_Preferences.GetStringValue(key, TeletextIPAddress))
 			{
@@ -1345,7 +1345,7 @@ void BeebWin::LoadTeletextAdapterPreferences(int Version)
 		}
 		else
 		{
-			sprintf(key, CFG_TELETEXT_IP_OLD, ch);
+			snprintf(key, sizeof(key), CFG_TELETEXT_IP_OLD, ch);
 
 			if (m_Preferences.GetStringValue(key, TeletextIPAddress))
 			{
@@ -1361,7 +1361,7 @@ void BeebWin::LoadTeletextAdapterPreferences(int Version)
 		{
 			int Value;
 
-			sprintf(key, CFG_TELETEXT_PORT, ch);
+			snprintf(key, sizeof(key), CFG_TELETEXT_PORT, ch);
 
 			// From BeebEm 4.20, port numbers are stored in decimal.
 			m_Preferences.GetDecimalValue(key, Value, TELETEXT_BASE_PORT + ch);
@@ -1379,7 +1379,7 @@ void BeebWin::LoadTeletextAdapterPreferences(int Version)
 		{
 			DWORD Value;
 
-			sprintf(key, CFG_TELETEXT_PORT_OLD, ch);
+			snprintf(key, sizeof(key), CFG_TELETEXT_PORT_OLD, ch);
 
 			m_Preferences.GetDWORDValue(key, Value, TELETEXT_BASE_PORT + ch);
 
@@ -1667,7 +1667,7 @@ void BeebWin::LoadFilePathPreferences()
 	for (int machine = 0; machine < static_cast<int>(Model::Master128); ++machine)
 	{
 		char CfgName[256];
-		sprintf(CfgName, CFG_FDC_DLL, machine);
+		snprintf(CfgName, sizeof(CfgName), CFG_FDC_DLL, machine);
 
 		if (!m_Preferences.HasValue(CfgName))
 		{
@@ -1756,7 +1756,7 @@ void BeebWin::SavePreferences(bool saveAll)
 		// Display
 		m_Preferences.SetStringValue(CFG_DISPLAY_RENDERER, DisplayRendererTypeStr[(int)m_DisplayRenderer]);
 		m_Preferences.SetBoolValue(CFG_FULL_SCREEN, m_FullScreen);
-		m_Preferences.SetStringValue(CFG_DX_FULL_SCREEN_MODE, DirectXFullScreenModeStr[(int)m_DDFullScreenMode]);
+		m_Preferences.SetStringValue(CFG_DX_FULL_SCREEN_MODE, DirectXFullScreenModeStr[(int)m_DirectXFullScreenMode]);
 		m_Preferences.EraseValue(CFG_DX_FULL_SCREEN_MODE_OLD);
 		m_Preferences.SetBoolValue(CFG_MAINTAIN_ASPECT_RATIO, m_MaintainAspectRatio);
 		m_Preferences.SetBoolValue(CFG_DX_SMOOTHING, m_DXSmoothing);
@@ -1846,15 +1846,15 @@ void BeebWin::SavePreferences(bool saveAll)
 
 		for (int ch = 0; ch < TELETEXT_CHANNEL_COUNT; ch++)
 		{
-			sprintf(key, CFG_TELETEXT_FILE, ch);
+			snprintf(key, sizeof(key), CFG_TELETEXT_FILE, ch);
 			m_Preferences.SetStringValue(key, TeletextFileName[ch]);
-			sprintf(key, CFG_TELETEXT_PORT, ch);
+			snprintf(key, sizeof(key), CFG_TELETEXT_PORT, ch);
 			m_Preferences.SetDecimalValue(key, TeletextPort[ch]);
-			sprintf(key, CFG_TELETEXT_PORT_OLD, ch);
+			snprintf(key, sizeof(key), CFG_TELETEXT_PORT_OLD, ch);
 			m_Preferences.EraseValue(key);
-			sprintf(key, CFG_TELETEXT_IP, ch);
+			snprintf(key, sizeof(key), CFG_TELETEXT_IP, ch);
 			m_Preferences.SetStringValue(key, TeletextIP[ch]);
-			sprintf(key, CFG_TELETEXT_IP_OLD, ch);
+			snprintf(key, sizeof(key), CFG_TELETEXT_IP_OLD, ch);
 			m_Preferences.EraseValue(key);
 		}
 

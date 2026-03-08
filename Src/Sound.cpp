@@ -31,7 +31,7 @@ Boston, MA  02110-1301, USA.
 
 #include "Sound.h"
 #include "6502core.h"
-#ifndef __APPLE__
+#ifdef __APPLE__
 #include "AviWriter.h"
 #else
 #include "AVIWriter.h"

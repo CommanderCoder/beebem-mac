@@ -51,7 +51,11 @@ class SerialPort
 	private:
 		bool InitThread();
 
+#ifndef __APPLE__
 		static unsigned int __stdcall ReadThreadFunc(void* pParameter);
+#else
+        static unsigned int ReadThreadFunc(void* pParameter);
+#endif
 		void ReadThreadFunc();
 
 		void PutRxData(const unsigned char* pData, int Length);

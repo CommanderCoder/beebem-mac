@@ -22,7 +22,9 @@ bool TapeControlEnabled = false;
 static HWND hwndTapeControl;
 static HWND hwndMap;
 
+#ifndef __APPLE__
 static INT_PTR CALLBACK TapeControlDlgProc(HWND hwndDlg, UINT message, WPARAM wParam, LPARAM lParam);
+#endif
 
 static void TapeControlNewTape();
 static void TapeControlEjectTape();

@@ -441,7 +441,11 @@ unsigned char SerialPort::GetStatus()
 
 /*--------------------------------------------------------------------------*/
 
+#ifndef __APPLE__
 unsigned int __stdcall SerialPort::ReadThreadFunc(void* pParameter)
+#else
+unsigned int SerialPort::ReadThreadFunc(void* pParameter)
+#endif
 {
 #ifndef __APPLE__
 
