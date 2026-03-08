@@ -60,7 +60,11 @@ using std::max;
 #include "AboutDialog.h"
 #include "Arm.h"
 #include "AtoDConv.h"
+#ifdef __APPLE__
+#include "AviWriter.h"
+#else
 #include "AVIWriter.h"
+#endif
 #include "BeebMem.h"
 #include "Debug.h"
 #include "DebugTrace.h"
@@ -201,14 +205,12 @@ BeebWin::BeebWin()
 	memcpy(m_BlurIntensities, DefaultBlurIntensities, sizeof(m_BlurIntensities));
 	m_MaintainAspectRatio = true;
 	m_DisplayRenderer = DisplayRendererType::DirectX9;
-	m_CurrentDisplayRenderer = DisplayRendererType::GDI;
-	m_DDFullScreenMode = DirectXFullScreenMode::ScreenResolution;
+	m_DirectXFullScreenMode = DirectXFullScreenMode::ScreenResolution;
 	m_DiscLedColour = LEDColour::Red;
 
 	// DirectX stuff
 	m_DXInit = false;
-	m_DXResetPending = false;
-	m_DXDeviceLost = false;
+	m_DX9State = DX9State::Uninitialised;
 
 	// DirectDraw stuff
 	m_hInstDDraw = nullptr;
@@ -499,7 +501,7 @@ bool BeebWin::Initialise()
 	m_hDC = GetDC(m_hWnd);
 
 	RomConfig.Load(RomFile);
-	ApplyPrefs();
+	ApplyPreferences();
 
 	if (!m_DebugScriptFileName.empty())
 	{
@@ -547,7 +549,7 @@ bool BeebWin::Initialise()
 
 /****************************************************************************/
 
-void BeebWin::ApplyPrefs()
+void BeebWin::ApplyPreferences()
 {
 	// Set up paths
 
@@ -598,8 +600,11 @@ void BeebWin::ApplyPrefs()
 	ShowMenu(true);
 
 	ExitDX();
+
 	if (m_DisplayRenderer != DisplayRendererType::GDI)
+	{
 		InitDX();
+	}
 
 	InitTextToSpeechVoices();
 	InitVoiceMenu();
@@ -616,7 +621,9 @@ void BeebWin::ApplyPrefs()
 
 	// Joysticks can only be initialised after the window is created (needs hwnd)
 	if (m_JoystickOption == JoystickOption::Joystick)
+	{
 		InitJoystick();
+	}
 
 	LoadFDC(NULL, true);
 	RTCInit();
@@ -661,16 +668,22 @@ BeebWin::~BeebWin()
 	if (m_DisplayRenderer != DisplayRendererType::GDI)
 		ExitDX();
 
-	CloseDX9();
-
 	ReleaseDC(m_hWnd, m_hDC);
 
-	if (m_hOldObj != NULL)
+	if (m_hOldObj != nullptr)
+	{
 		SelectObject(m_hDCBitmap, m_hOldObj);
-	if (m_hBitmap != NULL)
+	}
+
+	if (m_hBitmap != nullptr)
+	{
 		DeleteObject(m_hBitmap);
-	if (m_hDCBitmap != NULL)
+	}
+
+	if (m_hDCBitmap != nullptr)
+	{
 		DeleteDC(m_hDCBitmap);
+	}
 
 #ifndef __APPLE__
 	Gdiplus::GdiplusShutdown(m_gdiplusToken);
@@ -1119,16 +1132,23 @@ void BeebWin::DestroySprowCoPro()
 
 void BeebWin::CreateBitmap()
 {
-	if (m_hBitmap != NULL)
+	if (m_hBitmap != nullptr)
+	{
 		DeleteObject(m_hBitmap);
-	if (m_hDCBitmap != NULL)
-		DeleteDC(m_hDCBitmap);
+	}
 
-	if (m_screen_blur != NULL)
+	if (m_hDCBitmap != nullptr)
+	{
+		DeleteDC(m_hDCBitmap);
+	}
+
+	if (m_screen_blur != nullptr)
+	{
 		free(m_screen_blur);
+	}
 
 #ifndef __APPLE__
-	m_hDCBitmap = CreateCompatibleDC(NULL);
+	m_hDCBitmap = CreateCompatibleDC(nullptr);
 #endif
 
 	m_bmi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
@@ -1278,14 +1298,23 @@ bool BeebWin::CreateBeebWindow()
 		dwStyle = WS_OVERLAPPEDWINDOW;
 	}
 
+	const int Width = m_XWinSize;
+	const int Height = m_YWinSize;
+
+	RECT Rect{ 0, 0, Width, Height };
+
+	// Estimate initial window size. This won't be correct if the menu bar
+	// spans multiple rows. We handle this in WM_SET_WINDOW_CLIENT_SIZE.
+	AdjustWindowRect(&Rect, dwStyle, TRUE);
+
 	m_hWnd = CreateWindow(
 		"BEEBWIN",  // See RegisterClass() call.
 		m_szTitle,  // Text for window title bar.
 		dwStyle,    // Window style
 		x,
 		y,
-		m_XWinSize, // See SetWindowAttributes()
-		m_YWinSize,
+		Rect.right - Rect.left,
+		Rect.bottom - Rect.top,
 		nullptr,    // Overlapped windows have no parent.
 		nullptr,    // Use the window class menu.
 		hInst,      // This instance owns this window.
@@ -1306,6 +1335,13 @@ bool BeebWin::CreateBeebWindow()
 	UpdateWindow(m_hWnd); // Sends WM_PAINT message
 
 	SetWindowAttributes(false);
+
+	WindowPos* pWindowPos = new WindowPos(Width, Height);
+
+	PostMessage(m_hWnd,
+	            WM_SET_WINDOW_CLIENT_SIZE,
+	            0,
+	            reinterpret_cast<LPARAM>(pWindowPos));
 
 #endif
 	return true;
@@ -1378,6 +1414,8 @@ void BeebWin::EnableMenuItem(UINT id, bool Enabled)
 	::EnableMenuItem(m_hMenu, id, Enabled ? MF_ENABLED : MF_GRAYED);
 }
 
+/****************************************************************************/
+
 void BeebWin::InitMenu(void)
 {
 	// File -> Video Options
@@ -1414,15 +1452,7 @@ void BeebWin::InitMenu(void)
 
 	// View
 	UpdateDisplayRendererMenu();
-
-#ifndef __APPLE__
-    const bool DirectXEnabled = m_DisplayRenderer != DisplayRendererType::GDI;
-	EnableMenuItem(IDM_DXSMOOTHING, DirectXEnabled);
-	EnableMenuItem(IDM_DXSMOOTHMODE7ONLY, DirectXEnabled);
-
-	CheckMenuItem(IDM_DXSMOOTHING, m_DXSmoothing);
-	CheckMenuItem(IDM_DXSMOOTHMODE7ONLY, m_DXSmoothMode7Only);
-#endif
+	UpdateDisplayRendererOptionsMenu();
 
 	CheckMenuItem(IDM_SPEEDANDFPS, m_ShowSpeedAndFPS);
 	CheckMenuItem(IDM_FULLSCREEN, m_FullScreen);
@@ -1513,8 +1543,12 @@ void BeebWin::SetDisplayRenderer(DisplayRendererType DisplayRenderer)
 	ExitDX();
 
 	m_DisplayRenderer = DisplayRenderer;
-	SetWindowAttributes(m_FullScreen);
+	HRESULT hResult = SetWindowAttributes(m_FullScreen);
 
+	if (FAILED(hResult))
+	{
+		m_DisplayRenderer = DisplayRendererType::GDI;
+	}
 	bool DirectXEnabled = m_DisplayRenderer != DisplayRendererType::GDI;
 
 	if (DirectXEnabled)
@@ -1523,9 +1557,10 @@ void BeebWin::SetDisplayRenderer(DisplayRendererType DisplayRenderer)
 	}
 
 	UpdateDisplayRendererMenu();
-	EnableMenuItem(IDM_DXSMOOTHING, DirectXEnabled);
-	EnableMenuItem(IDM_DXSMOOTHMODE7ONLY, DirectXEnabled);
+	UpdateDisplayRendererOptionsMenu();
 }
+
+/****************************************************************************/
 
 void BeebWin::UpdateDisplayRendererMenu()
 {
@@ -1535,6 +1570,11 @@ void BeebWin::UpdateDisplayRendererMenu()
 		{ IDM_DISPDDRAW, DisplayRendererType::DirectDraw },
 		{ IDM_DISPDX9,   DisplayRendererType::DirectX9 }
 	};
+
+	for (size_t i = 0; i < _countof(MenuItems); i++)
+	{
+		EnableMenuItem(MenuItems[i].ID, !m_FullScreen);
+	}
 
 	UINT SelectedMenuItemID = 0;
 
@@ -1548,6 +1588,20 @@ void BeebWin::UpdateDisplayRendererMenu()
 	}
 
 	CheckMenuRadioItem(IDM_DISPGDI, IDM_DISPDX9, SelectedMenuItemID);
+}
+
+/****************************************************************************/
+
+void BeebWin::UpdateDisplayRendererOptionsMenu()
+{
+	const bool DirectXEnabled = m_DisplayRenderer == DisplayRendererType::DirectX9 ||
+	                            m_DisplayRenderer == DisplayRendererType::DirectDraw;
+
+	CheckMenuItem(IDM_DXSMOOTHING, m_DXSmoothing);
+	CheckMenuItem(IDM_DXSMOOTHMODE7ONLY, m_DXSmoothMode7Only);
+
+	EnableMenuItem(IDM_DXSMOOTHING, DirectXEnabled);
+	EnableMenuItem(IDM_DXSMOOTHMODE7ONLY, DirectXEnabled);
 }
 
 /****************************************************************************/
@@ -1885,10 +1939,12 @@ void BeebWin::UpdateSFXMenu()
 
 /****************************************************************************/
 
+#ifndef __APPLE__
 static const unsigned char CFG_DISABLE_WINDOWS_KEYS[24] =
 {
 	00,00,00,00,00,00,00,00,03,00,00,00,00,00,0x5B,0xE0,00,00,0x5C,0xE0,00,00,00,00
 };
+#endif
 
 void BeebWin::DisableWindowsKeys()
 {
@@ -2263,19 +2319,28 @@ LRESULT BeebWin::WndProc(UINT nMessage, WPARAM wParam, LPARAM lParam)
 		case WM_PAINT: {
 			PAINTSTRUCT ps;
 			HDC hDC = BeginPaint(m_hWnd, &ps);
-			updateLines(hDC, 0, 0);
+			UpdateLines(hDC, 0, 0);
 			EndPaint(m_hWnd, &ps);
-
-			if (m_DXResetPending)
-			{
-				ResetDX();
-			}
 			break;
 		}
 
 		case WM_SIZE:
 			OnSize(wParam, LOWORD(lParam), HIWORD(lParam));
 			break;
+
+		case WM_SET_WINDOW_CLIENT_SIZE: {
+			const WindowPos* pWindowPos = reinterpret_cast<WindowPos*>(lParam);
+
+			if (!SetWindowClientSize(m_hWnd, pWindowPos))
+			{
+				SetWindowClientSize(m_hWnd, pWindowPos);
+			}
+
+			delete pWindowPos;
+
+			UpdateWindowSizeMenu();
+			break;
+		}
 
 		case WM_SYSKEYDOWN: {
 			// DebugTrace("SysKeyD: %d, 0x%X, 0x%X\n", wParam, wParam, lParam);
@@ -2300,7 +2365,7 @@ LRESULT BeebWin::WndProc(UINT nMessage, WPARAM wParam, LPARAM lParam)
 			}
 			else if (wParam == VK_RETURN && AltPressed) // Alt+Enter
 			{
-				HandleCommand(IDM_FULLSCREEN);
+				ToggleFullScreen();
 				break;
 			}
 			else if (wParam == VK_F4 && AltPressed) // Alt+F4
@@ -2310,7 +2375,7 @@ LRESULT BeebWin::WndProc(UINT nMessage, WPARAM wParam, LPARAM lParam)
 			}
 			else if (wParam == VK_F5 && AltPressed) // Alt+F5
 			{
-				HandleCommand(IDM_PAUSE);
+				TogglePause();
 				break;
 			}
 
@@ -2468,15 +2533,15 @@ LRESULT BeebWin::WndProc(UINT nMessage, WPARAM wParam, LPARAM lParam)
 			break;
 
 		case WM_ACTIVATE:
-			Activate(wParam != WA_INACTIVE);
+			OnActivate(wParam != WA_INACTIVE);
 			break;
 
 		case WM_SETFOCUS:
-			Focus(true);
+			OnSetFocus(true);
 			break;
 
 		case WM_KILLFOCUS:
-			Focus(false);
+			OnSetFocus(false);
 			break;
 
 		case WM_SETCURSOR:
@@ -2620,26 +2685,12 @@ LRESULT BeebWin::WndProc(UINT nMessage, WPARAM wParam, LPARAM lParam)
 			SetSound(SoundState::Unmuted);
 			break;
 
-		case WM_REINITDX:
-			DebugTrace("WM_REINITDX\n");
-			ReinitDX();
+		case WM_DIRECTX9_DEVICE_LOST:
+			OnDeviceLost();
 			break;
 
 		case WM_TIMER:
-			if (wParam == TIMER_KEYBOARD)
-			{
-				HandleKeyboardTimer();
-			}
-			else if (wParam == TIMER_AUTOBOOT_DELAY) // Handle timer for automatic disc boot delay
-			{
-				KillBootDiscTimer();
-				DoShiftBreak();
-			}
-			else if (wParam == TIMER_PRINTER)
-			{
-				KillTimer(m_hWnd, TIMER_PRINTER);
-				CopyPrinterBufferToClipboard();
-			}
+			OnTimer(wParam);
 			break;
 
 		case WM_USER_KEYBOARD_DIALOG_CLOSED:
@@ -2651,13 +2702,16 @@ LRESULT BeebWin::WndProc(UINT nMessage, WPARAM wParam, LPARAM lParam)
 			userPortBreakoutDialog = nullptr;
 			break;
 
-		case WM_DIRECTX9_DEVICE_LOST:
-			OnDeviceLost();
-			break;
-
 		case WM_IP232_ERROR:
 			OnIP232Error((int)wParam);
 			break;
+
+		case WM_REPORT_ERROR: {
+			char* Buffer = reinterpret_cast<char*>(lParam);
+			Report(MessageType::Error, Buffer);
+			free(Buffer);
+			break;
+		}
 
 		default: // Passes it on if unprocessed
 			return DefWindowProc(m_hWnd, nMessage, wParam, lParam);
@@ -2977,17 +3031,11 @@ bool BeebWin::UpdateTiming()
 
 void BeebWin::SetDirectXFullScreenMode(DirectXFullScreenMode Mode)
 {
-	// Ignore IDM_VIEW_DD_SCREENRES if already in full screen mode
-	if ((Mode != DirectXFullScreenMode::ScreenResolution) || !m_FullScreen)
+	if (!m_FullScreen)
 	{
-		m_DDFullScreenMode = Mode;
+		m_DirectXFullScreenMode = Mode;
 
 		TranslateDDSize();
-
-		if (m_FullScreen && m_DisplayRenderer != DisplayRendererType::GDI)
-		{
-			SetWindowAttributes(m_FullScreen);
-		}
 
 		UpdateDirectXFullScreenModeMenu();
 	}
@@ -2995,7 +3043,7 @@ void BeebWin::SetDirectXFullScreenMode(DirectXFullScreenMode Mode)
 
 void BeebWin::TranslateDDSize()
 {
-	switch (m_DDFullScreenMode)
+	switch (m_DirectXFullScreenMode)
 	{
 		case DirectXFullScreenMode::_640x480:
 			m_XDXSize = 640;
@@ -3091,11 +3139,16 @@ void BeebWin::UpdateDirectXFullScreenModeMenu()
 		{ IDM_VIEW_DD_3840X2160, DirectXFullScreenMode::_3840x2160 }
 	};
 
+	for (size_t i = 0; i < _countof(MenuItems); i++)
+	{
+		EnableMenuItem(MenuItems[i].ID, !m_FullScreen);
+	}
+
 	UINT SelectedMenuItemID = 0;
 
 	for (size_t i = 0; i < _countof(MenuItems); i++)
 	{
-		if (m_DDFullScreenMode == MenuItems[i].Mode)
+		if (m_DirectXFullScreenMode == MenuItems[i].Mode)
 		{
 			SelectedMenuItemID = MenuItems[i].ID;
 			break;
@@ -3109,11 +3162,48 @@ void BeebWin::UpdateDirectXFullScreenModeMenu()
 	);
 }
 
+/****************************************************************************/
+
 void BeebWin::ToggleFullScreen()
 {
+	bool WasFullScreen = m_FullScreen;
 	m_FullScreen = !m_FullScreen;
+
+	HRESULT hResult = SetWindowAttributes(WasFullScreen);
+
+    if (FAILED(hResult))
+	{
+		WasFullScreen = m_FullScreen;
+		m_FullScreen = false;
+
+		bool DirectXEnabled = m_DisplayRenderer != DisplayRendererType::GDI;
+
+		if (DirectXEnabled)
+		{
+			InitDX();
+		}
+
+		SetWindowAttributes(WasFullScreen);
+
+		if (WasFullScreen)
+		{
+			const char* Format = "Unable to enter full screen mode. Failure code %X";
+
+			// Calculate required length, +1 is for NUL terminator
+			const int length = snprintf(nullptr, 0, Format, static_cast<unsigned int>(hResult)) + 1;
+
+			char* Buffer = (char*)malloc(length);
+
+			snprintf(Buffer, length, Format, static_cast<unsigned int>(hResult));
+
+			PostMessage(m_hWnd, WM_REPORT_ERROR, 0, reinterpret_cast<LPARAM>(Buffer));
+		}
+	}
+    
 	CheckMenuItem(IDM_FULLSCREEN, m_FullScreen);
-	SetWindowAttributes(!m_FullScreen);
+	UpdateDisplayRendererMenu();
+	UpdateWindowSizeMenu();
+	UpdateDirectXFullScreenModeMenu();
 
 	if (m_MouseCaptured)
 	{
@@ -3125,18 +3215,18 @@ void BeebWin::ToggleFullScreen()
 
 void BeebWin::SetWindowSize(int Width, int Height)
 {
-	if (m_FullScreen)
-	{
-		HandleCommand(IDM_FULLSCREEN);
-	}
-
 	m_XWinSize = Width;
 	m_YWinSize = Height;
 
 	m_XLastWinSize = m_XWinSize;
 	m_YLastWinSize = m_YWinSize;
 
-	UpdateWindowSizeMenu();
+	WindowPos* pWindowPos = new WindowPos(Width, Height);
+
+	PostMessage(m_hWnd,
+	            WM_SET_WINDOW_CLIENT_SIZE,
+	            0,
+	            reinterpret_cast<LPARAM>(pWindowPos));
 
 	SetWindowAttributes(m_FullScreen);
 }
@@ -3155,6 +3245,11 @@ void BeebWin::UpdateWindowSizeMenu()
 		{ IDM_1600X1200, 1600, 1200 }
 	};
 
+	for (size_t i = 0; i < _countof(MenuItems); i++)
+	{
+		EnableMenuItem(MenuItems[i].ID, !m_FullScreen);
+	}
+
 	int SelectedMenuItemID = 0;
 
 	for (size_t i = 0; i < _countof(MenuItems); i++)
@@ -3170,6 +3265,10 @@ void BeebWin::UpdateWindowSizeMenu()
 	if (SelectedMenuItemID != 0)
 	{
 		CheckMenuRadioItem(IDM_320X256, IDM_1600X1200, SelectedMenuItemID);
+	}
+	else
+	{
+		CheckMenuRadioItem(IDM_320X256, IDM_1600X1200, (UINT)-1);
 	}
 }
 
@@ -3405,25 +3504,26 @@ void BeebWin::CalcAspectRatioAdjustment(int DisplayWidth, int DisplayHeight)
 
 /****************************************************************************/
 
-void BeebWin::SetWindowAttributes(bool wasFullScreen)
+HRESULT BeebWin::SetWindowAttributes(bool WasFullScreen)
 {
 	if (m_FullScreen)
 	{
 		// Get the monitor that the BeebEm window is on to account for multiple monitors
-		if (m_DDFullScreenMode == DirectXFullScreenMode::ScreenResolution)
+		if (m_DirectXFullScreenMode == DirectXFullScreenMode::ScreenResolution)
 		{
-			HMONITOR monitor = MonitorFromWindow(m_hWnd, MONITOR_DEFAULTTONEAREST);
-			MONITORINFO info;
-			info.cbSize = sizeof(MONITORINFO);
-			GetMonitorInfo(monitor, &info);
+			HMONITOR hMonitor = MonitorFromWindow(m_hWnd, MONITOR_DEFAULTTONEAREST);
+			MONITORINFO MonitorInfo;
+			MonitorInfo.cbSize = sizeof(MONITORINFO);
+			GetMonitorInfo(hMonitor, &MonitorInfo);
 
 			// Get current resolution of the monitor
-			m_XDXSize = info.rcMonitor.right - info.rcMonitor.left;
-			m_YDXSize = info.rcMonitor.bottom - info.rcMonitor.top;
+			m_XDXSize = MonitorInfo.rcMonitor.right - MonitorInfo.rcMonitor.left;
+			m_YDXSize = MonitorInfo.rcMonitor.bottom - MonitorInfo.rcMonitor.top;
 		}
 
-		if (!wasFullScreen)
+		if (!WasFullScreen)
 		{
+			// Remember window position, so we can restore it when exiting fullscreen.
 			RECT Rect;
 			GetWindowRect(m_hWnd, &Rect);
 
@@ -3441,7 +3541,12 @@ void BeebWin::SetWindowAttributes(bool wasFullScreen)
 
 			if (m_DXInit)
 			{
-				ResetDX();
+				HRESULT hResult = ResetDX();
+
+				if (FAILED(hResult))
+				{
+					return hResult;
+				}
 			}
 		}
 		else
@@ -3460,44 +3565,70 @@ void BeebWin::SetWindowAttributes(bool wasFullScreen)
 	{
 		CalcAspectRatioAdjustment(0, 0);
 
-		if (wasFullScreen)
-			ShowWindow(m_hWnd, SW_RESTORE);
+		int WindowPosX;
+		int WindowPosY;
 
-		// Note: Window size gets lost in DDraw mode when DD is reset
-		int xs = m_XLastWinSize;
-		int ys = m_YLastWinSize;
-
-		if (m_DisplayRenderer != DisplayRendererType::GDI && m_DXInit)
+		if (WasFullScreen)
 		{
-			ResetDX();
+			WindowPosX = m_XWinPos;
+			WindowPosY = m_YWinPos;
+		}
+		else
+		{
+			RECT Rect;
+			GetWindowRect(m_hWnd, &Rect);
+
+			WindowPosX = Rect.left;
+			WindowPosY = Rect.top;
 		}
 
-		m_XWinSize = xs;
-		m_YWinSize = ys;
+		// Note: Window size gets lost in DDraw mode when DD is reset
+		int Width = m_XLastWinSize;
+		int Height = m_YLastWinSize;
+
+		if (m_DisplayRenderer != DisplayRendererType::GDI)
+		{
+			if (m_DXInit)
+			{
+				HRESULT hResult = ResetDX();
+
+				if (FAILED(hResult))
+				{
+					return hResult;
+				}
+			}
+		}
+
+		m_XWinSize = Width;
+		m_YWinSize = Height;
 
 #ifndef __APPLE__
-		DWORD Style = SetWindowStyle(WS_OVERLAPPEDWINDOW, WS_POPUP);
-
-		RECT Rect{ 0, 0, m_XWinSize, m_YWinSize };
-		AdjustWindowRect(&Rect, Style, TRUE);
-
-		SetWindowPos(m_hWnd,
-		             HWND_NOTOPMOST,
-		             m_XWinPos,
-		             m_YWinPos,
-		             Rect.right - Rect.left,
-		             Rect.bottom - Rect.top,
-		             !wasFullScreen ? SWP_NOMOVE : 0);
+		SetWindowStyle(WS_OVERLAPPEDWINDOW, WS_POPUP);
 #endif
 
 		// Experiment: hide menu in full screen
 		HideMenu(false);
+
+		WindowPos* pWindowPos = new WindowPos(Width, Height,
+		                                      WindowPosX, WindowPosY);
+
+		PostMessage(m_hWnd,
+		            WM_SET_WINDOW_CLIENT_SIZE,
+		            0,
+		            reinterpret_cast<LPARAM>(pWindowPos));
+
+		PostMessage(m_hWnd,
+		            WM_SETICON,
+		            ICON_BIG,
+		            (LPARAM)LoadIcon(hInst, MAKEINTRESOURCE(IDI_BEEBEM)));
 	}
 
 	// Clear unused areas of screen
 	RECT Rect;
 	GetClientRect(m_hWnd, &Rect);
 	InvalidateRect(m_hWnd, &Rect, TRUE);
+
+	return S_OK;
 }
 
 /*****************************************************************************/
@@ -3514,12 +3645,10 @@ void BeebWin::OnSize(WPARAM ResizeType, int Width, int Height)
 	{
 		m_XWinSize = Width;
 		m_YWinSize = Height;
-		CalcAspectRatioAdjustment(m_XWinSize, m_YWinSize);
 
-		if (ResizeType != SIZE_MINIMIZED && m_DisplayRenderer != DisplayRendererType::GDI && m_DXInit)
-		{
-			m_DXResetPending = true;
-		}
+		UpdateWindowSizeMenu();
+
+		CalcAspectRatioAdjustment(m_XWinSize, m_YWinSize);
 	}
 
 	if (!m_FullScreen)
@@ -3977,20 +4106,14 @@ void BeebWin::HandleCommand(UINT MenuID)
 		m_DXSmoothing = !m_DXSmoothing;
 		CheckMenuItem(IDM_DXSMOOTHING, m_DXSmoothing);
 
-		if (m_DisplayRenderer != DisplayRendererType::GDI)
-		{
-			UpdateSmoothing();
-		}
+		UpdateSmoothing();
 		break;
 
 	case IDM_DXSMOOTHMODE7ONLY:
 		m_DXSmoothMode7Only = !m_DXSmoothMode7Only;
 		CheckMenuItem(IDM_DXSMOOTHMODE7ONLY, m_DXSmoothMode7Only);
 
-		if (m_DisplayRenderer != DisplayRendererType::GDI)
-		{
-			UpdateSmoothing();
-		}
+		UpdateSmoothing();
 		break;
 
 	case IDM_320X256:
@@ -4630,7 +4753,7 @@ void BeebWin::HandleCommand(UINT MenuID)
 		if (MachineType != Model::Master128 && MachineType != Model::MasterET)
 		{
 			char CfgName[20];
-			sprintf(CfgName, "FDCDLL%d", static_cast<int>(MachineType));
+			snprintf(CfgName, sizeof(CfgName), "FDCDLL%d", static_cast<int>(MachineType));
 			m_Preferences.SetStringValue(CfgName, "None");
 		}
 		break;
@@ -5010,7 +5133,7 @@ void BeebWin::SetSoundMenu()
 	CheckMenuItem(IDM_MUSIC5000, Music5000Enabled);
 }
 
-void BeebWin::Activate(bool Active)
+void BeebWin::OnActivate(bool Active)
 {
 	if (Active)
 	{
@@ -5037,7 +5160,7 @@ void BeebWin::Activate(bool Active)
 	}
 }
 
-void BeebWin::Focus(bool Focus)
+void BeebWin::OnSetFocus(bool Focus)
 {
 	if (Focus)
 	{
@@ -5065,7 +5188,7 @@ void BeebWin::TogglePause()
 
 	if (m_ShowSpeedAndFPS && m_Paused)
 	{
-		sprintf(m_szTitle, "%s  Paused", WindowTitle);
+		snprintf(m_szTitle, sizeof(m_szTitle), "%s  Paused", WindowTitle);
 		SetWindowText(m_hWnd, m_szTitle);
 	}
 
@@ -5747,6 +5870,8 @@ bool BeebWin::HasKbdCmd() const
 	return !m_KbdCmd.empty();
 }
 
+/****************************************************************************/
+
 void BeebWin::SetKeyboardTimer()
 {
 	SetTimer(m_hWnd, TIMER_KEYBOARD, 1000, NULL);
@@ -5757,13 +5882,36 @@ void BeebWin::SetBootDiscTimer()
 	SetTimer(m_hWnd, TIMER_AUTOBOOT_DELAY, m_AutoBootDelay, NULL);
 }
 
-void BeebWin::KillBootDiscTimer()
+void BeebWin::OnTimer(UINT_PTR TimerID)
 {
-	m_BootDiscTimerElapsed = true;
-	KillTimer(m_hWnd, TIMER_AUTOBOOT_DELAY);
+	switch (TimerID)
+	{
+		case TIMER_KEYBOARD:
+			HandleKeyboardTimer();
+			break;
+
+		case TIMER_AUTOBOOT_DELAY: // Handle timer for automatic disc boot delay
+			m_BootDiscTimerElapsed = true;
+			KillTimer(m_hWnd, TIMER_AUTOBOOT_DELAY);
+
+			DoShiftBreak();
+			break;
+
+		case TIMER_PRINTER:
+			KillTimer(m_hWnd, TIMER_PRINTER);
+
+			CopyPrinterBufferToClipboard();
+			break;
+
+		case TIMER_DEVICE_LOST:
+			KillTimer(m_hWnd, TIMER_DEVICE_LOST);
+			OnDeviceLost();
+			break;
+	}
 }
 
 /****************************************************************************/
+
 bool BeebWin::RebootSystem()
 {
 #ifndef __APPLE__
@@ -6058,7 +6206,7 @@ void BeebWin::SelectUserDataPath()
 
 				// Load and apply prefs
 				LoadPreferences();
-				ApplyPrefs();
+				ApplyPreferences();
 			}
 			break;
 
@@ -6199,7 +6347,7 @@ MessageResult BeebWin::ReportV(MessageType type, const char *format, va_list arg
 
 	if (buffer != nullptr)
 	{
-		vsprintf(buffer, format, args);
+		vsnprintf(buffer, length, format, args);
 
 		UINT Type = 0;
 

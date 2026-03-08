@@ -77,36 +77,37 @@ AF=0000 MZ5H3VNC BC=0000 DE=0000 HL=0000 IX=0000 I=00 PC=0000:00,00,00,00
 AF'0000 MZ5H3VNC BC'0000 DE'0000 HL'0000 IY=0000 R=00 SP=0000:00,00,00,00
 */
 
-void Disp_RegSet1(char *str)
+
+void Disp_RegSet1(char *str, size_t kRegDumpBufferSize)
 {
-	sprintf(str, "AF=%04X ",af[0]);
-	sprintf(str + strlen(str), (af[0] & 128) ? "M" : "P");
-	sprintf(str + strlen(str), (af[0] & 64) ? "Z" : ".");
-	sprintf(str + strlen(str), (af[0] & 32) ? "5" : ".");
-	sprintf(str + strlen(str), (af[0] & 16) ? "H" : ".");
-	sprintf(str + strlen(str), (af[0] & 8) ? "3" : ".");
-	sprintf(str + strlen(str), (af[0] & 4) ? "V" : ".");
-	sprintf(str + strlen(str), (af[0] & 2) ? "N" : ".");
-	sprintf(str + strlen(str), (af[0] & 1) ? "C" : ".");
-	sprintf(str + strlen(str), " BC=%04X DE=%04X HL=%04X", regs[0].bc, regs[0].de, regs[0].hl);
-	sprintf(str + strlen(str), " IX=%04X I=%02X PC=%04X",ix, ir & 255, pc);
-	sprintf(str + strlen(str), ":%02X,%02X,%02X,%02X",ReadZ80Mem(pc),ReadZ80Mem(pc+1),ReadZ80Mem(pc+2),ReadZ80Mem(pc+3));
+	snprintf(str, kRegDumpBufferSize, "AF=%04X ", af[0]);
+	snprintf(str + strlen(str), kRegDumpBufferSize - strlen(str), (af[0] & 128) ? "M" : "P");
+	snprintf(str + strlen(str), kRegDumpBufferSize - strlen(str), (af[0] & 64) ? "Z" : ".");
+	snprintf(str + strlen(str), kRegDumpBufferSize - strlen(str), (af[0] & 32) ? "5" : ".");
+	snprintf(str + strlen(str), kRegDumpBufferSize - strlen(str), (af[0] & 16) ? "H" : ".");
+	snprintf(str + strlen(str), kRegDumpBufferSize - strlen(str), (af[0] & 8) ? "3" : ".");
+	snprintf(str + strlen(str), kRegDumpBufferSize - strlen(str), (af[0] & 4) ? "V" : ".");
+	snprintf(str + strlen(str), kRegDumpBufferSize - strlen(str), (af[0] & 2) ? "N" : ".");
+	snprintf(str + strlen(str), kRegDumpBufferSize - strlen(str), (af[0] & 1) ? "C" : ".");
+	snprintf(str + strlen(str), kRegDumpBufferSize - strlen(str), " BC=%04X DE=%04X HL=%04X", regs[0].bc, regs[0].de, regs[0].hl);
+	snprintf(str + strlen(str), kRegDumpBufferSize - strlen(str), " IX=%04X I=%02X PC=%04X", ix, ir & 255, pc);
+	snprintf(str + strlen(str), kRegDumpBufferSize - strlen(str), ":%02X,%02X,%02X,%02X", ReadZ80Mem(pc), ReadZ80Mem(pc + 1), ReadZ80Mem(pc + 2), ReadZ80Mem(pc + 3));
 }
 
-void Disp_RegSet2(char *str)
+void Disp_RegSet2(char *str, size_t kRegDumpBufferSize)
 {
-	sprintf(str, "AF'%04X ",af[1]);
-	sprintf(str + strlen(str), (af[1] & 128) ? "M" : "P");
-	sprintf(str + strlen(str), (af[1] & 64) ? "Z" : ".");
-	sprintf(str + strlen(str), (af[1] & 32) ? "5" : ".");
-	sprintf(str + strlen(str), (af[1] & 16) ? "H" : ".");
-	sprintf(str + strlen(str), (af[1] & 8) ? "3" : ".");
-	sprintf(str + strlen(str), (af[1] & 4) ? "V" : ".");
-	sprintf(str + strlen(str), (af[1] & 2) ? "N" : ".");
-	sprintf(str + strlen(str), (af[1] & 1) ? "C" : ".");
-	sprintf(str + strlen(str), " BC'%04X DE'%04X HL'%04X",regs[1].bc,regs[1].de,regs[1].hl);
-	sprintf(str + strlen(str), " IY=%04X R=%02x SP=%04X",iy, regs_sel, sp);
-	sprintf(str + strlen(str), ":%02X,%02X,%02X,%02X\n",ReadZ80Mem(sp),ReadZ80Mem(sp+1),ReadZ80Mem(sp+2),ReadZ80Mem(sp+3));
+	snprintf(str, kRegDumpBufferSize, "AF'%04X ", af[1]);
+	snprintf(str + strlen(str), kRegDumpBufferSize - strlen(str), (af[1] & 128) ? "M" : "P");
+	snprintf(str + strlen(str), kRegDumpBufferSize - strlen(str), (af[1] & 64) ? "Z" : ".");
+	snprintf(str + strlen(str), kRegDumpBufferSize - strlen(str), (af[1] & 32) ? "5" : ".");
+	snprintf(str + strlen(str), kRegDumpBufferSize - strlen(str), (af[1] & 16) ? "H" : ".");
+	snprintf(str + strlen(str), kRegDumpBufferSize - strlen(str), (af[1] & 8) ? "3" : ".");
+	snprintf(str + strlen(str), kRegDumpBufferSize - strlen(str), (af[1] & 4) ? "V" : ".");
+	snprintf(str + strlen(str), kRegDumpBufferSize - strlen(str), (af[1] & 2) ? "N" : ".");
+	snprintf(str + strlen(str), kRegDumpBufferSize - strlen(str), (af[1] & 1) ? "C" : ".");
+	snprintf(str + strlen(str), kRegDumpBufferSize - strlen(str), " BC'%04X DE'%04X HL'%04X", regs[1].bc, regs[1].de, regs[1].hl);
+	snprintf(str + strlen(str), kRegDumpBufferSize - strlen(str), " IY=%04X R=%02x SP=%04X", iy, regs_sel, sp);
+	snprintf(str + strlen(str), kRegDumpBufferSize - strlen(str), ":%02X,%02X,%02X,%02X\n", ReadZ80Mem(sp), ReadZ80Mem(sp + 1), ReadZ80Mem(sp + 2), ReadZ80Mem(sp + 3));
 }
 
 
@@ -117,33 +118,33 @@ void disp_regs()
 
 	Z80_Disassemble(pc, buff);
 
-	sprintf(str, "AF=%04X ",af[0]);
-	sprintf(str + strlen(str), (af[0] & 128) ? "M" : "P");
-	sprintf(str + strlen(str), (af[0] & 64) ? "Z" : ".");
-	sprintf(str + strlen(str), (af[0] & 32) ? "5" : ".");
-	sprintf(str + strlen(str), (af[0] & 16) ? "H" : ".");
-	sprintf(str + strlen(str), (af[0] & 8) ? "3" : ".");
-	sprintf(str + strlen(str), (af[0] & 4) ? "V" : ".");
-	sprintf(str + strlen(str), (af[0] & 2) ? "N" : ".");
-	sprintf(str + strlen(str), (af[0] & 1) ? "C" : ".");
-	sprintf(str + strlen(str), " BC=%04X DE=%04X HL=%04X", regs[0].bc, regs[0].de, regs[0].hl);
-	sprintf(str + strlen(str), " IX=%04X I=%02X PC=%04X",ix, ir & 255, pc);
-	sprintf(str + strlen(str), ":%02X,%02X,%02X,%02X",ReadZ80Mem(pc),ReadZ80Mem(pc+1),ReadZ80Mem(pc+2),ReadZ80Mem(pc+3));
+	snprintf(str, sizeof(str), "AF=%04X ", af[0]);
+	snprintf(str + strlen(str), sizeof(str) - strlen(str), (af[0] & 128) ? "M" : "P");
+	snprintf(str + strlen(str), sizeof(str) - strlen(str), (af[0] & 64) ? "Z" : ".");
+	snprintf(str + strlen(str), sizeof(str) - strlen(str), (af[0] & 32) ? "5" : ".");
+	snprintf(str + strlen(str), sizeof(str) - strlen(str), (af[0] & 16) ? "H" : ".");
+	snprintf(str + strlen(str), sizeof(str) - strlen(str), (af[0] & 8) ? "3" : ".");
+	snprintf(str + strlen(str), sizeof(str) - strlen(str), (af[0] & 4) ? "V" : ".");
+	snprintf(str + strlen(str), sizeof(str) - strlen(str), (af[0] & 2) ? "N" : ".");
+	snprintf(str + strlen(str), sizeof(str) - strlen(str), (af[0] & 1) ? "C" : ".");
+	snprintf(str + strlen(str), sizeof(str) - strlen(str), " BC=%04X DE=%04X HL=%04X", regs[0].bc, regs[0].de, regs[0].hl);
+	snprintf(str + strlen(str), sizeof(str) - strlen(str), " IX=%04X I=%02X PC=%04X", ix, ir & 255, pc);
+	snprintf(str + strlen(str), sizeof(str) - strlen(str), ":%02X,%02X,%02X,%02X", ReadZ80Mem(pc), ReadZ80Mem(pc + 1), ReadZ80Mem(pc + 2), ReadZ80Mem(pc + 3));
 
 	WriteLog("%s %s\n", str, buff);
 
-	sprintf(str, "AF'%04X ",af[1]);
-	sprintf(str + strlen(str), (af[1] & 128) ? "M" : "P");
-	sprintf(str + strlen(str), (af[1] & 64) ? "Z" : ".");
-	sprintf(str + strlen(str), (af[1] & 32) ? "5" : ".");
-	sprintf(str + strlen(str), (af[1] & 16) ? "H" : ".");
-	sprintf(str + strlen(str), (af[1] & 8) ? "3" : ".");
-	sprintf(str + strlen(str), (af[1] & 4) ? "V" : ".");
-	sprintf(str + strlen(str), (af[1] & 2) ? "N" : ".");
-	sprintf(str + strlen(str), (af[1] & 1) ? "C" : ".");
-	sprintf(str + strlen(str), " BC'%04X DE'%04X HL'%04X",regs[1].bc,regs[1].de,regs[1].hl);
-	sprintf(str + strlen(str), " IY=%04X R=%02x SP=%04X",iy, regs_sel, sp);
-	sprintf(str + strlen(str), ":%02X,%02X,%02X,%02X\n",ReadZ80Mem(sp),ReadZ80Mem(sp+1),ReadZ80Mem(sp+2),ReadZ80Mem(sp+3));
+	snprintf(str, sizeof(str), "AF'%04X ", af[1]);
+	snprintf(str + strlen(str), sizeof(str) - strlen(str), (af[1] & 128) ? "M" : "P");
+	snprintf(str + strlen(str), sizeof(str) - strlen(str), (af[1] & 64) ? "Z" : ".");
+	snprintf(str + strlen(str), sizeof(str) - strlen(str), (af[1] & 32) ? "5" : ".");
+	snprintf(str + strlen(str), sizeof(str) - strlen(str), (af[1] & 16) ? "H" : ".");
+	snprintf(str + strlen(str), sizeof(str) - strlen(str), (af[1] & 8) ? "3" : ".");
+	snprintf(str + strlen(str), sizeof(str) - strlen(str), (af[1] & 4) ? "V" : ".");
+	snprintf(str + strlen(str), sizeof(str) - strlen(str), (af[1] & 2) ? "N" : ".");
+	snprintf(str + strlen(str), sizeof(str) - strlen(str), (af[1] & 1) ? "C" : ".");
+	snprintf(str + strlen(str), sizeof(str) - strlen(str), " BC'%04X DE'%04X HL'%04X", regs[1].bc, regs[1].de, regs[1].hl);
+	snprintf(str + strlen(str), sizeof(str) - strlen(str), " IY=%04X R=%02x SP=%04X", iy, regs_sel, sp);
+	snprintf(str + strlen(str), sizeof(str) - strlen(str), ":%02X,%02X,%02X,%02X\n", ReadZ80Mem(sp), ReadZ80Mem(sp + 1), ReadZ80Mem(sp + 2), ReadZ80Mem(sp + 3));
 
 	WriteLog("%s\n", str);
 }
@@ -336,12 +337,12 @@ void PrintHex(int addr)
 	const int num = 16;
 
 	char *p = buff;
-	sprintf(p, "%04X : ", addr);
+	snprintf(p, sizeof(buff) - (size_t)(p - buff), "%04X : ", addr);
 	p += 7;
 
 	for (int i = 0; i < 16; ++i)
 	{
-		sprintf(p, "%02X ", ReadZ80Mem(addr + i));
+		snprintf(p, sizeof(buff) - (size_t)(p - buff), "%02X ", ReadZ80Mem(addr + i));
 		p += 3;
 	}
 

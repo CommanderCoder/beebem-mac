@@ -160,7 +160,7 @@ const char* GetFileNameFromPath(const char* PathName)
 
 /****************************************************************************/
 
-void MakeFileName(char* Path, size_t /* Size */, const char* DirName, const char* FileName, ...)
+void MakeFileName(char* Path, size_t Size, const char* DirName, const char* FileName, ...)
 {
 	va_list args;
 	va_start(args, FileName);
@@ -174,7 +174,7 @@ void MakeFileName(char* Path, size_t /* Size */, const char* DirName, const char
 		Path[Len++] = DIR_SEPARATOR;
 	}
 
-	vsprintf(&Path[Len], FileName, args);
+	vsnprintf(&Path[Len], Size > Len ? Size - Len : 0, FileName, args);
 
 	va_end(args);
 }

@@ -34,7 +34,7 @@ int Z80_Disassemble(int adr, char *s)
 	static const char* const dreg[4] = {"BC", "DE", "HL", "SP"};
 	static const char* const cond[8] = {"NZ", "Z", "NC", "C", "PO", "PE", "P", "M"};
 	static const char* const arith[8] = {"ADD\tA,", "ADC\tA,", "SUB\t", "SBC\tA,", "AND\t", "XOR\t", "OR\t", "CP\t"};
-	char stemp[80]; // temp.String for sprintf()
+	char stemp[80]; // temp.String for snprintf()
 	char ireg[3]; // temp.Indexregister
 	int size = 1;
 
@@ -51,19 +51,19 @@ int Z80_Disassemble(int adr, char *s)
 				break;
 			case 0x02:
 				strcpy(s,"DJNZ\t");
-				sprintf(stemp,"%4.4Xh",adr+2+(signed char)ReadZ80Mem(adr+1));strcat(s,stemp);
+				snprintf(stemp, sizeof(stemp),"%4.4Xh",adr+2+(signed char)ReadZ80Mem(adr+1));strcat(s,stemp);
 				size = 2;
 				break;
 			case 0x03:
 				strcpy(s,"JR\t");
-				sprintf(stemp,"%4.4Xh",adr+2+(signed char)ReadZ80Mem(adr+1));strcat(s,stemp);
+				snprintf(stemp, sizeof(stemp),"%4.4Xh",adr+2+(signed char)ReadZ80Mem(adr+1));strcat(s,stemp);
 				size = 2;
 				break;
 			default:
 				strcpy(s,"JR\t");
 				strcat(s,cond[d & 3]);
 				strcat(s,",");
-				sprintf(stemp,"%4.4Xh",adr+2+(signed char)ReadZ80Mem(adr+1));strcat(s,stemp);
+				snprintf(stemp, sizeof(stemp),"%4.4Xh",adr+2+(signed char)ReadZ80Mem(adr+1));strcat(s,stemp);
 				size = 2;
 				break;
 			}
@@ -76,7 +76,7 @@ int Z80_Disassemble(int adr, char *s)
 				strcpy(s,"LD\t");
 				strcat(s,dreg[d >> 1]);
 				strcat(s,",");
-				sprintf(stemp,"%4.4Xh",ReadZ80Mem(adr+1)+(ReadZ80Mem(adr+2)<<8));strcat(s,stemp);
+				snprintf(stemp, sizeof(stemp),"%4.4Xh",ReadZ80Mem(adr+1)+(ReadZ80Mem(adr+2)<<8));strcat(s,stemp);
 				size = 3;
 			}
 			break;
@@ -96,25 +96,25 @@ int Z80_Disassemble(int adr, char *s)
 				break;
 			case 0x04:
 				strcpy(s,"LD\t(");
-				sprintf(stemp,"%4.4Xh",ReadZ80Mem(adr+1)+(ReadZ80Mem(adr+2)<<8));strcat(s,stemp);
+				snprintf(stemp, sizeof(stemp),"%4.4Xh",ReadZ80Mem(adr+1)+(ReadZ80Mem(adr+2)<<8));strcat(s,stemp);
 				strcat(s,"),HL");
 				size = 3;
 				break;
 			case 0x05:
 				strcpy(s,"LD\tHL,(");
-				sprintf(stemp,"%4.4Xh",ReadZ80Mem(adr+1)+(ReadZ80Mem(adr+2)<<8));strcat(s,stemp);
+				snprintf(stemp, sizeof(stemp),"%4.4Xh",ReadZ80Mem(adr+1)+(ReadZ80Mem(adr+2)<<8));strcat(s,stemp);
 				strcat(s,")");
 				size = 3;
 				break;
 			case 0x06:
 				strcpy(s,"LD\t(");
-				sprintf(stemp,"%4.4Xh",ReadZ80Mem(adr+1)+(ReadZ80Mem(adr+2)<<8));strcat(s,stemp);
+				snprintf(stemp, sizeof(stemp),"%4.4Xh",ReadZ80Mem(adr+1)+(ReadZ80Mem(adr+2)<<8));strcat(s,stemp);
 				strcat(s,"),A");
 				size = 3;
 				break;
 			case 0x07:
 				strcpy(s,"LD\tA,(");
-				sprintf(stemp,"%4.4Xh",ReadZ80Mem(adr+1)+(ReadZ80Mem(adr+2)<<8));strcat(s,stemp);
+				snprintf(stemp, sizeof(stemp),"%4.4Xh",ReadZ80Mem(adr+1)+(ReadZ80Mem(adr+2)<<8));strcat(s,stemp);
 				strcat(s,")");
 				size = 3;
 				break;
@@ -139,7 +139,7 @@ int Z80_Disassemble(int adr, char *s)
 			strcpy(s,"LD\t");
 			strcat(s,reg[d]);
 			strcat(s,",");
-			sprintf(stemp,"%2.2Xh",ReadZ80Mem(adr+1));strcat(s,stemp);
+			snprintf(stemp, sizeof(stemp),"%2.2Xh",ReadZ80Mem(adr+1));strcat(s,stemp);
 			size = 2;
 			break;
 		case 0x07:
@@ -198,14 +198,14 @@ int Z80_Disassemble(int adr, char *s)
 			strcpy(s,"JP\t");
 			strcat(s,cond[d]);
 			strcat(s,",");
-			sprintf(stemp,"%4.4Xh",ReadZ80Mem(adr+1)+(ReadZ80Mem(adr+2)<<8));strcat(s,stemp);
+			snprintf(stemp, sizeof(stemp),"%4.4Xh",ReadZ80Mem(adr+1)+(ReadZ80Mem(adr+2)<<8));strcat(s,stemp);
 			size = 3;
 			break;
 		case 0x03:
 			switch(d) {
 			case 0x00:
 				strcpy(s,"JP\t");
-				sprintf(stemp,"%4.4Xh",ReadZ80Mem(adr+1)+(ReadZ80Mem(adr+2)<<8));strcat(s,stemp);
+				snprintf(stemp, sizeof(stemp),"%4.4Xh",ReadZ80Mem(adr+1)+(ReadZ80Mem(adr+2)<<8));strcat(s,stemp);
 				size = 3;
 				break;
 			case 0x01:					// 0xCB
@@ -245,13 +245,13 @@ int Z80_Disassemble(int adr, char *s)
 				break;
 			case 0x02:
 				strcpy(s,"OUT\t(");
-				sprintf(stemp,"%2.2Xh",ReadZ80Mem(adr+1));strcat(s,stemp);
+				snprintf(stemp, sizeof(stemp),"%2.2Xh",ReadZ80Mem(adr+1));strcat(s,stemp);
 				strcat(s,"),A");
 				size = 2;
 				break;
 			case 0x03:
 				strcpy(s,"IN\tA,(");
-				sprintf(stemp,"%2.2Xh",ReadZ80Mem(adr+1));strcat(s,stemp);
+				snprintf(stemp, sizeof(stemp),"%2.2Xh",ReadZ80Mem(adr+1));strcat(s,stemp);
 				strcat(s,")");
 				size = 2;
 				break;
@@ -273,7 +273,7 @@ int Z80_Disassemble(int adr, char *s)
 			strcpy(s,"CALL\t");
 			strcat(s,cond[d]);
 			strcat(s,",");
-			sprintf(stemp,"%4.4Xh",ReadZ80Mem(adr+1)+(ReadZ80Mem(adr+2)<<8));strcat(s,stemp);
+			snprintf(stemp, sizeof(stemp),"%4.4Xh",ReadZ80Mem(adr+1)+(ReadZ80Mem(adr+2)<<8));strcat(s,stemp);
 			size = 3;
 			break;
 		case 0x05:
@@ -281,7 +281,7 @@ int Z80_Disassemble(int adr, char *s)
 				switch(d >> 1) {
 				case 0x00:
 					strcpy(s,"CALL\t");
-					sprintf(stemp,"%4.4Xh",ReadZ80Mem(adr+1)+(ReadZ80Mem(adr+2)<<8));strcat(s,stemp);
+					snprintf(stemp, sizeof(stemp),"%4.4Xh",ReadZ80Mem(adr+1)+(ReadZ80Mem(adr+2)<<8));strcat(s,stemp);
 					size = 3;
 					break;
 				case 0x02:				// 0xED
@@ -314,12 +314,12 @@ int Z80_Disassemble(int adr, char *s)
 								strcpy(s,"LD\t");
 								strcat(s,dreg[d >> 1]);
 								strcat(s,",(");
-								sprintf(stemp,"%4.4Xh",ReadZ80Mem(adr+1)+(ReadZ80Mem(adr+2)<<8));strcat(s,stemp);
+								snprintf(stemp, sizeof(stemp),"%4.4Xh",ReadZ80Mem(adr+1)+(ReadZ80Mem(adr+2)<<8));strcat(s,stemp);
 								strcat(s,")");
 								size += 2;
 							} else {
 								strcpy(s,"LD\t(");
-								sprintf(stemp,"%4.4Xh",ReadZ80Mem(adr+1)+(ReadZ80Mem(adr+2)<<8));strcat(s,stemp);
+								snprintf(stemp, sizeof(stemp),"%4.4Xh",ReadZ80Mem(adr+1)+(ReadZ80Mem(adr+2)<<8));strcat(s,stemp);
 								strcat(s,"),");
 								strcat(s,dreg[d >> 1]);
 								size += 2;
@@ -382,12 +382,12 @@ int Z80_Disassemble(int adr, char *s)
 						strcpy(s,"LD\t");
 						strcat(s,ireg);
 						strcat(s,",");
-						sprintf(stemp,"%4.4Xh",ReadZ80Mem(adr+1)+(ReadZ80Mem(adr+2)<<8));strcat(s,stemp);
+						snprintf(stemp, sizeof(stemp),"%4.4Xh",ReadZ80Mem(adr+1)+(ReadZ80Mem(adr+2)<<8));strcat(s,stemp);
 						size += 2;
 						break;
 					case 0x22:
 						strcpy(s,"LD\t(");
-						sprintf(stemp,"%4.4Xh",ReadZ80Mem(adr+1)+(ReadZ80Mem(adr+2)<<8));strcat(s,stemp);
+						snprintf(stemp, sizeof(stemp),"%4.4Xh",ReadZ80Mem(adr+1)+(ReadZ80Mem(adr+2)<<8));strcat(s,stemp);
 						strcat(s,"),");
 						strcat(s,ireg);
 						size += 2;
@@ -406,7 +406,7 @@ int Z80_Disassemble(int adr, char *s)
 						strcpy(s,"LD\t");
 						strcat(s,ireg);
 						strcat(s,",(");
-						sprintf(stemp,"%4.4Xh",ReadZ80Mem(adr+1)+(ReadZ80Mem(adr+2)<<8));strcat(s,stemp);
+						snprintf(stemp, sizeof(stemp),"%4.4Xh",ReadZ80Mem(adr+1)+(ReadZ80Mem(adr+2)<<8));strcat(s,stemp);
 						strcat(s,")");
 						size += 2;
 						break;
@@ -418,7 +418,7 @@ int Z80_Disassemble(int adr, char *s)
 						strcpy(s,"INC\t(");
 						strcat(s,ireg);
 						strcat(s,"+");
-						sprintf(stemp,"%2.2Xh",ReadZ80Mem(adr+1));strcat(s,stemp);
+						snprintf(stemp, sizeof(stemp),"%2.2Xh",ReadZ80Mem(adr+1));strcat(s,stemp);
 						strcat(s,")");
 						size += 1;
 						break;
@@ -426,7 +426,7 @@ int Z80_Disassemble(int adr, char *s)
 						strcpy(s,"DEC\t(");
 						strcat(s,ireg);
 						strcat(s,"+");
-						sprintf(stemp,"%2.2Xh",ReadZ80Mem(adr+1));strcat(s,stemp);
+						snprintf(stemp, sizeof(stemp),"%2.2Xh",ReadZ80Mem(adr+1));strcat(s,stemp);
 						strcat(s,")");
 						size += 1;
 						break;
@@ -434,9 +434,9 @@ int Z80_Disassemble(int adr, char *s)
 						strcpy(s,"LD\t(");
 						strcat(s,ireg);
 						strcat(s,"+");
-						sprintf(stemp,"%2.2Xh",ReadZ80Mem(adr+1));strcat(s,stemp);
+						snprintf(stemp, sizeof(stemp),"%2.2Xh",ReadZ80Mem(adr+1));strcat(s,stemp);
 						strcat(s,"),");
-						sprintf(stemp,"%2.2Xh",ReadZ80Mem(adr+2));strcat(s,stemp);
+						snprintf(stemp, sizeof(stemp),"%2.2Xh",ReadZ80Mem(adr+2));strcat(s,stemp);
 						size += 2;
 						break;
 					case 0x39:
@@ -455,7 +455,7 @@ int Z80_Disassemble(int adr, char *s)
 						strcat(s,",(");
 						strcat(s,ireg);
 						strcat(s,"+");
-						sprintf(stemp,"%2.2Xh",ReadZ80Mem(adr+1));strcat(s,stemp);
+						snprintf(stemp, sizeof(stemp),"%2.2Xh",ReadZ80Mem(adr+1));strcat(s,stemp);
 						strcat(s,")");
 						size += 1;
 						break;
@@ -469,7 +469,7 @@ int Z80_Disassemble(int adr, char *s)
 						strcpy(s,"LD\t(");
 						strcat(s,ireg);
 						strcat(s,"+");
-						sprintf(stemp,"%2.2Xh",ReadZ80Mem(adr+1));strcat(s,stemp);
+						snprintf(stemp, sizeof(stemp),"%2.2Xh",ReadZ80Mem(adr+1));strcat(s,stemp);
 						strcat(s,"),");
 						strcat(s,reg[a & 7]);
 						size += 1;
@@ -478,7 +478,7 @@ int Z80_Disassemble(int adr, char *s)
 						strcpy(s,"LD\tA,(");
 						strcat(s,ireg);
 						strcat(s,"+");
-						sprintf(stemp,"%2.2Xh",ReadZ80Mem(adr+1));strcat(s,stemp);
+						snprintf(stemp, sizeof(stemp),"%2.2Xh",ReadZ80Mem(adr+1));strcat(s,stemp);
 						strcat(s,")");
 						size += 1;
 						break;
@@ -486,7 +486,7 @@ int Z80_Disassemble(int adr, char *s)
 						strcpy(s,"ADD\tA,(");
 						strcat(s,ireg);
 						strcat(s,"+");
-						sprintf(stemp,"%2.2Xh",ReadZ80Mem(adr+1));strcat(s,stemp);
+						snprintf(stemp, sizeof(stemp),"%2.2Xh",ReadZ80Mem(adr+1));strcat(s,stemp);
 						strcat(s,")");
 						size += 1;
 						break;
@@ -494,7 +494,7 @@ int Z80_Disassemble(int adr, char *s)
 						strcpy(s,"ADC\tA,(");
 						strcat(s,ireg);
 						strcat(s,"+");
-						sprintf(stemp,"%2.2Xh",ReadZ80Mem(adr+1));strcat(s,stemp);
+						snprintf(stemp, sizeof(stemp),"%2.2Xh",ReadZ80Mem(adr+1));strcat(s,stemp);
 						strcat(s,")");
 						size += 1;
 						break;
@@ -502,7 +502,7 @@ int Z80_Disassemble(int adr, char *s)
 						strcpy(s,"SUB\t(");
 						strcat(s,ireg);
 						strcat(s,"+");
-						sprintf(stemp,"%2.2Xh",ReadZ80Mem(adr+1));strcat(s,stemp);
+						snprintf(stemp, sizeof(stemp),"%2.2Xh",ReadZ80Mem(adr+1));strcat(s,stemp);
 						strcat(s,")");
 						size += 1;
 						break;
@@ -510,7 +510,7 @@ int Z80_Disassemble(int adr, char *s)
 						strcpy(s,"SBC\tA,(");
 						strcat(s,ireg);
 						strcat(s,"+");
-						sprintf(stemp,"%2.2Xh",ReadZ80Mem(adr+1));strcat(s,stemp);
+						snprintf(stemp, sizeof(stemp),"%2.2Xh",ReadZ80Mem(adr+1));strcat(s,stemp);
 						strcat(s,")");
 						size += 1;
 						break;
@@ -518,7 +518,7 @@ int Z80_Disassemble(int adr, char *s)
 						strcpy(s,"AND\tA,(");
 						strcat(s,ireg);
 						strcat(s,"+");
-						sprintf(stemp,"%2.2Xh",ReadZ80Mem(adr+1));strcat(s,stemp);
+						snprintf(stemp, sizeof(stemp),"%2.2Xh",ReadZ80Mem(adr+1));strcat(s,stemp);
 						strcat(s,")");
 						size += 1;
 						break;
@@ -526,7 +526,7 @@ int Z80_Disassemble(int adr, char *s)
 						strcpy(s,"XOR\tA,(");
 						strcat(s,ireg);
 						strcat(s,"+");
-						sprintf(stemp,"%2.2Xh",ReadZ80Mem(adr+1));strcat(s,stemp);
+						snprintf(stemp, sizeof(stemp),"%2.2Xh",ReadZ80Mem(adr+1));strcat(s,stemp);
 						strcat(s,")");
 						size += 1;
 						break;
@@ -534,7 +534,7 @@ int Z80_Disassemble(int adr, char *s)
 						strcpy(s,"OR\tA,(");
 						strcat(s,ireg);
 						strcat(s,"+");
-						sprintf(stemp,"%2.2Xh",ReadZ80Mem(adr+1));strcat(s,stemp);
+						snprintf(stemp, sizeof(stemp),"%2.2Xh",ReadZ80Mem(adr+1));strcat(s,stemp);
 						strcat(s,")");
 						size += 1;
 						break;
@@ -542,7 +542,7 @@ int Z80_Disassemble(int adr, char *s)
 						strcpy(s,"CP\tA,(");
 						strcat(s,ireg);
 						strcat(s,"+");
-						sprintf(stemp,"%2.2Xh",ReadZ80Mem(adr+1));strcat(s,stemp);
+						snprintf(stemp, sizeof(stemp),"%2.2Xh",ReadZ80Mem(adr+1));strcat(s,stemp);
 						strcat(s,")");
 						size += 1;
 						break;
@@ -603,7 +603,7 @@ int Z80_Disassemble(int adr, char *s)
 						strcat(s,"(");
 						strcat(s,ireg);
 						strcat(s,"+");
-						sprintf(stemp,"%2.2Xh",ReadZ80Mem(adr+1));strcat(s,stemp);
+						snprintf(stemp, sizeof(stemp),"%2.2Xh",ReadZ80Mem(adr+1));strcat(s,stemp);
 						strcat(s,")");
 						size += 2;
 						break;
@@ -620,12 +620,12 @@ int Z80_Disassemble(int adr, char *s)
 			break;
 		case 0x06:
 			strcpy(s,arith[d]);
-			sprintf(stemp,"%2.2Xh",ReadZ80Mem(adr+1));strcat(s,stemp);
+			snprintf(stemp, sizeof(stemp),"%2.2Xh",ReadZ80Mem(adr+1));strcat(s,stemp);
 			size += 1;
 			break;
 		case 0x07:
 			strcpy(s,"RST\t");
-			sprintf(stemp,"%2.2Xh",a & 0x38);strcat(s,stemp);
+			snprintf(stemp, sizeof(stemp),"%2.2Xh",a & 0x38);strcat(s,stemp);
 			break;
 		}
 		break;

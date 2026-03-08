@@ -37,6 +37,7 @@ Boston, MA  02110-1301, USA.
 
 #include <windows.h>
 #include <d3d9.h>
+#include <d3dx9math.h>
 #include <ddraw.h>
 #include <sapi.h>
 
@@ -236,7 +237,7 @@ public:
 	~BeebWin();
 
 	bool Initialise();
-	void ApplyPrefs();
+	void ApplyPreferences();
 	void Shutdown();
 
 #ifndef __APPLE__
@@ -269,10 +270,10 @@ public:
 	void UpdateLEDMenu();
 	void SetDriveControl(unsigned char value);
 	unsigned char GetDriveControl(void);
-	void doLED(int sx,bool on);
-	void updateLines(HDC hDC, int StartY, int NLines);
-	void updateLines(int StartY, int NLines) {
-		updateLines(m_hDC, StartY, NLines);
+	void doLED(int sx, bool on);
+	void UpdateLines(HDC hDC, int StartY, int NLines);
+	void UpdateLines(int StartY, int NLines) {
+		UpdateLines(m_hDC, StartY, NLines);
 	}
 
 	void doHorizLine(int Colour, int y, int sx, int width) {
@@ -357,8 +358,8 @@ public:
 	void ChangeAMXPosition(int deltaX, int deltaY);
 	void CaptureMouse();
 	void ReleaseMouse();
-	void Activate(bool Active);
-	void Focus(bool Focus);
+	void OnActivate(bool Active);
+	void OnSetFocus(bool Focus);
 	void OnSize(WPARAM ResizeType, int Width, int Height);
 	bool IsFrozen() const;
 	void TogglePause();
@@ -404,7 +405,7 @@ public:
 	bool HasKbdCmd() const;
 	void SetKeyboardTimer();
 	void SetBootDiscTimer();
-	void KillBootDiscTimer();
+	void OnTimer(UINT_PTR TimerID);
 
 	void SaveBeebEmID(FILE *SUEF);
 	void SaveEmuUEF(FILE *SUEF);
@@ -438,6 +439,7 @@ public:
 
 	void SetDisplayRenderer(DisplayRendererType DisplayRenderer);
 	void UpdateDisplayRendererMenu();
+	void UpdateDisplayRendererOptionsMenu();
 
 	void SetSoundStreamer(SoundStreamerType StreamerType);
 	void UpdateSoundStreamerMenu();
@@ -458,8 +460,8 @@ public:
 
 	// DirectX - calls DDraw or DX9 fn
 	void InitDX();
-	void ResetDX();
-	void ReinitDX();
+	HRESULT ResetDX();
+	HRESULT ReinitDX();
 	void ExitDX();
 	void UpdateSmoothing();
 
@@ -468,16 +470,16 @@ public:
 
 	// DirectDraw
 	HRESULT InitDirectDraw();
+	void ExitDirectDraw();
 	HRESULT InitSurfaces();
-	void CloseSurfaces();
+	void ResetSurfaces();
 
 	// DirectX9
-	bool InitDX9();
-	void CloseDX9();
-	HRESULT InitD3DDevice();
-	void CloseD3DDevice();
+	HRESULT InitDX9();
+	void ExitDX9();
 	void RenderDX9();
 	void OnDeviceLost();
+	void DirectX9Failed(HRESULT hResult);
 
 	void SetWindowSize(int Width, int Height);
 	void UpdateWindowSizeMenu();
@@ -527,7 +529,7 @@ public:
 	void ToggleWriteProtect(int Drive);
 	void SetDiscWriteProtect(int Drive, bool WriteProtect);
 	void SetDiscWriteProtects();
-	void SetWindowAttributes(bool wasFullScreen);
+	HRESULT SetWindowAttributes(bool WasFullScreen);
 
 	void SetAMXSize(AMXSizeType Size);
 	void UpdateAMXSizeMenu();
@@ -636,11 +638,6 @@ public:
 
 	int FindEnum(const std::string& Value, const char* const* Names, int Default);
 
-	// Timers
-	const UINT TIMER_KEYBOARD       = 1;
-	const UINT TIMER_AUTOBOOT_DELAY = 2;
-	const UINT TIMER_PRINTER        = 3;
-
 	// Main window
 	HWND m_hWnd;
 	char m_szTitle[256];
@@ -680,7 +677,7 @@ public:
 	bool m_Frozen;
 
 	// Window size
-	int m_XWinSize;
+	int m_XWinSize; // Client area size
 	int m_YWinSize;
 	int m_XLastWinSize;
 	int m_YLastWinSize;
@@ -708,38 +705,36 @@ public:
 	char m_BlurIntensities[8];
 	bool m_MaintainAspectRatio;
 	DisplayRendererType m_DisplayRenderer;
-	DisplayRendererType m_CurrentDisplayRenderer;
-	DirectXFullScreenMode m_DDFullScreenMode;
+	DirectXFullScreenMode m_DirectXFullScreenMode;
 	LEDColour m_DiscLedColour;
 
 	// DirectX stuff
 	bool m_DXInit;
-	bool m_DXResetPending;
-	bool m_DXDeviceLost;
+	enum class DX9State { Uninitialised, OK, DeviceLost } m_DX9State;
 
 	// DirectDraw stuff
 	HINSTANCE m_hInstDDraw;
 #ifndef __APPLE__
-	LPDIRECTDRAW m_DD; // DirectDraw object
-	LPDIRECTDRAW2 m_DD2; // DirectDraw object
-	LPDIRECTDRAWSURFACE m_DDSPrimary; // DirectDraw primary surface
-	LPDIRECTDRAWSURFACE2 m_DDS2Primary; // DirectDraw primary surface
-	LPDIRECTDRAWSURFACE m_DDSOne; // Offscreen surface 1
-	LPDIRECTDRAWSURFACE2 m_DDS2One; // Offscreen surface 1
+	IDirectDraw* m_DD; // DirectDraw object
+	IDirectDraw2* m_DD2; // DirectDraw object
+	IDirectDrawSurface* m_DDSPrimary; // DirectDraw primary surface
+	IDirectDrawSurface2* m_DDS2Primary; // DirectDraw primary surface
+	IDirectDrawSurface* m_DDSOne; // Offscreen surface 1
+	IDirectDrawSurface2* m_DDS2One; // Offscreen surface 1
+	IDirectDrawClipper* m_Clipper; // clipper for primary
 #endif
 	bool m_DXSmoothing;
 	bool m_DXSmoothMode7Only;
-#ifndef __APPLE__
-	LPDIRECTDRAWCLIPPER m_Clipper; // clipper for primary
 
 	// Direct3D9 stuff
-	LPDIRECT3D9 m_pD3D;
-	LPDIRECT3DDEVICE9 m_pd3dDevice;
-	LPDIRECT3DVERTEXBUFFER9 m_pVB;
-	LPDIRECT3DTEXTURE9 m_pTexture;
-	D3DMATRIX m_TextureMatrix;
+#ifndef __APPLE__
+	IDirect3D9* m_pD3D;
+	IDirect3DDevice9* m_pd3dDevice;
+	IDirect3DVertexBuffer9* m_pVB;
+	IDirect3DTexture9* m_pTexture;
+	D3DXMATRIX m_TextureMatrix;
 #endif
-    
+
 	// Joystick input
 	bool m_JoystickCaptured;
 	JOYCAPS m_JoystickCaps;
@@ -871,6 +866,12 @@ public:
 	WNDPROC m_TextViewPrevWndProc;
 	static const int MAX_TEXTVIEW_SCREEN_LEN = 128 * 32;
 	char m_TextViewScreen[MAX_TEXTVIEW_SCREEN_LEN + 1];
+
+	// Timers
+	static const UINT_PTR TIMER_KEYBOARD       = 1;
+	static const UINT_PTR TIMER_AUTOBOOT_DELAY = 2;
+	static const UINT_PTR TIMER_PRINTER        = 3;
+	static const UINT_PTR TIMER_DEVICE_LOST    = 4;
 
 	// Debug
 	bool m_WriteInstructionCounts;

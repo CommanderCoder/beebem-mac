@@ -23,6 +23,10 @@ Boston, MA  02110-1301, USA.
 #include <codecvt>
 #include <locale>
 
+#ifdef __APPLE__
+#include <CoreFoundation/CoreFoundation.h>
+#endif
+
 #ifndef WIN32
 #include <strings.h> // For strcasecmp
 #endif
@@ -97,6 +101,7 @@ bool StringEndsWith(const std::string& str, const std::string& suffix)
 
 /****************************************************************************/
 
+#ifndef __APPLE__
 std::string WStr2Str(const std::wstring& str)
 {
 	std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> Converter;
@@ -113,6 +118,22 @@ std::wstring Str2WStr(const std::string& str)
 	return Converter.from_bytes(str);
 }
 
+#else
+// codecvt_utf8 is deprecated
+// only used by Text To Speech so don't worry about it on Apple until this feature is supported.
+std::string WStr2Str(const std::wstring& str)
+{
+    return std::string(str.begin(), str.end());
+}
+
+/****************************************************************************/
+
+std::wstring Str2WStr(const std::string& str)
+{
+    return std::wstring(str.begin(), str.end());
+}
+
+#endif
 /****************************************************************************/
 
 int StrCaseCmp(const char *str1, const char *str2)

@@ -164,7 +164,7 @@ const bool DEFAULT_LEARN_MODE = false;
 const bool DEFAULT_STRICT_AUN_MODE = false;
 const bool DEFAULT_SINGLE_SOCKET = true;
 const int DEFAULT_FLAG_FILL_TIMEOUT = 500000;
-const int DEFAULT_SCOUT_ACK_TIMEOUT = 500;
+const int DEFAULT_SCOUT_ACK_TIMEOUT = 5000;
 const unsigned int DEFAULT_TIME_BETWEEN_BYTES = 128;
 const unsigned int DEFAULT_FOUR_WAY_STAGE_TIMEOUT = 500000;
 const bool DEFAULT_MASSAGE_NETWORKS = false;
@@ -446,7 +446,11 @@ static bool IsBroadcastStation(unsigned int Station)
 static const char* IpAddressStr(unsigned long inet_addr)
 {
 	in_addr in;
-	IN_ADDR(in) = inet_addr;
+#ifdef __APPLE__
+    IN_ADDR(in) = (unsigned int) inet_addr;
+#else
+    IN_ADDR(in) = inet_addr;
+#endif
 
 	return inet_ntoa(in);
 }
@@ -460,7 +464,7 @@ static std::string BytesToString(const unsigned char* pData, int Length)
 	for (int i = 0; i < Length; i++)
 	{
 		char sz[10];
-		sprintf(sz, " %02X", pData[i]);
+		snprintf(sz, sizeof(sz), " %02X", pData[i]);
 
 		str += sz;
 	}
@@ -956,7 +960,8 @@ static bool ReadEconetConfigFile()
 				{
 					EconetFlagFillTimeout = std::stoi(Value);
 				}
-				else if (StrCaseCmp(Key.c_str(), "SCACKTIMEOUT") == 0)
+				else if (StrCaseCmp(Key.c_str(), "SCACKTIMEOUT") == 0 ||
+				         StrCaseCmp(Key.c_str(), "SCOUTACKTIMEOUT") == 0)
 				{
 					EconetScoutAckTimeout = std::stoi(Value);
 				}

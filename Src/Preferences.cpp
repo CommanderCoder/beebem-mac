@@ -180,7 +180,7 @@ void Preferences::SetBinaryValue(const char* id, const void* Value, size_t Size)
 
 	for (size_t b = 0; b < Size; ++b)
 	{
-		sprintf(hx + b * 2, "%02x", static_cast<int>(BinValue[b]));
+		snprintf(hx + b * 2, sizeof(hx) - b * 2, "%02x", static_cast<int>(BinValue[b]));
 	}
 
 	m_Prefs[id] = hx;
@@ -305,7 +305,7 @@ bool Preferences::GetDWORDValue(const char* id, DWORD& Value, DWORD Default) con
 void Preferences::SetDWORDValue(const char* id, DWORD Value)
 {
 	char hx[10];
-	sprintf(hx, "%08x", Value);
+	snprintf(hx, sizeof(hx), "%08x", Value);
 	m_Prefs[id] = hx;
 }
 

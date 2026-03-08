@@ -647,7 +647,7 @@ void DebugMemoryState()
 	{
 		if (RomWritable[i])
 		{
-			psram += sprintf(psram,"%d, ",i);
+			psram += snprintf(psram, sizeof(sram) - (size_t)(psram - sram), "%d, ", i);
 			m += 16;
 		}
 	}

@@ -305,7 +305,7 @@ void TeletextDialog::SetChannelIPControls(int Channel)
 	SetDlgItemText(IPAddressControl[Channel], m_IPAddress[Channel]);
 
 	char sz[20];
-	sprintf(sz, "%d", m_IPPort[Channel]);
+	snprintf(sz, sizeof(sz), "%d", m_IPPort[Channel]);
 	SetDlgItemText(IPPortControl[Channel], sz);
 }
 

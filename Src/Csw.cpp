@@ -298,11 +298,11 @@ again:
 
 				if (name[0] != 0)
 				{
-					sprintf(desc, "%-12s %02X  Length %04X", name, blk_num, block_ptr);
+					snprintf(desc, sizeof(desc), "%-12s %02X  Length %04X", name, blk_num, block_ptr);
 				}
 				else
 				{
-					sprintf(desc, "<No name>    %02X  Length %04X", blk_num, block_ptr);
+					snprintf(desc, sizeof(desc), "<No name>    %02X  Length %04X", blk_num, block_ptr);
 				}
 
 				TapeMap.emplace_back(desc, start_time);
@@ -329,7 +329,7 @@ again:
 					}
 				}
 
-				sprintf(desc, "Non-standard %02X  Length %04X", blk_num, block_ptr);
+				snprintf(desc, sizeof(desc), "Non-standard %02X  Length %04X", blk_num, block_ptr);
 
 				TapeMap.emplace_back(desc, start_time);
 				std_last_block = false;

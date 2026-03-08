@@ -220,7 +220,7 @@ void RomConfigDialog::FillROMList()
 		int Bank = 16 - Row;
 
 		char str[20];
-		sprintf(str, "%02d (%X)", Bank, Bank);
+		snprintf(str, sizeof(str), "%02d (%X)", Bank, Bank);
 
 		LVInsertItem(m_hWndROMList, Row, 0, str, Bank);
 		UpdateROMField(Row);
@@ -256,7 +256,9 @@ bool RomConfigDialog::WM_INITDIALOG()
 }
 
 #define CBN_SELCHANGE 1
-#define ComboBox_GetCurSel(_x_) model
+
+int ComboBox_GetCurrentSelection(HWND n, int m) { return m; }
+#define ComboBox_GetCurSel(_x_) ComboBox_GetCurrentSelection(_x_, model)
 			
 bool RomConfigDialog::WM_COMMAND(WPARAM wParam)
 {
