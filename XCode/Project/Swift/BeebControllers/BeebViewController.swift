@@ -386,7 +386,15 @@ extension BeebViewController
 	private func checkCapsLockDebounce() {
 		// Only sync in Logical keyboard mapping mode (mode 2)
 		let keyboardMode = beeb_getKeyboardMappingMode()
-		guard keyboardMode == 2 else {  // 2 = Logical mode
+		let keyMapASActive = beeb_getKeyMapAS() != 0
+
+		// AS mode uses A/S as momentary CAPS/CTRL; do not auto-synchronize
+		// Caps Lock state from macOS in this mode because it causes input failure
+		guard keyboardMode == 2 && !keyMapASActive else {
+			// Update local state baseline when checking is skipped
+			bbcCapsLockLegitimateState = CBridge.leds.contains(.CapsLED)
+			bbcCapsLockPendingState = CBridge.leds.contains(.CapsLED)
+			bbcCapsLockStateChangeTime = 0
 			return
 		}
 
@@ -446,11 +454,17 @@ extension BeebViewController: NSWindowDelegate {
 		// the user changed Mac Caps Lock while BeebEm was not focused
 		let currentModifiers = NSEvent.modifierFlags
 		let macCapsLockIsOn = currentModifiers.contains(.capsLock)
+		let keyMapASActive = beeb_getKeyMapAS() != 0
 
-		beeb_syncCapsLockState(macCapsLockIsOn ? 1 : 0)
-
-		// Update legitimate state to match after sync
-		bbcCapsLockLegitimateState = macCapsLockIsOn
+		if !keyMapASActive {
+			beeb_syncCapsLockState(macCapsLockIsOn ? 1 : 0)
+			// Update legitimate state to match after sync
+			bbcCapsLockLegitimateState = macCapsLockIsOn
+		} else {
+			// In A/S-to-CAPS/CTRL mode, keep local state based on BBC LED status
+			let bbcCapsLockIsOn = CBridge.leds.contains(.CapsLED)
+			bbcCapsLockLegitimateState = bbcCapsLockIsOn
+		}
 
 		// Reset modifier tracking to prevent stale state detection
 		beeb_resetModifierTracking(Int(currentModifiers.rawValue))

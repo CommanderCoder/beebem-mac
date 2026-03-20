@@ -497,6 +497,12 @@ extern "C" int beeb_getKeyboardMappingMode()
 	return static_cast<int>(mainWin->m_KeyboardMapping);
 }
 
+extern "C" int beeb_getKeyMapAS()
+{
+	// Used for AS mode where A/S keys map to CAPS/CTRL as momentary controls
+	return mainWin->m_KeyMapAS ? 1 : 0;
+}
+
 // SWIFT calls this to
 extern "C" void beeb_handlekeys(long message, long wParam, long lParam)
 {

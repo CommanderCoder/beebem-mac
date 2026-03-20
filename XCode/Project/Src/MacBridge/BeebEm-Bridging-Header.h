@@ -20,6 +20,7 @@ void beeb_handlemouse(long message, long wParam, long lParam);
 void beeb_syncCapsLockState(int macCapsLockIsOn);  // C bool: 0=false, non-zero=true
 void beeb_resetModifierTracking(long currentModifiers);
 int beeb_getKeyboardMappingMode();  // Returns: 0=User, 1=Default, 2=Logical
+int beeb_getKeyMapAS();        // Returns: 0=false, 1=true
 
 // Notify Swift when user presses Caps Lock (for tracking legitimate state)
 void swift_userDidPressCapsLock();
