@@ -182,8 +182,8 @@ public func swift_GetDlgItemText(_ dlg: Dialogs, _ cmd: UInt32, _ text : UnsafeM
 		print("\(#function)",cmdSTR,t)
 
 		// set the filepath back in the C code - fill with zeros first
-		text.assign(repeating: 0, count: length)
-		text.assign(from: t, count: t.count)
+        text.update(repeating: 0, count: length)
+        text.update(from: t, count: t.count)
 		return true
 	}
 	else

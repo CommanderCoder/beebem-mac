@@ -18,8 +18,8 @@ public func swift_GetDocumentsDirectory( _ resourcePath: UnsafeMutablePointer<CC
 	
 	let dpath = documentURL.path+"/"
 	// set the filepath back in the C code - fill with zeros first
-	resourcePath.assign(repeating: 0, count: length)
-	resourcePath.assign(from: dpath, count: dpath.count)
+    resourcePath.update(repeating: 0, count: length)
+    resourcePath.update(from: dpath, count: dpath.count)
 }
 
 // allow access to this in C
@@ -115,14 +115,10 @@ func swift_PListSetValue(_ CCkey: UnsafePointer<CChar>, _ CCvalue: UnsafePointer
 @_cdecl("swift_PListGetValue")
 func swift_PListGetValue(_ CCkey: UnsafePointer<CChar>) -> UnsafeMutablePointer<CChar>? {
 	let key = String(cString: CCkey)
-	do {
-		if let plistData = readPlist(from: plistURL), let value = plistData[key] {
-			let cString = strdup(value)
-			return UnsafeMutablePointer<CChar>(cString)
-		}
-	} catch {
-		print("Error reading plist: \(error)")
-	}
+    if let plistData = readPlist(from: plistURL), let value = plistData[key] {
+        let cString = strdup(value)
+        return UnsafeMutablePointer<CChar>(cString)
+    }
 	return nil
 }
 

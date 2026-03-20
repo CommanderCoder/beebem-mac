@@ -24,8 +24,8 @@ public func swift_SelectedFiles ( selectedFiles : UnsafeMutablePointer<Int32> , 
 	let beeblist = exportFilesView.beeblistdata
 	let numSelected = beeblist.selectedFiles.count
 
-	selectedFiles.assign(repeating: 0, count: length)
-	selectedFiles.assign(from: beeblist.selectedFiles, count: numSelected)
+    selectedFiles.update(repeating: 0, count: length)
+    selectedFiles.update(from: beeblist.selectedFiles, count: numSelected)
 	return numSelected
 }
 
