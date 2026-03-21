@@ -18,6 +18,7 @@ bool UK_WM_CLEAR_KEY_MAPPING(WPARAM wParam);
 bool UK_WM_SELECT_KEY_DIALOG_CLOSED(WPARAM wParam);
 
 
+extern int remapKeys(int k); // convert a MacOS keycode into a PC keycode
 extern int selectKeyDialog_Key;
 extern bool selectKeyDialog_Shift;
 

@@ -121,6 +121,9 @@ class BeebSKView: SKView {
 		beeb_handlemouse(kEventMouseUp, buttons[ms], 0)
 	}
 	override func mouseDown(with event: NSEvent) {
+        
+        window?.makeFirstResponder(self)
+        
 		let ms = event.buttonNumber
 //        print("mouseDown \(ms)")
 		beeb_handlemouse(kEventMouseDown, buttons[ms], 0)

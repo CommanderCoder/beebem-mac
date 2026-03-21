@@ -34,10 +34,12 @@ class BreakoutBoxViewController: NSViewController {
     }
 
     override func viewDidAppear() {
+        view.window?.makeFirstResponder(self)
         beeb_BreakoutBoxOpenDialog()
     }
     
     override func viewDidDisappear() {
+        view.window?.resignFirstResponder()
         beeb_BreakoutBoxCloseDialog()
     }
     

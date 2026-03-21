@@ -22,9 +22,11 @@ class KeyboardMappingViewController: NSViewController {
     @IBOutlet weak var assignedTo: NSTextField!
     
     override func viewDidAppear() {
+        view.window?.makeFirstResponder(self)
     }
     
     override func viewDidDisappear() {
+        view.window?.resignFirstResponder()
 		beeb_UKHandleCommand(conv("idcl")) //IDCANCEL
 		beeb_UserKeyboardClosed();
     }

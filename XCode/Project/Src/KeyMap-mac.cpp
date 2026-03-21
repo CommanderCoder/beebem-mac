@@ -431,6 +431,7 @@ void ClearUserKeyMapping(int Row, int Column, bool Shift)
 
 /*--------------------------------------------------------------------------*/
 
+// returns the keys in the UserKeyMap that are mapped to the BBC row & column
 std::string GetKeysUsed(int Row, int Column, bool Shift)
 {
 	std::string Keys;

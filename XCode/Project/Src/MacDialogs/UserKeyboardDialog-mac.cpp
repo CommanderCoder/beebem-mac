@@ -25,7 +25,7 @@
 
 #define COLORREF int
 
-
+static std::string GetBBCKeyName(int row, int col, bool shifted);
 static void SetKeyColour(COLORREF aColour);
 static void SelectKeyMapping(HWND hwnd, UINT ctrlID, HWND hwndCtrl);
 static void SetRowCol(UINT ctrlID);
@@ -148,6 +148,8 @@ static void SelectKeyMapping(HWND hwnd, UINT ctrlID, HWND hwndCtrl)
 	// closing the kay dialog :	WM_SELECT_KEY_DIALOG_CLOSED
 	
 	// set the 'ass ' text to the UsedKeys value
+    
+    UsedKeys = "Use your keyboard to assign a key to " + GetBBCKeyName(BBCRow, BBCCol, doingShifted);
 	swift_UKSetAssignedTo(UsedKeys.c_str());
 	
 	
@@ -334,6 +336,12 @@ bool UK_WM_SELECT_KEY_DIALOG_CLOSED(WPARAM wParam)
 			);
 			
 			
+            std::string pckey = GetPCKeyName(selectKeyDialog_Key);
+            std::string bbcKey = GetBBCKeyName(BBCRow, BBCCol, doingShifted);           
+			std::string UsedKeys = "Pressing " + pckey + " will produce " + bbcKey;
+            
+            swift_UKSetAssignedTo(UsedKeys.c_str());
+
 			// should set the key and open the dialog again for the shifted one
 			// but for now, just setting the key to the one that was pressed on the
 			// main dialog
@@ -384,6 +392,35 @@ bool UK_WM_SELECT_KEY_DIALOG_CLOSED(WPARAM wParam)
 //
 //	return FALSE;
 //}
+
+
+
+
+// convert row col to the key name
+// SHIFTED not used
+static std::string GetBBCKeyName(int row, int col, bool shifted)
+{
+    if (row == -2 && col == -2)
+        return "Break";
+
+    static const char* const keyMatrix[8][10] = {
+        // Col:  0          1        2        3        4        5        6        7        8            9
+        /* 0 */ {"ShiftL",  "Ctrl",  nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,     nullptr   },
+        /* 1 */ {"Q",       "3",     "4",     "5",     "F4",    "8",     "F7",    "=",     "^",         "Left"    },
+        /* 2 */ {"F0",      "W",     "E",     "T",     "7",     "I",     "9",     "0",     "Underscore","Down"    },
+        /* 3 */ {"1",       "2",     "D",     "R",     "6",     "U",     "O",     "P",     "OpenSq",    "Up"      },
+        /* 4 */ {"Caps",    "A",     "X",     "F",     "Y",     "J",     "K",     "@",     "Star",      "Return"  },
+        /* 5 */ {"ShiftLk", "S",     "C",     "G",     "H",     "N",     "L",     ";",     "CloseSq",   "Del"     },
+        /* 6 */ {"Tab",     "Z",     "Space", "V",     "B",     "M",     ",",     ".",     "FwdSlash",  "Copy"    },
+        /* 7 */ {"Esc",     "F1",    "F2",    "F3",    "F5",    "F6",    "F8",    "F9",    "Backslash", "Right"   },
+    };
+
+    if (row < 0 || row > 7 || col < 0 || col > 9)
+        return "";
+
+    const char* name = keyMatrix[row][col];
+    return name ? name : "";
+}
 
 /****************************************************************************/
 //

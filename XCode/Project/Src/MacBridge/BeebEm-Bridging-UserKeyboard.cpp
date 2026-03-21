@@ -34,10 +34,13 @@ extern "C" void beeb_ukhandlekeys(long eventkind, unsigned int keycode, char cha
 		 
 		 fprintf(stderr, "Key pressed: code = %d, '%c'\n", keycode, charCode);
 			 
-		 selectKeyDialog_Key = keycode;
+         // this is the MAC keycode
+         int PCkey = remapKeys((int)keycode);
+         
+		 selectKeyDialog_Key = PCkey;
 		 selectKeyDialog_Shift = false;
 		 UK_WM_SELECT_KEY_DIALOG_CLOSED((WPARAM)IDOK);
-		 break;
+ 		 break;
  }
 
 }
