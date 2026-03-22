@@ -64,6 +64,8 @@ class UserPortBreakoutDialog
 		int m_BitKey;
 		unsigned char m_LastInputData;
 		unsigned char m_LastOutputData;
+    
+    bool m_prompted;
 };
 
 extern int BitKeys[8];

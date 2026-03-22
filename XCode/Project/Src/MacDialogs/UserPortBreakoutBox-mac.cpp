@@ -6,6 +6,7 @@
 //
 
 #include "UserPortBreakoutBox-mac.hpp"
+#include "UserKeyboardDialog-mac.hpp"
 
 #include "KeyMap.h"
 #include "Main.h"
@@ -15,6 +16,7 @@
 #include "UserVia.h"
 
 #include "beebemrcids.h"
+
 
 /****************************************************************************/
 
@@ -39,7 +41,8 @@ UserPortBreakoutDialog::UserPortBreakoutDialog(
 	m_hwndParent(hwndParent),
 	m_BitKey(0),
 	m_LastInputData(0),
-	m_LastOutputData(0)
+	m_LastOutputData(0),
+m_prompted(false)
 {
 }
 
@@ -90,9 +93,11 @@ void UserPortBreakoutDialog::Close()
 //	EnableWindow(m_hwndParent, TRUE);
 //	DestroyWindow(m_hwnd);
 //	m_hwnd = nullptr;
-//	hCurrentDialog = nullptr;
+	hCurrentDialog = nullptr;
+    userPortBreakoutDialog = nullptr;
 //
 //	PostMessage(m_hwndParent, WM_USER_PORT_BREAKOUT_DIALOG_CLOSED, 0, 0);
+    swift_CloseDialog(Dialogs::breakoutBox);
 }
 
 /****************************************************************************/
@@ -101,7 +106,10 @@ bool UserPortBreakoutDialog::KeyDown(int Key)
 {
 	int mask = 0x01;
 	bool bit = false;
-
+    
+    // this is the MAC keycode
+    Key = remapKeys(Key);
+    
 	for (int i = 0; i < 8; ++i)
 	{
 		if (BitKeys[i] == Key)
@@ -126,20 +134,47 @@ bool UserPortBreakoutDialog::KeyUp(int Key)
 	int mask = 0x01;
 	bool bit = false;
 
-	for (int i = 0; i < 8; ++i)
-	{
-		if (BitKeys[i] == Key)
-		{
-			if ((UserVIAState.ddrb & mask) == 0x00)
-			{
-				UserVIAState.irb |= mask;
-				ShowInputs((UserVIAState.orb & UserVIAState.ddrb) | (UserVIAState.irb & (~UserVIAState.ddrb)));
-				bit = true;
-			}
-		}
-		mask <<= 1;
-	}
+    // this is the MAC keycode
+    Key = remapKeys(Key);
 
+
+    
+    // Windows will bring up a popup when selecting a new key, otherwise pressing the specific key will
+    // toggle the bits while this dialogue is open.
+    
+    if (m_prompted)
+    {
+        
+        std::string pckey = GetPCKeyName(Key);
+        std::string bbcKey = "BIT"+std::to_string(m_BitKey);
+        
+        std::string PCKeys = "Set " + pckey + " to produce " + bbcKey;
+        
+        swift_BBSetAssignedTo(PCKeys.c_str());
+        
+        // Assign the BBC key to the PC key.
+//        selectKeyDialog_Key = PCkey;
+//        BitKeys[m_BitKey] = selectKeyDialog_Key;
+        BitKeys[m_BitKey] = Key;
+        ShowBitKey(m_BitKey, BitKeyButtonIDs[m_BitKey]);
+        m_prompted = false;
+    }
+    else
+    {
+        for (int i = 0; i < 8; ++i)
+        {
+            if (BitKeys[i] == Key)
+            {
+                if ((UserVIAState.ddrb & mask) == 0x00)
+                {
+                    UserVIAState.irb |= mask;
+                    ShowInputs((UserVIAState.orb & UserVIAState.ddrb) | (UserVIAState.irb & (~UserVIAState.ddrb)));
+                    bit = true;
+                }
+            }
+            mask <<= 1;
+        }
+    }
 	return bit;
 }
 
@@ -352,7 +387,8 @@ bool UserPortBreakoutDialog::GetValue(int ctrlID)
 	return SendDlgItemMessage(m_hwnd, ctrlID, BM_GETCHECK, 0, 0) == BST_CHECKED;
 #else
 	printf("getvalue for ID %d\n", ctrlID);
-	return false;
+	return swift_GetDlgCheck(Dialogs::breakoutBox, ConvRC2ID(ctrlID));
+;
 #endif
 }
 
@@ -364,6 +400,7 @@ void UserPortBreakoutDialog::SetValue(int ctrlID, bool State)
 	SendDlgItemMessage(m_hwnd, ctrlID, BM_SETCHECK, State ? 1 : 0, 0);
 #else
 	printf("setvalue for ID %d %d\n", ctrlID, State ? 1 : 0);
+    swift_SetDlgCheck(Dialogs::breakoutBox, ConvRC2ID(ctrlID), State ? 1 : 0);
 #endif
 }
 
@@ -415,9 +452,8 @@ void UserPortBreakoutDialog::ShowInputs(unsigned char data)
 
 void UserPortBreakoutDialog::ShowBitKey(int key, int ctrlID)
 {
-	printf("showbitkey %d %s\n", ConvRC2ID(ctrlID), GetPCKeyName(BitKeys[key]));
 	uint32_t bb = Dialogs::breakoutBox;
-    SetDlgItemText(&bb, ConvRC2ID(ctrlID), GetPCKeyName(BitKeys[key]));
+    SetDlgItemText(&bb, ctrlID, GetPCKeyName(BitKeys[key]));
 }
 
 /****************************************************************************/
@@ -444,6 +480,11 @@ void UserPortBreakoutDialog::PromptForBitKeyInput(int bitKey)
 
 	selectKeyDialog->Open();
 #else
-	printf("Press the key to use... %s\n", PCKeys.c_str());
+	printf("Press the key to use for... %s\n", PCKeys.c_str());
+    
+    PCKeys = "Use your keyboard to assign a key to bit" + std::to_string(bitKey);
+    swift_BBSetAssignedTo(PCKeys.c_str());
+    
+    m_prompted = true;
 #endif
 }

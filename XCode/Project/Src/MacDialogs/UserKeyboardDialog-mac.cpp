@@ -316,7 +316,7 @@ bool UK_WM_CLEAR_KEY_MAPPING(WPARAM wParam)
 	return FALSE;
 }
 
-int selectKeyDialog_Key;
+int selectKeyDialog_Key; // on Windows this is the value returned by SelectKeyDialog which is a separate popup
 bool selectKeyDialog_Shift = false;
 
 //	case WM_SELECT_KEY_DIALOG_CLOSED:

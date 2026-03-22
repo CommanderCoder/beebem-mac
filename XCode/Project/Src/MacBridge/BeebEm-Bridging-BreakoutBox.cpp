@@ -20,12 +20,12 @@ extern "C" void beeb_bbhandlekeys(long eventkind, unsigned int keycode, char cha
 		case kEventRawKeyDown:
 			
 			fprintf(stderr, "Key pressed: code = %d, '%c'\n", keycode, charCode);
-			userPortBreakoutDialog->KeyDown(charCode);
+			userPortBreakoutDialog->KeyDown(keycode);
 			break;
 		case kEventRawKeyUp:
 			
 			fprintf(stderr, "Key released: code = %d, '%c'\n", keycode, charCode);
-			userPortBreakoutDialog->KeyUp(charCode);
+			userPortBreakoutDialog->KeyUp(keycode);
 			break;
 	}
 
@@ -40,11 +40,18 @@ extern "C" void beeb_BreakoutBoxOpenDialog()
 
 extern "C" void beeb_BreakoutBoxCloseDialog()
 {
-//	BreakoutBoxCloseDialog();
+    userPortBreakoutDialog->Close();
+    delete userPortBreakoutDialog;
+    userPortBreakoutDialog = nullptr;
 }
 
 extern "C" long beeb_BBHandleCommand(unsigned int cmdID)
 {
 	return userPortBreakoutDialog->WM_COMMAND(ConvID2RC(cmdID));
+}
+
+extern "C" void beeb_BBClearMapping()
+{
+    userPortBreakoutDialog->WM_CLEAR_KEY_MAPPING();
 }
 

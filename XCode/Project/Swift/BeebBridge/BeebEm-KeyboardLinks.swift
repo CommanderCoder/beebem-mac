@@ -149,18 +149,26 @@ public func swift_SetDlgItemText(_ dlg: Dialogs, _ cmd: UInt32, _ text : UnsafeP
 	guard let dlgView : NSViewController = allViews[dlg] else {
 		return false
 	}
+    
+    let cmdSTR = conv(cmd)
+    
+    // get NSTextField? first, then NSButton?
+    let item = dlgItemTextByIdentifier(cmdSTR, dlgView) ?? dlgItemByIdentifier(cmdSTR, dlgView)
 
-	let cmdSTR =  conv(cmd)
-	if let n = dlgItemTextByIdentifier(cmdSTR, dlgView)
+    if let n = item {
+        let t = String(cString: text)
+        print("\(#function)", cmdSTR, t)
+        // Use optional casting to handle different types
+        if let textField = n as? NSTextField {
+            textField.stringValue = t
+        } else if let button = n as? NSButton {
+            button.title = t
+        }
+        return true
+    }
+    else
 	{
-		let t = String(cString: text)
-        print("\(#function)",cmdSTR,t)
-		n.stringValue = t
-		return true
-	}
-	else
-	{
-		print("\(#function): \(cmd) not found: \(cmdSTR)")
+		print("\(#function): \(cmd) not found: \(cmdSTR) - Maybe it isn't a Text Field")
 	}
 
 	return false

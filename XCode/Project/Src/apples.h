@@ -496,6 +496,10 @@ extern "C" int swift_EndModal(bool ok);
 extern "C" void swift_UKSetAssignedTo(const char* title);
 extern "C" void swift_buttonSetControlValue(unsigned int cmd, int state);
 
+
+extern "C" void swift_BBSetAssignedTo(const char* title);
+
+
 void beebwin_ModifyMenu(
 						UINT position,
 						UINT newitem,

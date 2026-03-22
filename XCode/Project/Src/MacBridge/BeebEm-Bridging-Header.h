@@ -57,6 +57,7 @@ void beeb_bbhandlekeys(long eventkind, unsigned int keycode, char charCode);
 void beeb_BreakoutBoxOpenDialog();
 void beeb_BreakoutBoxCloseDialog();
 long beeb_BBHandleCommand(unsigned int cmdID);
+void beeb_BBClearMapping();
 
 
 long beeb_SPHandleCommand(unsigned int cmdID);

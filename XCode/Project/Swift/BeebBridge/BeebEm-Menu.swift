@@ -11,37 +11,27 @@ import Cocoa
 
 
 // convert a string of 4 characters to a UInt32
-// if the string has more than 4 characters it will be clamped
-// to the first 4
 func conv(_ str: String) -> UInt32
 {
-	var  v: UInt32 = 0
-    let  l = min(str.count,4)
-	let  i = l-1
-	for (index, element) in str.unicodeScalars.enumerated()
-	{
-		if index == 4
-		{
-			break
-		}
-		v += element.value << ((i-index)*8)
-	}
-	return v
+    // Get the first 4 characters as UInt8 (bytes)
+    let bytes = str.prefix(4).compactMap { $0.asciiValue }
+    
+    // Shift and add them together
+    return bytes.reduce(0) { ($0 << 8) | UInt32($1) }
 }
 
 // convert a UInt32 to a string of 4 characters
 func conv(_ value: UInt32) -> String
 {
-	var  s: String = ""
-	let  i = 4
-	for index in 1...i
-	{
-		// if unicode not recognised - use '@'
-		s.append( Character(UnicodeScalar(value >> ((i-index)*8)&0xff) ?? UnicodeScalar(64)))
-	}
-	return s
+    let bytes = [
+        UInt8((value >> 24) & 0xFF),
+        UInt8((value >> 16) & 0xFF),
+        UInt8((value >> 8) & 0xFF),
+        UInt8(value & 0xFF)
+    ]
+    
+    return String(bytes.map { Character(UnicodeScalar($0)) })
 }
-
 
 extension NSView {
 

@@ -40,10 +40,15 @@ class BreakoutBoxViewController: NSViewController {
     
     override func viewDidDisappear() {
         view.window?.resignFirstResponder()
+        beeb_BBHandleCommand(conv("idcl")) //IDCANCEL
         beeb_BreakoutBoxCloseDialog()
     }
     
-    
+    func setAssignedToText(_ text: String)
+    {
+        ass.stringValue = text
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -81,9 +86,8 @@ class BreakoutBoxViewController: NSViewController {
         
         if (cmd == "uprs")
         {
-            // breakoutbox
-            // beeb_BBReset()
-            print ("beeb_BBReset()")
+            // clear the mapping for the last key
+            beeb_BBClearMapping()
         }
         else
         {
