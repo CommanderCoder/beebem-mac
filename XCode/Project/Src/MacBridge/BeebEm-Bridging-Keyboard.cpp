@@ -36,6 +36,8 @@ enum {
 #include "SysVia.h"
 extern BeebWin* mainWin;
 
+// Forward declaration for Swift bridge function
+extern "C" void swift_userDidPressCapsLock();
 
 // map from APPLE input: https://eastmanreference.com/complete-list-of-applescript-key-codes
 // to WINDOWS input: https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
@@ -444,6 +446,62 @@ int remapKeys(int k)
 /*
 */
 
+// File-scoped variable to track last seen modifier state
+// Moved from inside beeb_handlekeys to allow reset function access
+static long last_wParam = 0;
+
+// Send a complete Caps Lock key DOWN/UP cycle to the BBC emulator
+// This triggers the BBC MOS to toggle its Caps Lock state
+static void pressCapsLock()
+{
+	// Send DOWN - BBC MOS detects key press and toggles Caps Lock state
+	int row, col;
+	mainWin->TranslateKey(VK_CAPITAL, false, row, col);
+
+	// Schedule UP for 50ms later (40ms Windows default + 25% reliability margin)
+	// This delay ensures BBC MOS has time to scan keyboard and process the key press
+	// The UP releases the key so the next toggle will be detected as a new press
+	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 50 * NSEC_PER_MSEC),
+					dispatch_get_main_queue(), ^{
+		int up_row, up_col;
+		mainWin->TranslateKey(VK_CAPITAL, true, up_row, up_col);
+	});
+}
+
+// Sync BBC Caps Lock state to match Mac Caps Lock state
+// Called on startup and when window gains focus
+extern "C" void beeb_syncCapsLockState(int macCapsLockIsOn)
+{
+	// Read current BBC Caps Lock state from LEDs global
+	bool macCapsOn = (macCapsLockIsOn != 0);
+	bool bbcCapsLockIsOn = LEDs.CapsLock;
+
+	// If states differ, send toggle to BBC to bring into sync
+	if (macCapsOn != bbcCapsLockIsOn) {
+		pressCapsLock();
+	}
+}
+
+// Reset modifier tracking to current Mac state
+// Called when window gains focus to prevent stale state issues
+extern "C" void beeb_resetModifierTracking(long currentModifiers)
+{
+	last_wParam = currentModifiers;
+}
+
+// Query current keyboard mapping mode for Caps Lock sync behavior
+extern "C" int beeb_getKeyboardMappingMode()
+{
+	// Return keyboard mapping mode as integer
+	// 0 = User, 1 = Default, 2 = Logical
+	return static_cast<int>(mainWin->m_KeyboardMapping);
+}
+
+extern "C" int beeb_getKeyMapAS()
+{
+	// Used for AS mode where A/S keys map to CAPS/CTRL as momentary controls
+	return mainWin->m_KeyMapAS ? 1 : 0;
+}
 
 // SWIFT calls this to
 extern "C" void beeb_handlekeys(long message, long wParam, long lParam)
@@ -488,10 +546,8 @@ extern "C" void beeb_handlekeys(long message, long wParam, long lParam)
 			}
 			break;
 		case kEventRawKeyModifiersChanged:
+		{
 //            fprintf(stderr, "Key modifier : code = %016x\n", wParam);
-			
-			static long last_wParam = 0;
-			
 			long diff_wParam = wParam ^ last_wParam; // XOR - to find what changed
 			
 			// bitpatterns
@@ -524,15 +580,56 @@ extern "C" void beeb_handlekeys(long message, long wParam, long lParam)
 				mainWin->TranslateKey(VK_CONTROL, (wParam & CTRLMASK)==0, row, col);
 			}
 
-			// APPLE ALT KEY
-			if ((diff_wParam & ALTMASK)!=0) // left and right caps key
+			// APPLE ALT/OPTION KEY
+			if ((diff_wParam & ALTMASK)!=0) // left and right alt/option key
 			{
 				// UP when mask is 0, DOWN if mask is 1
-				mainWin->TranslateKey(VK_CAPITAL, (wParam & ALTMASK)==0, row, col);
+				// Maps to Windows VK_MENU (the Alt key - confusing name,
+				// but VK_MENU is indeed the Windows Alt key)
+				mainWin->TranslateKey(VK_MENU, (wParam & ALTMASK)==0, row, col);
+			}
+
+			// APPLE CAPS LOCK KEY
+			//
+			// Implementation Notes (discovered through systematic research and testing):
+			//
+			// 1. macOS Caps Lock behavior:
+			//    - Toggle key with persistent state (LED on physical key)
+			//    - We receive modifier change events when state toggles (ON to OFF)
+			//    - Events report the NEW state, not press/release
+			//
+			// 2. BBC Micro Caps Lock behavior:
+			//    - Momentary key at keyboard matrix position row 4, column 0
+			//    - BBC MOS scans keyboard matrix and toggles IC32 bit 6 on key PRESS
+			//    - IC32 bit 6 controls Caps Lock LED (active-low: 0=ON, 1=OFF)
+			//    - The MOS toggles Caps Lock state on key DOWN only, not on key UP
+			//
+			// 3. Discovered through testing:
+			//    - Sending KEY DOWN triggers BBC MOS to toggle Caps Lock LED
+			//    - Sending KEY UP has no effect (TranslateKey returns row=-1, col=-1)
+			//
+			// 4. State synchronization implications:
+			//    - Mac and BBC Caps Lock states can get out of phase when Mac key is
+			//      toggled outside of BeebEm, e.g. while BeebEm window is unfocused
+			//      so we take special action on focus gain to resynchronise states
+			//
+			// 5. Known limitations:
+			//    - INKEY(-65) cannot detect "key held". This is a limitation of how
+			//      Caps Lock works in macOS.
+			//    - Games needing held Caps Lock should use "Map A,S to Caps,Ctrl" option
+			//    - Initial state may be out of sync (BBC boots with LED ON due to IC32State=0x00)
+			//      so we take special action on startup to sync states
+			//
+			if ((diff_wParam & CAPSMASK)!=0)
+			{
+				pressCapsLock();
+				// Notify Swift that user pressed Caps Lock (for legitimate state tracking)
+				swift_userDidPressCapsLock();
 			}
 			
 			last_wParam = wParam;
-			break;
+		}
+		break;
 	}
 }
 
@@ -627,7 +724,6 @@ extern "C" void beeb_handlejoystick(long message, long wParam, long lParam)
 				if (oldpattern != buttons1)
 					mainWin->AppProc(MM_JOY1BUTTONDOWN, buttons1, 0);
 			}
-			break;
 			break;
 	}
 	

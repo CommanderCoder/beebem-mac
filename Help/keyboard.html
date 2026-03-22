@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <title>BeebEm - BBC Micro and Master Series Emulator</title>
@@ -55,15 +55,18 @@
         <a href ="https://en.wikipedia.org/wiki/British_and_American_keyboards">[wikipedia]</a>
       </p>
 
+      <h3>Using a UK Macbook as the host machine.</h3>
       <p>
         The MacBook keyboard mappings are stored in custom key mapping files that 
         are suffixed with <code>-macbook-uk.kmap</code> and require
-        loading manually as a <a href='#userkeymapping'>User Key Mapping</a>.  These 
-        use the PC key names (e.g. VK_RETURN), rather than Mac names to be compatible 
-        with the PC version.
+        loading <strong>manually</strong> via the <a href='#userkeymapping'>User Key Mapping</a> menu item.  Mappings in
+        this file
+        use the PC key names (e.g. VK_RETURN), rather than Mac names to be compatible
+        with the PC version. See <a href="#userkeymapping">below</a> for more details.
       </p>
+      
 
-      <h2>Logical Keyboard Mapping</h2>
+      <h2>Logical Keyboard Mapping (Host Computer Keyboard)</h2>
 
       <p>
         With the <span class="ui">Logical Keyboard Mapping</span> the key
@@ -82,7 +85,7 @@
         For easy access to #, <kbd>`~</kbd> maps to <kbd>#~</kbd>.
       </p>
 
-      <h2>Default Keyboard Mapping</h2>
+      <h2>Default Keyboard Mapping (BBC Micro Keyboard, Positional)</h2>
       <p>
         For the <span class="ui">Default Keyboard Mapping</span>, most of the
         keys are the same on the Beeb and PC, and Mac 
@@ -258,16 +261,16 @@
       <h2 id="userkeymapping">Custom Key Mappings</h2>
 
       <p>
-        Key mappings are kept in <span class="file">.kmap</span> files stored in
-        the <span class="file">My Documents\BeebEm</span> folder. BeebEm will
-        read the <span class="file">Default.kmap</span> and <span
-        class="file">Logical.kmap</span> files at start up. These files contain
-        mappings for a UK PC keyboard and they can be replaced with alternative
-        mapping files if you are not using a UK keyboard (for example, the <span
-        class="file">USLogical.kmap</span> file for a US keyboard or
-        <span class="file">ITLogical.kmap</span> for an Italian keyboard).
+        Key mappings are stored in <span class="file">.kmap</span> files located in
+        the <span class="file">My Documents\BeebEm</span> folder. On startup, BeebEm
+        loads <span class="file">Default.kmap</span> and <span
+        class="file">Logical.kmap</span>, which provide mappings for a UK PC keyboard.
+        If you are using a non-UK keyboard, you can override these by placing an
+        alternative mapping file in your <span class="file">User Data</span> folder -
+        for example, copy <span class="file">USLogical.kmap</span> over <span
+        class="file">Logical.kmap</span> for a US keyboard, or <span
+        class="file">ITLogical.kmap</span> for an Italian keyboard.
       </p>
-
       <p>
         You can create your own mapping to map your PC keyboard to your emulated
         BBC one. Do this as follows:
@@ -332,6 +335,8 @@
           default user key mapping file that gets loaded when BeebEm starts up.
         </li>
       </ol>
+
+
     </main>
 
     <footer>

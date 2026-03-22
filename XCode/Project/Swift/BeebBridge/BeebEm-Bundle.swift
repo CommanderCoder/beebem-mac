@@ -21,8 +21,8 @@ public func swift_GetResourcePath( _ resourcePath: UnsafeMutablePointer<CChar>, 
 		print("\(#function) \(path)")
 
 		// set the filepath back in the C code - fill with zeros first
-		resourcePath.assign(repeating: 0, count: length)
-		resourcePath.assign(from: path, count: path.count)
+        resourcePath.update(repeating: 0, count: length)
+        resourcePath.update(from: path, count: path.count)
 	}
 	
 }
@@ -35,6 +35,6 @@ public func swift_GetBundleDirectory( _ bundlePath: UnsafeMutablePointer<CChar>,
 	let dpath : String = Bundle.main.resourcePath!+"/"
 	print("\(#function) \(dpath)")
 	// set the filepath back in the C code - fill with zeros first
-	bundlePath.assign(repeating: 0, count: length)
-	bundlePath.assign(from: dpath, count: dpath.count)
+    bundlePath.update(repeating: 0, count: length)
+    bundlePath.update(from: dpath, count: dpath.count)
 }

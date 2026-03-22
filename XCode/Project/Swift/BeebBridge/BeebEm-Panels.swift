@@ -249,8 +249,8 @@ func swift_GetFilesWithPreview(filepath : UnsafeMutablePointer<CChar>, bytes: In
             // /Users/ourcodeworld/Desktop/file.txt
             
             // set the filepath back in the C code - fill with zeros first
-            filepath.assign(repeating: 0, count: bytes)
-            filepath.assign(from: path, count: path.count)
+            filepath.update(repeating: 0, count: bytes)
+            filepath.update(from: path, count: path.count)
 
             return 0 // no issues
         }
@@ -279,8 +279,8 @@ func swift_SelectFolder(filepath : UnsafeMutablePointer<CChar>, bytes: Int, titl
         // /Users/ourcodeworld/Desktop/
         
         // set the filepath back in the C code.. fill with zeros first
-        filepath.assign(repeating: 0, count: bytes)
-        filepath.assign(from: path, count: path.count)
+        filepath.update(repeating: 0, count: bytes)
+        filepath.update(from: path, count: path.count)
             
         print("Picked \(String(cString:filepath))")
         return 0
@@ -328,8 +328,8 @@ func swift_SaveFile(filepath : UnsafeMutablePointer<CChar>, bytes: Int, filefilt
         // /Users/ourcodeworld/Desktop/file.txt
         
         // set the filepath back in the C code.. fill with zeros first
-        filepath.assign(repeating: 0, count: bytes)
-        filepath.assign(from: path, count: path.count)
+        filepath.update(repeating: 0, count: bytes)
+        filepath.update(from: path, count: path.count)
             
         print("Picked \(String(cString:filepath))")
         return true
@@ -381,8 +381,8 @@ public func swift_getPasteboard(_ text: UnsafeMutablePointer<CChar>, _ length: I
         // text was found and placed in the "string" constant
         
         // set the clipboard back in the C code - fill with zeros first
-        text.assign(repeating: 0, count: length)
-        text.assign(from: string, count: string.count)
+        text.update(repeating: 0, count: length)
+        text.update(from: string, count: string.count)
         return true
     }
     return false
