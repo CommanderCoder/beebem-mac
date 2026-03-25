@@ -247,6 +247,7 @@ BeebWin::BeebWin()
 	// Keyboard input
 	m_KeyboardMapping = KeyboardMappingType::Logical;
 	m_KeyMapAS = false;
+    m_KeyMapWINALT = false;
 	m_KeyMapFunc = false;
 	ZeroMemory(m_UserKeyMapPath, sizeof(m_UserKeyMapPath));
 	m_DisableKeysWindows = false;
@@ -1530,6 +1531,7 @@ void BeebWin::InitMenu(void)
 	UpdateKeyboardMappingMenu();
 	CheckMenuItem(IDM_MAPAS, m_KeyMapAS);
 	CheckMenuItem(IDM_MAPFUNCS, m_KeyMapFunc);
+    CheckMenuItem(IDM_MAPWINALT, m_KeyMapWINALT);
 	UpdateDisableKeysMenu();
 	CheckMenuItem(IDM_AUTOSAVE_PREFS_CMOS, m_AutoSavePrefsCMOS);
 	CheckMenuItem(IDM_AUTOSAVE_PREFS_FOLDERS, m_AutoSavePrefsFolders);
@@ -2809,17 +2811,32 @@ int BeebWin::TranslateKey(int vkey, bool keyUp, int &row, int &col)
 		if (m_KeyMapAS)
 		{
 			// Map A & S to CAPS & CTRL - good for some games
-			if (vkey == 65)
+			if (vkey == 'A')
 			{
 				row = 4;
 				col = 0;
 			}
-			else if (vkey == 83)
+			else if (vkey == 'S')
 			{
 				row = 0;
 				col = 1;
 			}
 		}
+        
+        if (m_KeyMapWINALT)
+        {
+            // Map Windows Logo & Left Alt to CAPS & CTRL - good for some games
+            if (vkey == VK_LWIN) // the generic Windows Key (RWIN is an extended key for natural keyboards)
+            {
+                row = 4;
+                col = 0;
+            }
+            else if (vkey == VK_MENU) // VK_MENU = VK_ALT = generic ALT key .  VK_LALT specifically distinguishes LEFT alt
+            {
+                row = 0;
+                col = 1;
+            }
+        }
 
 		if (m_KeyMapFunc)
 		{
@@ -4515,6 +4532,12 @@ void BeebWin::HandleCommand(UINT MenuID)
 		m_KeyMapAS = !m_KeyMapAS;
 		CheckMenuItem(IDM_MAPAS, m_KeyMapAS);
 		break;
+            
+    case IDM_MAPWINALT:
+        m_KeyMapWINALT = !m_KeyMapWINALT;
+        CheckMenuItem(IDM_MAPWINALT, m_KeyMapWINALT);
+        break;
+
 
 	case IDM_MAPFUNCS:
 		m_KeyMapFunc = !m_KeyMapFunc;

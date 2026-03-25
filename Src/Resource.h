@@ -365,6 +365,7 @@
 #define IDM_MAPAS                       40169
 #define IDM_MAPFUNCS                    40170
 #define IDM_RUNDISC                     40171
+#define IDM_MAPWINALT                   40172
 #define IDM_SHOWDEBUGGER                40173
 #define IDM_TAPECONTROL                 40174
 #define IDM_SOUNDCHIP                   40175

@@ -749,6 +749,7 @@ public:
 	// Keyboard input
 	KeyboardMappingType m_KeyboardMapping;
 	bool m_KeyMapAS;
+    bool m_KeyMapWINALT;
 	bool m_KeyMapFunc;
 	char m_UserKeyMapPath[MAX_PATH];
 	bool m_DisableKeysWindows;

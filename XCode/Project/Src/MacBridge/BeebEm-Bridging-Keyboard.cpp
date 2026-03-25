@@ -503,6 +503,12 @@ extern "C" int beeb_getKeyMapAS()
 	return mainWin->m_KeyMapAS ? 1 : 0;
 }
 
+extern "C" int beeb_getKeyMapWINALT()
+{
+    // Used for WINALT mode where WIN/LALT keys map to CAPS/CTRL as momentary controls
+    return mainWin->m_KeyMapWINALT ? 1 : 0;
+}
+
 // SWIFT calls this to
 extern "C" void beeb_handlekeys(long message, long wParam, long lParam)
 {
@@ -549,6 +555,7 @@ extern "C" void beeb_handlekeys(long message, long wParam, long lParam)
 		{
 //            fprintf(stderr, "Key modifier : code = %016x\n", wParam);
 			long diff_wParam = wParam ^ last_wParam; // XOR - to find what changed
+//            printf("0x%06lx\n", wParam);
 			
 			// bitpatterns
 			// 0000 0010 0000 0000 0000 0010 - L SHIFT
@@ -572,22 +579,38 @@ extern "C" void beeb_handlekeys(long message, long wParam, long lParam)
 			{
 				// UP when mask is 0, DOWN if mask is 1
 				mainWin->TranslateKey(VK_SHIFT, (wParam & SHIFTMASK)==0, row, col);
+//                printf("VK_SHIFT");
 			}
 			// APPLE CTRL KEY
 			if ((diff_wParam & CTRLMASK)!=0) // left and right ctrl key
 			{
 				// UP when mask is 0, DOWN if mask is 1
 				mainWin->TranslateKey(VK_CONTROL, (wParam & CTRLMASK)==0, row, col);
+//                printf("VK_CONTROL");
 			}
 
-			// APPLE ALT/OPTION KEY
-			if ((diff_wParam & ALTMASK)!=0) // left and right alt/option key
+            // APPLE COMMAND KEY
+            if ((diff_wParam & CMDMASK) != 0)
 			{
 				// UP when mask is 0, DOWN if mask is 1
-				// Maps to Windows VK_MENU (the Alt key - confusing name,
-				// but VK_MENU is indeed the Windows Alt key)
-				mainWin->TranslateKey(VK_MENU, (wParam & ALTMASK)==0, row, col);
+				// Maps to Windows VK_MENU (the ALT key - confusing name,
+                // but VK_MENU is indeed the Left Alt key on Windows)
+				mainWin->TranslateKey(VK_MENU, (wParam & CMDMASK)==0, row, col);
+//                printf("VK_MENU");
+                
+                //NOTE: It isn't possible to detect CMD+F12 being released as it comes into here
+                // from performKeyEquivalent. KeyDown and KeyUp are not triggered for CMD+F12; just the
+                // equivalent when it is pressed.  CTRL and OPTION +F12 are fine!
 			}
+
+            // APPLE ALT/OPTION KEY
+            if ((diff_wParam & ALTMASK)!=0) // left and right alt/option key
+            {
+                // UP when mask is 0, DOWN if mask is 1
+                // Use VK_LWIN to map Command to the Windows key
+                mainWin->TranslateKey(VK_LWIN, (wParam & ALTMASK) == 0, row, col);
+//                printf("VK_LWIN");
+            }
 
 			// APPLE CAPS LOCK KEY
 			//
@@ -625,6 +648,8 @@ extern "C" void beeb_handlekeys(long message, long wParam, long lParam)
 				pressCapsLock();
 				// Notify Swift that user pressed Caps Lock (for legitimate state tracking)
 				swift_userDidPressCapsLock();
+//                printf("CAPSLock");
+
 			}
 			
 			last_wParam = wParam;
