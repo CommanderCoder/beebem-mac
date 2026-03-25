@@ -387,10 +387,11 @@ extension BeebViewController
 		// Only sync in Logical keyboard mapping mode (mode 2)
 		let keyboardMode = beeb_getKeyboardMappingMode()
 		let keyMapASActive = beeb_getKeyMapAS() != 0
+        let keyMapWINALTActive = beeb_getKeyMapWINALT() != 0
 
 		// AS mode uses A/S as momentary CAPS/CTRL; do not auto-synchronize
 		// Caps Lock state from macOS in this mode because it causes input failure
-		guard keyboardMode == 2 && !keyMapASActive else {
+		guard keyboardMode == 2 && !keyMapASActive && !keyMapWINALTActive else {
 			// Update local state baseline when checking is skipped
 			bbcCapsLockLegitimateState = CBridge.leds.contains(.CapsLED)
 			bbcCapsLockPendingState = CBridge.leds.contains(.CapsLED)
@@ -455,13 +456,14 @@ extension BeebViewController: NSWindowDelegate {
 		let currentModifiers = NSEvent.modifierFlags
 		let macCapsLockIsOn = currentModifiers.contains(.capsLock)
 		let keyMapASActive = beeb_getKeyMapAS() != 0
+        let keyMapWINALTActive = beeb_getKeyMapWINALT() != 0
 
-		if !keyMapASActive {
+		if !keyMapASActive && !keyMapWINALTActive {
 			beeb_syncCapsLockState(macCapsLockIsOn ? 1 : 0)
 			// Update legitimate state to match after sync
 			bbcCapsLockLegitimateState = macCapsLockIsOn
 		} else {
-			// In A/S-to-CAPS/CTRL mode, keep local state based on BBC LED status
+			// In WIN/ALT or A/S-to-CAPS/CTRL mode, keep local state based on BBC LED status
 			let bbcCapsLockIsOn = CBridge.leds.contains(.CapsLED)
 			bbcCapsLockLegitimateState = bbcCapsLockIsOn
 		}

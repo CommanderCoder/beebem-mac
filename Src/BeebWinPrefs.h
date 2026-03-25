@@ -183,6 +183,7 @@ const char* const CFG_PANELOFF    = "MACOS_PanelOff";
 
 // Key mappings
 const char* const CFG_KEY_MAP_AS                   = "KeyMapAS";
+const char* const CFG_KEY_MAP_WINALT               = "KeyMapWINALT";
 const char* const CFG_KEY_MAP_FUNC                 = "KeyMapFunc";
 const char* const CFG_DISABLE_KEYS_BREAK           = "DisableKeysBreak";
 const char* const CFG_DISABLE_KEYS_ESCAPE          = "DisableKeysEscape";

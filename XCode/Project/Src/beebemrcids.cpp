@@ -129,6 +129,7 @@ std::map<int,int> ID2RC =
 //{'pcc3', IDM_PRINTER_COM3},
 //{'pcc4', IDM_PRINTER_COM4}, //new ^^
 {'kmas', IDM_MAPAS},
+{'kmwt', IDM_MAPWINALT},
 {'copy', IDM_EDIT_COPY},
 {'past', IDM_EDIT_PASTE},
 {'trac', ID_}, // trace186

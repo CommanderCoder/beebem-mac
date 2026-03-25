@@ -50,8 +50,23 @@ class BeebSKView: SKView {
     }
     
     override func flagsChanged(with event: NSEvent) {
-        //       print("\(String(event.modifierFlags.rawValue, radix: 16))")
+//       print("flagsChanged \(String(event.modifierFlags.rawValue, radix: 16))")
 		beeb_handlekeys(kEventRawKeyModifiersChanged, Int(event.modifierFlags.rawValue), 0)
+    }
+    
+    override func performKeyEquivalent(with event: NSEvent) -> Bool {
+        print("performKeyEquivalent \(String(event.modifierFlags.rawValue, radix: 16))")
+
+        let flags = event.modifierFlags.intersection(.deviceIndependentFlagsMask)
+
+        if flags == [.command, .function] {
+            beeb_handlekeys(kEventRawKeyModifiersChanged, Int(event.modifierFlags.rawValue), 0)
+            return true;
+        }
+        return super.performKeyEquivalent(with: event)
+        
+
+        
     }
 	 
 	

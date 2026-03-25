@@ -1556,6 +1556,7 @@ void BeebWin::LoadSettingsPreferences()
 void BeebWin::LoadKeyMapPreferences()
 {
 	m_Preferences.GetBoolValue(CFG_KEY_MAP_AS, m_KeyMapAS, false);
+    m_Preferences.GetBoolValue(CFG_KEY_MAP_WINALT, m_KeyMapWINALT, false);
 	m_Preferences.GetBoolValue(CFG_KEY_MAP_FUNC, m_KeyMapFunc, false);
 
 	TranslateKeyMapping();
@@ -1888,7 +1889,8 @@ void BeebWin::SavePreferences(bool saveAll)
 #endif
 
 		// Key mappings
-		m_Preferences.SetBoolValue(CFG_KEY_MAP_AS, m_KeyMapAS);
+        m_Preferences.SetBoolValue(CFG_KEY_MAP_AS, m_KeyMapAS);
+		m_Preferences.SetBoolValue(CFG_KEY_MAP_WINALT, m_KeyMapWINALT);
 		m_Preferences.SetBoolValue(CFG_KEY_MAP_FUNC, m_KeyMapFunc);
 		m_Preferences.SetBoolValue(CFG_DISABLE_KEYS_BREAK, m_DisableKeysBreak);
 		m_Preferences.SetBoolValue(CFG_DISABLE_KEYS_ESCAPE, m_DisableKeysEscape);
