@@ -1755,13 +1755,13 @@
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9I4-Yf-xHc">
-                                <rect key="frame" x="20" y="224" width="330" height="289"/>
+                                <rect key="frame" x="20" y="276" width="330" height="237"/>
                                 <clipView key="contentView" id="bxb-nq-r68">
-                                    <rect key="frame" x="1" y="1" width="328" height="287"/>
+                                    <rect key="frame" x="1" y="1" width="328" height="235"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" multipleSelection="NO" emptySelection="NO" autosaveColumns="NO" typeSelect="NO" rowSizeStyle="automatic" headerView="Ghv-5L-cAi" viewBased="YES" id="o6K-RA-peU">
-                                            <rect key="frame" x="0.0" y="0.0" width="328" height="262"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="328" height="210"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <size key="intercellSpacing" width="3" height="2"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -2042,10 +2042,10 @@
                                 </customSpacing>
                             </stackView>
                             <stackView distribution="fill" orientation="horizontal" alignment="centerY" spacing="3" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mbP-gz-4lx" userLabel="tapename">
-                                <rect key="frame" x="20" y="44" width="104" height="172"/>
+                                <rect key="frame" x="20" y="44" width="104" height="224"/>
                                 <subviews>
                                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Dr1-uc-qH4">
-                                        <rect key="frame" x="-2" y="78" width="62" height="16"/>
+                                        <rect key="frame" x="-2" y="104" width="62" height="16"/>
                                         <textFieldCell key="cell" lineBreakMode="clipping" title="Tape File:" id="3fx-42-U2z">
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -2053,7 +2053,7 @@
                                         </textFieldCell>
                                     </textField>
                                     <textField identifier="tpnm" focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="sSm-cg-yfW">
-                                        <rect key="frame" x="59" y="78" width="47" height="16"/>
+                                        <rect key="frame" x="59" y="104" width="47" height="16"/>
                                         <textFieldCell key="cell" lineBreakMode="clipping" title="[name]" id="Ybr-x7-PGE">
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -4380,7 +4380,7 @@ DQ
                                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                     <font key="font" metaFont="system"/>
                                                 </buttonCell>
-                                                <color key="bezelColor" name="systemBrownColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="bezelColor" name="systemPinkColor" catalog="System" colorSpace="catalog"/>
                                             </button>
                                             <button identifier="upc6" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="gNE-nm-uM4">
                                                 <rect key="frame" x="39" y="3" width="30" height="16"/>
