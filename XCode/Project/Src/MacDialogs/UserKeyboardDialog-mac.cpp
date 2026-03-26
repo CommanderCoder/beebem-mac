@@ -25,7 +25,7 @@
 
 #define COLORREF int
 
-static std::string GetBBCKeyName(int row, int col, bool shifted);
+static std::string GetBBCKeyName(int row, int col);
 static void SetKeyColour(COLORREF aColour);
 static void SelectKeyMapping(HWND hwnd, UINT ctrlID, HWND hwndCtrl);
 static void SetRowCol(UINT ctrlID);
@@ -60,6 +60,16 @@ static bool doingShifted; // Selecting shifted or unshifted key press
 //	"Press key for unshifted press...",
 //	"Press key for shifted press..."
 //};
+
+
+
+static HWND hwnduk = (HWND)Modals::keyboardMapping;
+
+static bool IsDlgItemChecked(HWND hDlg, UINT nIDDlgItem)
+{
+    return SendDlgItemMessage(hDlg, nIDDlgItem, BM_GETCHECK, 0, 0) == BST_CHECKED;
+}
+
 
 /****************************************************************************/
 
@@ -122,9 +132,10 @@ static void SelectKeyMapping(HWND hwnd, UINT ctrlID, HWND hwndCtrl)
 	hwndBBCKey = hwndCtrl;
 	selectedCtrlID = ctrlID;
 
-	doingShifted = false;
+    HWND hwndDlg = (HWND)&hwnduk;
+    doingShifted = IsDlgItemChecked(hwndDlg, IDC_SHIFT);
 
-	std::string UsedKeys = GetKeysUsed(BBCRow, BBCCol, doingShifted);
+    std::string UsedKeys = GetKeysUsed(BBCRow, BBCCol, doingShifted);
 
 #ifdef FUTURE__APPLE__
 	// Now ask the user to input the PC key to assign to the BBC key.
@@ -149,7 +160,7 @@ static void SelectKeyMapping(HWND hwnd, UINT ctrlID, HWND hwndCtrl)
 	
 	// set the 'ass ' text to the UsedKeys value
     
-    UsedKeys = "Use your keyboard to assign a key to " + GetBBCKeyName(BBCRow, BBCCol, doingShifted);
+    UsedKeys = "Host "+UsedKeys+ " -> BBC " + GetBBCKeyName(BBCRow, BBCCol);
 	swift_UKSetAssignedTo(UsedKeys.c_str());
 	
 	
@@ -311,8 +322,12 @@ bool UK_WM_DRAWITEM(WPARAM wParam)
 //	case WM_CLEAR_KEY_MAPPING:
 bool UK_WM_CLEAR_KEY_MAPPING(WPARAM wParam)
 {
+    HWND hwndDlg = (HWND)&hwnduk;
+    doingShifted = IsDlgItemChecked(hwndDlg, IDC_SHIFT);
+
 		ClearUserKeyMapping(BBCRow, BBCCol, doingShifted);
-//		break;
+    
+    //		break;
 	return FALSE;
 }
 
@@ -322,6 +337,9 @@ bool selectKeyDialog_Shift = false;
 //	case WM_SELECT_KEY_DIALOG_CLOSED:
 bool UK_WM_SELECT_KEY_DIALOG_CLOSED(WPARAM wParam)
 {
+    HWND hwndDlg = (HWND)&hwnduk;
+    doingShifted = IsDlgItemChecked(hwndDlg, IDC_SHIFT);
+
 		if (wParam == IDOK)
 		{
 			// Assign the BBC key to the PC key.
@@ -331,14 +349,12 @@ bool UK_WM_SELECT_KEY_DIALOG_CLOSED(WPARAM wParam)
 				doingShifted,
 				selectKeyDialog_Key,
 				selectKeyDialog_Shift
-//				selectKeyDialog->Key(),
-//				selectKeyDialog->Shift()
 			);
 			
 			
             std::string pckey = GetPCKeyName(selectKeyDialog_Key);
-            std::string bbcKey = GetBBCKeyName(BBCRow, BBCCol, doingShifted);           
-			std::string UsedKeys = "Pressing " + pckey + " will produce " + bbcKey;
+            std::string bbcKey = GetBBCKeyName(BBCRow, BBCCol);
+			std::string UsedKeys = "Host "+pckey + " +> BBC " + bbcKey;
             
             swift_UKSetAssignedTo(UsedKeys.c_str());
 
@@ -397,22 +413,21 @@ bool UK_WM_SELECT_KEY_DIALOG_CLOSED(WPARAM wParam)
 
 
 // convert row col to the key name
-// SHIFTED not used
-static std::string GetBBCKeyName(int row, int col, bool shifted)
+static std::string GetBBCKeyName(int row, int col)
 {
     if (row == -2 && col == -2)
         return "Break";
 
     static const char* const keyMatrix[8][10] = {
         // Col:  0          1        2        3        4        5        6        7        8            9
-        /* 0 */ {"ShiftL",  "Ctrl",  nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,     nullptr   },
-        /* 1 */ {"Q",       "3",     "4",     "5",     "F4",    "8",     "F7",    "=",     "^",         "Left"    },
-        /* 2 */ {"F0",      "W",     "E",     "T",     "7",     "I",     "9",     "0",     "Underscore","Down"    },
-        /* 3 */ {"1",       "2",     "D",     "R",     "6",     "U",     "O",     "P",     "OpenSq",    "Up"      },
-        /* 4 */ {"Caps",    "A",     "X",     "F",     "Y",     "J",     "K",     "@",     "Star",      "Return"  },
-        /* 5 */ {"ShiftLk", "S",     "C",     "G",     "H",     "N",     "L",     ";",     "CloseSq",   "Del"     },
-        /* 6 */ {"Tab",     "Z",     "Space", "V",     "B",     "M",     ",",     ".",     "FwdSlash",  "Copy"    },
-        /* 7 */ {"Esc",     "F1",    "F2",    "F3",    "F5",    "F6",    "F8",    "F9",    "Backslash", "Right"   },
+        /* 0 */ {"Shift",  "Ctrl",  nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,     nullptr   },
+        /* 1 */ {"Q",       "3#",     "4$",     "5%",     "F4",    "8)",     "F7",    "-=",     "^~",         "Left"    },
+        /* 2 */ {"F0",      "W",     "E",     "T",     "7'",     "I",     "9)",     "0",     "_£","Down"    },
+        /* 3 */ {"1!",       "2\"",     "D",     "R",     "6&",     "U",     "O",     "P",     "[{",    "Up"      },
+        /* 4 */ {"CapsLk",    "A",     "X",     "F",     "Y",     "J",     "K",     "@",     ":*",      "Return"  },
+        /* 5 */ {"ShiftLk", "S",     "C",     "G",     "H",     "N",     "L",     ";+",     "]}",   "Del"     },
+        /* 6 */ {"Tab",     "Z",     "Space", "V",     "B",     "M",     ",>",     ".>",     "/?",  "Copy"    },
+        /* 7 */ {"Esc",     "F1",    "F2",    "F3",    "F5",    "F6",    "F8",    "F9",    "|\\", "Right"   },
     };
 
     if (row < 0 || row > 7 || col < 0 || col > 9)

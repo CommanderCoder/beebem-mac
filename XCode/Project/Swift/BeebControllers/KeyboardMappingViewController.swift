@@ -57,8 +57,8 @@ class KeyboardMappingViewController: NSViewController {
         
         if (cmd == "ukrs")
         {
-            // beeb_UKReset()
-            print ("beeb_UKReset()")
+            // reset the keyboard input mappings
+            beeb_UKReset()
         }
         else
         {

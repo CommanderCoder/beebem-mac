@@ -44,3 +44,8 @@ extern "C" void beeb_ukhandlekeys(long eventkind, unsigned int keycode, char cha
  }
 
 }
+
+extern "C" void beeb_UKReset()
+{
+	UK_WM_CLEAR_KEY_MAPPING(0);
+}

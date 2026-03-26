@@ -56,7 +56,7 @@ void beeb_setBlackBackground(char val);
 void beeb_UserKeyboardClosed();
 long beeb_UKHandleCommand(unsigned int cmdID);
 void beeb_ukhandlekeys(long eventkind, unsigned int keycode, char charCode);
-
+void beeb_UKReset();
 
 // Exposed to RomConfigViewController
 long beeb_RCHandleCommand(int cmdID);

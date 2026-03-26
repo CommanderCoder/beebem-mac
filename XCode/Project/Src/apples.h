@@ -580,10 +580,10 @@ extern "C" void swift_SetPanelOff(bool b);
 #define MB_OKCANCEL 0x200
 
 #ifndef IDYES
-#define IDYES 0x10
-#define IDNO 0x20
-#define IDOK 0x30
-#define IDCANCEL 0x40
+#define IDYES 0x06
+#define IDNO 0x07
+#define IDOK 0x01
+#define IDCANCEL 0x02
 #endif
 
 #define ID_FDC_ACORN                      39901

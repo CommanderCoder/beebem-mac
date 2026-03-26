@@ -340,6 +340,7 @@ std::map<int,int> ID2RC =
     {']}  ',IDK_CLOSE_SQUARE},
     {'@   ',IDK_AT},
     {'uspd',IDK_UNDERSCORE},
+    {'shft', IDC_SHIFT},
     
     
 	{'tpmp', IDC_TAPE_CONTROL_MAP},

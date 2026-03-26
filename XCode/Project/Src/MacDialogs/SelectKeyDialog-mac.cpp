@@ -6,3 +6,5 @@
 //
 
 #include "SelectKeyDialog-mac.hpp"
+
+// NOT USED, SEE UserKeyboardDialog-mac INSTEAD

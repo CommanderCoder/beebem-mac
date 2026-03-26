@@ -55,7 +55,7 @@ class BeebSKView: SKView {
     }
     
     override func performKeyEquivalent(with event: NSEvent) -> Bool {
-        print("performKeyEquivalent \(String(event.modifierFlags.rawValue, radix: 16))")
+//        print("performKeyEquivalent \(String(event.modifierFlags.rawValue, radix: 16))")
 
         let flags = event.modifierFlags.intersection(.deviceIndependentFlagsMask)
 

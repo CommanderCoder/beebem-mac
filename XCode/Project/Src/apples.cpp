@@ -546,14 +546,18 @@ LRESULT SendDlgItemMessage(
    LPARAM lParam
 )
 {
-	
+    LRESULT on = 0;
 	if (Msg == BM_SETCHECK){
-		swift_SetDlgCheck((Dialogs)*hDlg, nIDDlgItem, wParam);
+		swift_SetDlgCheck((Dialogs)*hDlg, ConvRC2ID(nIDDlgItem), wParam);
 //	e.g. 	hwndTapeControl, IDC_TAPE_CONTROL_UNLOCK
 //	e.g. 	Modals::tapeControl, 'tcul'
 	}
+    else
+    {
+        on = swift_GetDlgCheck((Dialogs)*hDlg, ConvRC2ID(nIDDlgItem));
+    }
 
-	return 0;
+	return on;
 }
 
 void SetDlgItemText(int nID, const std::string& str)
